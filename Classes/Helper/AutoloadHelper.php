@@ -32,23 +32,6 @@ class AutoloadHelper
 
 
     /**
-     * Ruft das Laden der Klassesn (*.php) für den
-     * übergebenen Pfad (inkl. Unterordnern) auf.
-     * @param        $strPath
-     * @param string $strRgex
-     */
-    public static function loadClasses($strPath, $strRgex = '/^.+\.php$/i')
-    {
-        $strPath  = self::makePath($strPath, '/classes');
-        $objFiles = self::getFiles($strPath, $strRgex);
-
-        if ($objFiles) {
-            self::registerClasses($objFiles);
-        }
-    }
-
-
-    /**
      * Registriert die gefundenen Templates bei Contao.
      * @param $objFiles
      */
@@ -63,25 +46,9 @@ class AutoloadHelper
 
 
     /**
-     * Registriert die gefundenen Klasses bei Contao.
-     * @param $objFiles
-     */
-    protected static function registerClasses($objFiles)
-    {
-        foreach ($objFiles as $varFile) {
-            $strFile      = (is_array($varFile)) ? array_shift($varFile) : $varFile;
-            $objFile      = pathinfo($strFile);
-            $strNamespace = self::registerNamespace($objFile['dirname']);
-            $strClassname = $strNamespace . $objFile['filename'];
-            $strPath      = str_replace(TL_ROOT . '/', '', $objFile['dirname']) . '/' . $objFile['basename'];
-            \ClassLoader::addClass($strClassname, $strPath);
-        }
-    }
-
-
-    /**
      * Prüft den übergebenen Pfad und ergänzt die fehlenden Bestandteile.
      * @param $strPath
+     * @param $folder
      * @return mixed|string
      */
     protected static function makePath($strPath, $folder)
@@ -95,34 +62,10 @@ class AutoloadHelper
 
 
     /**
-     * Registriert den Namespace bei Contao und gibt ihn zurück.
-     * @param        $strPath
-     * @param string $f
-     * @return mixed|string
-     */
-    protected static function registerNamespace($strPath, $f = TL_ROOT.'/system/modules/edenCommon/config/config.php')
-    {
-        $strNamespace = str_replace(TL_ROOT . '/system/modules/', '', $strPath);
-        $strNamespace = str_replace('/', '\\', $strNamespace);
-
-        if (is_file($f)) {  #@todo raus und durch direkte Übergeben des Prefixes ersetzen!
-            include_once($f); // FIX: namespace_prefix not found!
-
-            if (isset($GLOBALS['ecn']['eden']['auoload']['namspaceprefix'])) {
-                $strNamespace = $GLOBALS['ecn']['eden']['auoload']['namspaceprefix'] . "\\$strNamespace\\";
-            }
-        }
-
-        \ClassLoader::addNamespace($strNamespace);
-
-        return $strNamespace;
-    }
-
-
-    /**
      * Sucht die Templates im übergebenen Pfad.
-     * @param $strPath
-     * @return \RegexIterator
+     * @param        $strPath
+     * @param string $strRgex
+     * @return null|\RegexIterator
      */
     protected static function getFiles($strPath, $strRgex = '/^.+\.php$/i')
     {
