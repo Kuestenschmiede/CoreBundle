@@ -12,10 +12,10 @@ namespace con4gis\CoreBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class con4GisCoreBundle
+ * Class con4gisCoreBundle
  * @package con4gis\CoreBundle
  */
-class con4GisCoreBundle extends Bundle
+class con4gisCoreBundle extends Bundle
 {
 
 }
