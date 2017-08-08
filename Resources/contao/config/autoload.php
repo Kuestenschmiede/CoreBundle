@@ -10,9 +10,9 @@
 /**
  * Variables
  */
-$strBundle = 'con4gis/coreBundle';
+$strBundle = 'con4gis/CoreBundle';
 
 /**
  * Register the templates
  */
-\con4gis\coreBundle\classes\helper\AutoloadHelper::loadTemplates("/src/$strBundle/");
+\con4gis\CoreBundle\Classes\Helper\AutoloadHelper::loadTemplates("/src/$strBundle/");

@@ -7,15 +7,15 @@
  * @copyright Küstenschmiede GmbH Software & Design 2016 - 2017.
  * @link      https://www.kuestenschmiede.de
  */
-namespace con4gis\coreBundle;
+namespace con4gis\CoreBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class con4gisCoreBundle
- * @package con4gis\coreBundle
+ * Class con4GisCoreBundle
+ * @package con4gis\CoreBundle
  */
-class con4gisCoreBundle extends Bundle
+class con4GisCoreBundle extends Bundle
 {
 
 }

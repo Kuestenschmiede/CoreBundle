@@ -1,14 +1,16 @@
 <?php
 /**
- * Eden
+ * con4gis
  * @version   2.0.0
  * @package   con4gis
  * @author    con4gis authors (see "authors.txt")
  * @copyright Küstenschmiede GmbH Software & Design 2016 - 2017.
  * @link      https://www.kuestenschmiede.de
  */
-namespace con4gis\coreBundle\classes\helper;
+namespace con4gis\CoreBundle\Classes\Helper;
+
 use c4g\Maps\Utils;
+use c4g\projects\C4GBrickCommon;
 use Contao\Database;
 use Contao\Image;
 use Contao\Input;
@@ -16,7 +18,7 @@ use Contao\System;
 
 /**
  * Class DcaHelper
- * @package con4gis\coreBundle\classes\contao\dca
+ * @package con4gis\CoreBundle\Classes\Helper
  */
 class DcaHelper
 {
@@ -24,14 +26,14 @@ class DcaHelper
 
     /**
      * save_callback: Erstelle eine Uuid.
-     * @param      $prefix
-     * @param bool $entropy
+     * @param $varValue
+     * @param $dc
      * @return string
      */
     public static function generateUuid($varValue, $dc)
     {
         if (!$varValue) {
-            return \c4g\projects\C4GBrickCommon::getGUID();
+            return C4GBrickCommon::getGUID();
         }
 
         return $varValue;
@@ -61,6 +63,7 @@ class DcaHelper
     /**
      * Lädt die Optionen für die Orts- und Straßenfelder.
      * @param $dc
+     * @return array
      */
     public function loadOptions($dc)
     {
@@ -112,6 +115,7 @@ class DcaHelper
 
     /**
      * options_callback: Gibt eine Liste der Felder einer Tabelle zurück.
+     * @param $dc
      * @return array
      */
     public function cbGetFields($dc)

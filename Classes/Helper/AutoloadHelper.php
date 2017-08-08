@@ -3,11 +3,11 @@
  * @package     esitlib
  * @version     1.0.0
  */
-namespace con4gis\coreBundle\classes\helper;
+namespace con4gis\CoreBundle\Classes\Helper;
 
 /**
  * Class AutoloadHelper
- * @package con4gis\coreBundle\classes\helper
+ * @package con4gis\CoreBundle\Classes\Helper
  */
 class AutoloadHelper
 {
@@ -102,12 +102,10 @@ class AutoloadHelper
      */
     protected static function registerNamespace($strPath, $f = TL_ROOT.'/system/modules/edenCommon/config/config.php')
     {
-
-
         $strNamespace = str_replace(TL_ROOT . '/system/modules/', '', $strPath);
         $strNamespace = str_replace('/', '\\', $strNamespace);
 
-        if (is_file($f)) {
+        if (is_file($f)) {  #@todo raus und durch direkte Übergeben des Prefixes ersetzen!
             include_once($f); // FIX: namespace_prefix not found!
 
             if (isset($GLOBALS['ecn']['eden']['auoload']['namspaceprefix'])) {

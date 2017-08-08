@@ -1,19 +1,19 @@
 <?php
 /**
- * Eden
+ * con4gis
  * @version   2.0.0
  * @package   con4gis
  * @author    con4gis authors (see "authors.txt")
  * @copyright Küstenschmiede GmbH Software & Design 2016 - 2017.
  * @link      https://www.kuestenschmiede.de
  */
-namespace con4gis\coreBundle\classes\helper;
+namespace con4gis\CoreBundle\Classes\Helper;
 
 use Contao\Input;
 
 /**
  * Class InputHelper
- * @package con4gis\coreBundle\classes\helper
+ * @package con4gis\CoreBundle\Classes\Helper
  */
 class InputHelper
 {

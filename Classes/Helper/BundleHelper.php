@@ -1,19 +1,19 @@
 <?php
 /**
- * Eden
+ * con4gis
  * @version   2.0.0
  * @package   con4gis
  * @author    con4gis authors (see "authors.txt")
  * @copyright Küstenschmiede GmbH Software & Design 2016 - 2017.
  * @link      https://www.kuestenschmiede.de
  */
-namespace con4gis\coreBundle\classes\helper;
+namespace con4gis\CoreBundle\Classes\Helper;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 
 /**
  * Class BundleHelper
- * @package con4gis\coreBundle\classes\helper
+ * @package con4gis\CoreBundle\Classes\Helper
  */
 class BundleHelper
 {
@@ -67,7 +67,7 @@ class BundleHelper
         if (is_array($bundleFiles) && count($bundleFiles)) {
             foreach ($bundleFiles as $bundleFile) {
                 // coreBundle muss seperat registriert werden, damit der BundleHelper gefunden wird!
-                if (!substr_count($bundleFile, 'src/con4gis/coreBundle/con4gisCoreBundle.php')) {
+                if (!substr_count($bundleFile, 'src/con4gis/CoreBundle/con4gisCoreBundle.php')) {
                     $class     = str_replace($bundleRoot . '/', '', $bundleFile);
                     $class     = str_replace('/', '\\', $class);
                     $class     = str_replace('.php', '', $class);
