@@ -41,67 +41,6 @@ class DcaHelper
 
 
     /**
-     * options_callback: Gibt die Tarifregionen zurück.
-     * @param \DataContainer $dc
-     * @return array
-     */
-    public static function getCommissionTypes($dc)
-    {
-        $result = Database::getInstance()->execute('SELECT * FROM tl_eden_commission_type');
-        $data   = array();
-
-        if ($result->numRows) {
-            while ($result->next()) {
-                $data[$result->id] = $result->caption;
-            }
-        }
-
-        return $data;
-    }
-
-
-    /**
-     * Lädt die Optionen für die Orts- und Straßenfelder.
-     * @param $dc
-     * @return array
-     */
-    public function loadOptions($dc)
-    {
-        $db             = Database::getInstance();
-        $id             = $dc->id;
-        $table          = $dc->table;
-        $targetfield    = $dc->field;
-        $options        = array();
-
-        if ($id) {
-            $data = $db->execute("SELECT * FROM $table WHERE id = $id");
-
-            if ($data->numRows) {
-                $sourcetable = 'tl_eden_area';
-
-                if (substr_count($targetfield, 'city')) {
-                    $sourcefield = str_replace('city', 'postal', $targetfield);
-                    $dbfield     = 'postal';
-                } elseif (substr_count($targetfield, 'street')) {
-                    $sourcefield = str_replace('postal', 'street', $targetfield);
-                    $dbfield     = 'city';
-                }
-
-                if (isset($data->$sourcefield) && $data->$sourcefield) {
-                    $sourcedata = $db->execute("SELECT * FROM $sourcetable WHERE $dbfield = '{$data->$sourcefield}'");
-                    if ($sourcedata->numRows) {
-                        while ($sourcedata->next()) {
-                            $options[$sourcedata->id] = $sourcedata->postal . ' ' . $sourcedata->city;
-                        }
-                    }
-                }
-            }
-        }
-        return $options;
-    }
-
-
-    /**
      * options_callback: Gibt eine Liste der Tabellen zurück.
      * @return array
      */
