@@ -45,4 +45,20 @@ class InputHelper
 
         return $data;
     }
+
+
+    /**
+     * Gibt den RequestToken zurück.
+     * @param string $serviceName
+     * @param string $tokenName
+     * @return mixed
+     */
+    public static function getRequestToken(
+        $serviceName = 'security.csrf.token_manager',
+        $tokenName = 'contao.csrf_token_name'
+    ) {
+        $c      = \System::getContainer();
+        $param  = $c->getParameter($tokenName);
+        return $c->get($serviceName)->getToken($param)->getValue();
+    }
 }
