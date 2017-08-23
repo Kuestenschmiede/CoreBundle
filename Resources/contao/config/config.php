@@ -11,6 +11,8 @@
  * @link      https://www.kuestenschmiede.de
  */
 
+$GLOBALS['con4gis']['core']['version'] = '4.0';
+
 array_insert($GLOBALS['BE_MOD'],1, array('con4gis' => array()));
 array_insert($GLOBALS['BE_MOD'],2, array('con4gis_bricks' => array()));
 
