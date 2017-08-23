@@ -1,0 +1,244 @@
+
+iframe.bbc-frame {
+	width: 100%;
+	min-height: 400px;
+	background: #fff; 
+	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+	border: 1px solid silver;
+}
+
+div.editBar {
+	width: 100%;
+	background-image:url('../images/editbar_bg.gif');
+	border-left:1px solid silver;
+	border-right:1px solid silver;
+	border-top:1px solid silver;
+	border-bottom:none;
+}
+
+div.editBar button {
+	outline: none;
+	vertical-align:middle;
+	width:25px;
+	height:25px;
+	border:1px solid transparent;
+	background-color:transparent;
+	cursor:pointer;
+	color: black;
+	background-position:center;
+	background-repeat:no-repeat;
+	background-image:none;
+}
+
+div.editBar button:hover {
+	border:1px solid silver;
+	-webkit-box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+	box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+}
+
+input.wswgInput {
+	color: #333;
+	font-size: 90%;
+	border:1px solid silver !important;
+	-webkit-box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #fff;
+	box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #fff;
+}
+input.wswgInput:hover,
+input.wswgInput:active,
+input.wswgInput:focus {
+	-webkit-box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+	box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+}
+
+input#wswgTextsize {
+	width: 40px;
+	padding-left: 25px;
+	background: transparent url('../images/textsize.png') left no-repeat;
+}
+
+button.wswgButton {
+	outline: none;
+	color: #333;
+	height: 27px;
+	background-color: #ccc;
+	background-image:url('../images/editbar_bg.gif');
+	border:1px solid silver;
+	border-radius: 3px;
+	-webkit-box-shadow: 0 0 5px #bbb,
+				inset 0 0 10px #fff;
+	box-shadow: 0 0 5px #bbb,
+				inset 0 0 10px #fff;
+}
+
+button.ok {
+	color: #171;
+}
+button.cancel {
+	color: #711;
+}
+
+button.wswgButton:hover {
+	border:1px solid silver;
+	-webkit-box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+	box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+}
+
+div.editBar span {
+	color: #ccc;
+	text-shadow: 0 0 1px #fff;
+	margin: 0 10px; 
+}
+
+div.chooseImage{
+	width: 100%;
+	background: #eee;
+	border:1px solid silver;
+	/*box-shadow: inset 0 0 10px #bbb;*/
+}
+div.chooseImage input#uploadFile {
+	outline: none;
+	color: #333;
+	height: 27px;
+	background-color: #ccc;
+	border:1px solid silver;
+	-webkit-box-shadow: 0 0 5px #bbb,
+				inset 0 0 10px #fff;
+	box-shadow: 0 0 5px #bbb,
+				inset 0 0 10px #fff;
+}
+div.chooseImage input#uploadFile:hover {
+	border:1px solid silver;
+	-webkit-box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+	box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+}
+
+div.container {
+	border-top:none;
+	border-bottom:1px solid silver;
+	border-left:1px solid silver;
+	border-right:1px solid silver;
+}
+
+textarea#editor {
+	resize: vertical !important;
+	margin: 0;
+	outline: none;
+	border: 1px solid silver;
+	background: #fdfdff url('../images/bg_textarea.png') top right no-repeat;
+	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+div#preview {
+	background-color: rgba(0, 0, 0, 0.1);
+	width: 110px;
+	height: 110px;
+	line-height: 110px;
+	text-align: center;
+	border: 1px dashed black;
+	margin: 0 auto 5px auto;
+
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+div#progress {
+	margin-bottom: 3px; 
+	height: 10px;
+	background-color: silver;
+	-webkit-box-shadow: 0 0 2px #fff,
+				inset 0 0 10px #333;
+	box-shadow: 0 0 2px #fff,
+				inset 0 0 10px #333;
+}
+div.progress-bar {
+	/*display: none;*/
+	height: 8px;
+	/*width: 10%;*/
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ColorPicker */
+div#wswgColorPicker {
+	visibility:hidden;
+	display:none;
+	position:absolute;
+	z-index:999;
+
+	padding: 0;
+	margin-top: -1px;
+	border-top: 1px solid silver;
+
+	box-shadow: 0 0 5px black;
+	/*filter:progid:DXImageTransform.Microsoft.Shadow(color=#D0D0D0,direction=135);*/
+}
+a.wswgCpDisplay span {
+	margin: 2px;
+	padding: 0 2px;
+}
+a.wswgCpDisplay:link,
+a.wswgCpDisplay:visited {
+	color: #333;
+	height: 27px;
+	background-image: url('../images/editbar_bg.gif');
+	border:1px solid silver;
+	border-right: none;
+	border-radius: 3px 0 0 3px;
+	box-shadow: 0 0 5px #bbb,
+				inset 0 0 10px #fff;
+}
+a.wswgCpDisplay:hover,
+a.wswgCpDisplay:active,
+a.wswgCpDisplay:focus {
+	outline: none;
+	border:1px solid silver;
+	box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+	text-decoration: none !important;
+	cursor: pointer;
+}
+input.wswgCpDisplay,
+input.wswgCpDisplay2 {
+	font-size: 11px;
+	border: 1px solid silver !important;
+	box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+div#wswgColorPicker table tr:first-child {
+	background-image: url('../images/editbar_bg.gif');
+}
+div#wswgColorPicker table tr:first-child:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -25px;
+	width: 24px;
+	height: 24px;
+	border: 1px solid silver;
+	border-right: none;
+	box-shadow: 0 0 5px #fff,
+				inset 0 0 10px #bbb;
+}
+
+
+div#imgDiv,
+div#smilieDiv {
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efefef));
+	background: -moz-linear-gradient(top, #fff, #efefef);
+	background: -o-linear-gradient(top, #fff, #efefef);
+	background: linear-gradient(top, #fff, #efefef);
+}
