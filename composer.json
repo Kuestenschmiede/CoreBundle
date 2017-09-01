@@ -1,0 +1,44 @@
+{
+    "name": "con4gis/core",
+    "type": "contao-bundle",
+    "description": "Core bundle with functionality needed for every con4gis application.",
+    "keywords": ["con4gis", "core", "contao", "c4g", "con4giscore", "con4giscorebundle", "c4gcore"],
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Kuestenschmiede",
+            "homepage": "https://github.com/kuestenschmiede"
+        }
+    ],
+    "require": {
+        "php": "^5.6|^7.0",
+        "symfony/framework-bundle": "^3.3",
+        "contao/core-bundle": "^4.4.2"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "con4gis\\CoreBundle\\": ""
+        },
+        "classmap": [
+            "Resources/contao/"
+        ],
+        "exclude-from-classmap": [
+            "Resources/contao/config/",
+            "Resources/contao/dca/",
+            "Resources/contao/languages/",
+            "Resources/contao/templates/"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
