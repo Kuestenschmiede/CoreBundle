@@ -1,0 +1,164 @@
+@CHARSET "ISO-8859-1";
+
+@font-face {
+	font-family: 'FontAwesome';
+	src: url('../../assets/vendor/font-awesome/fonts/fontawesome-webfont.eot?v=4.2.0');
+	src: url('../../assets/vendor/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'),
+	url('../../assets/vendor/font-awesome/fonts/fontawesome-webfont.woff?v=4.2.0') format('woff'),
+	url('../../assets/vendor/font-awesome/fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'),
+	url('../../assets/vendor/font-awesome/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
+	font-weight: 100;
+	font-style: normal;
+}
+
+.c4gGuiNavigation {
+	width: 200px;
+	height: 100%;
+	float: left;
+}
+.c4gGuiNavigation .c4gGuiTree {
+	height: 100%;
+	width: 100%;	
+}
+.c4gGuiNavigation .dynatree-container {
+	height: 100%;	
+	width: 192px;
+	float: left;
+}
+.c4gGuiContentWrapper {
+	height: 100% !important;
+	width: 50%;
+	float: left;
+	clear: none !important;
+}
+
+.c4gGuiScrollable {
+	overflow: scroll;
+	height: 100%;
+}
+
+.c4gGuiAjaxBusy {
+	opacity: 1.0;
+	cursor: wait !important;
+}
+
+.c4gGuiDialog {
+	text-align: left;
+}
+
+.c4gGuiDialogButtonsNoJqui a {
+	margin-right: 5px;
+}
+
+.c4gGuiDialogTitle {
+	padding: 10px;
+	margin-top: 10px;
+}
+.c4gGuiBreadcrumb a,.c4gGuiButtons a, .c4gGuiBreadcrumbDelim {
+	margin-right: 5px;
+}
+
+.c4gGuiTooltipComponent {
+	position: absolute;
+	z-index: 3000;
+	border: 1px solid #111;
+	background-color: #eee;
+	padding: 5px;
+	opacity: 0.85;
+	font-size: small;
+	max-width: 350px;
+
+	/* CSS3 */
+    -moz-box-shadow: #111 2px 2px 7px;
+    -webkit-box-shadow: #111 2px 2px 7px;
+	box-shadow: #111 2px 2px 7px;
+    /* ____ */
+}
+.c4gGuiTooltipComponent h3, .c4gGuiTooltipComponent div { margin: 0; }
+.c4gGuiPostContent { margin-top:20px; }
+.c4gGuiCollapsible_trigger { cursor: pointer; }
+
+.c4gGuiDataTable {width: 100%!important;}
+
+div.dt-buttons {
+    position: relative!important;
+    float: inherit!important;
+    text-align: center!important;
+}
+
+.dt-buttons .ui-button-text{
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 1.5rem;
+    font-weight: 100;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-indent: 0;
+    padding: 0px 0px;
+    margin: 0px 0px;
+    text-indent: 0;
+    margin: 0px;
+    paddingLeft: 0px;
+    paddingRight: 0px;
+    paddingTop: 0px;
+    paddingBottom: 0px;
+    position: relative;
+    left: 0px;
+    top: 2px;
+    width: auto;
+}
+
+.dt-button {
+    background-color: transparent;
+    border: 0px;
+}
+
+a.dt-button {
+    border: 0!important;
+    background: 0!important;
+
+}
+
+.dt-buttons a:hover {
+    color: inherit;
+}
+
+.dt-buttons .dt-button:hover>span {
+    background-color: transparent;
+}
+
+
+.buttons-print .ui-button-text:before {
+	content: "\f02f";
+}
+
+.buttons-pdf .ui-button-text:before {
+    content: "\f1c1";
+}
+
+.buttons-excel .ui-button-text:before {
+    content: "\f1c3";
+}
+
+.buttons-csv .ui-button-text:before {
+    content: "\f0ce";
+}
+
+.buttons-copy .ui-button-text:before {
+    content: "\f0ea";
+}
+
+#uiMessage {
+	text-align: left;
+}
+
+/*dataTable without toggle button*/
+table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before,
+table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+  display:none!important;
+}
+table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child,
+table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child {
+  padding-left: 10px!important;
+}
