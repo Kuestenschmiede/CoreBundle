@@ -28,7 +28,6 @@ class Plugin implements BundlePluginInterface
         return [
             BundleConfig::create(con4gisCoreBundle::class)
                 ->setLoadAfter([ContaoCoreBundle::class])
-                ->setReplace(['Core']),
         ];
     }
 }
