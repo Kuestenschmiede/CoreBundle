@@ -98,7 +98,7 @@ function FileUpload( file, path )
         }
     }
 
-    xhr.open("POST", "system/modules/con4gis_core/assets/vendor/fileUpload/upload.php", true);
+    xhr.open("POST", "bundles/con4giscore/vendor/fileUpload/upload.php", true);
     xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
  
     xhr.send(fd);

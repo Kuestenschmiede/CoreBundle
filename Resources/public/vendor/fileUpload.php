@@ -10,9 +10,10 @@ class C4GFileUpload {
     public function generate() {
         try {
             define("TL_MODE", "FE");
+            define("TL_SCRIPT","SOMETHING");
 //            $sRootPath = dirname($_SERVER['SCRIPT_FILENAME']) . "/../../../../../";
 //            require_once($sRootPath . "system/initialize.php");
-            $initialize = $_SERVER["DOCUMENT_ROOT"].'/system/initialize.php';
+            $initialize = $_SERVER["DOCUMENT_ROOT"].'/../system/initialize.php';
             if (!file_exists($initialize)) {
                 $initialize = '../../../../../system/initialize.php';
             }
@@ -83,7 +84,7 @@ class C4GFileUpload {
             //config array
             $aConfig = array(
                 'maxsize' => intval($sMaxFileSize),          // maximum file size, in KiloBytes (2 MB)
-                'type'    => explode(",", $sValidFileTypes)        // allowed extensions
+                'type'    => explode(",", strtoupper($sValidFileTypes))        // allowed extensions
             );
 
             $sReturn         = '';
@@ -102,7 +103,7 @@ class C4GFileUpload {
                 if (class_exists('con4gis\ApiBundle\Controller\ApiController') &&  (version_compare( VERSION, '4', '>=' ))) {
                     $sSite     = $sProtocol . $sServerName . $path . '/con4gis/api/deliver?file=';
                 } else {
-                    $sSite     = $sProtocol . $sServerName . $path . '/system/modules/con4gis_core/assets/vendor/deliver.php?file=';
+                    $sSite     = $sProtocol . $sServerName . $path . 'bundles/con4giscore/vendor/deliver.php?file=';
                 }
 
 
@@ -112,7 +113,7 @@ class C4GFileUpload {
                 $sType       = $sExtension['extension'];       // gets extension
 
                 // Checks if the file has allowed type, size, width and height (for images)
-                if (!in_array($sType, $aConfig['type'])) {
+                if (!in_array($sType, strtoupper($aConfig['type']))) {
                     $sError = sprintf($GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_invalid_extension'], $_FILES['uploadFile']['name']);
                 }elseif ($_FILES['uploadFile']['size'] > $aConfig['maxsize']) {
                     $sError = sprintf($GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_invalid_size'], ($sMaxFileSize / 1024));

@@ -1,0 +1,33 @@
+{
+  "name": "con4gis/CoreBundle",
+  "description": "Core package for every con4gis application",
+  "keywords": ["con4gis", "core", "contao", "c4g"],
+  "type": "contao-module",
+  "homepage": "https://con4gis.org",
+  "license": "LGPL-3.0+",
+  "authors":[
+    {
+      "name":"Küstenschmiede GmbH Software & Design",
+      "homepage":"https://kuestenschmiede.de"
+    }
+  ],
+  "require": {
+    "php":">=5.5.0",
+    "contao/core-bundle": "^3.5.2 || ~4.4",
+    "con4gis/con4gis_api_bundle": "~1.1",
+    "menatwork/contao-multicolumnwizard": "^3.3.6"
+  },
+  "support": {
+    "issues": "https://github.com/Kuestenschmiede/CoreBundle/issues"
+  },
+  "autoload": {
+    "classmap": [""]
+  },
+  "extra": {
+    "contao": {
+      "sources": {
+        "": "src/con4gis/CoreBundle"
+      }
+    }
+  }
+}

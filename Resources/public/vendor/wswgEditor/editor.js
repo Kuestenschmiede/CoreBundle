@@ -54,28 +54,28 @@ var wswgEditor = new function () {
     var textRange;
     var editorVisible = false;
     var enableWysiwyg = false;
-    var editBarButtons = '&nbsp; <button title="Bold" onclick="wswgEditor.doClick(\'bold\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/bold.png\')"></button>'
-        + '<button title="Italic" onclick="wswgEditor.doClick(\'italic\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/italic.png\')"></button>'
-        + '<button title="Underline" onclick="wswgEditor.doClick(\'underline\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/underlined.png\')"></button>'
+    var editBarButtons = '&nbsp; <button title="Bold" onclick="wswgEditor.doClick(\'bold\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/bold.png\')"></button>'
+        + '<button title="Italic" onclick="wswgEditor.doClick(\'italic\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/italic.png\')"></button>'
+        + '<button title="Underline" onclick="wswgEditor.doClick(\'underline\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/underlined.png\')"></button>'
             // +' <span>|</span> '
             // +'<input type="number" title="textsize" id="wswgTextsize" class="wswgInput" min="0" max="60" value="11" onchange="wswgEditor.doClick(\'underline\');">'
         + ' <span>|</span> '
-        + '<button title="Textalign (left)" onclick="wswgEditor.doClick(\'justifyLeft\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/textalign-left.png\')"></button>'
-        + '<button title="Textalign (center)" onclick="wswgEditor.doClick(\'justifyCenter\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/textalign-center.png\')"></button>'
-        + '<button title="Textalign (right)" onclick="wswgEditor.doClick(\'justifyRight\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/textalign-right.png\')"></button>'
-        + '<button title="Textalign (justify)" onclick="wswgEditor.doClick(\'justifyFull\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/textalign-justify.png\')"></button>'
+        + '<button title="Textalign (left)" onclick="wswgEditor.doClick(\'justifyLeft\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/textalign-left.png\')"></button>'
+        + '<button title="Textalign (center)" onclick="wswgEditor.doClick(\'justifyCenter\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/textalign-center.png\')"></button>'
+        + '<button title="Textalign (right)" onclick="wswgEditor.doClick(\'justifyRight\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/textalign-right.png\')"></button>'
+        + '<button title="Textalign (justify)" onclick="wswgEditor.doClick(\'justifyFull\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/textalign-justify.png\')"></button>'
         + ' <span>|</span> '
-        + '<button title="Hyperlink" onclick="wswgEditor.doLink();" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/url.png\')"></button>'
-        + '<button title="Image" onclick="wswgEditor.doImage();" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/img.png\')"></button>'
-        + '<button title="List (unordered)" onclick="wswgEditor.doClick(\'InsertUnorderedList\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/icon_list.png\');"></button>'
-        + '<button title="List (ordered)" onclick="wswgEditor.doClick(\'InsertOrderedList\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/icon_olist.png\');"></button>'
-        + '<button title="Textcolor" onclick="wswgEditor.showColorGrid2(\'none\')" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/colors.png\');"></button><div id="wswgColorPicker" class="wswgColorPicker"></div>'
-        + '<button title="Quote" onclick="wswgEditor.insertTag(\'[quote=UNKNOWN]\', \'[/quote]\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/icon_quote.png\');"></button>'
-            //+'<button title="youtube" onclick="wswgEditor.InsertYoutube();" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/icon_youtube.png\');"></button>'
-        + '<button title="Spoiler" onclick="wswgEditor.insertTag(\'[spoiler]\', \'[/spoiler]\');" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/spoiler.png\');"></button>'
-            // +'<button title="Smilies" onclick="wswgEditor.doSmilie();" role="button" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/smilies.png\');"></button>'
+        + '<button title="Hyperlink" onclick="wswgEditor.doLink();" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/url.png\')"></button>'
+        + '<button title="Image" onclick="wswgEditor.doImage();" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/img.png\')"></button>'
+        + '<button title="List (unordered)" onclick="wswgEditor.doClick(\'InsertUnorderedList\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/icon_list.png\');"></button>'
+        + '<button title="List (ordered)" onclick="wswgEditor.doClick(\'InsertOrderedList\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/icon_olist.png\');"></button>'
+        + '<button title="Textcolor" onclick="wswgEditor.showColorGrid2(\'none\')" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/colors.png\');"></button><div id="wswgColorPicker" class="wswgColorPicker"></div>'
+        + '<button title="Quote" onclick="wswgEditor.insertTag(\'[quote=UNKNOWN]\', \'[/quote]\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/icon_quote.png\');"></button>'
+            //+'<button title="youtube" onclick="wswgEditor.InsertYoutube();" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/icon_youtube.png\');"></button>'
+        + '<button title="Spoiler" onclick="wswgEditor.insertTag(\'[spoiler]\', \'[/spoiler]\');" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/spoiler.png\');"></button>'
+            // +'<button title="Smilies" onclick="wswgEditor.doSmilie();" role="button" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/smilies.png\');"></button>'
         + ' <span>|</span> '
-        + '<button title="Switch to source-view" role="button" onclick="wswgEditor.SwitchEditor()" style="background-image:url(\'system/modules/con4gis_core/assets/vendor/wswgEditor/images/icon_source.png\');"></button>';
+        + '<button title="Switch to source-view" role="button" onclick="wswgEditor.SwitchEditor()" style="background-image:url(\'bundles/con4giscore/vendor/wswgEditor/images/icon_source.png\');"></button>';
 
     function rep(re, str) {
         content = content.replace(re, str);
@@ -135,7 +135,7 @@ var wswgEditor = new function () {
         myeditor = ifm.contentWindow.document;
         myeditor.designMode = "on";
         myeditor.open();
-        myeditor.write('<html><head><link href="system/modules/con4gis_core/assets/vendor/wswgEditor/css/editor.css" rel="Stylesheet" type="text/css" /></head>');
+        myeditor.write('<html><head><link href="bundles/con4giscore/vendor/wswgEditor/css/editor.css" rel="Stylesheet" type="text/css" /></head>');
         myeditor.write('<body style="margin:0; padding:5px;" class="editorWYSIWYG">');
         myeditor.write('</body></html>');
         myeditor.close();
@@ -515,7 +515,7 @@ var wswgEditor = new function () {
                 '</div>' +
                 '<button type="submit" name="submit" class="wswgButton" onClick="wswgEditor.insertImage( prompt(\'URL:\', \'http://\'), false );">URL</button>' +
                 '<button type="submit" name="submit" class="wswgButton" onClick="document.getElementById(\'fileElem\').click();">FILE</button><br>' +
-                '<div id="preview"><img src="system/modules/con4gis_core/assets/vendor/wswgEditor/images/imgPrev.png"></div>' +
+                '<div id="preview"><img src="bundles/con4giscore/vendor/wswgEditor/images/imgPrev.png"></div>' +
                 '<center><button id="uploadFile" class="wswgButton ok" onClick="sendFile( \'' + imgPath + '\' );"><b>✓</b> OK</button>' +
                 '<button onClick="wswgEditor.remove(\'imgDiv\');" class="wswgButton cancel"><b>X</b> Cancel</button></center>';
 
@@ -552,7 +552,7 @@ var wswgEditor = new function () {
 
     //      // var smiliePath = jQuery('input[name="smiliePath"]').val();
     //      var envPath = jQuery('input[name="uploadEnv"]').val();
-    //      var smiliePath = envPath + 'system/modules/con4gis_core/assets/vendor/wswgEditor/images/smilies/';
+    //      var smiliePath = envPath + 'bundles/con4giscore/vendor/wswgEditor/images/smilies/';
 
     //      ifm.contentWindow.focus();
 
@@ -562,7 +562,7 @@ var wswgEditor = new function () {
     //      ifm.parentNode.insertBefore(smilieDiv, ifm);
     //      smilieDiv.innerHTML = '<button type="submit" name="submit" class="wswgButton" onClick="wswgEditor.insertSmilie( \'' + smiliePath + 'c4g_smile.png\', ' + asTag + ' );"><img src="' + smiliePath + 'c4g_smile.png"></button>' +
     //                          '<button type="submit" name="submit" class="wswgButton" onClick="document.getElementById(\'fileElem\').click();">FILE</button><br>' +
-    //                          '<div id="preview"><img src="system/modules/con4gis_core/assets/vendor/wswgEditor/images/imgPrev.png"></div>'+
+    //                          '<div id="preview"><img src="bundles/con4giscore/vendor/wswgEditor/images/imgPrev.png"></div>'+
     //                          '<center><button id="uploadFile" class="wswgButton ok" onClick="sendFile( \'' + smiliePath + '\' );"><b>✓</b> OK</button>'+
     //                          '<button onClick="wswgEditor.remove(\'smilieDiv\');" class="wswgButton cancel"><b>X</b> Cancel</button></center>';
 
