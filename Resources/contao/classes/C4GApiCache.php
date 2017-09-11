@@ -11,7 +11,7 @@
  * @link      https://www.kuestenschmiede.de
  */
 
-namespace c4g\Core;
+namespace con4gis\CoreBundle\Resources\contao\classes;
 
 class C4GApiCache extends \Frontend
 {

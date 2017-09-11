@@ -13,6 +13,9 @@
 
 namespace c4g;
 
+use con4gis\GroupsBundle\Resources\models\MemberModel;
+use con4gis\GroupsBundle\Resources\models\MemberGroupModel;
+
 /**
  * Class C4GMembergroupSync
  * @package c4g
@@ -83,7 +86,7 @@ class C4GMembergroupSync extends \BackendModule
 
     protected function syncMemberGroupBindings()
     {
-        if (class_exists('c4g\MemberModel') && class_exists('c4g\MemberGroupModel')) {
+        if (class_exists('con4gis\GroupsBundle\Resources\models\MemberModel') && class_exists('con4gis\GroupsBundle\Resources\models\MemberGroupModel')) {
 
             // fetch all enabled members
             $objMembers = MemberModel::findAll(array('disable' => ''));

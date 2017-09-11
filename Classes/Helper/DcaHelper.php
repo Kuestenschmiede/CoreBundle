@@ -10,7 +10,7 @@
 namespace con4gis\CoreBundle\Classes\Helper;
 
 use c4g\Maps\Utils;
-use c4g\projects\C4GBrickCommon;
+use con4gis\ProjectsBundle\Classes\Common\C4GBrickCommon;
 use Contao\Database;
 use Contao\Image;
 use Contao\Input;

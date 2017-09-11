@@ -127,7 +127,7 @@
             if ($blnUseCache)
             {
                 // check for cached data
-                if ($strResponse = c4g\Core\C4GApiCache::getCacheData($strApiEndpoint, $arrFragments))
+                if ($strResponse = \con4gis\CoreBundle\Resources\contao\classes\C4GApiCache::getCacheData($strApiEndpoint, $arrFragments))
                 {
                     $blnOutputFromCache = true;
                 }
@@ -160,7 +160,7 @@
                 if ($blnUseCache)
                 {
                     // write data into cache
-                    c4g\Core\C4GApiCache::putCacheData($strApiEndpoint, $arrFragments, $strResponse);
+                    \con4gis\CoreBundle\Resources\contao\classes\C4GApiCache::putCacheData($strApiEndpoint, $arrFragments, $strResponse);
                 }
 
                 echo $strResponse;
