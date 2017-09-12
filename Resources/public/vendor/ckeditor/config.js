@@ -45,6 +45,6 @@ CKEDITOR.editorConfig = function( config ) {
 
     config.entermode = CKEDITOR.ENTER_BR;
     config.shiftEnterMode = CKEDITOR.ENTER_P;
-    config.autoParagraph(false);
+    config.autoParagraph = false;
 
 };
