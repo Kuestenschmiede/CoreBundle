@@ -172,8 +172,8 @@ class C4GJQueryGUI
 				// Maps 3
 				//
 				// TODO: recieve and use profileId
- 				\c4g\Maps\ResourceLoader::loadResources();
-                \c4g\Maps\ResourceLoader::loadTheme();
+                \con4gis\MapsBundle\Resources\contao\classes\ResourceLoader::loadResources();
+                \con4gis\MapsBundle\Resources\contao\classes\ResourceLoader::loadTheme();
 
 				// Core-Resources
 				//

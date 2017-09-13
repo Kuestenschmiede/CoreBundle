@@ -18,6 +18,7 @@
         "doctrine/data-fixtures": "^1.2",
         "doctrine/dbal": "~2.5",
         "menatwork/contao-multicolumnwizard": "^3.3",
+        "fortawesome/font-awesome":"^4.7",
         "terminal42/notification_center": "^1.4"
     },
     "conflict": {

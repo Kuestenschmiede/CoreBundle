@@ -101,7 +101,7 @@ class C4GMigration extends \BackendModule
 
         $this->Template->buttons = $this->buttons ?: '';
 
-        // $GLOBALS['TL_CSS'][] = 'system/modules/con4gis_core/assets/css/be_c4g_info.css';
+        // $GLOBALS['TL_CSS'][] = 'bundels/con4gisMapsBundle/css/be_c4g_info.css';
         // $this->Template->c4gModules->con4gis_maps->installed = $GLOBALS[];
     }
 
