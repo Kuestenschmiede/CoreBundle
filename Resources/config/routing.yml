@@ -1,4 +1,4 @@
-Con4gisApiBundle:
+Con4gisCoreBundle:
     path: /con4gis/api/{_url_fragment}
     defaults:
         _scope: frontend
