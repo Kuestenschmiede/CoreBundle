@@ -110,27 +110,39 @@ class ResourceLoader
                 // jQuery is already loaded by Contao 3, don't load again!
             }
             else {
-                $GLOBALS['TL_JAVASCRIPT']['c4g_jquery'] = 'assets/jquery/js/jquery.min.js|static';
+                self::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
             }
         }
         if ($resources['magnific-popup']) {
             // load magnific-popup
-
-            $GLOBALS['TL_JAVASCRIPT']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js';
-            $GLOBALS['TL_CSS']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css';
+            self::loadJavaScriptRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js', true);
+            self::loadCssRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css');
 
         }
         if ($resources['clipboard']) {
             // load clipboard
-            $GLOBALS['TL_JAVASCRIPT']['clipboard'] = 'bundles/con4giscore/vendor/clipboard.min.js';
+            self::loadJavaScriptRessource('clipboard', 'bundles/con4giscore/vendor/clipboard.min.js', true);
         }
         if ($resources['jspdf']) {
             // load clipboard
-            $GLOBALS['TL_JAVASCRIPT']['jspdf'] = 'bundles/con4giscore/vendor/jspdf/jspdf.min.js';
+            self::loadJavaScriptRessource('jspdf', 'bundles/con4giscore/vendor/jspdf/jspdf.min.js', true);
             //$GLOBALS['TL_JAVASCRIPT']['jspdf.plugin.from_html'] = 'bundles/con4giscore/vendor/jspdf/plugins/from_html.js|static';
         }
 
         return true;
+    }
+
+    public static function loadCssRessource($key, $cssFile) {
+        $GLOBALS['TL_CSS'][$key] = $cssFile;
+    }
+
+    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false) {
+        if ($inHeader) {
+            $GLOBALS['TL_JAVASCRIPT'][$key] = $jsFile;
+        } else
+        {
+            $GLOBALS['TL_BODY'][$key] = \Template::generateScriptTag($jsFile) . "\n";
+        }
     }
 
 }
