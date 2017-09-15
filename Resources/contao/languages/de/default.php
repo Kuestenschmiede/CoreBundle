@@ -18,7 +18,7 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK']   = 'Zurück';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CANCEL'] = 'Abbrechen';
 
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['TITLESUB'] = 'Contao für Geoinformationssysteme';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['TITLESUB'] = 'Content Management für Geoinformationssysteme';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INTRO'] = '<b>con4gis4</b> ist bereits im Feuer. Ende 2017 präsentieren wir Euch die neue Version. Nur für Contao 4 und mit Openlayers 4 im Bauch. Seid gespannt auf den besten GIS-Baukasten aller Zeiten!';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FOOTER'] = 'Ein Projekt der %s.';
