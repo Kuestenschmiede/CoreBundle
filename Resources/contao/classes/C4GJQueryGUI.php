@@ -1,6 +1,8 @@
 <?php
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
+use con4gis\CoreBundle\Resources\contao\classes\ResourceLoader;
+
 if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 
@@ -38,7 +40,28 @@ class C4GJQueryGUI
 											   		$useMaps=false, $useGoogleMaps=false, $useMapsEditor=false, $useWswgEditor=false, $useScrollpane=false, $usePopups=false )
 	{
 
-   		if ($addJQueryUI || $useTree || $useMaps)
+		if ($addJQuery)
+		{
+			if (version_compare( VERSION, '3', '>=' ) &&
+				is_array( $GLOBALS['TL_JAVASCRIPT'] ) &&
+				(array_search( 'assets/jquery/core/' . JQUERY . '/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
+			{
+				// jQuery is already loaded by Contao 3, don't load again!
+			}
+			else {
+				// Include JQuery JS
+				ResourceLoader::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
+				// just until the old plugins are replaced
+				// $GLOBALS['TL_JAVASCRIPT']['c4g_jquery_migrate']		= 'bundles/con4giscore/vendor/jQuery/jquery-migrate-1.2.1.min.js';
+				C4GJQueryGUI::optimizeJSForContao3('c4g_jquery');
+				// Set JQuery to noConflict mode immediately after load of jQuery
+				$GLOBALS['TL_JAVASCRIPT']['c4g_jquery_noconflict'] 	= 'bundles/con4giscore/js/c4gjQueryNoConflict.js';
+				C4GJQueryGUI::optimizeJSForContao3('c4g_jquery_noconflict');
+			}
+		}
+
+
+		if ($addJQueryUI || $useTree || $useMaps)
    		{
 			// Include JQuery UI JS - only js to append the css files to the end of $GLOBALS['TL_CSS'] array.
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jquery_ui'] 		= 'bundles/con4giscore/vendor/jQuery/jquery-ui-1.12.1.custom/jquery-ui.min.js';
