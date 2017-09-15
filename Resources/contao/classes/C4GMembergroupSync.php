@@ -11,7 +11,7 @@
  * @link      https://www.kuestenschmiede.de
  */
 
-namespace c4g;
+namespace con4gis\CoreBundle\Resources\contao\classes;
 
 use con4gis\GroupsBundle\Resources\models\MemberModel;
 use con4gis\GroupsBundle\Resources\models\MemberGroupModel;

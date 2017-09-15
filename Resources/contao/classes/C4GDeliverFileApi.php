@@ -1,6 +1,6 @@
 <?php
 
-namespace c4g;
+namespace con4gis\CoreBundle\Resources\contao\classes;
 
 class C4GDeliverFileApi {
 

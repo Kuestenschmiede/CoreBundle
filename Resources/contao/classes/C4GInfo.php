@@ -11,7 +11,7 @@
  * @link      https://www.kuestenschmiede.de
  */
 
-namespace c4g;
+namespace con4gis\CoreBundle\Resources\contao\classes;
 
 /**
  * Class C4GInfo
@@ -30,18 +30,18 @@ class C4GInfo extends \BackendModule
         $GLOBALS['TL_CSS'][] = 'bundles/con4giscore/css/be_c4g_info.css';
 
     	// check for actions (atm only "migrate")
-    	if (\Input::get('perf') != '') {
-    		if (\Input::get('perf') == 'migrate' && \Input::get('mod') != '') {
-        		$objCallback = new C4GMigration(\Input::get('mod'));
-        		return $objCallback->generate();
-    		} elseif (\Input::get('perf') == 'apicheck' && \Input::get('mod') != '') {
-                $objCallback = new C4GApiCheck(\Input::get('mod'));
-                return $objCallback->generate();
-            } elseif (\Input::get('perf') == 'membergroupsync') {
-                $objCallback = new C4GMembergroupSync();
-                return $objCallback->generate();
-            }
-    	}
+//    	if (\Input::get('perf') != '') {
+//    		if (\Input::get('perf') == 'migrate' && \Input::get('mod') != '') {
+//        		$objCallback = new C4GMigration(\Input::get('mod'));
+//        		return $objCallback->generate();
+//    		} elseif (\Input::get('perf') == 'apicheck' && \Input::get('mod') != '') {
+//                $objCallback = new C4GApiCheck(\Input::get('mod'));
+//                return $objCallback->generate();
+//            } elseif (\Input::get('perf') == 'membergroupsync') {
+//                $objCallback = new C4GMembergroupSync();
+//                return $objCallback->generate();
+//            }
+//    	}
 
     	return parent::generate();
     }

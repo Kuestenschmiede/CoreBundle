@@ -1,6 +1,6 @@
 <?php
 
-namespace c4g;
+namespace con4gis\CoreBundle;
 
 use Contao\File;
 use Contao\Frontend;
