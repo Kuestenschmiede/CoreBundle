@@ -20,8 +20,7 @@
         "menatwork/contao-multicolumnwizard": "^3.3",
         "fortawesome/font-awesome":"^4.7",
         "contao-components/jquery": "^1.11.3",
-        "terminal42/notification_center": "^1.4",
-        "datatables/datatables":"^1.10"
+        "terminal42/notification_center": "^1.4"
     },
     "conflict": {
         "contao/core": "*",
