@@ -11,10 +11,8 @@
  * @link      https://www.kuestenschmiede.de
  */
 
-$GLOBALS['con4gis']['core']['version'] = '4.0';
-//$GLOBALS['con4gis_core_extension']['installed'] = true;
-//$GLOBALS['con4gis_core_extension']['version']   = '1.9.1-snapshot';
-//$GLOBALS['con4gis_core_extension']['con4gis_version'] = 'v4.0';
+$GLOBALS['con4gis']['version'] = 'v4.0';
+$GLOBALS['con4gis']['core']['installed'] = true;
 
 // API-Registration
 
