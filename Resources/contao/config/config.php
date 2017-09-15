@@ -17,7 +17,7 @@ array_insert($GLOBALS['BE_MOD'],1, array('con4gis' => array()));
 array_insert($GLOBALS['BE_MOD'],2, array('con4gis_bricks' => array()));
 
 /** Damit die CSS nicht nur im Modul selbst geladen wird */
-$GLOBALS['TL_CSS'][] = '/bundles/con4giscore/con4gis.css|static';
+$GLOBALS['TL_CSS'][] = '/bundles/con4giscore/con4gis.css';
 
 if (class_exists('\Contao\StringUtil')) {
     $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';

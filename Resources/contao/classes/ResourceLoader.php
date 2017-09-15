@@ -105,28 +105,28 @@ class ResourceLoader
             // load jQuery
             if (version_compare( VERSION, '3', '>=' ) &&
                 is_array( $GLOBALS['TL_JAVASCRIPT'] ) &&
-                (array_search( 'assets/jquery/core/' . JQUERY . '/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
+                (array_search( 'assets/jquery/core/' . JQUERY . '/jquery.min.js', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
             {
                 // jQuery is already loaded by Contao 3, don't load again!
             }
             else {
-                $GLOBALS['TL_JAVASCRIPT']['c4g_jquery'] = 'bundles/con4giscore/vendor/jQuery/jquery-1.11.3.min.js|static';
+                $GLOBALS['TL_JAVASCRIPT']['c4g_jquery'] = 'assets/jquery/js/jquery.min.js|static';
             }
         }
         if ($resources['magnific-popup']) {
             // load magnific-popup
 
-            $GLOBALS['TL_JAVASCRIPT']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js';
             $GLOBALS['TL_CSS']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css';
 
         }
         if ($resources['clipboard']) {
             // load clipboard
-            $GLOBALS['TL_JAVASCRIPT']['clipboard'] = 'bundles/con4giscore/vendor/clipboard.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['clipboard'] = 'bundles/con4giscore/vendor/clipboard.min.js';
         }
         if ($resources['jspdf']) {
             // load clipboard
-            $GLOBALS['TL_JAVASCRIPT']['jspdf'] = 'bundles/con4giscore/vendor/jspdf/jspdf.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['jspdf'] = 'bundles/con4giscore/vendor/jspdf/jspdf.min.js';
             //$GLOBALS['TL_JAVASCRIPT']['jspdf.plugin.from_html'] = 'bundles/con4giscore/vendor/jspdf/plugins/from_html.js|static';
         }
 
