@@ -20,6 +20,7 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['TITLESUB'] = 'Sisältö-Manageri Geo-Informaatio-Systeemiä varten';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INTRO'] = 'con4gis4';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FOOTER'] = '%s Projekti.';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] = 'Developer version';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['HEADLINE']      = 'Migration (cfs_%1$s -> con4gis_%1$s)';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['INTRO']         = 'Suorittamalla tämän migraation se kopio olemassaolevan datan "cfs_%1$s" paikkaan "con4gis_%1$s" ja jälkeenpäin konfiguroi Contaon käynnistymään ohjelmalla "con4gis_%1$s".';

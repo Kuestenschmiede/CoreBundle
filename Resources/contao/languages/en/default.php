@@ -20,6 +20,7 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['TITLESUB'] = 'Contao for geographical information systems';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INTRO'] = 'con4gis4';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FOOTER'] = 'A %s Project.';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] = 'Developer version';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['HEADLINE']      = 'Migration (cfs_%1$s -> con4gis_%1$s)';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['INTRO']         = 'Running this migration will copy the existing data from "cfs_%1$s" to "con4gis_%1$s" and afterwards configurates Contao to run with "con4gis_%1$s".';
