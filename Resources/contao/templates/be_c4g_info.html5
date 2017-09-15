@@ -20,7 +20,7 @@
         </legend>
         <div>
             <?php if ($GLOBALS['CoreBundle']['installed']): ?>
-            <?php echo C4GHTMLFactory::imgLink( array(
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
             href        => 'https://www.github.com/kuestenschmiede/con4gis_core',
             c4gImg      => 'github',
@@ -34,10 +34,10 @@
     <fieldset id="pal_c4g_api_bundle" class="tl_box">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_api_bundle')">
             con4gis-ApiBundle
-            <?php echo ' [' . \con4gis\ApiBundle\Controller\ApiController::getSApiBundleVersion() . ']'; ?>
+            <?php echo ' [' . \con4gis\CoreBundle\Controller\ApiController::getSApiBundleVersion() . ']'; ?>
         </legend>
         <div>
-            <?php echo C4GHTMLFactory::imgLink( array(
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
             href        => 'https://www.github.com/kuestenschmiede/con4gis_api_bundle',
             c4gImg      => 'github',
@@ -58,20 +58,20 @@
         <div>
 
             <?php if ($GLOBALS['con4gis_forum_extension']['installed']): ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     c4gImg      => 'contao-board',
                     href        => 'https://community.contao.org/de/showthread.php?55910-con4gis_forum-Offizieller-Support-Thread',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://www.github.com/kuestenschmiede/con4gis_forum',
                     c4gImg      => 'github',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
                 )); ?>
                 <?php if ($GLOBALS['cfs_forum_extension']['installed'] && version_compare($GLOBALS['con4gis_forum_extension']['version'], '2.0.0', '<')): ?>
-                    <?php echo C4GHTMLFactory::imgLink( array(
+                    <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                         addClass    => 'floatR',
                         href        => \Environment::get('script') . '?do=c4g_core&perf=migrate&mod=forum',
                         c4gImg      => 'migrate',
@@ -80,7 +80,7 @@
                 <?php endif; ?>
             <?php else: ?>
                 <?php if (version_compare( VERSION, '4', '<' )):?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
                     href        => \Environment::get('script') . '?do=repository_catalog&view=con4gis_forum',
                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'con4gis_forum')
@@ -99,19 +99,19 @@
         </legend>
         <div>
             <?php if ($GLOBALS['con4gis_groups_extension']['installed']): ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://community.contao.org/de/showthread.php?55912-con4gis_groups-Offizieller-Support-Thread',
                     c4gImg      => 'contao-board',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://www.github.com/kuestenschmiede/GroupsBundle',
                     c4gImg      => 'github',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
                 )); ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     addClass    => 'floatR',
                     href        => \Environment::get('script') . '?do=c4g_core&perf=membergroupsync',
                     c4gImg      => 'membergroupsync',
@@ -119,7 +119,7 @@
                 )); ?>
             <?php else: ?>
                 <?php if (version_compare( VERSION, '4', '<' )):?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
                     href        => \Environment::get('script') . '?do=repository_catalog&view=con4gis_groups',
                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'GroupsBundle')
@@ -146,20 +146,20 @@
         </legend>
         <div>
             <?php if ($GLOBALS['con4gis_maps_extension']['installed']): ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://community.contao.org/de/showthread.php?55909-con4gis_maps-Offizieller-Support-Thread',
                     c4gImg      => 'contao-board',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://www.github.com/kuestenschmiede/con4gis_maps3',
                     c4gImg      => 'github',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
                 )); ?>
                 <?php if ($GLOBALS['cfs_maps_extension']['installed'] && version_compare($GLOBALS['con4gis_maps_extension']['version'], '3.0', '<')): ?>
-                    <?php echo C4GHTMLFactory::imgLink( array(
+                    <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                         addClass    => 'floatR',
                         href        => \Environment::get('script') . '?do=c4g_core&perf=migrate&mod=maps',
                         c4gImg      => 'migrate',
@@ -168,7 +168,7 @@
                 <?php endif; ?>
             <?php else: ?>
                <?php if (version_compare( VERSION, '4', '<' )):?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
                     href        => \Environment::get('script') . '?do=repository_catalog&view=con4gis_maps',
                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'con4gis_maps')
@@ -187,7 +187,7 @@
         </legend>
         <div>
             <?php if ($GLOBALS['con4gis_projects_extension']['installed']): ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://www.github.com/kuestenschmiede/con4gis_projects',
                     c4gImg      => 'github',
@@ -195,7 +195,7 @@
                 )); ?>
             <?php else: ?>
                 <?php if (version_compare( VERSION, '4', '<' )):?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
                     href        => \Environment::get('script') . '?do=repository_catalog&view=con4gis_projects',
                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'con4gis_projects')
@@ -217,13 +217,13 @@
         </legend>
         <div>
             <?php if ($GLOBALS['con4gis_tracking_extension']['installed']): ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://community.contao.org/de/showthread.php?55911-con4gis_tracking-Offizieller-Support-Thread',
                     c4gImg      => 'contao-board',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://www.github.com/kuestenschmiede/con4gis_tracking',
                     c4gImg      => 'github',
@@ -231,7 +231,7 @@
                 )); ?>
             <?php else: ?>
                 <?php if (version_compare( VERSION, '4', '<' )):?>
-                <?php echo C4GHTMLFactory::imgLink( array(
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
                     href        => \Environment::get('script') . '?do=repository_catalog&view=con4gis_tracking',
                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'con4gis_tracking')
@@ -251,19 +251,19 @@
         </legend>
         <div>
             <?php if ($GLOBALS['con4gis_tracking_android_extension']['installed']): ?>
-            <?php echo C4GHTMLFactory::imgLink( array(
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
             href        => 'https://community.contao.org/de/showthread.php?55911-con4gis_tracking-Offizieller-Support-Thread',
             c4gImg      => 'contao-board',
             label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
             )); ?>
-            <?php echo C4GHTMLFactory::imgLink( array(
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
             href        => 'https://www.github.com/kuestenschmiede/con4gis_tracking_android',
             c4gImg      => 'github',
             label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
             )); ?>
-            <?php echo C4GHTMLFactory::imgLink( array(
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
             addClass    => 'floatR',
             href        => 'https://play.google.com/store/apps/details?id=org.con4gis.app4gis_tracking',
@@ -272,7 +272,7 @@
             )); ?>
             <?php else: ?>
             <?php if (version_compare( VERSION, '4', '<' )):?>
-            <?php echo C4GHTMLFactory::imgLink( array(
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
             href        => \Environment::get('script') . '?do=repository_catalog&view=con4gis_tracking_android',
             label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'con4gis_tracking_android')
