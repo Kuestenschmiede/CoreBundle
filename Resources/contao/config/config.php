@@ -65,7 +65,7 @@ array_insert($GLOBALS['TL_CTE']['con4gis'], 2, array
 $GLOBALS['TL_PURGE']['folders']['con4gis'] = array
 (
     'callback' => array('con4gis\CoreBundle\Resources\contao\classes\C4GAutomator', 'purgeApiCache'),
-    'affected' => array('system/cache/con4gis')
+    'affected' => array('var/cache/prod/con4gis')
 );
 
 /**
