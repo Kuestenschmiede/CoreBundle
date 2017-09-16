@@ -78,6 +78,9 @@ $GLOBALS['TL_PURGE']['folders']['con4gis'] = array
  * eg: $GLOBALS['CON4GIS']['USE_CACHE']['PARAMS']['method'] = array('getLive'); => request with method=getLive will be cached
  *
  */
-$GLOBALS['CON4GIS']['USE_CACHE'] = array();
-$GLOBALS['CON4GIS']['USE_CACHE']['SERVICES'] = array();
-$GLOBALS['CON4GIS']['USE_CACHE']['PARAMS'] = array();
+if (!$GLOBALS['CON4GIS']['USE_CACHE'])
+{
+    $GLOBALS['CON4GIS']['USE_CACHE'] = array();
+    $GLOBALS['CON4GIS']['USE_CACHE']['SERVICES'] = array();
+    $GLOBALS['CON4GIS']['USE_CACHE']['PARAMS'] = array();
+}

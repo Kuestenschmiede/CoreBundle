@@ -13,6 +13,7 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
+use con4gis\CoreBundle\Resources\contao\classes\C4GApiCache;
 
 /**
  * Provide methods to run automated jobs.
@@ -39,6 +40,8 @@ class C4GAutomator extends \System
         $objFolder = new \Folder('system/cache/con4gis');
         $objFolder->purge();
 
+
+        C4GApiCache::clearCache();
         // Add a log entry
 
     }
