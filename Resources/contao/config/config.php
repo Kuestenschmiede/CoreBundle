@@ -18,7 +18,7 @@ $GLOBALS['con4gis']['core']['installed'] = true;
 
 //ToDO so werden die Klassen nicht gefunden
 $GLOBALS['TL_API'] = array();
-$GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Resources\contao\classes\C4GFileUpload';
+$GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Classes\C4GFileUpload';
 $GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Resources\contao\classes\C4GImageUpload';
 $GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Resources\contao\classes\C4GDeliverFileApi';
 
