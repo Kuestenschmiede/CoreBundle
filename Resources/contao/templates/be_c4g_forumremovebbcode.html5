@@ -2,7 +2,7 @@
 	<a href="<?php echo 'contao/main.php?do=c4g_core'" class="header_back"><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK']; ?></a>
 </div>
 <h1 id="tl_welcome">
-	<?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNC']['HEADLINE']; ?>
+	<?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']['HEADLINE']; ?>
 </h1>
 
 <div class="tl_tbox" align="center">
@@ -19,7 +19,7 @@
 <div class="tl_formbody_submit">
 	<div class="tl_submit_container">
 		<?php foreach ($this->buttons as $button): ?>
-			<a href="<?php echo 'contao/main.php?do=c4g_core&perf=membergroupsync&act=' . $button['action']; ?>" class="tl_submit">
+			<a href="<?php echo 'contao/main.php?do=c4g_core&perf=forumremovebbcode&act=' . $button['action']; ?>" class="tl_submit">
 				<?php echo $button['label']; ?>
 			</a>
 		<?php endforeach; ?>
