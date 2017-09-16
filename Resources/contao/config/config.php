@@ -48,17 +48,7 @@ if(TL_MODE == "FE") {
     $GLOBALS['TL_HEAD'][] = "<script>var c4g_rq = '" . $_SESSION['REQUEST_TOKEN'] . "';</script>";
 }
 $apiBaseUrl = 'con4gis/api';
-/*
-if (version_compare( VERSION, '4', '>=' ))
-{
 
-    $GLOBALS['TL_CSS']['c4g_backend'] = 'system/modules/con4gis_core/assets/css/c4gBackend.css';
-}
-else
-{
-    $apiBaseUrl = 'system/modules/con4gis_core/api/index.php';
-}
-*/
 $GLOBALS['TL_HEAD'][] = "<script>var apiBaseUrl = '" . $apiBaseUrl . "';</script>";
 
 /**

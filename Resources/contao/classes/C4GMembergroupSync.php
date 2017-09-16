@@ -53,7 +53,7 @@ class C4GMembergroupSync extends \BackendModule
                 $this->syncMemberGroupBindings();
                 break;
             case 'back':
-                \Controller::redirect( \Environment::get('script') . '?do=c4g_core' );
+                \Controller::redirect( 'contao/main.php?do=c4g_core' );
             case 'init':
             default:
                 $this->output[] = $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNC']['INTRO'];
