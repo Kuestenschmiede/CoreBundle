@@ -124,7 +124,7 @@
                                     addClass    => 'floatR',
                                     href        => 'contao/main.php?do=c4g_core&perf=forumremovebbcode',
                                     c4gImg      => 'forumremovebbcode',
-                                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']
+                                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODETOOL']
                 )); ?>
             <?php else: ?>
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(

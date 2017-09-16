@@ -83,7 +83,7 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATIONTOOL']          = 'Migrationstool';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECKTOOL']           = 'API-Check';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNCTOOL']    = 'Gruppen-Zuordnungen<br>synchronisieren';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']      = 'con4gis 3 bbCode<br>entfernen';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODETOOL']  = 'con4gis 3 bbCode<br>entfernen';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL']                = '%s installieren';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']  = 'con4gis Compendium (Handbuch)';
