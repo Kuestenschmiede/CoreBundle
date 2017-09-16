@@ -36,10 +36,6 @@ class C4GAutomator extends \System
      */
     public static function purgeApiCache()
     {
-        // Purge the folder
-        $objFolder = new \Folder('system/cache/con4gis');
-        $objFolder->purge();
-
 
         C4GApiCache::clearCache();
         // Add a log entry
