@@ -39,7 +39,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 
-	config.extraPlugins = 'justify,fileUpload,,panelbutton,floatpanel,colorbutton,blockquote,youtube,smiley,sourcedialog,image2,codesnippet';
+	config.extraPlugins = 'justify,fileUpload,panelbutton,floatpanel,colorbutton,blockquote,youtube,smiley,sourcedialog,image2,codesnippet';
 	config.removePlugins = 'bbcode';
 	config.image_previewText = ' ';
 
