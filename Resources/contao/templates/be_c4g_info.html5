@@ -407,11 +407,13 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_support')">support</legend>
         <div>
             <ul>
+            <!--
                 <li>
                     <a href="https://con4gis.org/downloads.html#handbuch" target="_blank"><span>
                             <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']?>
                         </span></a>
                 </li>
+                -->
                 <li>
                     <a href="https://con4gis.org/support-kontakt.html" target="_blank"><span>
                             <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_support']?>
