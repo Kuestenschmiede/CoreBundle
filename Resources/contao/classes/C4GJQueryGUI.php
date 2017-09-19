@@ -29,38 +29,30 @@ class C4GJQueryGUI
 		C4GJQueryGUI::initializeLibraries( $addCore, $addJQuery, $addJQueryUI, true, false, false, false, false, false, false, false, true, false);
 	}
 
-	private static function optimizeJSForContao3 ( $libKey )
-	{
-		if (version_compare( VERSION, '3', '>=' ) && version_compare( VERSION, '3.2', '<' )) {
-			$GLOBALS['TL_JAVASCRIPT'][$libKey] .= '|static';
-		}
-	}
-
 	public static function initializeLibraries ( $addCore=true, $addJQuery=true, $addJQueryUI=true, $useTree=true, $useTable=true, $useHistory=true, $useTooltip=true,
 											   		$useMaps=false, $useGoogleMaps=false, $useMapsEditor=false, $useWswgEditor=false, $useScrollpane=false, $usePopups=false )
 	{
 
 
-		if ($addJQuery)
-		{
-			if (version_compare( VERSION, '3', '>=' ) &&
-				is_array( $GLOBALS['TL_JAVASCRIPT'] ) &&
-				(array_search( 'assets/jquery/core/' . JQUERY . '/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
-			{
-				// jQuery is already loaded by Contao 3, don't load again!
-			}
-			else {
-				// Include JQuery JS
-				ResourceLoader::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
-				// just until the old plugins are replaced
-				// $GLOBALS['TL_JAVASCRIPT']['c4g_jquery_migrate']		= 'bundles/con4giscore/vendor/jQuery/jquery-migrate-1.2.1.min.js';
-				//C4GJQueryGUI::optimizeJSForContao3('c4g_jquery');
-				// Set JQuery to noConflict mode immediately after load of jQuery
-				$GLOBALS['TL_JAVASCRIPT']['c4g_jquery_noconflict'] 	= 'bundles/con4giscore/js/c4gjQueryNoConflict.js';
-				C4GJQueryGUI::optimizeJSForContao3('c4g_jquery_noconflict');
-
-			}
-		}
+//		if ($addJQuery)
+//		{
+//			if (is_array( $GLOBALS['TL_JAVASCRIPT'] ) &&
+//				(array_search( 'assets/jquery/core/' . JQUERY . '/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
+//			{
+//				// jQuery is already loaded by Contao 3, don't load again!
+//			}
+//			else {
+//				// Include JQuery JS
+//				ResourceLoader::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
+//				// just until the old plugins are replaced
+//				// $GLOBALS['TL_JAVASCRIPT']['c4g_jquery_migrate']		= 'bundles/con4giscore/vendor/jQuery/jquery-migrate-1.2.1.min.js';
+//				//C4GJQueryGUI::optimizeJSForContao3('c4g_jquery');
+//				// Set JQuery to noConflict mode immediately after load of jQuery
+//				$GLOBALS['TL_JAVASCRIPT']['c4g_jquery_noconflict'] 	= 'bundles/con4giscore/js/c4gjQueryNoConflict.js';
+//				C4GJQueryGUI::optimizeJSForContao3('c4g_jquery_noconflict');
+//
+//			}
+//		}
 
 
 		if ($addJQueryUI || $useTree || $useMaps)
@@ -68,8 +60,7 @@ class C4GJQueryGUI
 			// Include JQuery UI JS - only js to append the css files to the end of $GLOBALS['TL_CSS'] array.
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jquery_ui'] 		= 'bundles/con4giscore/vendor/jQuery/jquery-ui-1.12.1.custom/jquery-ui.min.js';
             $GLOBALS['TL_JAVASCRIPT']['c4g_jquery_ui_i18n'] = 'bundles/con4giscore/vendor/jQuery/jquery-ui-i18n.min.js';
-			C4GJQueryGUI::optimizeJSForContao3('c4g_jquery_ui');
-            $GLOBALS ['TL_JAVASCRIPT']['c4g_a'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/jquery.legacy.min.js';
+            $GLOBALS ['TL_JAVASCRIPT']['c4g_a'] 	        = 'bundles/con4giscore/vendor/jQuery/plugins/jquery.legacy.min.js';
 
             $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/con4giscore/js/DialogHanlder.js';
    		}
@@ -78,8 +69,6 @@ class C4GJQueryGUI
 		{
 			// Include DataTables JS
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/datatables/media/js/jquery.dataTables.min.js';
-            C4GJQueryGUI::optimizeJSForContao3('c4g_jq_datatables');
-
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_buttons'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/dataTables.buttons.min.js';
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_buttons_print'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/buttons.print.min.js';
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_buttons_jquery'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/buttons.jqueryui.min.js';
@@ -107,7 +96,6 @@ class C4GJQueryGUI
 		{
 			// Include dynatree JS
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_dynatree'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/dynatree/jquery.dynatree.min.js';
-			C4GJQueryGUI::optimizeJSForContao3('c4g_jq_dynatree');
 			// Include dynatree CSS
 			$GLOBALS['TL_CSS']['c4g_jq_dynatree'] 			= 'bundles/con4giscore/vendor/jQuery/plugins/dynatree/skin/ui.dynatree.css';
 		}
@@ -115,13 +103,11 @@ class C4GJQueryGUI
 		if ($useHistory)
 		{
    			$GLOBALS ['TL_JAVASCRIPT'] ['c4g_jq_history'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/jquery.history.js';
-			C4GJQueryGUI::optimizeJSForContao3('c4g_jq_history');
 		}
 
 		if ($useTooltip)
 		{
    			$GLOBALS ['TL_JAVASCRIPT'] ['c4g_jq_tooltip_b'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/jquery.tooltip.pack.js';
-			C4GJQueryGUI::optimizeJSForContao3('c4g_jq_tooltip');
 		}
 
 		if ($useWswgEditor)
@@ -136,11 +122,8 @@ class C4GJQueryGUI
 		if ($useScrollpane)
 		{
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_scrollpane'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/jScrollPane/js/jquery.jscrollpane.min.js';
-			C4GJQueryGUI::optimizeJSForContao3('c4g_jq_scrollpane');
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_mousewheel'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/jScrollPane/js/jquery.mousewheel.js';
-			C4GJQueryGUI::optimizeJSForContao3('c4g_jq_mousewheel');
 			$GLOBALS['TL_JAVASCRIPT']['c4g_mwheelintent'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/jScrollPane/js/mwheelIntent.js';
-			C4GJQueryGUI::optimizeJSForContao3('c4g_mwheelintent');
 			$GLOBALS['TL_CSS']['c4g_jq_scrollpane'] 		= 'bundles/con4giscore/vendor/jQuery/plugins/jScrollPane/css/jquery.jscrollpane.css';
 		}
 
@@ -150,67 +133,39 @@ class C4GJQueryGUI
 			$GLOBALS['TL_JAVASCRIPT']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js';
 		}
 
-		if ($useMaps && $GLOBALS['con4gis_maps_extension']['installed'])
+		if ($useMaps && $GLOBALS['con4gis']['maps']['installed'])
 		{
-			if (version_compare($GLOBALS['con4gis_maps_extension']['version'], '3.0', '<'))
-			{
-				// Maps 2
-				//
-				$GLOBALS['TL_JAVASCRIPT']['c4g_openlayers'] = $GLOBALS['con4gis_maps_extension']['js_openlayers_libs']['DEFAULT'];
-		    	$GLOBALS['TL_JAVASCRIPT']['c4g_maps'] 		= 'system/modules/con4gis_maps/html/js/C4GMaps.js';
+            // TODO: recieve and use profileId
+            \con4gis\MapsBundle\Resources\contao\classes\ResourceLoader::loadResources();
+            \con4gis\MapsBundle\Resources\contao\classes\ResourceLoader::loadTheme();
 
-		    	if ($useGoogleMaps) {
-		    		$GLOBALS['TL_JAVASCRIPT']['c4g_google'] = $GLOBALS['con4gis_maps_extension']['js_google'];
-		    	}
-			   	if ($useMapsEditor) {
-			   		if ($GLOBALS['con4gis_maps_extension']['js_editor']) {
-			    		$GLOBALS['TL_JAVASCRIPT']['c4g_maps_edit'] 	= $GLOBALS['con4gis_maps_extension']['js_editor'];
-			    		$GLOBALS['TL_CSS']['c4g_maps_edit'] 		= $GLOBALS['con4gis_maps_extension']['css_editor'];
-			   		}
-			   	}
-			   	// Include Extended LayerSwitcher JS
-			   	$GLOBALS['TL_JAVASCRIPT']['c4g_layerswitcher'] 		= 'system/modules/con4gis_maps/html/js/C4GLayerSwitcher.js';
-			   	// Include LayerSwitcher CSS (Dynatree styling)
-			   	$GLOBALS['TL_CSS']['c4g_layerswitcher'] 			= 'system/modules/con4gis_maps/html/css/C4GLayerSwitcher.css';
+//            // Core-Resources
+//            //
+//            if (is_array( $GLOBALS['TL_JAVASCRIPT'] ) &&
+//                (array_search( 'assets/jquery/core/' . JQUERY . '/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
+//            {
+//                // jQuery is already loaded by Contao 3, don't load again!
+//            }
+//            else {
+//                ResourceLoader::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
+//            }
+            // Load magnific-popup.js for projects
+            if ($GLOBALS['con4gis']['projects']['installed']) {
 
-			} else
-			{
-				// Maps 3
-				//
-				// TODO: recieve and use profileId
-                \con4gis\MapsBundle\Resources\contao\classes\ResourceLoader::loadResources();
-                \con4gis\MapsBundle\Resources\contao\classes\ResourceLoader::loadTheme();
+                $GLOBALS['TL_JAVASCRIPT']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|static';
+                $GLOBALS['TL_CSS']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css';
+            }
 
-				// Core-Resources
-				//
-				if (version_compare( VERSION, '3', '>=' ) &&
-					is_array( $GLOBALS['TL_JAVASCRIPT'] ) &&
-					(array_search( 'assets/jquery/core/' . JQUERY . '/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
-				{
-					// jQuery is already loaded by Contao 3, don't load again!
-				}
-				else {
-					ResourceLoader::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
-				}
-				// Load magnific-popup.js for projects
-		        if ($GLOBALS['con4gis_projects_extension']['installed']) {
+            $GLOBALS['TL_JAVASCRIPT']['clipboard'] = 'bundles/con4giscore/vendor/clipboard.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['datetimepicker'] = 'bundles/con4giscore/vendor/jQuery/plugins/jquery-simple-datetimepicker/1.13.0/jquery.simple-dtpicker.js|static';
 
-		            $GLOBALS['TL_JAVASCRIPT']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|static';
-		            $GLOBALS['TL_CSS']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css';
-		        }
-
-		        $GLOBALS['TL_JAVASCRIPT']['clipboard'] = 'bundles/con4giscore/vendor/clipboard.min.js|static';
-				$GLOBALS['TL_JAVASCRIPT']['datetimepicker'] = 'bundles/con4giscore/vendor/jQuery/plugins/jquery-simple-datetimepicker/1.13.0/jquery.simple-dtpicker.js|static';
-
-				//ToDo uncomment for PDF Export
-				//$GLOBALS['TL_JAVASCRIPT']['jspdf'] = 'bundles/con4giscore/vendor/jspdf/jspdf.min.js|static';
-			}
+            //ToDo uncomment for PDF Export
+            //$GLOBALS['TL_JAVASCRIPT']['jspdf'] = 'bundles/con4giscore/vendor/jspdf/jspdf.min.js|static';
 		}
 
 		if ($addCore)
 		{
 	        $GLOBALS ['TL_JAVASCRIPT']['c4g_jquery_gui'] = 'bundles/con4giscore/vendor/jQuery/plugins/jquery.c4gGui.js';
-	        C4GJQueryGUI::optimizeJSForContao3('c4g_jquery_gui');
 	        $GLOBALS ['TL_CSS']['c4g_jquery_gui'] = 'bundles/con4giscore/css/c4gGui.css';
 			$GLOBALS ['TL_CSS']['c4g_loader'] = 'bundles/con4giscore/css/c4gLoader.css';
 		}

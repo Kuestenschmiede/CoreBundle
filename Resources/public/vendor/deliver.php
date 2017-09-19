@@ -3,9 +3,9 @@ define("TL_MODE", "FE");
 define("TL_SCRIPT", "SOMETHING");
 //    $sRootPath = dirname($_SERVER['SCRIPT_FILENAME']) . "/../../../../../";
 //    require_once($sRootPath . "system/initialize.php");
-$initialize = $_SERVER["DOCUMENT_ROOT"].'/system/initialize.php';
+$initialize = $_SERVER["DOCUMENT_ROOT"] . '/../system/initialize.php';
 if (!file_exists($initialize)) {
-    $initialize = '../../../../../system/initialize.php';
+    $initialize = '../../../system/initialize.php';
 }
 // Initialize the system
 require_once($initialize);
@@ -44,7 +44,7 @@ $protocol = !empty($sHttps) ? 'https://' : 'http://';
 $sUrl     = $protocol . $sServerName . $sRequestUri;
 // extract uri vars
 parse_str($sRequestUri, $aUriVars);
-$sFileHashGenerated = md5($aUriVars['u'] . $GLOBALS['TL_CONFIG']['encryptionKey'] . basename($aUriVars[$path.'/system/modules/con4gis_core/assets/vendor/deliver_php?file']));
+$sFileHashGenerated = md5($aUriVars['u'] . $GLOBALS['TL_CONFIG']['encryptionKey'] . basename($aUriVars[$path.'bundles/con4giscore/vendor/deliver_php?file']));
 if ($sFileHash !== $sFileHashGenerated) {
     header('HTTP/1.0 404 Not Found');
     die();
