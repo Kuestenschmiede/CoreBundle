@@ -64,7 +64,7 @@ class ResourceLoader
                 $neededResources['jquery'] = !$jQueryLoaded;
                 
                 // Load magnific-popup.js for projects
-                $neededResources['magnific-popup'] = $GLOBALS['con4gis_projects_extension']['installed'];
+                $neededResources['magnific-popup'] = $GLOBALS['con4gis']['projects']['installed'];
 
                 //ToDo switch for pdf export
                 $neededResources['jspdf'] = false;

@@ -127,7 +127,7 @@ class C4GJQueryGUI
 			$GLOBALS['TL_CSS']['c4g_jq_scrollpane'] 		= 'bundles/con4giscore/vendor/jQuery/plugins/jScrollPane/css/jquery.jscrollpane.css';
 		}
 
-		if ($usePopups || ($GLOBALS['con4gis_projects_extension']['installed']))
+		if ($usePopups || ($GLOBALS['con4gis']['projects']['installed']))
 		{
 			$GLOBALS['TL_CSS']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css';
 			$GLOBALS['TL_JAVASCRIPT']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js';
