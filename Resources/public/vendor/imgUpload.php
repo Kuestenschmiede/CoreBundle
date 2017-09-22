@@ -6,7 +6,7 @@ ini_set("display_errors","1");
         define("TL_SCRIPT","SOMETHING");
 //        $sRootPath = dirname($_SERVER['SCRIPT_FILENAME']) . "/../../../../";
 //        require_once($sRootPath . "system/initialize.php");
-        $initialize = $_SERVER["DOCUMENT_ROOT"] . '../system/initialize.php';
+        $initialize = $_SERVER["DOCUMENT_ROOT"] . '/../system/initialize.php';
         if (!file_exists($initialize)) {
             $initialize = '../../../system/initialize.php';
         }
