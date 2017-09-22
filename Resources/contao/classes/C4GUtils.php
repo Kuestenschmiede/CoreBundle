@@ -15,7 +15,7 @@ namespace con4gis\CoreBundle\Resources\contao\classes;
 
 /**
  * Class C4GUtils
- * @package c4g
+ * @package con4gis\CoreBundle\Resources\contao\classes
  */
 class C4GUtils
 {
@@ -36,6 +36,46 @@ class C4GUtils
 
     // Eingangs-Html formatieren und überflüssige Leerzeichen entfernen
     return trim(htmlspecialchars($result));
+  }
+
+  public static function cleanHtml($html, $img=false) {
+      $javascript = '/<script[^>]*?javascript{1}[^>]*?>.*?<\/script>/si';
+      $noscript = '';
+      $html = preg_replace($javascript, $noscript, $html);
+
+      $unsafe=array(
+          '/<iframe(.*?)<\/iframe>/is',
+          '/<title(.*?)<\/title>/is',
+          '/<pre(.*?)<\/pre>/is',
+          '/<frame(.*?)<\/frame>/is',
+          '/<frameset(.*?)<\/frameset>/is',
+          '/<object(.*?)<\/object>/is',
+          '/<script(.*?)<\/script>/is',
+          '/<embed(.*?)<\/embed>/is',
+          '/<applet(.*?)<\/applet>/is',
+          '/<meta(.*?)>/is',
+          '/<!doctype(.*?)>/is',
+          '/<link(.*?)>/is',
+          '/<body(.*?)>/is',
+          '/<\/body>/is',
+          '/<head(.*?)>/is',
+          '/<\/head>/is',
+          '/<html(.*?)>/is',
+          '/<\/html>/is');
+
+      // Remove graphic too if the user wants
+      if ($img==true)
+      {
+          $unsafe[]='/<img(.*?)>/is';
+      }
+
+      // Remove these tags and all parameters within them
+      $html=preg_replace($unsafe, "", $html);
+
+      // Remove html events
+      $html = preg_replace("#<([^><]+?)([^a-z_\-]on\w*|xmlns)(\s*=\s*[^><]*)([><]*)#i", "<\\1\\4", $html);
+
+      return $html;
   }
 
   /**
