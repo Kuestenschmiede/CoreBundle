@@ -1,6 +1,6 @@
 <div id="c4g_header">
     <img src="bundles/con4giscore/images/logo-con4gis.png" width="250" height="90" alt="con4gis_logo">
-    <span class="version"><?php echo $GLOBALS['con4gis']['version'] ?></span>
+    <span class="version">v<?php echo $GLOBALS['con4gis']['version'] ?></span>
     <span class="sub"><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['TITLESUB'] ?></span>
 </div>
 

@@ -11,7 +11,9 @@
  * @link      https://www.kuestenschmiede.de
  */
 
-$GLOBALS['con4gis']['version'] = 'v4.0';
+use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
+
+$GLOBALS['con4gis']['version'] = '4.0';
 $GLOBALS['con4gis']['core']['installed'] = true;
 
 // API-Registration
@@ -84,3 +86,8 @@ if (!$GLOBALS['CON4GIS']['USE_CACHE'])
     $GLOBALS['CON4GIS']['USE_CACHE']['SERVICES'] = array();
     $GLOBALS['CON4GIS']['USE_CACHE']['PARAMS'] = array();
 }
+
+/**
+ * replace con4gis insertTags
+ */
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags', 'replaceTag');
