@@ -1,0 +1,13 @@
+##
+# con4gis
+#
+# @package con4gis
+# @link    http://www.con4gis.org
+##
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Allow from all
+</IfModule>
+<IfModule mod_authz_core.c>
+  Require all granted
+</IfModule>

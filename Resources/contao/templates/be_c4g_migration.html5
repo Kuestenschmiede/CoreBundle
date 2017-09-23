@@ -1,0 +1,28 @@
+<div id="tl_buttons">
+	<a href="<?php echo \Environment::get('script'); ?>?do=c4g_core" class="header_back"><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK']; ?></a>
+</div>
+<h1 id="tl_welcome">
+	<?php echo sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['HEADLINE'], $this->mod ); ?>
+</h1>
+
+<div class="tl_tbox" align="center">
+	<?php if(!empty( $this->output )): ?>
+		<div class="tl_header" align="left">
+			<?php foreach ($this->output as $oLine): ?>
+				<p><?php print_r( $oLine ); ?></p>
+			<?php endforeach; ?>
+		</div>
+	<?php endif; ?>
+</div>
+
+<?php if(!empty( $this->buttons )): ?>
+<div class="tl_formbody_submit">
+	<div class="tl_submit_container">
+		<?php foreach ($this->buttons as $button): ?>
+			<a href="<?php echo \Environment::get('script') . '?do=c4g_core&perf=migrate&mod=' . $this->mod . '&act=' . $button['action']; ?>" class="tl_submit">
+				<?php echo $button['label']; ?>
+			</a>
+		<?php endforeach; ?>
+	</div>
+</div>
+<?php endif; ?>
