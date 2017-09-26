@@ -48,6 +48,7 @@ class con4gisInsertTags extends \System
                 $fieldName = $arrSplit[1];
                 switch($fieldName) {
                     case 'version': return $GLOBALS['con4gis']['version'];
+                    case 'ol': return $GLOBALS['con4gis']['maps']['ol-version'];
                     case 'core':
                         if ($packages['con4gis/core']) {
                             return $packages['con4gis/core'];
