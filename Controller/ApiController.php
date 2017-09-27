@@ -14,7 +14,10 @@ namespace con4gis\CoreBundle\Controller;
 
 use con4gis\CoreBundle\Resources\contao\classes\C4GApiCache;
 use Contao\CoreBundle\Controller\FrontendController;
+use Contao\System;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -95,6 +98,20 @@ class ApiController extends FrontendController
 
         return $response;
 
+    }
+
+    public function deliverAction(Request $request)
+    {
+        $fileName = $request->query->get('file');
+        $uuid = $request->query->get('u');
+        $fileHash = $request->query->get('c');
+        $aInfo     = pathinfo($fileName);
+        $fileName = str_replace($aInfo['basename'], "", $fileName) . $uuid;
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        if (file_exists($rootDir . '/' . $fileName)) {
+            $response = new BinaryFileResponse($rootDir . '/' . $fileName);
+            return $response;
+        }
     }
 
     protected function getFramgentsFromRoutingParam($strUrlFrament)
