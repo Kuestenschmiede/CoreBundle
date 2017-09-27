@@ -120,12 +120,14 @@
                                     href        => 'https://community.contao.org/de/showthread.php?55910-con4gis_forum-Offizieller-Support-Thread',
                                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
+                <!--
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                                     addClass    => 'floatR',
                                     href        => 'contao/main.php?do=c4g_core&perf=forumremovebbcode',
                                     c4gImg      => 'forumremovebbcode',
                                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODETOOL']
                 )); ?>
+                -->
             <?php else: ?>
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
@@ -160,12 +162,14 @@
                                     c4gImg      => 'contao-board',
                                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
+                <!--
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     addClass    => 'floatR',
                     href        => 'contao/main.php?do=c4g_core&perf=membergroupsync',
                     c4gImg      => 'membergroupsync',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNCTOOL']
                 )); ?>
+                -->
            <?php else: ?>
                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                    c4gImg      => 'install',
