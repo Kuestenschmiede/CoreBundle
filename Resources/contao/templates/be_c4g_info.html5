@@ -120,12 +120,14 @@
                                     href        => 'https://community.contao.org/de/showthread.php?55910-con4gis_forum-Offizieller-Support-Thread',
                                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
+                <!--
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                                     addClass    => 'floatR',
                                     href        => 'contao/main.php?do=c4g_core&perf=forumremovebbcode',
                                     c4gImg      => 'forumremovebbcode',
                                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODETOOL']
                 )); ?>
+                -->
             <?php else: ?>
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
@@ -160,12 +162,14 @@
                                     c4gImg      => 'contao-board',
                                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
+                <!--
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     addClass    => 'floatR',
                     href        => 'contao/main.php?do=c4g_core&perf=membergroupsync',
                     c4gImg      => 'membergroupsync',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNCTOOL']
                 )); ?>
+                -->
            <?php else: ?>
                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                    c4gImg      => 'install',
@@ -402,32 +406,30 @@
             </ul>
         </div>
     </fieldset>
-
+<!--
     <fieldset id="pal_c4g_support" class="tl_box">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_support')">support</legend>
         <div>
             <ul>
-            <!--
                 <li>
                     <a href="https://con4gis.org/downloads.html#handbuch" target="_blank"><span>
                             <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']?>
                         </span></a>
                 </li>
-                -->
                 <li>
-                    <a href="https://con4gis.org/support-kontakt.html" target="_blank"><span>
+                    <a href="https://con4gis.org" target="_blank"><span>
                             <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_support']?>
                         </span></a>
                 </li>
                 <li>
-                    <a href="https://kuestenschmiede.de/kontakt.html" target="_blank"><span>
+                    <a href="https://kuestenschmiede.de" target="_blank"><span>
                             <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['coastforge_support']?>
                         </span></a>
                 </li>
             </ul>
         </div>
     </fieldset>
-
+-->
 </div>
 <div id="c4g_footer" class="tl_box c4g_info">
     <!-- <img src="bundles/con4giscore/images/con4gis_info_head.png" width="741" height="100" alt="con4gis_info_head"> -->
