@@ -69,7 +69,8 @@
     if (empty($sError)) {
         $sDestination = $sDestinationPath . $sFileName;
 
-        if (move_uploaded_file($sTempname, TL_ROOT."/". $sDestination)) {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        if (move_uploaded_file($sTempname, $rootDir."/". $sDestination)) {
             echo $sDestination;
         } else {
             echo 0;

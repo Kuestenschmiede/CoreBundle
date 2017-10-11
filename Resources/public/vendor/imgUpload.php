@@ -3,11 +3,12 @@
 ini_set("display_errors","1");
     try {
         define("TL_MODE", "FE");
+        define("TL_SCRIPT","SOMETHING");
 //        $sRootPath = dirname($_SERVER['SCRIPT_FILENAME']) . "/../../../../";
 //        require_once($sRootPath . "system/initialize.php");
-        $initialize = $_SERVER["DOCUMENT_ROOT"].'/system/initialize.php';
+        $initialize = $_SERVER["DOCUMENT_ROOT"] . '/../system/initialize.php';
         if (!file_exists($initialize)) {
-            $initialize = '../../../../system/initialize.php';
+            $initialize = '../../../system/initialize.php';
         }
 
         // Initialize the system

@@ -9,8 +9,8 @@
  */
 namespace con4gis\CoreBundle\Classes\Helper;
 
-use c4g\Maps\Utils;
-use c4g\projects\C4GBrickCommon;
+use con4gis\MapsBundle\Resources\contao\classes\Utils;
+use con4gis\ProjectsBundle\Classes\Common\C4GBrickCommon;
 use Contao\Database;
 use Contao\Image;
 use Contao\Input;
@@ -122,7 +122,7 @@ class DcaHelper
     {
         if (!$GLOBALS['TL_JAVASCRIPT']['c4g-maps-backend'])
         {
-            $GLOBALS['TL_JAVASCRIPT']['c4g-maps-backend'] = 'system/modules/con4gis_maps3/assets/js/c4g-maps-backend.js';
+            $GLOBALS['TL_JAVASCRIPT']['c4g-maps-backend'] = 'bundles/con4gismaps/js/c4g-maps-backend.js';
         }
         $input = Input::get('act');
         $strField = 'ctrl_' . $dc->field . (($input == 'editAll') ? '_' . $dc->id : '');
@@ -138,7 +138,7 @@ class DcaHelper
             '" title="' . $GLOBALS['TL_LANG']['c4g_maps']['geopicker'] .
             '" style="padding-left:3px" onclick="c4g.maps.backend.showGeoPicker(this.href,' .
             $strFieldX . ',' . $strFieldY . ', {title:\'' . $GLOBALS['TL_LANG']['c4g_maps']['geopicker']. '\'});return false">' .
-            Image::getHtml('system/modules/con4gis_maps3/assets/images/be-icons/geopicker.png',
+            Image::getHtml('bundles/con4gismaps/js/images/be-icons/geopicker.png',
                 $GLOBALS['TL_LANG']['tl_content']['editalias'][0], 'style="vertical-align:top"') . '</a>';
 
     }
