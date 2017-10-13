@@ -108,15 +108,9 @@ class C4GMigration extends \BackendModule
 
     protected function checkMod()
     {
-        if (!$GLOBALS['con4gis_' . $this->module . '_extension']['installed']) {
+        if (!$GLOBALS['con4gis'][$this->module]['installed']) {
             $this->output[] = '<span class="c4g_errorblock">' .
                                 sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['NOMODULEERROR'], 'con4gis_'.$this->module ) .
-                                '</span>';
-            return false;
-        }
-        if (!$GLOBALS['cfs_' . $this->module . '_extension']['installed']) {
-            $this->output[] = '<span class="c4g_errorblock">' .
-                                sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['NOMODULEERROR'], 'cfs_'.$this->module ).
                                 '</span>';
             return false;
         }
