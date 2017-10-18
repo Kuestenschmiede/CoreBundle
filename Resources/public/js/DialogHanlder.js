@@ -1,7 +1,12 @@
 /**
- * Created by pfroch on 02.02.17.
+ * con4gis - the gis-kit
+ *
+ * @package   con4gis
+ * @author    con4gis contributors (see "authors.txt")
+ * @license   GNU/LGPL http://opensource.org/licenses/lgpl-3.0.html
+ * @copyright Küstenschmiede GmbH Software & Design 2011 - 2017.
+ * @link      https://www.kuestenschmiede.de
  */
-
 
 /**
  * DialogHandler
@@ -13,11 +18,10 @@
  * @constructor
  */
 function DialogHandler() {
-
     this.buttons    = {'OK': function() {jQuery(this).dialog('close');}};
     this.modal      = true;
 
-    this.show = function (title, msg) {
+    this.show = function (title, msg, linkUrl) {
         var date        = new Date();
         var randomId    = Math.random() * Math.random() + date.getTime();
         var uiMessage   = jQuery('<div id="uiMessage-' + randomId + '">' + msg + '</div>');
@@ -34,6 +38,12 @@ function DialogHandler() {
 
             close: function() {
                 jQuery(this).dialog('destroy').remove();
+                if (linkUrl) {
+                    if ((linkUrl.indexOf(':')<0) && (linkUrl[0]!='/')) {
+                        linkUrl = linkUrl.replace('index.php/', "");
+                        window.location = linkUrl;
+                    }
+                }
             }
         });
 
