@@ -1075,7 +1075,11 @@ this.c4g = this.c4g || {};
         }
 
         var dh = new DialogHandler();
-        dh.show(title, content.usermessage);
+        var messageJump = '';
+        if (content.jump_after_message) {
+            messageJump = content.jump_after_message;
+        }
+        dh.show(title, content.usermessage, messageJump);
       }
 
       // additional action to be performed via ajax

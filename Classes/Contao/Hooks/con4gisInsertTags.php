@@ -112,5 +112,7 @@ class con4gisInsertTags extends \System
 
             }
         }
+
+        return false;
     }
 }
