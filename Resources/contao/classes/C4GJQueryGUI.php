@@ -56,7 +56,7 @@ class C4GJQueryGUI
             $GLOBALS['TL_JAVASCRIPT']['c4g_jquery_ui_i18n'] = 'bundles/con4giscore/vendor/jQuery/jquery-ui-i18n.min.js';
             $GLOBALS ['TL_JAVASCRIPT']['c4g_a'] 	        = 'bundles/con4giscore/vendor/jQuery/plugins/jquery.legacy.min.js';
 
-            $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/con4giscore/js/DialogHanlder.js';
+            $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/con4giscore/js/DialogHandler.js';
    		}
 
 		if ($useTable)

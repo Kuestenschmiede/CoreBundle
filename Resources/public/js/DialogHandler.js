@@ -13,7 +13,7 @@
  *
  * Useage:
  * var dh = new DialogHandler();
- * dh.show('TestTitle', 'Dies ist eine Testmessage!');
+ * dh.show('TestTitle', 'Dies ist eine Testmessage!','');
  *
  * @constructor
  */
