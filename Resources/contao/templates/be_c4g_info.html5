@@ -282,7 +282,7 @@
             }?>
         </legend>
         <div>
-            <?php if ($this->packages['con4gis/queu'] || $GLOBALS['con4gis']['queue']['installed']): ?>
+            <?php if ($this->packages['con4gis/queue'] || $GLOBALS['con4gis']['queue']['installed']): ?>
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://www.github.com/kuestenschmiede/QueueBundle',
@@ -300,31 +300,36 @@
         </div>
     </fieldset>
 
-
-<!--
+    <!-- con4gis-Tracking -->
     <fieldset id="pal_c4g_tracking" class="tl_box">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_tracking')">
             con4gis-Tracking
-            <?php if ($GLOBALS['con4gis_tracking_extension']['installed']) {
-                echo ' [' . $GLOBALS['con4gis_tracking_extension']['version'] . ']';
+            <?php if ($this->packages['con4gis/tracking']) {
+                echo ' [' . $this->packages['con4gis/tracking'] . ']';
+            } else if ($GLOBALS['con4gis']['tracking']['installed']) {
+               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
         </legend>
         <div>
-            <?php if ($GLOBALS['con4gis_tracking_extension']['installed']): ?>
+            <?php if ($GLOBALS['con4gis']['tracking']['installed']): ?>
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                    target      => '_blank',
+                    href        => 'https://www.github.com/kuestenschmiede/TrackingBundle',
+                    c4gImg      => 'github',
+                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+                )); ?>
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
                     href        => 'https://community.contao.org/de/showthread.php?55911-con4gis_tracking-Offizieller-Support-Thread',
                     c4gImg      => 'contao-board',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/con4gis_tracking',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
             <?php else: ?>
-
+                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                                     c4gImg      => 'install',
+                                     href        => 'https://packagist.org/packages/con4gis/tracking',
+                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'TrackingBundle')
+                 )); ?>
             <?php endif; ?>
         </div>
     </fieldset>
@@ -333,23 +338,25 @@
     <fieldset id="pal_c4g_tracking_android" class="tl_box">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_tracking_android')">
             con4gis-Tracking-Android
-            <?php if ($GLOBALS['con4gis_tracking_android_extension']['installed']) {
-                echo ' [' . $GLOBALS['con4gis_tracking_android_extension']['version'] . ']';
+            <?php if ($this->packages['con4gis/trackingAndroid']) {
+                echo ' [' . $this->packages['con4gis/trackingAndroid'] . ']';
+            } else if ($GLOBALS['con4gis']['trackingAndroid']['installed']) {
+               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
         </legend>
         <div>
-            <?php if ($GLOBALS['con4gis_tracking_android_extension']['installed']): ?>
+            <?php if ($GLOBALS['con4gis']['trackingAndroid']['installed']): ?>
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                    target      => '_blank',
+            href        => 'https://www.github.com/kuestenschmiede/TrackingAndroidBundle',
+            c4gImg      => 'github',
+            label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+            )); ?>
             <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
             href        => 'https://community.contao.org/de/showthread.php?55911-con4gis_tracking-Offizieller-Support-Thread',
             c4gImg      => 'contao-board',
             label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
-            )); ?>
-            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-            href        => 'https://www.github.com/kuestenschmiede/con4gis_tracking_android',
-            c4gImg      => 'github',
-            label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
             )); ?>
             <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
@@ -363,7 +370,6 @@
             <?php endif; ?>
         </div>
     </fieldset>
--->
     <fieldset id="pal_c4g_links" class="tl_box">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_links')">links</legend>
         <div>
