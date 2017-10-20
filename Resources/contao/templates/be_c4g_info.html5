@@ -366,7 +366,11 @@
             label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['PLAYSTORE']
             )); ?>
             <?php else: ?>
-
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                                     c4gImg      => 'install',
+                                     href        => 'https://packagist.org/packages/con4gis/tracking-android',
+                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'TrackingAndroidBundle')
+                 )); ?>
             <?php endif; ?>
         </div>
     </fieldset>
