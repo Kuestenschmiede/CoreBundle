@@ -338,8 +338,8 @@
     <fieldset id="pal_c4g_tracking_android" class="tl_box">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_tracking_android')">
             con4gis-Tracking-Android
-            <?php if ($this->packages['con4gis/trackingAndroid']) {
-                echo ' [' . $this->packages['con4gis/trackingAndroid'] . ']';
+            <?php if ($this->packages['con4gis/tracking-android']) {
+                echo ' [' . $this->packages['con4gis/tracking-android'] . ']';
             } else if ($GLOBALS['con4gis']['trackingAndroid']['installed']) {
                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
