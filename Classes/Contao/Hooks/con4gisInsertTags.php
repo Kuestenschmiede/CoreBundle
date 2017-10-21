@@ -106,6 +106,18 @@ class con4gisInsertTags extends \System
                         } else {
                             return 'not installed';
                         }
+                    case 'tracking':
+                        if ($packages['con4gis/tracking']) {
+                            return $packages['con4gis/tracking'];
+                        } else {
+                            return 'not installed';
+                        }
+                    case 'tracking-android':
+                        if ($packages['con4gis/tracking-android']) {
+                            return $packages['con4gis/tracking-android'];
+                        } else {
+                            return 'not installed';
+                        }
                     default:
                         return 'unknown';
                 }

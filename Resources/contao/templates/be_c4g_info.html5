@@ -346,25 +346,25 @@
         </legend>
         <div>
             <?php if ($GLOBALS['con4gis']['trackingAndroid']['installed']): ?>
-            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-            href        => 'https://www.github.com/kuestenschmiede/TrackingAndroidBundle',
-            c4gImg      => 'github',
-            label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-            )); ?>
-            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-            href        => 'https://community.contao.org/de/showthread.php?55911-con4gis_tracking-Offizieller-Support-Thread',
-            c4gImg      => 'contao-board',
-            label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
-            )); ?>
-            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-            addClass    => 'floatR',
-            href        => 'https://play.google.com/store/apps/details?id=org.con4gis.app4gis_tracking',
-            c4gImg      => 'playstore',
-            label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['PLAYSTORE']
-            )); ?>
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                        target      => '_blank',
+                href        => 'https://www.github.com/kuestenschmiede/TrackingAndroidBundle',
+                c4gImg      => 'github',
+                label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+                )); ?>
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                        target      => '_blank',
+                href        => 'https://community.contao.org/de/showthread.php?55911-con4gis_tracking-Offizieller-Support-Thread',
+                c4gImg      => 'contao-board',
+                label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
+                )); ?>
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                        target      => '_blank',
+                addClass    => 'floatR',
+                href        => 'https://play.google.com/store/apps/details?id=org.con4gis.app4gis_tracking',
+                c4gImg      => 'playstore',
+                label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['PLAYSTORE']
+                )); ?>
             <?php else: ?>
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                                      c4gImg      => 'install',
