@@ -58,8 +58,10 @@ $GLOBALS['TL_HEAD'][] = "<script>var apiBaseUrl = '" . $apiBaseUrl . "';</script
  */
 array_insert($GLOBALS['TL_CTE']['con4gis'], 2, array
 (
-    'c4g_activationpage' => 'con4gis\CoreBundle\Resources\contao\classes\Content_c4g_activationpage'
+    'tables' => array('tl_c4g_activationkey'),
+    'c4g_activationpage' => 'con4gis\CoreBundle\Resources\contao\modules\ContentC4gActivationpage'
 ));
+$GLOBALS['TL_MODELS']['tl_c4g_activationkey'] = 'con4gis\CoreBundle\Resources\contao\models\C4gActivationkeyModel';
 
 /**
  * Purge jobs

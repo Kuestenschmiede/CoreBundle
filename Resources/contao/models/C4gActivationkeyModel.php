@@ -12,7 +12,7 @@
  */
 
 
-namespace c4g;
+namespace con4gis\CoreBundle\Resources\contao\models;
 
 /**
  * Class C4gActivationkeyModel
@@ -31,7 +31,7 @@ class C4gActivationkeyModel extends \Model
 	 * @param  string $key
 	 * @return string
 	 */
-	public static function generateActivationLinkFromKey( $key )
+	public static function generateActivationLinkFromKey($key,$keyAction='')
 	{
 		// check if key exists
 		if (empty( $key )) {
@@ -39,7 +39,11 @@ class C4gActivationkeyModel extends \Model
 		}
 
 		// get action for this key
-		$keyAction = static::getActionForKey($key);
+        if (!$keyAction) {
+            $keyAction = C4gActivationkeyModel::getActionForKey($key);
+        }
+
+
 		$keyAction = explode(':', $keyAction);
 
 		// find an appropriate activationpage
@@ -91,7 +95,7 @@ class C4gActivationkeyModel extends \Model
 		$attempts = 42;
 		do {
 			$key = md5(uniqid(rand(), true));
-			$hasKey = static::findOneBy( 'activationkey', $key );
+			$hasKey = C4gActivationkeyModel::findOneBy( 'activationkey', $key );
 			$attempts--;
 		} while (!empty( $hasKey ) && $attempts > 0);
 		if (!empty( $hasKey )) { return false; }
@@ -116,7 +120,7 @@ class C4gActivationkeyModel extends \Model
 	 */
 	public static function assignUserToKey( $userId, $key )
 	{
-		$objKey = static::findBy( 'activationkey', hash('sha256', $key) );
+		$objKey = C4gActivationkeyModel::findBy( 'activationkey', hash('sha256', $key) );
 		if (empty( $objKey ) || $objKey->used_by != 0) { return false; }
 		$objKey->used_by = $userId;
 		$objKey->save();
@@ -130,7 +134,7 @@ class C4gActivationkeyModel extends \Model
 	 */
 	public static function getActionForKey( $key )
 	{
-		return static::findOneBy( 'activationkey', hash('sha256', $key) )->key_action;
+        return C4gActivationkeyModel::findOneBy( 'activationkey', hash('sha256', $key) )->key_action;
 	}
 
 	/**
@@ -140,7 +144,7 @@ class C4gActivationkeyModel extends \Model
 	 */
 	public static function keyIsValid( $key )
 	{
-		$key = static::findOneBy( 'activationkey', hash('sha256', $key) );
+		$key = C4gActivationkeyModel::findOneBy( 'activationkey', hash('sha256', $key) );
 		// the key exists, is not already claimed and is not expired
 		return (!empty( $key ) && empty( $key->used_by ) && ($key->expiration_date == 0 || $key->expiration_date > time()));
 	}
