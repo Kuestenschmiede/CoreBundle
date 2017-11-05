@@ -14,7 +14,7 @@
 <div class="tl_formbody_edit c4g_info">
 
 <!-- con4gis-Core -->
-    <fieldset id="pal_c4g_core" class="tl_box">
+    <fieldset id="pal_c4g_core" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_core')">
             con4gis-Core
             <?php if ($this->packages['con4gis/core']) {
@@ -35,7 +35,7 @@
     </fieldset>
 
     <!-- con4gis-Documents -->
-    <fieldset id="pal_c4g_documents" class="tl_box">
+    <fieldset id="pal_c4g_documents" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_documents')">
             con4gis-Documents
             <?php if ($this->packages['con4gis/documents']) {
@@ -65,7 +65,7 @@
 
 
 <!-- con4gis-Export -->
-    <fieldset id="pal_c4g_export" class="tl_box">
+    <fieldset id="pal_c4g_export" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_export')">
             con4gis-Export
             <?php if ($this->packages['con4gis/export']) {
@@ -95,7 +95,7 @@
 
 
 <!-- con4gis-Forum -->
-    <fieldset id="pal_c4g_forum" class="tl_box">
+    <fieldset id="pal_c4g_forum" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_forum')">
             con4gis-Forum
             <?php if ($this->packages['con4gis/forum']) {
@@ -139,7 +139,7 @@
     </fieldset>
 
 <!-- con4gis-Groups -->
-    <fieldset id="pal_c4g_groups" class="tl_box">
+    <fieldset id="pal_c4g_groups" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_groups')">
             con4gis-Groups
             <?php if ($this->packages['con4gis/groups']) {
@@ -180,7 +180,7 @@
         </div>
     </fieldset>
 <!-- con4gis-Import -->
-    <fieldset id="pal_c4g_import" class="tl_box">
+    <fieldset id="pal_c4g_import" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_import')">
             con4gis-Import
             <?php if ($this->packages['con4gis/import']) {
@@ -209,7 +209,7 @@
     </fieldset>
 
 <!-- con4gis-Maps -->
-    <fieldset id="pal_c4g_maps" class="tl_box">
+    <fieldset id="pal_c4g_maps" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_maps')">
         con4gis-Maps
            <?php if ($this->packages['con4gis/maps']) {
@@ -243,7 +243,7 @@
     </fieldset>
 
 <!-- con4gis-Projects -->
-    <fieldset id="pal_c4g_projects" class="tl_box">
+    <fieldset id="pal_c4g_projects" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_projects')">
             con4gis-Projects
             <?php if ($this->packages['con4gis/projects']) {
@@ -272,7 +272,7 @@
     </fieldset>
 
     <!-- con4gis-Queue -->
-    <fieldset id="pal_c4g_queue" class="tl_box">
+    <fieldset id="pal_c4g_queue" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_queue')">
             con4gis-Queue
             <?php if ($this->packages['con4gis/queue']) {
@@ -301,7 +301,7 @@
     </fieldset>
 
     <!-- con4gis-Tracking -->
-    <fieldset id="pal_c4g_tracking" class="tl_box">
+    <fieldset id="pal_c4g_tracking" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_tracking')">
             con4gis-Tracking
             <?php if ($this->packages['con4gis/tracking']) {
@@ -335,7 +335,7 @@
     </fieldset>
 
 
-    <fieldset id="pal_c4g_tracking_android" class="tl_box">
+    <fieldset id="pal_c4g_tracking_android" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_tracking_android')">
             con4gis-Tracking-Android
             <?php if ($this->packages['con4gis/tracking-android']) {
@@ -374,9 +374,9 @@
             <?php endif; ?>
         </div>
     </fieldset>
-    <fieldset id="pal_c4g_links" class="tl_box">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_links')">links</legend>
-        <div>
+    <!--fieldset id="pal_c4g_links" class="tl_box">
+        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_links')">links</legend-->
+        <div id="pal_c4g_links">
             <ul>
                 <li>
                     <a href="https://con4gis.org" target="_blank"><span>
@@ -415,9 +415,9 @@
                 </li>
             </ul>
         </div>
-    </fieldset>
+    <!--/fieldset-->
 <!--
-    <fieldset id="pal_c4g_support" class="tl_box">
+    <fieldset id="pal_c4g_support" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_support')">support</legend>
         <div>
             <ul>
