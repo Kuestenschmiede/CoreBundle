@@ -149,7 +149,7 @@ a.dt-button {
     content: "\f0ea";
 }
 
-#uiMessage {
+.uiMessage {
 	text-align: left;
 }
 
