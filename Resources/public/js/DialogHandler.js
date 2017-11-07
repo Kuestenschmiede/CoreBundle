@@ -13,7 +13,7 @@
  *
  * Useage:
  * var dh = new DialogHandler();
- * dh.show('TestTitle', 'Dies ist eine Testmessage!');
+ * dh.show('TestTitle', 'Dies ist eine Testmessage!','');
  *
  * @constructor
  */
@@ -24,7 +24,7 @@ function DialogHandler() {
     this.show = function (title, msg, linkUrl) {
         var date        = new Date();
         var randomId    = Math.random() * Math.random() + date.getTime();
-        var uiMessage   = jQuery('<div id="uiMessage-' + randomId + '">' + msg + '</div>');
+        var uiMessage   = jQuery('<div class="uiMessage" id="uiMessage-' + randomId + '">' + msg + '</div>');
 
         uiMessage.dialog({
             title:      title,

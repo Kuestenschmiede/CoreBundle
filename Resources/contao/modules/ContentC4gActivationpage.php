@@ -11,13 +11,15 @@
  * @link      https://www.kuestenschmiede.de
  */
 
-namespace c4g;
+namespace con4gis\CoreBundle\Resources\contao\modules;
+
+use con4gis\CoreBundle\Resources\contao\models\C4gActivationkeyModel;
 
 /**
  * Class Content_c4g_activationpage
  * @package c4g
  */
-class Content_c4g_activationpage extends \Module
+class ContentC4gActivationpage extends \Module
 {
     /**
      * Template

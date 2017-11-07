@@ -1068,7 +1068,11 @@ this.c4g = this.c4g || {};
         uiMessage.dialog('moveToTop');
         */
 
-        var title = content.usermessage;
+        //ToDo auslagern
+        var title = 'Usermessage';
+        if  (navigator.language == 'de') {
+            title = 'Benutzerhinweis';
+        }
 
         if (content.title) {
             title = content.title;
