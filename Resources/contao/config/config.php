@@ -47,7 +47,9 @@ array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE
 ));
 
 if(TL_MODE == "FE") {
-    $GLOBALS['TL_HEAD'][] = "<script>var c4g_rq = '" . $_SESSION['REQUEST_TOKEN'] . "';</script>";
+    // TODO replace with symfony csrf token
+    $rq = \Contao\RequestToken::get();
+    $GLOBALS['TL_HEAD'][] = "<script>var c4g_rq = '" . $rq . "';</script>";
 }
 $apiBaseUrl = 'con4gis/api';
 
