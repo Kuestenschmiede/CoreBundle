@@ -149,6 +149,10 @@ a.dt-button {
     content: "\f0ea";
 }
 
+.ui-dialog {
+	width: auto!important;
+}
+
 .uiMessage {
 	text-align: left;
 }
