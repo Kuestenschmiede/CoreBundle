@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     con4gis
- * @filesource  StingHelper.php
+ * @filesource  StringHelper.php
  * @version     1.0.0
  * @since       30.11.17 - 11:37
  * @author      Patrick Froch <info@easySolutionsIT.de>
@@ -12,10 +12,10 @@
 namespace con4gis\CoreBundle\Classes\Helper;
 
 /**
- * Class StingHelper
+ * Class StringHelper
  * @package con4gis\CoreBundle\Classes\Helper
  */
-class StingHelper
+class StringHelper
 {
 
 
