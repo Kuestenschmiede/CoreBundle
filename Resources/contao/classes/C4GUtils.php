@@ -315,4 +315,19 @@ class C4GUtils
     $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
     return "$scheme$user$pass$host$port$path$query$fragment";
   }
+
+
+  /**
+   * @param $string
+   * @return bool|string
+   */
+  public static function removeLastSlashes($string) {
+      if ($string) {
+          if ((substr($string, -1, 1) == '/') || (substr($string, -1, 1) == '\\')) {
+              return substr($string, 0, -1);
+          }
+      }
+
+      return $string;
+  }
 }
