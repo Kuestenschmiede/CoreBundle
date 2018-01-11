@@ -61,8 +61,13 @@ class C4GJQueryGUI
 
 		if ($useTable)
 		{
+            $GLOBALS['TL_JAVASCRIPT']['c4g_jq_scrollTo'] = 'bundles/con4giscore/vendor/jQuery/plugins/jquery.scrollTo/jquery.scrollTo.min.js';
+
 			// Include DataTables JS
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/datatables/media/js/jquery.dataTables.min.js';
+            $GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_ui'] 	= 'bundles/con4giscore/vendor/jQuery/plugins/datatables/media/js/dataTables.jqueryui.min.js';
+
+			//Include DataTables Extensions CSS
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_buttons'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/dataTables.buttons.min.js';
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_buttons_print'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/buttons.print.min.js';
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_buttons_jquery'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/buttons.jqueryui.min.js';
@@ -70,7 +75,6 @@ class C4GJQueryGUI
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_buttons_html5'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/buttons.html5.min.js';
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_buttons_font'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/vfs_fonts.js';
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_jszip'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/jszip.min.js';
-            $GLOBALS['TL_JAVASCRIPT']['c4g_jq_scrollTo'] = 'bundles/con4giscore/vendor/jQuery/plugins/jquery.scrollTo/jquery.scrollTo.min.js';
             $GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_scroller'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Scroller/js/dataTables.scroller.min.js';
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_sort_date_de'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Sorting/date-de.js';
             $GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_responsive'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js';
@@ -78,6 +82,9 @@ class C4GJQueryGUI
 
 			// Include DataTables CSS
 			$GLOBALS['TL_CSS']['c4g_jq_datatables'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/media/css/jquery.dataTables_themeroller.css';
+            $GLOBALS['TL_CSS']['c4g_jq_datatables_ui'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/media/css/dataTables.jqueryui.min.css';
+
+            // Include DataTables Extensions CSS
 			$GLOBALS['TL_CSS']['c4g_jq_datatables_buttons']	= 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/css/buttons.dataTables.min.css';
 			$GLOBALS['TL_CSS']['c4g_jq_datatables_buttons_jquery'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/css/buttons.jqueryui.min.css';
             $GLOBALS['TL_CSS']['c4g_jq_datatables_scroller'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Scroller/css/scroller.dataTables.min.css';
