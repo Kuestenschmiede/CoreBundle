@@ -15,8 +15,6 @@ namespace con4gis\CoreBundle\Classes\Helper;
  */
 class StringHelper
 {
-
-
     /**
      * Ersetzt die nicht erlaubten Zeichen der übergebenen Zeichenkette (Whitelist-Filterung).
      * @param        $string
