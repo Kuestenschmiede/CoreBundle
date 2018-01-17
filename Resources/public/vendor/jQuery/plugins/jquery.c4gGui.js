@@ -566,6 +566,10 @@ this.c4g = this.c4g || {};
                                       return x + y;
                                   }, 0);
 
+                              if (sum) {
+                                  sum  = parseFloat(sum).toFixed(2).toLocaleString();
+                              }
+
                               if (this.header().className && (this.header().className.indexOf('c4g_sum') != -1)) {
                                   $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;">'+sum+'</th>');
                               } else {
