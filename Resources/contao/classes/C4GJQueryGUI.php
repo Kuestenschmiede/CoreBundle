@@ -134,6 +134,13 @@ class C4GJQueryGUI
 			$GLOBALS['TL_JAVASCRIPT']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js';
 		}
 
+		//TODO: add own switch for maps
+		if ($GLOBALS['con4gis']['projects']['installed']) {
+            $GLOBALS['TL_CSS']['c4g_jq_lighbox2'] = 'bundles/con4giscore/vendor/jQuery/plugins/lighbox2/css/lightbox.min.css';
+            $GLOBALS['TL_JAVASCRIPT']['c4g_jq_lighbox2'] = 'bundles/con4giscore/vendor/jQuery/plugins/lighbox2/js/lightbox.min.js';
+        }
+
+
 		if ($useMaps && $GLOBALS['con4gis']['maps']['installed'])
 		{
             // TODO: recieve and use profileId
