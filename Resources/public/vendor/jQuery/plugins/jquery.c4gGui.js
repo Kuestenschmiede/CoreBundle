@@ -553,30 +553,35 @@ this.c4g = this.c4g || {};
                   //"lengthMenu": [ [25, 50, "-1"], [25, 50, "All"] ],
                   "footerCallback": function(row, data, start, end, display) {
                       var api = this.api();
-                      if (($('.c4g_sum').length != 0) && ($('.c4g_sumrow').length == 0)) {
-                          $(this).append('<tfoot><tr role="row" class="c4g_sumrow ui-state-highlight"></tr></tfoot>');
+                      if ($('.c4g_sumfoot').length > 0) {
+                            $('.c4g_sumfoot').remove();
+                      }
 
-                          api.columns('.c4g_brick_col', { page: 'current' }).every(function () {
-                              var sum = api
-                                  .cells( null, this.index())
-                                  .data()
-                                  .reduce(function (a, b) {
-                                      var x = parseFloat(a) || 0;
-                                      var y = parseFloat(b) || 0;
-                                      return x + y;
-                                  }, 0);
+                      $(this).append('<tfoot class="c4g_sumfoot"><tr role="row" class="c4g_sumrow ui-state-highlight"></tr></tfoot>');
+                      api.columns('.c4g_brick_col', { page: 'current' }).every(function () {
+                          if ($(this.header()).css("display") !== "none") {
+                              if (this.header().className.indexOf('c4g_sum')) {
+                                  var sum = api
+                                      .cells( null, this.index())
+                                      .data()
+                                      .reduce(function (a, b) {
+                                          var x = parseFloat(a) || 0;
+                                          var y = parseFloat(b) || 0;
+                                          return x + y;
+                                      }, 0);
 
-                              if (sum) {
-                                  sum  = parseFloat(sum).toFixed(2).toLocaleString();
+                                  if (sum) {
+                                      sum  = parseFloat(sum).toFixed(2).toLocaleString();
+                                  }
                               }
 
-                              if (this.header().className && (this.header().className.indexOf('c4g_sum') != -1)) {
+                              if (sum && this.header().className && (this.header().className.indexOf('c4g_sum') != -1)) {
                                   $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;">'+sum+'</th>');
                               } else {
                                   $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;"></th>');
                               }
-                          });
-                      }
+                          }
+                      });
                   },
                   "fnDrawCallback": function() {
                       $(tableDiv).find('tr')
@@ -609,8 +614,9 @@ this.c4g = this.c4g || {};
                     }
               }, contentdata);
 
-                        oDataTable = $(tableDiv).dataTable(contentdata);
-                        fnDataTableColumnVis(oDataTable);
+              oDataTable = $(tableDiv).dataTable(contentdata);
+              fnDataTableColumnVis(oDataTable);
+
             }
 
           }
@@ -1248,6 +1254,7 @@ this.c4g = this.c4g || {};
             }
           });
         }
+
         // if ($.browser.msie  && parseInt($.browser.version, 10) === 8) {
         if ($('#top').hasClass('ie8')) {
           // fnAdjustColumnSizing() produces an infinite loop in MSIE 8 (!), so workaround the problem
