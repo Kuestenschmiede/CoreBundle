@@ -566,8 +566,12 @@ this.c4g = this.c4g || {};
                                           .cells( null, this.index())
                                           .data()
                                           .reduce(function (a, b) {
-                                              var x = parseFloat(a) || 0;
-                                              var y = parseFloat(b) || 0;
+                                            a += "";
+                                            b += "";
+                                            var x = a.replace(",", ".");
+                                            x = parseFloat(x) || 0;
+                                            var y = b.replace(",", ".");
+                                            y = parseFloat(y) || 0;
                                               return x + y;
                                           }, 0);
 
