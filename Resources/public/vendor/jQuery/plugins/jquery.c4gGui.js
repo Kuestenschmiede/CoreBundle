@@ -557,31 +557,33 @@ this.c4g = this.c4g || {};
                             $('.c4g_sumfoot').remove();
                       }
 
-                      $(this).append('<tfoot class="c4g_sumfoot"><tr role="row" class="c4g_sumrow ui-state-highlight"></tr></tfoot>');
-                      api.columns('.c4g_brick_col', { page: 'current' }).every(function () {
-                          if ($(this.header()).css("display") !== "none") {
-                              if (this.header().className.indexOf('c4g_sum')) {
-                                  var sum = api
-                                      .cells( null, this.index())
-                                      .data()
-                                      .reduce(function (a, b) {
-                                          var x = parseFloat(a) || 0;
-                                          var y = parseFloat(b) || 0;
-                                          return x + y;
-                                      }, 0);
+                      if ($('.c4g_sum').length > 0) {
+                          $(this).append('<tfoot class="c4g_sumfoot"><tr role="row" class="c4g_sumrow ui-state-highlight"></tr></tfoot>');
+                          api.columns('.c4g_brick_col', { page: 'current' }).every(function () {
+                              if ($(this.header()).css("display") !== "none") {
+                                  if (this.header().className.indexOf('c4g_sum')) {
+                                      var sum = api
+                                          .cells( null, this.index())
+                                          .data()
+                                          .reduce(function (a, b) {
+                                              var x = parseFloat(a) || 0;
+                                              var y = parseFloat(b) || 0;
+                                              return x + y;
+                                          }, 0);
 
-                                  if (sum) {
-                                      sum  = parseFloat(sum).toFixed(2).toLocaleString();
+                                      if (sum) {
+                                          sum  = parseFloat(sum).toFixed(2).toLocaleString();
+                                      }
+                                  }
+
+                                  if (sum && this.header().className && (this.header().className.indexOf('c4g_sum') != -1)) {
+                                      $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;">'+sum+'</th>');
+                                  } else {
+                                      $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;"></th>');
                                   }
                               }
-
-                              if (sum && this.header().className && (this.header().className.indexOf('c4g_sum') != -1)) {
-                                  $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;">'+sum+'</th>');
-                              } else {
-                                  $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;"></th>');
-                              }
-                          }
-                      });
+                          });
+                      }
                   },
                   "fnDrawCallback": function() {
                       $(tableDiv).find('tr')
