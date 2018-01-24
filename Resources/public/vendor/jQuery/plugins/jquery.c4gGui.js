@@ -576,7 +576,10 @@ this.c4g = this.c4g || {};
                                           }, 0);
 
                                       if (sum) {
+                                        // TODO Internationalize this
+                                        // TODO make this configurable ?
                                           sum  = parseFloat(sum).toFixed(2).toLocaleString();
+                                          sum = sum.replace(".", ",");
                                       }
                                   }
 
