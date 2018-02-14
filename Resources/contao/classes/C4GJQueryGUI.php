@@ -173,7 +173,7 @@ class C4GJQueryGUI
 
 		if ($addCore)
 		{
-	        $GLOBALS ['TL_JAVASCRIPT']['c4g_jquery_gui'] = 'bundles/con4giscore/vendor/jQuery/plugins/jquery.c4gGui.js';
+	        $GLOBALS ['TL_JAVASCRIPT']['c4g_jquery_gui'] = 'bundles/con4giscore/js/c4gGui.js';
 	        $GLOBALS ['TL_CSS']['c4g_jquery_gui'] = 'bundles/con4giscore/css/c4gGui.css';
 			$GLOBALS ['TL_CSS']['c4g_loader'] = 'bundles/con4giscore/css/c4gLoader.css';
 		}

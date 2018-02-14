@@ -512,7 +512,7 @@ this.c4g.projects = this.c4g.projects || {};
             .click(function () {
               if (value['tableSelection']) {
                 if ((typeof(oDataTable) !== 'undefined') && (oDataTable != null)) {
-                  var formdata = new Object();
+                  var formdata = {};
                   oDataTable.$('tr.row_selected').each(function (index, value) {
                     formdata['action' + index] = value.attributes['data-action'].value;
                   });
@@ -761,7 +761,8 @@ this.c4g.projects = this.c4g.projects || {};
                 }
               }, contentdata);
 
-              oDataTable = $(tableDiv).dataTable(contentdata);
+              var oDataTable = $(tableDiv).dataTable(contentdata);
+              scope.dataTableApi = oDataTable.api();
               scope.fnDataTableColumnVis(oDataTable);
 
             }
@@ -1309,6 +1310,7 @@ this.c4g.projects = this.c4g.projects || {};
         else {
           dataTable.fnAdjustColumnSizing();
         }
+        // this.dataTable = dataTable;
       }
     }, // end of fnDataTableColumnVis
 
