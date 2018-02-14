@@ -38,7 +38,6 @@ this.c4g.projects = this.c4g.projects || {};
       height: '',
       mainDiv: ''
     }, options);
-    console.log(options.id);
     this.options = options;
     this.options.moduleId = options.id;
     this.buttonDiv = null;
@@ -61,7 +60,6 @@ this.c4g.projects = this.c4g.projects || {};
     });
 
     var oDataTable = null;  // TODO enable more than one
-    console.log(this);
     // this.c4gGui.setup();
   };
 
@@ -69,10 +67,8 @@ this.c4g.projects = this.c4g.projects || {};
   $.extend(c4g.projects.c4gGui.prototype, {
     setup: function () {
       var scope = this;
-      console.log(scope);
       return this.mainDiv.each(function() {
         var options = scope.options;
-        console.log(options);
         // if no ID is provided then initialize internal ID for DIVs
         if (typeof(options.id) ==='undefined') {
           options.id = nextId;
@@ -1363,6 +1359,5 @@ this.c4g.projects = this.c4g.projects || {};
     } // end of fnHistoryPush
 
   }); // end of extend
-  console.log(c4g.projects.c4gGui.prototype);
 })(jQuery, this.c4g);  // single execution function
 
