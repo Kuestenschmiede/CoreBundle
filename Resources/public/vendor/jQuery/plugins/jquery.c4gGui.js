@@ -38,15 +38,13 @@ this.c4g.projects = this.c4g.projects || {};
       height: '',
       mainDiv: ''
     }, options);
-
-    console.log(options.mainDiv.each);
+    console.log(options.id);
     this.options = options;
+    this.options.moduleId = options.id;
     this.buttonDiv = null;
     this.pushingState = false;
     this.mainDiv = options.mainDiv;
     var scope = this;
-    console.log(options);
-
     var History = null;
     if ((typeof(window.History) !== 'undefined') && window.History.enabled) {
       History = window.History;
@@ -504,8 +502,8 @@ this.c4g.projects = this.c4g.projects || {};
 
       // create buttons
       if ($.isArray(content.buttons)) {
-        $(buttonDiv).empty();
-        $(buttonDiv).hide();
+        $(scope.buttonDiv).empty();
+        $(scope.buttonDiv).hide();
         $.each(content.buttons, function (index, value) {
           var aButton = $("<a />")
             .attr('href', '#')
@@ -529,11 +527,11 @@ this.c4g.projects = this.c4g.projects || {};
               fnExecAjaxGet(options.ajaxData + '/' + value['id']);
               return false;
             })
-            .appendTo(buttonDiv);
+            .appendTo(scope.buttonDiv);
           if (options.jquiButtons) {
             aButton.button();
           }
-          $(buttonDiv).show();
+          $(scope.buttonDiv).show();
         });
       }
 
@@ -584,9 +582,9 @@ this.c4g.projects = this.c4g.projects || {};
             //animate: true,
             alsoResize: navDiv + " .dynatree-container, " + navDiv + " .c4gGuiTree",
             resize: function (event, ui) {
-              var newWidth = $(contentWrapperDiv).parent().width() - ui.size.width - 5;
-              $(contentWrapperDiv).width(newWidth);
-              $(contentWrapperDiv).height(ui.size.height);
+              var newWidth = $(scope.contentWrapperDiv).parent().width() - ui.size.width - 5;
+              $(scope.contentWrapperDiv).width(newWidth);
+              $(scope.contentWrapperDiv).height(ui.size.height);
             },
             stop: function () {
               if ((typeof(oDataTable) !== 'undefined') && (oDataTable != null)) {
@@ -606,12 +604,12 @@ this.c4g.projects = this.c4g.projects || {};
         var newWidth = '100%';
         var newHeight = '100%';
         if (options.navPanel) {
-          newWidth = $(contentWrapperDiv).parent().width()
+          newWidth = $(scope.contentWrapperDiv).parent().width()
             - $(navDiv).width() - 5;
           newHeight = $(navDiv).height();
         }
-        $(contentWrapperDiv).width(newWidth);
-        $(contentWrapperDiv).height(newHeight);
+        $(scope.contentWrapperDiv).width(newWidth);
+        $(scope.contentWrapperDiv).height(newHeight);
         if (typeof (content.state) !== 'undefined') {
           $(scope.contentDiv).attr('data-state', content.state);
         }
