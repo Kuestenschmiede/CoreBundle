@@ -10,6 +10,7 @@
  */
 
 this.c4g = this.c4g || {};
+this.c4g.projects = this.c4g.projects || {};
 
 // use local namespace with single execution function
 (function($, c4g) {
@@ -20,336 +21,478 @@ this.c4g = this.c4g || {};
 
 
   // Extend jQuery, so c4gGui can be used with $(...).c4gGui(...)
-  $.fn.c4gGui = function(options) {
+  c4g.projects.c4gGui = function(options) {
 
     options = $.extend({
-      ajaxUrlPrefix : 'ajax.php',
-      navPanel : true,
-      jquiBreadcrumb : true,
-      jquiButtons : true,
-      embedDialogs : false,
-      jquiEmbeddedDialogs : true,
-      wswgEditor : false,
-      breadcrumbDelim : '',
-      contaoPath : '',
+      ajaxUrlPrefix: 'ajax.php',
+      navPanel: true,
+      jquiBreadcrumb: true,
+      jquiButtons: true,
+      embedDialogs: false,
+      jquiEmbeddedDialogs: true,
+      wswgEditor: false,
+      breadcrumbDelim: '',
+      contaoPath: '',
       contaoLanguage: '',
-      width : '',
-      height : ''
+      width: '',
+      height: '',
+      mainDiv: ''
     }, options);
 
-        //if(options.ajaxUrl.indexOf("?") <= 0){
-        //    options.ajaxUrl += "?id=0";
-        //}else{
-        //    options.ajaxUrl += "&id=0";
-        //}
-
-    var buttonDiv = null;
-    var pushingState = false;
+    console.log(options.mainDiv.each);
+    this.options = options;
+    this.buttonDiv = null;
+    this.pushingState = false;
+    this.mainDiv = options.mainDiv;
+    var scope = this;
+    console.log(options);
 
     var History = null;
-    if ((typeof(window.History)!='undefined') && window.History.enabled) {
+    if ((typeof(window.History) !== 'undefined') && window.History.enabled) {
       History = window.History;
     }
 
-    var fnHistoryPush = function( state ) {
-      if (History!=null) {
-        pushingState = true;
-                if(document.location.hash){
-                    History.pushState(null, document.title, '?state=' + state + document.location.hash);
-                }else {
-                    History.pushState(null, document.title, '?state=' + state);
-                }
+    // -----------------------------------
+    // $.fn.c4gGui()
+    // -----------------------------------
+    $(window).resize(function(){
+      $('.c4gGuiCenterDiv').each(function(i,element){
+        scope.fnCenterDiv(element);
+      });
+      scope.fnDataTableColumnVis(oDataTable);
+    });
 
-        // strange workaround for Opera >= 11.60 bug
-        if (typeof(document.getElement)!='undefined') {
-          var head = document.getElement("head");
-          if (typeof(head)=='object') {
-            var base = head.getElement('base');
-            if (typeof(base)=='object') {
-                            base.href = base.href;
-            }
+    var oDataTable = null;  // TODO enable more than one
+    console.log(this);
+    // this.c4gGui.setup();
+  };
+
+
+  $.extend(c4g.projects.c4gGui.prototype, {
+    setup: function () {
+      var scope = this;
+      console.log(scope);
+      return this.mainDiv.each(function() {
+        var options = scope.options;
+        console.log(options);
+        // if no ID is provided then initialize internal ID for DIVs
+        if (typeof(options.id) ==='undefined') {
+          options.id = nextId;
+        }
+
+        if (options.jquiBreadcrumb || options.jquiButtons || options.jquiEmbeddedDialogs) {
+          if (typeof jQuery.ui === 'undefined') {
+            $(this).html('jQuery UI missing!');
+            return;
           }
         }
 
-        pushingState = false;
-      }
+        // set height and width if provided
+        if (options.height !== '') {
+          $(this).height(options.height);
+        }
+        if (options.width !== '') {
+          $(this).width(options.width);
+        }
 
-    };
+        // add c4gGui class
+        $(this).attr('class', function(i, val) {
+          if (typeof(val) === 'undefined') {
+            return 'c4gGui';
+          } else {
+            return val + ' c4gGui';
+          }
+        });
 
+        if (typeof(options.title) !== 'undefined') {
+          $('<h1 id="c4gGuiTitle">'+options.title+'</h1>').appendTo($(this));
+        }
+        $('<h3 id="c4gGuiSubtitle"> </h3>').appendTo($(this));
+
+
+
+        // add Breadcrumb Area
+        $('<div />')
+          .attr('id', 'c4gGuiBreadcrumb'+options.id)
+          .attr('class', 'c4gGuiBreadcrumb')
+          .appendTo($(this));
+
+        // add Headline Area
+        $('<div />')
+          .attr('id', 'c4gGuiHeadline'+options.id)
+          .attr('class', 'c4gGuiHeadline')
+          .appendTo($(this));
+
+        // add Buttons Area
+        scope.buttonDiv = $('<div />')
+          .attr('id', 'c4gGuiButtons'+options.id)
+          .attr('class', 'c4gGuiButtons')
+          .appendTo($(this));
+        $(scope.buttonDiv).hide();
+
+        // add navigation
+        if (options.navPanel) {
+          $('<div />')
+            .attr('id','c4gGuiNavigation'+options.id)
+            .attr('class','c4gGuiNavigation')
+            .appendTo($(this));
+        }
+
+        // create DIV for ajax Message
+        $(this).append('<div class="c4gLoaderPh"></div>');
+        $(document).ajaxStart(function(){
+          $('.c4gGui,.c4gGuiDialog').addClass('c4gGuiAjaxBusy');
+          $('.c4gLoaderPh').addClass('c4gLoader');
+        });
+        $(document).ajaxStop(function(){
+          $('.c4gGui,.c4gGuiDialog').removeClass('c4gGuiAjaxBusy');
+          $('.c4gLoaderPh').removeClass('c4gLoader');
+        });
+
+        // create DIV for content
+        $('<div />')
+          .attr('id','c4gGuiContent'+options.id)
+          .attr('class','c4gGuiContent')
+          .appendTo(
+            $('<div />')
+              .attr('id','c4gGuiContentWrapper'+options.id)
+              .attr('class','c4gGuiContentWrapper')
+              .appendTo(this));
+
+        // create DIV for dialogs
+        $('<div />')
+          .attr('id','c4gGuiDialog'+options.id)
+          .attr('class','c4gGuiDialog')
+          .appendTo(this);
+
+        if (options.initData) {
+          // initialization data exists
+          var initData = {};
+          initData.content = options.initData;
+          scope.fnHandleAjaxResponse( initData, options.id );
+        } else {
+          // request initialization from server
+          $.ajax({
+            internalId: options.id,
+            url: options.ajaxUrl,
+            data: options.ajaxData+'/initnav',
+            dataType: "json",
+            type: "GET",
+            success: function( data ) {
+              scope.fnHandleAjaxResponse( data, this.internalId );
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              scope.fnInitContentDiv();
+              $(this.contentDiv).text('Error: '+errorThrown);
+            }
+          });
+        }
+        if (history != null) {
+          var internalId = options.id;
+          // history.Adapter.bind(window,'statechange',function(){
+          //   if (!scope.pushingState) {
+          //     var State = History.getState();
+          //     $.ajax({
+          //       internalId: internalId,
+          //       url: options.ajaxUrl + '/' + options.ajaxData,
+          //       data: 'historyreq='+decodeURI(
+          //         (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
+          //       ),
+          //       dataType: "json",
+          //       type: "GET",
+          //       success: function( data ) {
+          //         scope.fnHandleAjaxResponse( data, this.internalId );
+          //       },
+          //       error: function(jqXHR, textStatus, errorThrown) {
+          //         $(this.contentDiv).text('Error: '+errorThrown);
+          //       }
+          //     });
+          //   }
+          // });
+        }
+
+        // set next Id in case there is more than one element to be set
+        options.id++;
+        nextId = options.id;
+      });
+    }, // end of init
 
     // -----------------------------------
     // handle Ajax response
     // -----------------------------------
-    var fnHandleAjaxResponse = function(data, internalId) {
+    fnHandleAjaxResponse: function (data, internalId) {
       // TODO: Request Token Handling
-      var navDiv = '#c4gGuiNavigation'+internalId;
-      var contentWrapperDiv = '#c4gGuiContentWrapper'+internalId;
-      var contentDiv = '#c4gGuiContent'+internalId;
-      var dialogDiv = '#c4gGuiDialog'+internalId;
-      var breadcrumbDiv = '#c4gGuiBreadcrumb'+internalId;
-      var headlineDiv = '#c4gGuiHeadline'+internalId;
+      var navDiv = '#c4gGuiNavigation' + internalId;
+      this.contentWrapperDiv = '#c4gGuiContentWrapper' + internalId;
+      this.contentDiv = '#c4gGuiContent' + internalId;
+      var dialogDiv = '#c4gGuiDialog' + internalId;
+      var breadcrumbDiv = '#c4gGuiBreadcrumb' + internalId;
+      var headlineDiv = '#c4gGuiHeadline' + internalId;
+      var scope = this;
+      var options = this.options;
 
-      var fnExecAjax = function(ajaxMethod, ajaxUrl, ajaxData) {
-                if(ajaxUrl.indexOf("?") <= 0){
-                    ajaxUrl += "?id=0";
-                }else{
-                    ajaxUrl += "&id=0";
-                }
+      var fnExecAjax = function (ajaxMethod, ajaxUrl, ajaxData) {
+        if (ajaxUrl.indexOf("?") <= 0) {
+          ajaxUrl += "?id=0";
+        } else {
+          ajaxUrl += "&id=0";
+        }
         $.ajax({
-            internalId : internalId,
-            url: ajaxUrl,
-            data: ajaxData,
-            dataType: "json",
-            type: ajaxMethod,
-            success: function( data ) {
-              fnHandleAjaxResponse(data, this.internalId);
-            },
-              error: function(jqXHR, textStatus, errorThrown) {
-              fnInitContentDiv();
-              $(this.contentDiv).text('Error: '+errorThrown);
-              }
-          });
-      };
-
-      var fnExecAjaxGet = function(ajaxData) {
-        fnExecAjax( "GET", options.ajaxUrl+'/'+ajaxData, null );
-      };
-
-      var fnExecAjaxPut = function(ajaxUrl,ajaxData) {
-        fnExecAjax( "PUT", ajaxUrl, ajaxData );
-      };
-
-      var fnJumpToLink = function(linkUrl,newwindow) {
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-          if ((linkUrl.indexOf(':')<0) && (linkUrl[0]!='/')) {
-              linkUrl = linkUrl.replace('index.php/', "");
+          internalId: internalId,
+          url: ajaxUrl,
+          data: ajaxData,
+          dataType: "json",
+          type: ajaxMethod,
+          success: function (data) {
+            scope.fnHandleAjaxResponse(data, this.internalId);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            scope.fnInitContentDiv();
+            $(this.contentDiv).text('Error: ' + errorThrown);
           }
-      }
-      if (newwindow) {
-              window.open(linkUrl, 'Window');
-          }else {
-              window.location = linkUrl;
-          }
+        });
       };
 
-      var fnAddTooltip = function(element){
-        if (typeof(jQuery.fn.tooltip) == 'function') {
+      var fnExecAjaxGet = function (ajaxData) {
+        fnExecAjax("GET", options.ajaxUrl + '/' + ajaxData, null);
+      };
+
+      var fnExecAjaxPut = function (ajaxUrl, ajaxData) {
+        fnExecAjax("PUT", ajaxUrl, ajaxData);
+      };
+
+      var fnJumpToLink = function (linkUrl, newwindow) {
+        if (navigator.appName === 'Microsoft Internet Explorer') {
+          if ((linkUrl.indexOf(':') < 0) && (linkUrl[0] !== '/')) {
+            linkUrl = linkUrl.replace('index.php/', "");
+          }
+        }
+        if (newwindow) {
+          window.open(linkUrl, 'Window');
+        } else {
+          window.location = linkUrl;
+        }
+      };
+
+      var fnAddTooltip = function (element) {
+        if (typeof(jQuery.fn.tooltip) === 'function') {
           element
             .find('.c4gGuiTooltip')
-            .tooltip({track: false, delay: 0, extraClass: "c4gGuiTooltipComponent ui-corner-all ui-widget-content", showURL: true});
+            .tooltip({
+              track: false,
+              delay: 0,
+              extraClass: "c4gGuiTooltipComponent ui-corner-all ui-widget-content",
+              showURL: true
+            });
 
         }
       };
 
-      var fnAddScrollpane = function(element){
+      var fnAddScrollpane = function (element) {
         //TODO add Switch
         //TODO disable autoReinitialise and do it manually everytime the dialog resizes
-        if (typeof(jQuery.fn.jScrollPane) == 'function') {
+        if (typeof(jQuery.fn.jScrollPane) === 'function') {
           element
-            .jScrollPane({autoReinitialise:true, autoReinitialiseDelay:100});
+            .jScrollPane({autoReinitialise: true, autoReinitialiseDelay: 100});
         }
       };
 
-      var fnAddAccordion = function(element){
-        if (typeof(jQuery.fn.accordion) == 'function') {
+      var fnAddAccordion = function (element) {
+        if (typeof(jQuery.fn.accordion) === 'function') {
           element
             .find('.c4gGuiAccordion')
             .accordion({active: false, autoHeight: false, collapsible: true});
         }
       };
 
-      var fnMakeCollapsible = function(element){
+      var fnMakeCollapsible = function (element) {
         element
           .find('.c4gGuiCollapsible_hide')
           .slideUp(0);
         element
           .find('.c4gGuiCollapsible_trigger')
-          .click(function()
-          {
+          .click(function () {
             $(this).children('.c4gGuiCollapsible_trigger_target').slideToggle(250);
-            $(this).nextUntil('.c4gGuiCollapsible_trigger','.c4gGuiCollapsible_target').slideToggle(250); //.addClass('sub_active');
+            $(this).nextUntil('.c4gGuiCollapsible_trigger', '.c4gGuiCollapsible_target').slideToggle(250); //.addClass('sub_active');
           });
-            };
+      };
 
-            var fnEnableWswgEditor = function(){
-              if (typeof(wswgEditor) != 'undefined') {
-                if( $('#editor').length > 0 ){
-                    wswgEditor.initEditor('editor');
-                }
+      var fnEnableWswgEditor = function () {
+        if (typeof(wswgEditor) !== 'undefined') {
+          if ($('#editor').length > 0) {
+            wswgEditor.initEditor('editor');
+          }
 
-                if( $('#ckeditor').length > 0 ){
-                    if(typeof ckEditorItems == "undefined" || ckEditorItems == "" || ckEditorItems.length <= 1){
-                        ckEditorItems = ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', 'Blockquote', '-', 'RemoveFormat', 'NumberedList', 'BulletedList', 'Link', 'Unlink', 'Anchor', 'Image', 'FileUpload', 'Smiley',  'TextColor', 'BGColor' ];
-                    }
+          if ($('#ckeditor').length > 0) {
+            if (typeof ckEditorItems === "undefined" || ckEditorItems === "" || ckEditorItems.length <= 1) {
+              ckEditorItems = ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', 'Blockquote', '-', 'RemoveFormat', 'NumberedList', 'BulletedList', 'Link', 'Unlink', 'Anchor', 'Image', 'FileUpload', 'Smiley', 'TextColor', 'BGColor'];
+            }
 
-                    if ($.browser.mozilla) {
-                      CKEDITOR.on('instanceReady', function (event) {
-                        event.editor.on('mode', function (ev) {
-                          if (ev.editor.mode === 'wysiwyg') {
-                            // gets executed everytime the editor switches from source -> WYSIWYG
-                            document.designMode = 'on';
-                            document.execCommand('enableObjectResizing', false, false);
-                            document.execCommand('enableInlineTableEditing', false, false);
-                            document.designMode = 'off';
-                          }
-                        });
-
-                        // this gets executed on init
-                        document.designMode = 'on';
-                        document.execCommand('enableObjectResizing', false, false);
-                        document.execCommand('enableInlineTableEditing', false, false);
-                        document.designMode = 'off';
-                      });
-                    }
-
-                    try {
-                      if (CKEDITOR.instances['ckeditor']) {
-                        CKEDITOR.instances['ckeditor'].destroy(true);
-                      }
-                    } catch (e) { }
-                                setTimeout(function(){
-                                    CKEDITOR.replace('ckeditor', {
-                                        toolbar: [{
-                                            name: 'all', items: ckEditorItems
-                                        }],
-                                        removePlugins:ckRemovePlugins || '',
-                                        language:options.contaoLanguage,
-                                        defaultLanguage:"en",
-                                        disableObjectResizing : true,
-                                        filebrowserImageUploadUrl: options.contaoPath + "bundles/con4giscore/vendor/imgUpload.php",
-                                        filebrowserUploadUrl: options.contaoPath + uploadApiUrl
-                                    });
-                                },500);
-
+            if ($.browser.mozilla) {
+              CKEDITOR.on('instanceReady', function (event) {
+                event.editor.on('mode', function (ev) {
+                  if (ev.editor.mode === 'wysiwyg') {
+                    // gets executed everytime the editor switches from source -> WYSIWYG
+                    document.designMode = 'on';
+                    document.execCommand('enableObjectResizing', false, false);
+                    document.execCommand('enableInlineTableEditing', false, false);
+                    document.designMode = 'off';
                   }
-                  $('.BBCode-Area').each( function() {
-                    $(this).html( wswgEditor.parseBBCode( $(this).html() ) );
-                  });
+                });
 
-                }
-            };
+                // this gets executed on init
+                document.designMode = 'on';
+                document.execCommand('enableObjectResizing', false, false);
+                document.execCommand('enableInlineTableEditing', false, false);
+                document.designMode = 'off';
+              });
+            }
 
-            var fnAddButton = function(element){
-        if (typeof(jQuery.fn.button) == 'function') {
+            try {
+              if (CKEDITOR.instances['ckeditor']) {
+                CKEDITOR.instances['ckeditor'].destroy(true);
+              }
+            } catch (e) {
+            }
+            setTimeout(function () {
+              CKEDITOR.replace('ckeditor', {
+                toolbar: [{
+                  name: 'all', items: ckEditorItems
+                }],
+                removePlugins: ckRemovePlugins || '',
+                language: options.contaoLanguage,
+                defaultLanguage: "en",
+                disableObjectResizing: true,
+                filebrowserImageUploadUrl: options.contaoPath + "bundles/con4giscore/vendor/imgUpload.php",
+                filebrowserUploadUrl: options.contaoPath + uploadApiUrl
+              });
+            }, 500);
+
+          }
+          $('.BBCode-Area').each(function () {
+            $(this).html(wswgEditor.parseBBCode($(this).html()));
+          });
+
+        }
+      };
+
+      var fnAddButton = function (element) {
+        if (typeof(jQuery.fn.button) === 'function') {
           element
             .find('.c4gGuiButton')
             .button();
         }
-            };
+      };
 
-            var fnDialogClose = function(element) {
-              if (options.embedDialogs) {
-                $(element).hide();
-                var state =
-                  $(element).prev().show()
-                  .attr('data-state');
-                  if ((typeof(state)=="undefined") || (state=="")) {
-                    state = $(contentDiv).attr('data-state');
-                  }
-                  if ($(element).prev().hasClass('c4gGuiContent')) {
-                    $(buttonDiv).show();
-                  }
+      var fnDialogClose = function (element) {
+        if (options.embedDialogs) {
+          $(element).hide();
+          var state =
+            $(element).prev().show()
+              .attr('data-state');
+          if ((typeof(state) === "undefined") || (state === "")) {
+            state = $(scope.contentDiv).attr('data-state');
+          }
+          if ($(element).prev().hasClass('c4gGuiContent')) {
+            $(buttonDiv).show();
+          }
 
-                  if ((state!="") && (History!=null)) {
-                    fnHistoryPush(state);
-                  }
-                $(element).remove();
-              } else {
-                $(element).parent().find(".ui-dialog-titlebar-close").trigger('click');
-              }
+          if ((state !== "") && (History != null)) {
+            scope.fnHistoryPush(state);
+          }
+          $(element).remove();
+        } else {
+          $(element).parent().find(".ui-dialog-titlebar-close").trigger('click');
+        }
 
-              //ToDo test
-              window.scrollTo(0, 0);
-            };
+        //ToDo test
+        window.scrollTo(0, 0);
+      };
 
 
-      var content
-      if(data && data.content) {
+      var content;
+      if (data && data.content) {
         content = data.content;
       } else {
         content = data;
       }
-      if (content && typeof(content)!='object') {
-        content = $.parseJSON( content );
+      if (content && typeof(content) !== 'object') {
+        content = $.parseJSON(content);
       }
-      if (content==null) {
+      if (content == null) {
         return;
       }
 
-      if (typeof(content.title) != "undefined") {
+      if (typeof(content.title) !== "undefined") {
         $('#c4gGuiTitle').html(content.title);
-      };
+      }
 
-      if (typeof(content.subtitle) != "undefined") {
+      if (typeof(content.subtitle) !== "undefined") {
         $('#c4gGuiSubtitle').html(content.subtitle);
       } else {
-        if (typeof(content.title) != "undefined") {
+        if (typeof(content.title) !== "undefined") {
           $('#c4gGuiSubtitle').html("");
         }
-      };
+      }
 
       var currentState = "";
 
-          var fnInitContentDiv = function() {
-        $(contentDiv).empty();
-        $(contentWrapperDiv+' div:not('+contentDiv+')').remove();
-        $(contentDiv).show();
-          };
-
-          if (History!=null) {
-        if (typeof(content.state)!='undefined')
-        {
+      if (History != null) {
+        if (typeof(content.state) !== 'undefined') {
           currentState = content.state;
         }
-        if (typeof(content.dialogstate)!='undefined')
-        {
+        if (typeof(content.dialogstate) !== 'undefined') {
           currentState = content.dialogstate;
         }
-        if (currentState != "")  {
-          fnHistoryPush( currentState );
+        if (currentState !== "") {
+          this.fnHistoryPush(currentState);
         }
       }
 
       // Set headline
-          if (typeof(content.headline)!='undefined') {
+      if (typeof(content.headline) !== 'undefined') {
         $(headlineDiv).html(content.headline);
       }
 
       // create breadcrumb
       if ($.isArray(content.breadcrumb)) {
         $(breadcrumbDiv).empty();
-        $.each( content.breadcrumb, function(index, value){
-          if (index>0) {
-            if (options.breadcrumbDelim!='') {
-              $(breadcrumbDiv).append('<span class="c4gGuiBreadcrumbDelim">'+options.breadcrumbDelim+'</span>');
+        $.each(content.breadcrumb, function (index, value) {
+          if (index > 0) {
+            if (options.breadcrumbDelim !== '') {
+              $(breadcrumbDiv).append('<span class="c4gGuiBreadcrumbDelim">' + options.breadcrumbDelim + '</span>');
             }
 
           }
           var aButton = $("<a />")
-              .attr('href','#')
-              .attr('class','c4gGuiBreadcrumbItem')
-              .html(value['text'])
-              .click(function(e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if($(e.currentTarget).attr("disabled") != "disabled") {
-                                if (value['url']) {
-                                    fnJumpToLink(value['url']);
-                                } else {
-                                    if (value['id']) {
-                                        fnExecAjaxGet(options.ajaxData + '/' + value['id']);
-                                    }
-                                }
-                            }
-                return false;
-              })
-              .appendTo(breadcrumbDiv);
+            .attr('href', '#')
+            .attr('class', 'c4gGuiBreadcrumbItem')
+            .html(value['text'])
+            .click(function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if ($(e.currentTarget).attr("disabled") !== "disabled") {
+                if (value['url']) {
+                  fnJumpToLink(value['url']);
+                } else {
+                  if (value['id']) {
+                    fnExecAjaxGet(options.ajaxData + '/' + value['id']);
+                  }
+                }
+              }
+              return false;
+            })
+            .appendTo(breadcrumbDiv);
           if (options.jquiBreadcrumb) {
-              aButton.button();
+            aButton.button();
           }
         });
 
-        $(".c4gGuiBreadcrumbItem").last().attr("disabled","disabled").addClass("ui-state-hover").on("mouseleave",function(e){$( e.currentTarget ).addClass("ui-state-hover" );}).on("mousedown",function(e){$(e.currentTarget).removeClass("ui-state-active");});
+        $(".c4gGuiBreadcrumbItem").last().attr("disabled", "disabled").addClass("ui-state-hover").on("mouseleave", function (e) {
+          $(e.currentTarget).addClass("ui-state-hover");
+        }).on("mousedown", function (e) {
+          $(e.currentTarget).removeClass("ui-state-active");
+        });
 
         if (content !== data) {
           $(".c4gGuiBreadcrumbItem").last().attr("disabled", false);
@@ -363,92 +506,90 @@ this.c4g = this.c4g || {};
       if ($.isArray(content.buttons)) {
         $(buttonDiv).empty();
         $(buttonDiv).hide();
-        $.each( content.buttons, function(index, value){
+        $.each(content.buttons, function (index, value) {
           var aButton = $("<a />")
-              .attr('href','#')
-              .attr('accesskey', value['accesskey'])
-              .html(value['text'])
-              .click(function() {
-                if (value['tableSelection']) {
-                if ((typeof(oDataTable) != 'undefined') && (oDataTable!=null)) {
-                  var formdata=new Object();
-                  oDataTable.$('tr.row_selected').each(function(index,value){
-                    formdata['action'+index] = value.attributes['data-action'].value;
+            .attr('href', '#')
+            .attr('accesskey', value['accesskey'])
+            .html(value['text'])
+            .click(function () {
+              if (value['tableSelection']) {
+                if ((typeof(oDataTable) !== 'undefined') && (oDataTable != null)) {
+                  var formdata = new Object();
+                  oDataTable.$('tr.row_selected').each(function (index, value) {
+                    formdata['action' + index] = value.attributes['data-action'].value;
                   });
                   fnExecAjaxPut(
-                    options.ajaxUrl+'/'+options.ajaxData+'/'+value['id'],
+                    options.ajaxUrl + '/' + options.ajaxData + '/' + value['id'],
                     formdata);
 
                 }
                 return false;
 
-                }
-                fnExecAjaxGet(options.ajaxData+'/'+value['id']);
-                return false;
-              })
-              .appendTo(buttonDiv);
+              }
+              fnExecAjaxGet(options.ajaxData + '/' + value['id']);
+              return false;
+            })
+            .appendTo(buttonDiv);
           if (options.jquiButtons) {
-              aButton.button();
+            aButton.button();
           }
           $(buttonDiv).show();
         });
       }
 
 
-
-
-      if (typeof(content.treedata)!='undefined') {
+      if (typeof(content.treedata) !== 'undefined') {
         // populate tree with data when treedata is available
 
         $(navDiv).empty();
 
-        if (typeof ($.fn.dynatree) == 'undefined') {
+        if (typeof ($.fn.dynatree) === 'undefined') {
           $(navDiv).html('<h1>jQuery.dynatree missing</h1>');
         } else {
 
           var treeDiv = $('<div />')
-              .attr('id','c4gGuiDynatree'+internalId)
-              .attr('class','c4gGuiTree')
-              .attr('width',$(navDiv).width())
-              .attr('height',$(navDiv).height())
-              .appendTo($(navDiv));
+            .attr('id', 'c4gGuiDynatree' + internalId)
+            .attr('class', 'c4gGuiTree')
+            .attr('width', $(navDiv).width())
+            .attr('height', $(navDiv).height())
+            .appendTo($(navDiv));
 
           // TODO: Error handling
           var treedata = $.extend(
-              {
-                onActivate: function(node) {
-                  if ((typeof(node.data.href)!='undefined') && (node.data.href!='') && (node.data.href!==null)) {
-                    if (node.data.href_newwindow) {
-                      fnJumpToLink(node.data.href,true);
-                    }
-                    else {
-                      fnJumpToLink(node.data.href);
-                    }
-
+            {
+              onActivate: function (node) {
+                if ((typeof(node.data.href) !== 'undefined') && (node.data.href !== '') && (node.data.href !== null)) {
+                  if (node.data.href_newwindow) {
+                    fnJumpToLink(node.data.href, true);
                   }
                   else {
-                    fnExecAjaxGet(options.ajaxData+'/'+node.data.key);
+                    fnJumpToLink(node.data.href);
                   }
-                },
-                onFocus: function(node) {
-                  // Auto-activate focused node after 2 seconds
-                  node.scheduleAction("activate", 2000);
+
                 }
-              }, content.treedata
-            );
+                else {
+                  fnExecAjaxGet(options.ajaxData + '/' + node.data.key);
+                }
+              },
+              onFocus: function (node) {
+                // Auto-activate focused node after 2 seconds
+                node.scheduleAction("activate", 2000);
+              }
+            }, content.treedata
+          );
           $(treeDiv).dynatree(treedata);
-          $(navDiv).resizable( "destroy" );
-          $(navDiv+" .dynatree-container").width($(navDiv).width()-8);
+          $(navDiv).resizable("destroy");
+          $(navDiv + " .dynatree-container").width($(navDiv).width() - 8);
           $(navDiv).resizable({
             //animate: true,
-            alsoResize: navDiv+" .dynatree-container, "+navDiv+" .c4gGuiTree",
-            resize: function(event,ui) {
+            alsoResize: navDiv + " .dynatree-container, " + navDiv + " .c4gGuiTree",
+            resize: function (event, ui) {
               var newWidth = $(contentWrapperDiv).parent().width() - ui.size.width - 5;
-              $(contentWrapperDiv).width( newWidth );
-              $(contentWrapperDiv).height( ui.size.height);
+              $(contentWrapperDiv).width(newWidth);
+              $(contentWrapperDiv).height(ui.size.height);
             },
-            stop: function() {
-              if ((typeof(oDataTable) != 'undefined') && (oDataTable!=null)) {
+            stop: function () {
+              if ((typeof(oDataTable) !== 'undefined') && (oDataTable != null)) {
                 oDataTable.fnDraw(true);
               }
             }
@@ -458,222 +599,221 @@ this.c4g = this.c4g || {};
       }
 
       // TODO: Error handling
-      if ((typeof(content.contentdata)!='undefined') || ($.isArray(content.contents))) {
-                // populate dataTable
-        fnInitContentDiv();
+      if ((typeof(content.contentdata) !== 'undefined') || ($.isArray(content.contents))) {
+        // populate dataTable
+        scope.fnInitContentDiv();
 
         var newWidth = '100%';
         var newHeight = '100%';
         if (options.navPanel) {
           newWidth = $(contentWrapperDiv).parent().width()
-              - $(navDiv).width() - 5;
+            - $(navDiv).width() - 5;
           newHeight = $(navDiv).height();
         }
         $(contentWrapperDiv).width(newWidth);
         $(contentWrapperDiv).height(newHeight);
-        if (typeof (content.state) != 'undefined') {
-          $(contentDiv).attr('data-state', content.state);
+        if (typeof (content.state) !== 'undefined') {
+          $(scope.contentDiv).attr('data-state', content.state);
         }
 
         //var fnAddContent = function(contenttype,contentoptions,contentdata) {
-        var fnAddContent = function(content) {
+        var fnAddContent = function (content) {
           var contenttype = content.contenttype;
           var contentoptions = content.contentoptions;
           var contentdata = content.contentdata;
-          if ((contenttype == 'datatable')
-              && (typeof (contentdata) != 'undefined')) {
+          if ((contenttype === 'datatable')
+            && (typeof (contentdata) !== 'undefined')) {
 
-            if (typeof ($.fn.dataTable) == 'undefined') {
-              $(contentDiv).html('<h1>jQuery.dataTable missing</h1>');
+            if (typeof ($.fn.dataTable) === 'undefined') {
+              $(scope.contentDiv).html('<h1>jQuery.dataTable missing</h1>');
             } else {
 
-              var tableDiv = $( '<table />')
-                .attr('id','c4gGuiDataTable:' + content.state)
+              var tableDiv = $('<table />')
+                .attr('id', 'c4gGuiDataTable:' + content.state)
                 // .attr('id','c4gGuiDataTable'+internalId)
-                .attr('cellpadding','0')
-                .attr('cellspacing','0')
-                .attr('border','0')
-                .attr('class','display c4gGuiDataTable')
-                .appendTo(contentDiv);
+                .attr('cellpadding', '0')
+                .attr('cellspacing', '0')
+                .attr('border', '0')
+                .attr('class', 'display c4gGuiDataTable')
+                .appendTo(scope.contentDiv);
 
-              var actioncol=-1;
-              var selectrow=-1;
-              var tooltipcol=-1;
+              var actioncol = -1;
+              var selectrow = -1;
+              var tooltipcol = -1;
               var selectOnHover = false;
               var clickAction = false;
               var multiSelect = false;
 
 
-              if (typeof(contentoptions)!='undefined') {
-                if (typeof(contentoptions.actioncol)!='undefined') {
+              if (typeof(contentoptions) !== 'undefined') {
+                if (typeof(contentoptions.actioncol) !== 'undefined') {
                   actioncol = contentoptions.actioncol;
                 }
-                if (typeof(contentoptions.selectrow)!='undefined') {
+                if (typeof(contentoptions.selectrow) !== 'undefined') {
                   selectrow = contentoptions.selectrow;
                 }
-                if (typeof(contentoptions.tooltipcol)!='undefined') {
+                if (typeof(contentoptions.tooltipcol) !== 'undefined') {
                   tooltipcol = contentoptions.tooltipcol;
                 }
-                if (typeof(contentoptions.selectOnHover)!='undefined') {
+                if (typeof(contentoptions.selectOnHover) !== 'undefined') {
                   selectOnHover = contentoptions.selectOnHover;
                 }
-                if (typeof(contentoptions.clickAction)!='undefined') {
+                if (typeof(contentoptions.clickAction) !== 'undefined') {
                   clickAction = contentoptions.clickAction;
                 }
-                if (typeof(contentoptions.multiSelect)!='undefined') {
+                if (typeof(contentoptions.multiSelect) !== 'undefined') {
                   multiSelect = contentoptions.multiSelect;
                 }
               }
-              var contentdata = $.extend( {
-                  "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull )
-                      {
-                        if (actioncol!=-1) {
-                          $(nRow).attr( 'data-action', aData[actioncol] );
-                        }
-                        if (selectrow!=-1) {
-                          if (iDisplayIndex == selectrow) {
-                            $(nRow).addClass('selected');
-                            $(".dataTables_scrollBody").scrollTo(nRow);
-                          }
-                        }
-                        if ((tooltipcol!=-1) && (typeof(jQuery.fn.tooltip) == 'function')) {
-                          if (aData[tooltipcol]) {
-                            $(nRow).attr('data-tooltip',aData[tooltipcol]);
-                            $(nRow).tooltip( {
-                                  bodyHandler: function() {
-                                    return $(nRow).attr('data-tooltip');
-                                  },
-                                extraClass: "c4gGuiTooltipComponent c4gGuiTooltipInTable"
-                              }
-                            );
-                          }
-                        }
-                        return nRow;
-                      },
-                  //"lengthMenu": [ [25, 50, "-1"], [25, 50, "All"] ],
-                  "footerCallback": function(row, data, start, end, display) {
-                      var api = this.api();
-                      if ($('.c4g_sumfoot').length > 0) {
-                            $('.c4g_sumfoot').remove();
-                      }
-
-                      if ($('.c4g_sum').length > 0) {
-                          $(this).append('<tfoot class="c4g_sumfoot"><tr role="row" class="c4g_sumrow ui-state-highlight"></tr></tfoot>');
-                          api.columns('.c4g_brick_col', { page: 'current' }).every(function () {
-                              if ($(this.header()).css("display") !== "none") {
-                                  if (this.header().className.indexOf('c4g_sum')) {
-                                      var sum = api
-                                          .cells( null, this.index())
-                                          .data()
-                                          .reduce(function (a, b) {
-                                            a += "";
-                                            b += "";
-                                            var x = a.replace(",", ".");
-                                            x = parseFloat(x) || 0;
-                                            var y = b.replace(",", ".");
-                                            y = parseFloat(y) || 0;
-                                              return x + y;
-                                          }, 0);
-
-                                      if (sum) {
-                                        // TODO Internationalize this
-                                        // TODO make this configurable ?
-                                          sum  = parseFloat(sum).toFixed(2).toLocaleString();
-                                          sum = sum.replace(".", ",");
-                                      }
-                                  }
-
-                                  if (sum && this.header().className && (this.header().className.indexOf('c4g_sum') != -1)) {
-                                      $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;">'+sum+'</th>');
-                                  } else {
-                                      $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;"></th>');
-                                  }
-                              }
-                          });
-                      }
-                  },
-                  "fnDrawCallback": function() {
-                      $(tableDiv).find('tr')
-                      .unbind('hover')
-                      .unbind('click')
-                      .hover(function() {
-                        if (selectOnHover) {
-                          $(this).addClass('row_selected');
-                        }
-                        if (clickAction || multiSelect) {
-                          $(this).addClass('cursor_pointer');
-                        }
-                      }, function() {
-                        if (selectOnHover) {
-                          $(this).removeClass('row_selected');
-                        }
-                        if (clickAction || multiSelect) {
-                          $(this).removeClass('cursor_pointer');
-                        }
-                      })
-                      .click(function() {
-                        if (multiSelect) {
-                          $(this).toggleClass('row_selected');
-                        }
-                        if ((clickAction) && (typeof($(this).attr('data-action'))!='undefined')) {
-                          fnExecAjaxGet(options.ajaxData+'/'+$(this).attr('data-action'));
-                          return false;
-                        }
-                      });
+              contentdata = $.extend({
+                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                  if (actioncol !== -1) {
+                    $(nRow).attr('data-action', aData[actioncol]);
+                  }
+                  if (selectrow !== -1) {
+                    if (iDisplayIndex === selectrow) {
+                      $(nRow).addClass('selected');
+                      $(".dataTables_scrollBody").scrollTo(nRow);
                     }
+                  }
+                  if ((tooltipcol !== -1) && (typeof(jQuery.fn.tooltip) === 'function')) {
+                    if (aData[tooltipcol]) {
+                      $(nRow).attr('data-tooltip', aData[tooltipcol]);
+                      $(nRow).tooltip({
+                          bodyHandler: function () {
+                            return $(nRow).attr('data-tooltip');
+                          },
+                          extraClass: "c4gGuiTooltipComponent c4gGuiTooltipInTable"
+                        }
+                      );
+                    }
+                  }
+                  return nRow;
+                },
+                //"lengthMenu": [ [25, 50, "-1"], [25, 50, "All"] ],
+                "footerCallback": function (row, data, start, end, display) {
+                  var api = this.api();
+                  if ($('.c4g_sumfoot').length > 0) {
+                    $('.c4g_sumfoot').remove();
+                  }
+
+                  if ($('.c4g_sum').length > 0) {
+                    $(this).append('<tfoot class="c4g_sumfoot"><tr role="row" class="c4g_sumrow ui-state-highlight"></tr></tfoot>');
+                    api.columns('.c4g_brick_col', {page: 'current'}).every(function () {
+                      if ($(this.header()).css("display") !== "none") {
+                        if (this.header().className.indexOf('c4g_sum')) {
+                          var sum = api
+                            .cells(null, this.index())
+                            .data()
+                            .reduce(function (a, b) {
+                              a += "";
+                              b += "";
+                              var x = a.replace(",", ".");
+                              x = parseFloat(x) || 0;
+                              var y = b.replace(",", ".");
+                              y = parseFloat(y) || 0;
+                              return x + y;
+                            }, 0);
+
+                          if (sum) {
+                            // TODO Internationalize this
+                            // TODO make this configurable ?
+                            sum = parseFloat(sum).toFixed(2).toLocaleString();
+                            sum = sum.replace(".", ",");
+                          }
+                        }
+
+                        if (sum && this.header().className && (this.header().className.indexOf('c4g_sum') !== -1)) {
+                          $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;">' + sum + '</th>');
+                        } else {
+                          $('.c4g_sumrow').append('<th class="c4g_list_align_right" style="width:100%;"></th>');
+                        }
+                      }
+                    });
+                  }
+                },
+                "fnDrawCallback": function () {
+                  $(tableDiv).find('tr')
+                    .unbind('hover')
+                    .unbind('click')
+                    .hover(function () {
+                      if (selectOnHover) {
+                        $(this).addClass('row_selected');
+                      }
+                      if (clickAction || multiSelect) {
+                        $(this).addClass('cursor_pointer');
+                      }
+                    }, function () {
+                      if (selectOnHover) {
+                        $(this).removeClass('row_selected');
+                      }
+                      if (clickAction || multiSelect) {
+                        $(this).removeClass('cursor_pointer');
+                      }
+                    })
+                    .click(function () {
+                      if (multiSelect) {
+                        $(this).toggleClass('row_selected');
+                      }
+                      if ((clickAction) && (typeof($(this).attr('data-action')) !== 'undefined')) {
+                        fnExecAjaxGet(options.ajaxData + '/' + $(this).attr('data-action'));
+                        return false;
+                      }
+                    });
+                }
               }, contentdata);
 
               oDataTable = $(tableDiv).dataTable(contentdata);
-              fnDataTableColumnVis(oDataTable);
+              scope.fnDataTableColumnVis(oDataTable);
 
             }
 
           }
 
-          if (contenttype=='html')  {
+          if (contenttype === 'html') {
             var aClass = 'c4gGuiHtml';
-            if (typeof(contentoptions)!='undefined') {
+            if (typeof(contentoptions) !== 'undefined') {
               if (contentoptions.scrollable) {
                 aClass = aClass + ' c4gGuiScrollable';
               }
             }
             var aHtmlDiv = $('<div />')
-              .attr('id', 'c4gGuiHtml'+internalId)
-              .attr('class',aClass)
-              .appendTo(contentDiv)
+              .attr('id', 'c4gGuiHtml' + internalId)
+              .attr('class', aClass)
+              .appendTo(scope.contentDiv)
               .html(contentdata);
 
             aHtmlDiv
               .find('.c4gGuiAction')
-              .hover(function(){
-                if ($(this).attr('data-hoverclass')!='undefined') {
+              .hover(function () {
+                if ($(this).attr('data-hoverclass') !== 'undefined') {
                   if ($(this).attr('data-hoverclass')) {
                     $(this).addClass($(this).attr('data-hoverclass'));
                   }
                 }
-              }, function() {
-                if ($(this).attr('data-hoverclass')!='undefined') {
+              }, function () {
+                if ($(this).attr('data-hoverclass') !== 'undefined') {
                   if ($(this).attr('data-hoverclass')) {
                     $(this).removeClass($(this).attr('data-hoverclass'));
                   }
                 }
 
               })
-              .click(function() {
-                          if (typeof($(this).attr('data-href'))!='undefined') {
+              .click(function () {
+                if (typeof($(this).attr('data-href')) !== 'undefined') {
                   if ($(this).attr('data-href_newwindow')) {
-                      fnJumpToLink($(this).attr('data-href'), true);
-                    }
-                    else {
-                      fnJumpToLink($(this).attr('data-href'));
-                    }
-                            return false;
-                          }
+                    fnJumpToLink($(this).attr('data-href'), true);
+                  }
+                  else {
+                    fnJumpToLink($(this).attr('data-href'));
+                  }
+                  return false;
+                }
 
-                  if ($(this).hasClass('c4gGuiSend')) {
-                  var formdata = new Object();
-                  $(contentDiv).find('.formdata').each(function(index,element) {
-                    if ($(element).attr('type')=='checkbox') {
+                if ($(this).hasClass('c4gGuiSend')) {
+                  var formdata = {};
+                  $(scope.contentDiv).find('.formdata').each(function (index, element) {
+                    if ($(element).attr('type') === 'checkbox') {
                       // formdata[$(element).attr('name')] = ($(element).attr('checked') == 'checked');
                       formdata[$(element).attr('name')] = $(element).is(':checked');
                     } else {
@@ -681,19 +821,19 @@ this.c4g = this.c4g || {};
                     }
                   });
 
-                  if (typeof($(this).attr('data-action'))!='undefined') {
+                  if (typeof($(this).attr('data-action')) !== 'undefined') {
                     fnExecAjaxPut(
-                      options.ajaxUrl+'/'+options.ajaxData+'/'+$(this).attr('data-action'),
+                      options.ajaxUrl + '/' + options.ajaxData + '/' + $(this).attr('data-action'),
                       formdata);
                   }
                   return false;
                 }
-                          else if (typeof($(this).attr('data-action'))!='undefined') {
-                    fnExecAjaxGet(options.ajaxData+'/'+$(this).attr('data-action'));
-                    return false;
-                          }
+                else if (typeof($(this).attr('data-action')) !== 'undefined') {
+                  fnExecAjaxGet(options.ajaxData + '/' + $(this).attr('data-action'));
+                  return false;
+                }
 
-            });
+              });
 
             fnAddButton(aHtmlDiv);
             fnAddTooltip(aHtmlDiv);
@@ -704,7 +844,7 @@ this.c4g = this.c4g || {};
           //ToDo test
           window.scrollTo(0, 0);
 
-        }  // function fnAddContent
+        };  // function fnAddContent
 
         // call function to add the contents
         if ($.isArray(content.contents)) {
@@ -713,38 +853,38 @@ this.c4g = this.c4g || {};
             //  content.contents[i].contenttype,
             //  content.contents[i].contentoptions,
             //  content.contents[i].contentdata);
-            fnAddContent( content.contents[i] );
-          };
+            fnAddContent(content.contents[i]);
+          }
         }
         else {
           //fnAddContent(content.contenttype,content.contentoptions,content.contentdata);
-          fnAddContent( content );
+          fnAddContent(content);
         }
 
-        $('.c4gGuiCenterDiv').each(function(i,element){
-          fnCenterDiv(element);
+        $('.c4gGuiCenterDiv').each(function (i, element) {
+          scope.fnCenterDiv(element);
         });
 
-        if (typeof(content.precontent)!='undefined') {
-          $(contentDiv).prepend(
-              $('<div />').attr('class','c4gGuiPreContent').html(content.precontent));
+        if (typeof(content.precontent) !== 'undefined') {
+          $(scope.contentDiv).prepend(
+            $('<div />').attr('class', 'c4gGuiPreContent').html(content.precontent));
         }
 
-        if (typeof(content.postcontent)!='undefined') {
+        if (typeof(content.postcontent) !== 'undefined') {
           $('<div />')
-          .attr('class','c4gGuiPostContent')
-          .html(content.postcontent)
-          .appendTo(contentDiv);
+            .attr('class', 'c4gGuiPostContent')
+            .html(content.postcontent)
+            .appendTo(scope.contentDiv);
         }
       }
 
-      if (typeof(content.dialogclose)!='undefined') {
-        if (typeof(content.dialogclose)=='string') {
-          fnDialogClose('#c4gGuiDialog'+content.dialogclose);
+      if (typeof(content.dialogclose) !== 'undefined') {
+        if (typeof(content.dialogclose) === 'string') {
+          fnDialogClose('#c4gGuiDialog' + content.dialogclose);
         }
         else {
-          $.each(content.dialogclose,function(index,value){
-            fnDialogClose('#c4gGuiDialog'+value);
+          $.each(content.dialogclose, function (index, value) {
+            fnDialogClose('#c4gGuiDialog' + value);
           });
         }
       }
@@ -753,153 +893,154 @@ this.c4g = this.c4g || {};
         $('.c4gGuiDialog').parent().find(".ui-dialog-titlebar-close").trigger('click');
       }
 
-      if (typeof(content.dialogdata)!='undefined') {
-        var dialogoptions = new Object();
-        if (typeof(content.dialogoptions)!='undefined')
-        {
+      if (typeof(content.dialogdata) !== 'undefined') {
+        var dialogoptions = {};
+        if (typeof(content.dialogoptions) !== 'undefined') {
           dialogoptions = content.dialogoptions;
         }
         var dialogid = internalId;
-        if (typeof(content.dialogid)!='undefined') {
+        if (typeof(content.dialogid) !== 'undefined') {
           dialogid = content.dialogid;
         }
         dialogoptions.dialogClass = 'c4gGuiDialogWrapper';
         dialogoptions.position = [
-                  $(contentWrapperDiv).parent().offset().left,
-                  $(contentWrapperDiv).parent().offset().top
-                ];
-        if (typeof(dialogoptions.width)=='undefined') {
-          dialogoptions.width = $(contentDiv).parent().width();
+          $(scope.contentWrapperDiv).parent().offset().left,
+          $(scope.contentWrapperDiv).parent().offset().top
+        ];
+        if (typeof(dialogoptions.width) === 'undefined') {
+          dialogoptions.width = $(scope.contentDiv).parent().width();
         }
-        if (typeof(dialogoptions.height)=='undefined') {
-          if ($(contentWrapperDiv).parent().height() < 300) {
+        if (typeof(dialogoptions.height) === 'undefined') {
+          if ($(scope.contentWrapperDiv).parent().height() < 300) {
             dialogoptions.height = 300;
           }
           else {
-            dialogoptions.height = $(contentWrapperDiv).parent().height();
+            dialogoptions.height = $(scope.contentWrapperDiv).parent().height();
           }
         }
 
-        dialogoptions.close = function() {
-          $('#c4gGuiDialog'+dialogid).remove();
-          var state = $(contentDiv).attr('data-state');
-          if ((state!="") && (History!=null)) {
-            fnHistoryPush(state);
+        dialogoptions.close = function () {
+          $('#c4gGuiDialog' + dialogid).remove();
+          var state = $(scope.contentDiv).attr('data-state');
+          if ((state !== "") && (History != null)) {
+            scope.fnHistoryPush(state);
           }
 
           return true;
         };
 
         // dialog buttons
-        if (typeof(content.dialogbuttons)!='undefined') {
-          dialogoptions.buttons = new Array();
-          $(content.dialogbuttons).each(function(index,value){
+        if (typeof(content.dialogbuttons) !== 'undefined') {
+          dialogoptions.buttons = [];
+          $(content.dialogbuttons).each(function (index, value) {
             var aClass = (value['class'] ? value['class'] : '');
             var aAccesskey = (value['accesskey'] ? value['accesskey'] : '');
-            dialogoptions.buttons.push( {cssClass: aClass, accesskey: aAccesskey, text: value.text,click:function() {
+            dialogoptions.buttons.push({
+              cssClass: aClass, accesskey: aAccesskey, text: value.text, click: function () {
                 //todo value['onclick'] == ... dann click auf link für pdf dl
-              if (value.type == 'send') {
-                  if(($('#ckeditor').length > 0) && CKEDITOR && CKEDITOR.instances['ckeditor'] && typeof CKEDITOR.instances['ckeditor'] != "undefined") {
-                          CKEDITOR.instances.ckeditor.updateElement();
-                  }else {
-                      if (typeof(wswgEditor) != 'undefined') {
-                        wswgEditor.doCheck();
-                      }
-                  }
-
-                var formdata = new Object();
-                $('#c4gGuiDialog'+dialogid).find('.formdata').each(function(index,element) {
-                  $(element).trigger('c4g_before_save');
-                  if ($(element).attr('type')=='checkbox') {
-                    // formdata[$(element).attr('name')] = ($(element).attr('checked') == 'checked');
-                    formdata[$(element).attr('name')] = $(element).is(':checked');
+                if (value.type === 'send') {
+                  if (($('#ckeditor').length > 0) && CKEDITOR && CKEDITOR.instances['ckeditor'] && typeof CKEDITOR.instances['ckeditor'] !== "undefined") {
+                    CKEDITOR.instances.ckeditor.updateElement();
                   } else {
-                    formdata[$(element).attr('name')] = $(element).val();
+                    if (typeof(wswgEditor) !== 'undefined') {
+                      wswgEditor.doCheck();
+                    }
                   }
-                });
 
-                if (typeof(value.action)!='undefined') {
-                  fnExecAjaxPut(
-                    options.ajaxUrl+'/'+options.ajaxData+'/'+value.action,
-                    formdata);
+                  var formdata = {};
+                  $('#c4gGuiDialog' + dialogid).find('.formdata').each(function (index, element) {
+                    $(element).trigger('c4g_before_save');
+                    if ($(element).attr('type') === 'checkbox') {
+                      // formdata[$(element).attr('name')] = ($(element).attr('checked') == 'checked');
+                      formdata[$(element).attr('name')] = $(element).is(':checked');
+                    } else {
+                      formdata[$(element).attr('name')] = $(element).val();
+                    }
+                  });
+
+                  if (typeof(value.action) !== 'undefined') {
+                    fnExecAjaxPut(
+                      options.ajaxUrl + '/' + options.ajaxData + '/' + value.action,
+                      formdata);
+                  }
+                  return false;
+                }
+                if (value.type === 'submit') {
+                  $('#c4gGuiDialog' + dialogid).find('.formlink').each(function (index, element) {
+                    $(element).trigger('c4g_before_save');
+                    var newValue = '';
+                    if (value.action !== 'clear') {
+                      newValue = $(element).val();
+                    }
+                    var trg = $(element).attr('data-target');
+                    if (trg) {
+                      var trgAttr = $(element).attr('data-trgattr');
+                      if (!trgAttr) {
+                        $(trg).html(newValue);
+                      }
+                      else {
+                        $(trg).attr(trgAttr, newValue);
+                      }
+                    }
+                  });
+
+                  // close dialog
+                  fnDialogClose('#c4gGuiDialog' + dialogid);
+
+                }
+                if (value.type === 'get') {
+                  if (typeof(value.action) !== 'undefined') {
+                    fnExecAjaxGet(options.ajaxData + '/' + value.action);
+                  }
                 }
                 return false;
               }
-              if (value.type == 'submit') {
-                $('#c4gGuiDialog'+dialogid).find('.formlink').each(function(index,element) {
-                  $(element).trigger('c4g_before_save');
-                  var newValue = '';
-                  if (value.action!='clear') {
-                    newValue = $(element).val();
-                  }
-                  var trg = $(element).attr('data-target');
-                  if (trg) {
-                    var trgAttr = $(element).attr('data-trgattr');
-                    if (!trgAttr) {
-                      $(trg).html(newValue);
-                    }
-                    else {
-                      $(trg).attr(trgAttr, newValue);
-                    }
-                  }
-                });
-
-                // close dialog
-                fnDialogClose('#c4gGuiDialog'+dialogid);
-
-              }
-              if (value.type == 'get') {
-                if (typeof(value.action)!='undefined') {
-                  fnExecAjaxGet(options.ajaxData+'/'+value.action);
-                }
-              }
-              return false;
-            }});
+            });
           });
         }
 
 
         var
-           tmpDialogDiv = null,
-           dialogClass = "";
+          tmpDialogDiv = null,
+          dialogClass = "";
 
         // remove already existing dialogs if any
-        $('#c4gGuiDialog'+dialogid).remove();
+        $('#c4gGuiDialog' + dialogid).remove();
 
-        if (content.dialogtype=='html')  {
+        if (content.dialogtype === 'html') {
           //ToDo test
           window.scrollTo(0, 0);
           dialogClass = 'c4gGuiHtml';
-          if (typeof(content.usedialog)!='undefined') {
-            tmpDialogDiv = $('#c4gGuiDialog'+content.usedialog)
-              .attr('id', 'c4gGuiDialog'+dialogid);
+          if (typeof(content.usedialog) !== 'undefined') {
+            tmpDialogDiv = $('#c4gGuiDialog' + content.usedialog)
+              .attr('id', 'c4gGuiDialog' + dialogid);
 
           } else {
             tmpDialogDiv = $('<div />')
-              .attr('id', 'c4gGuiDialog'+dialogid);
+              .attr('id', 'c4gGuiDialog' + dialogid);
           }
         }
 
-        if (content.dialogtype=='form')  {
+        if (content.dialogtype === 'form') {
           //ToDo test
           window.scrollTo(0, 0);
           dialogClass = 'c4gGuiForm';
           tmpDialogDiv = $('<div />')
-            .attr('id', 'c4gGuiDialog'+dialogid);
+            .attr('id', 'c4gGuiDialog' + dialogid);
         }
 
         if (tmpDialogDiv != null) {
 
           if (options.embedDialogs) {
-            if (typeof(content.usedialog)=='undefined') {
-              $(contentWrapperDiv).children().last().hide();
-              $(buttonDiv).hide();
+            if (typeof(content.usedialog) === 'undefined') {
+              $(scope.contentWrapperDiv).children().last().hide();
+              $(scope.buttonDiv).hide();
             }
             else {
               $(tmpDialogDiv).empty();
             }
             var dialogContentDiv = $('<div />')
-              .attr('id', 'c4gGuiDialogContent'+dialogid)
+              .attr('id', 'c4gGuiDialogContent' + dialogid)
               .html(content.dialogdata)
               .appendTo(tmpDialogDiv);
 
@@ -913,17 +1054,17 @@ this.c4g = this.c4g || {};
             }
 
             $(tmpDialogDiv)
-              .attr('class',dialogClass+' c4gGuiDialog')
-              .appendTo(contentWrapperDiv);
+              .attr('class', dialogClass + ' c4gGuiDialog')
+              .appendTo(scope.contentWrapperDiv);
 
-            if (typeof(dialogoptions.title)!='undefined') {
+            if (typeof(dialogoptions.title) !== 'undefined') {
               var titleDiv;
               if (options.jquiEmbeddedDialogs) {
-                titleDiv = $('<div>').attr('class','c4gGuiDialogTitle c4gGuiDialogTitleJqui ui-widget ui-widget-header ui-corner-all');
+                titleDiv = $('<div>').attr('class', 'c4gGuiDialogTitle c4gGuiDialogTitleJqui ui-widget ui-widget-header ui-corner-all');
                 titleDiv.html(dialogoptions.title);
               } else {
                 titleDiv = $('<div>')
-                  .attr('class','c4gGuiDialogTitle c4gGuiDialogTitleNoJqui')
+                  .attr('class', 'c4gGuiDialogTitle c4gGuiDialogTitleNoJqui')
                   .append($('<h1>').html(dialogoptions.title));
               }
               $(tmpDialogDiv).prepend(titleDiv);
@@ -935,12 +1076,12 @@ this.c4g = this.c4g || {};
             } else {
               buttonDivClass = 'c4gGuiDialogButtons c4gGuiDialogButtonsNoJqui';
             }
-            var dialogButtonDiv = $('<div>').attr('class',buttonDivClass);
-            $.each(dialogoptions.buttons,function(index,value) {
+            var dialogButtonDiv = $('<div>').attr('class', buttonDivClass);
+            $.each(dialogoptions.buttons, function (index, value) {
               var aLink = $('<a>')
-                .attr('href','#')
+                .attr('href', '#')
                 .attr('accesskey', value.accesskey)
-                .attr('class',value.cssClass)
+                .attr('class', value.cssClass)
                 .html(value.text)
                 .click(value.click)
                 .appendTo(dialogButtonDiv);
@@ -956,7 +1097,7 @@ this.c4g = this.c4g || {};
             $(tmpDialogDiv).html(content.dialogdata);
 
             dialogClass = dialogClass + ' c4gGuiScrollable c4gGuiDialog';
-            if (typeof(content.usedialog)=='undefined') {
+            if (typeof(content.usedialog) === 'undefined') {
               $(tmpDialogDiv)
                 .appendTo(dialogDiv);
             }
@@ -965,16 +1106,16 @@ this.c4g = this.c4g || {};
             fnAddScrollpane(tmpDialogDiv);
 
             $(tmpDialogDiv)
-              .attr('class',dialogClass)
+              .attr('class', dialogClass)
               .dialog(dialogoptions)
-              .dialog( {
-                focus: function(event,ui) {
+              .dialog({
+                focus: function (event, ui) {
                   var state = $(this).attr('data-state');
-                  if ((state!="") && (History!=null)) {
-                    fnHistoryPush(state);
+                  if ((state !== "") && (History != null)) {
+                    scope.fnHistoryPush(state);
                   }
                 }
-            });
+              });
 
           }
 
@@ -986,71 +1127,71 @@ this.c4g = this.c4g || {};
 
           // toggle checkbox dependent fields on click when data-togglevis attribute is available
           $(tmpDialogDiv)
-          .find('input[type="checkbox"]')
-          .click(function(){
-            var toggle = $(this).attr('data-togglevis');
-            if (typeof(toggle)!='undefined') {
-              if ($(this).is(':checked')) {
+            .find('input[type="checkbox"]')
+            .click(function () {
+              var toggle = $(this).attr('data-togglevis');
+              if (typeof(toggle) !== 'undefined') {
+                if ($(this).is(':checked')) {
                   $(toggle).show();
-              } else {
-                $(toggle).hide();
+                } else {
+                  $(toggle).hide();
+                }
               }
-            }
-          });
+            });
 
           // ENTER key performs clicks on elements with class "c4gGuiDefaultAction"
-          $(tmpDialogDiv).keypress(function(event){
-            if (event.which===13) {
-              $('#c4gGuiDialog'+dialogid).parent().find('.c4gGuiDefaultAction').each(function(index,element) {
+          $(tmpDialogDiv).keypress(function (event) {
+            if (event.which === 13) {
+              $('#c4gGuiDialog' + dialogid).parent().find('.c4gGuiDefaultAction').each(function (index, element) {
                 element.click();
               });
             }
           });
 
           $(tmpDialogDiv)
-          .find('a.c4gGuiAction')
-          .click(function() {
-            if ($(this).hasClass('c4gGuiSend')) {
-              var formdata = new Object();
-              $('#c4gGuiDialog'+dialogid).find('.formdata').each(function(index,element) {
-                if ($(element).attr('type')=='checkbox') {
-                  // formdata[$(element).attr('name')] = ($(element).attr('checked') == 'checked');
-                  formdata[$(element).attr('name')] = $(element).is(':checked');
-                } else {
-                  formdata[$(element).attr('name')] = $(element).val();
-                }
-              });
-
-              if (typeof($(this).attr('data-action'))!='undefined') {
-                fnExecAjaxPut(
-                  options.ajaxUrl+'/'+options.ajaxData+'/'+$(this).attr('data-action'),
-                  formdata);
-              }
-              return false;
-            } else {
-              if ($(this).hasClass('c4gGuiAction')) {
-                if (typeof($(this).attr('data-action'))!='undefined') {
-                  if (typeof(wswgEditor) != 'undefined') {
-                    wswgEditor.doCheck();
+            .find('a.c4gGuiAction')
+            .click(function () {
+              if ($(this).hasClass('c4gGuiSend')) {
+                var formdata = {};
+                $('#c4gGuiDialog' + dialogid).find('.formdata').each(function (index, element) {
+                  if ($(element).attr('type') === 'checkbox') {
+                    // formdata[$(element).attr('name')] = ($(element).attr('checked') == 'checked');
+                    formdata[$(element).attr('name')] = $(element).is(':checked');
+                  } else {
+                    formdata[$(element).attr('name')] = $(element).val();
                   }
-                  fnExecAjaxGet(options.ajaxData+'/'+$(this).attr('data-action'));
+                });
+
+                if (typeof($(this).attr('data-action')) !== 'undefined') {
+                  fnExecAjaxPut(
+                    options.ajaxUrl + '/' + options.ajaxData + '/' + $(this).attr('data-action'),
+                    formdata);
                 }
                 return false;
               } else {
-                // default processing of link
+                if ($(this).hasClass('c4gGuiAction')) {
+                  if (typeof($(this).attr('data-action')) !== 'undefined') {
+                    if (typeof(wswgEditor) !== 'undefined') {
+                      wswgEditor.doCheck();
+                    }
+                    fnExecAjaxGet(options.ajaxData + '/' + $(this).attr('data-action'));
+                  }
+                  return false;
+                } else {
+                  // default processing of link
+                }
               }
-            }
-          });
+            });
 
-          if (typeof($.fn.button) == 'function') {
+          if (typeof($.fn.button) === 'function') {
             $(tmpDialogDiv)
-            .find('a.c4gGuiButtonDisabled')
-            .button({disabled:true});
+              .find('a.c4gGuiButtonDisabled')
+              .button({disabled: true});
           }
 
           // get source data for linked fields
           $(tmpDialogDiv)
-          .find('.formlink').each(function(index,element) {
+            .find('.formlink').each(function (index, element) {
             var src = $(element).attr('data-source');
             if (src) {
               var srcAttr = $(element).attr('data-srcattr');
@@ -1066,11 +1207,11 @@ this.c4g = this.c4g || {};
           fnAddAccordion(tmpDialogDiv);
           fnMakeCollapsible(tmpDialogDiv);
 
-          if(content.dialogid != "previewpost" && content.dialogid != "previewthread" && content.dialogid.indexOf("postmapentry") != 0){
+          if (content.dialogid !== "previewpost" && content.dialogid !== "previewthread" && content.dialogid.indexOf("postmapentry") !== 0) {
             fnEnableWswgEditor();
-          }else{
-            $('.BBCode-Area').each( function() {
-              $(this).html( wswgEditor.parseBBCode( $(this).html() ) );
+          } else {
+            $('.BBCode-Area').each(function () {
+              $(this).html(wswgEditor.parseBBCode($(this).html()));
             });
           }
         }
@@ -1078,124 +1219,39 @@ this.c4g = this.c4g || {};
       }
 
       // User Message
-            /**
-             * Create a JQuery UI dialog for the usermessage instead of an alert.
-             * When opening the dialog raise the dialogs background overlay just beneath the dialogs z-index to ensure the user cannot interact with any other dialogs.
-             * When closing the dialog remove itself entirely to keep the dom clean.
-             * TODO: Consider providing a specific title based upon the usermessage or hiding the titlebar completely. This can be done via a CSS defition.
-             */
-      if (typeof(content.usermessage)!='undefined') {
-          /*
-        var uiMessage = $('<div id="uiMessage">'+content.usermessage+'</div>');
-        var title = content.usermessage;
-        if (content.title) {
-          title = content.title;
-        }
-        uiMessage.dialog({
-          modal: true,
-                    title: title,
-                    buttons: {
-                        'OK': function() {
-                            $(this).dialog('close');
-                        }
-                    },
-                    open: function() {
-                        var $parent = $(this).parent();
-                        $parent.next().css('z-index', $parent.css('z-index'));
-                    },
-                    close: function() {
-                        $(this).dialog('destroy').remove();
-                    }
-        });
-        uiMessage.dialog('moveToTop');
-        */
-
+      /**
+       * Create a JQuery UI dialog for the usermessage instead of an alert.
+       * When opening the dialog raise the dialogs background overlay just beneath the dialogs z-index to ensure the user cannot interact with any other dialogs.
+       * When closing the dialog remove itself entirely to keep the dom clean.
+       * TODO: Consider providing a specific title based upon the usermessage or hiding the titlebar completely. This can be done via a CSS defition.
+       */
+      if (typeof(content.usermessage) !== 'undefined') {
         //ToDo auslagern
         var title = 'Usermessage';
-        if  (navigator.language == 'de') {
-            title = 'Benutzerhinweis';
+        if (navigator.language === 'de') {
+          title = 'Benutzerhinweis';
         }
 
         if (content.title) {
-            title = content.title;
+          title = content.title;
         }
 
         var dh = new DialogHandler();
         var messageJump = '';
         if (content.jump_after_message) {
-            messageJump = content.jump_after_message;
+          messageJump = content.jump_after_message;
         }
         dh.show(title, content.usermessage, messageJump);
       }
 
       // additional action to be performed via ajax
-      if (typeof(content.performaction)!='undefined') {
-        fnExecAjaxGet(options.ajaxData+'/'+content.performaction);
+      if (typeof(content.performaction) !== 'undefined') {
+        fnExecAjaxGet(options.ajaxData + '/' + content.performaction);
       }
 
       // show map
-      if (typeof(content.mapdata)!='undefined') {
-        if (typeof(C4GMaps)=='function') {
-          // Version 1 (/2)
-          //
-          if (typeof(content.mapdata.width)!='undefined') {
-            $('#'+content.mapdata.div).width(content.mapdata.width);
-          }
-          if (typeof(content.mapdata.height)!='undefined') {
-            $('#'+content.mapdata.div).height(content.mapdata.height);
-          }
-          if (content.mapdata.pickGeo) {
-            var pickGeo_xCoord = content.mapdata.pickGeo_xCoord;
-            var pickGeo_yCoord = content.mapdata.pickGeo_yCoord;
-            content.mapdata.onPickGeo = function(geox, geoy) {
-              $(pickGeo_xCoord).attr('value', geox);
-              $(pickGeo_yCoord).attr('value', geoy);
-            };
-
-            content.mapdata.pickGeo_init_xCoord = $(pickGeo_xCoord).attr('value');
-            content.mapdata.pickGeo_init_yCoord = $(pickGeo_yCoord).attr('value');
-            if ((content.mapdata.pickGeo_init_xCoord) &&
-              (content.mapdata.pickGeo_init_yCoord) &&
-                (content.mapdata.pickGeo_initzoom)) {
-                // center map on given initial coordinates when pickGeo_initzoom is set
-                content.mapdata.calc_extent = 'CENTERZOOM';
-                content.mapdata.center_geox = content.mapdata.pickGeo_init_xCoord;
-                content.mapdata.center_geoy = content.mapdata.pickGeo_init_yCoord;
-                content.mapdata.zoom = content.mapdata.pickGeo_initzoom;
-            }
-
-          }
-          if (content.mapdata.editor) {
-            content.mapdata.editor_input =
-              $(content.mapdata.editor_field).attr('value');
-            var mapEditor = null;
-            $(content.mapdata.editor_field).bind('c4g_before_save',function() {
-              if (mapEditor != null) {
-                var format = new OpenLayers.Format.GeoJSON();
-                mapEditor.stopEditMode();
-                $(this).attr('value', format.write(mapEditor.editLayer.features));
-              }
-            });
-            content.mapdata.onCreateEditor = function(editor) {
-              mapEditor = editor;
-            };
-          }
-
-          C4GMaps(content.mapdata);
-          if (options.jquiButtons) {
-            if (typeof(jQuery.fn.button) == 'function') {
-              $('a.c4gMapsGeoSearchLink').button();
-              $('div.c4gMapsGeoSearch').height(30);
-              $('input.c4gMapsGeoSearchInput').css('margin-top',4);
-              $('a.c4gMapsSearchLink').button();
-              $('div.c4gMapsSearch').height(30);
-              $('input.c4gMapsSearchInput').css('margin-top',4);
-            }
-            $('input.c4gMapsGeoSearchInput').addClass('ui-corner-all');
-            $('input.c4gMapsSearchInput').addClass('ui-corner-all');
-          }
-
-        } else if (typeof(c4g.maps.MapController) == 'function') {
+      if (typeof(content.mapdata) !== 'undefined') {
+        if (typeof(c4g.maps.MapController) === 'function') {
           // Version 3
           //
           content.mapdata.addIdToDiv = false;
@@ -1203,58 +1259,41 @@ this.c4g = this.c4g || {};
         }
       }
 
-      if ((typeof(content.cronexec)!='undefined') && (content.cronexec!=null)) {
+      if ((typeof(content.cronexec) !== 'undefined') && (content.cronexec != null)) {
         var cronexec = content.cronexec;
-        if (typeof(cronexec)=='string') {
-          cronexec =  new Array(cronexec);
+        if (typeof(cronexec) === 'string') {
+          cronexec = new Array(cronexec);
         }
-        $.each(cronexec,function(index,element){
+        $.each(cronexec, function (index, element) {
           $.ajax({
-              url: options.ajaxUrl + '/' + options.ajaxData+'/cron:'+element,
-              data: null,
-              success: function() {},
-              global: false
-            });
+            url: options.ajaxUrl + '/' + options.ajaxData + '/cron:' + element,
+            data: null,
+            success: function () {
+            },
+            global: false
+          });
         })
       }
 
-      if (typeof(content.jump_to_url)!='undefined'){
+      if (typeof(content.jump_to_url) !== 'undefined') {
         fnJumpToLink(content.jump_to_url);
       }
 
-    };
+    }, // end of fnHandleAjaxResponse
 
-    var fnCenterDiv = function(element) {
-      var pWidth = $(element).parent().width();
-      var divWidth = 0;
-      $(element).children().each(function(i,element) {
-        divWidth += $(element).outerWidth(true);
-        if ( divWidth > pWidth) {
-          divWidth -= $(element).outerWidth(true);
-          return false;
-        }
-      });
-      if (divWidth > 0) {
-          $(element).css({
-            margin: '0 auto',
-            width: divWidth+'px'
-          });
-      }
-    };
-
-    var fnDataTableColumnVis = function(dataTable) {
-      if ((typeof(dataTable) != 'undefined') && (dataTable!=null)) {
+    fnDataTableColumnVis: function(dataTable) {
+      if ((typeof(dataTable) !== 'undefined') && (dataTable!=null)) {
         var settings = dataTable.fnSettings();
         if (settings!=null) {
           $(settings.aoColumns).each(function(i,element){
-            if (typeof(element.c4gMinTableSize)!='undefined') {
+            if (typeof(element.c4gMinTableSize) !== 'undefined') {
               dataTable.fnSetColumnVis(i,dataTable.width()>=element.c4gMinTableSize, false);
             }
-            if (typeof(element.c4gMinTableSizeWidths)!='undefined') {
+            if (typeof(element.c4gMinTableSizeWidths) !== 'undefined') {
               // set table size dependant column widths
               $(element.c4gMinTableSizeWidths).each(function(tabIndex,tabElement) {
                 if (dataTable.width()>=tabElement.tsize) {
-                  if (element.sWidthOrig != tabElement.width) {
+                  if (element.sWidthOrig !== tabElement.width) {
                     element.sWidthOrig = tabElement.width;
                   }
                   return false;
@@ -1273,164 +1312,57 @@ this.c4g = this.c4g || {};
           dataTable.fnAdjustColumnSizing();
         }
       }
-    };
+    }, // end of fnDataTableColumnVis
 
-    // -----------------------------------
-    // $.fn.c4gGui()
-    // -----------------------------------
-    $(window).resize(function(){
-      $('.c4gGuiCenterDiv').each(function(i,element){
-        fnCenterDiv(element);
-      });
-      fnDataTableColumnVis(oDataTable);
-    });
-
-    var oDataTable = null;  // TODO enable more than one
-    var _that = this;
-    return this.each(function() {
-
-      // if no ID is provided then initialize internal ID for DIVs
-      if (typeof(options.id)=='undefined') {
-        options.id = nextId;
-      }
-
-      if (options.jquiBreadcrumb || options.jquiButtons || options.jquiEmbeddedDialogs) {
-        if (typeof jQuery.ui == 'undefined') {
-            $(this).html('jQuery UI missing!');
-            return;
-        }
-      }
-
-      // set height and width if provided
-      if (options.height!='') {
-        $(this).height(options.height);
-      }
-      if (options.width!='') {
-        $(this).width(options.width);
-      }
-
-      // add c4gGui class
-      $(this).attr('class', function(i, val) {
-        if (typeof(val)=='undefined') {
-          return 'c4gGui';
-        } else {
-          return val + ' c4gGui';
+    fnCenterDiv: function(element) {
+      var pWidth = $(element).parent().width();
+      var divWidth = 0;
+      $(element).children().each(function(i,element) {
+        divWidth += $(element).outerWidth(true);
+        if ( divWidth > pWidth) {
+          divWidth -= $(element).outerWidth(true);
+          return false;
         }
       });
-
-      if (typeof(options.titel) != 'undefined') {
-        $('<h1 id="c4gGuiTitle">'+options.title+'</h1>').appendTo($(this));
-      }
-      $('<h3 id="c4gGuiSubtitle"> </h3>').appendTo($(this));
-
-
-
-      // add Breadcrumb Area
-      $('<div />')
-        .attr('id', 'c4gGuiBreadcrumb'+options.id)
-        .attr('class', 'c4gGuiBreadcrumb')
-        .appendTo($(this));
-
-      // add Headline Area
-      $('<div />')
-        .attr('id', 'c4gGuiHeadline'+options.id)
-        .attr('class', 'c4gGuiHeadline')
-        .appendTo($(this));
-
-      // add Buttons Area
-      buttonDiv = $('<div />')
-        .attr('id', 'c4gGuiButtons'+options.id)
-        .attr('class', 'c4gGuiButtons')
-        .appendTo($(this));
-      $(buttonDiv).hide();
-
-      // add navigation
-      if (options.navPanel) {
-        $('<div />')
-            .attr('id','c4gGuiNavigation'+options.id)
-            .attr('class','c4gGuiNavigation')
-            .appendTo($(this));
-      }
-
-      // create DIV for ajax Message
-      $(this).append('<div class="c4gLoaderPh"></div>');
-      $(document).ajaxStart(function(){
-        $('.c4gGui,.c4gGuiDialog').addClass('c4gGuiAjaxBusy');
-        $('.c4gLoaderPh').addClass('c4gLoader');
-      });
-      $(document).ajaxStop(function(){
-        $('.c4gGui,.c4gGuiDialog').removeClass('c4gGuiAjaxBusy');
-        $('.c4gLoaderPh').removeClass('c4gLoader');
-      });
-
-      // create DIV for content
-      $('<div />')
-        .attr('id','c4gGuiContent'+options.id)
-        .attr('class','c4gGuiContent')
-        .appendTo(
-            $('<div />')
-            .attr('id','c4gGuiContentWrapper'+options.id)
-            .attr('class','c4gGuiContentWrapper')
-            .appendTo(this));
-
-      // create DIV for dialogs
-      $('<div />')
-        .attr('id','c4gGuiDialog'+options.id)
-        .attr('class','c4gGuiDialog')
-        .appendTo(this);
-
-      if (options.initData) {
-        // initialization data exists
-        var initData = Object();
-        initData.content = options.initData;
-        fnHandleAjaxResponse( initData, options.id );
-      } else {
-        // request initialization from server
-        $.ajax({
-            internalId: options.id,
-            url: options.ajaxUrl,
-            data: options.ajaxData+'/initnav',
-            dataType: "json",
-            type: "GET",
-            success: function( data ) {
-            fnHandleAjaxResponse( data, this.internalId );
-            },
-              error: function(jqXHR, textStatus, errorThrown) {
-              fnInitContentDiv();
-              $(this.contentDiv).text('Error: '+errorThrown);
-              }
-          });
-      }
-      if (History != null) {
-        var internalId = options.id;
-          History.Adapter.bind(window,'statechange',function(){
-            if (!pushingState) {
-                var State = History.getState();
-            $.ajax({
-              internalId: internalId,
-              url: options.ajaxUrl + '/' + options.ajaxData,
-              data: 'historyreq='+decodeURI(
-                    (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
-                  ),
-              dataType: "json",
-              type: "GET",
-              success: function( data ) {
-                fnHandleAjaxResponse( data, this.internalId );
-              },
-              error: function(jqXHR, textStatus, errorThrown) {
-                $(this.contentDiv).text('Error: '+errorThrown);
-              }
-            });
-          }
+      if (divWidth > 0) {
+        $(element).css({
+          margin: '0 auto',
+          width: divWidth+'px'
         });
       }
+    }, // end of fnCenterDiv
 
-      // set next Id in case there is more than one element to be set
-      options.id++;
-      nextId = options.id;
-    });
-  };
+    fnInitContentDiv: function () {
+      $(this.contentDiv).empty();
+      $(this.contentWrapperDiv + ' div:not(' + this.contentDiv + ')').remove();
+      $(this.contentDiv).show();
+    }, // end of fnInitContentDiv
 
+    fnHistoryPush: function (state) {
+      if (History != null) {
+        this.pushingState = true;
+        if (document.location.hash) {
+          // History.pushState(null, document.title, '?state=' + state + document.location.hash);
+        } else {
+          // History.pushState(null, document.title, '?state=' + state);
+        }
 
+        // strange workaround for Opera >= 11.60 bug
+        // TODO kann raus ?
+        if (typeof(document.getElement) !== 'undefined') {
+          var head = document.getElement("head");
+          if (typeof(head) === 'object') {
+            var base = head.getElement('base');
+            if (typeof(base) === 'object') {
+              base.href = base.href;
+            }
+          }
+        }
+        this.pushingState = false;
+      }
+    } // end of fnHistoryPush
+
+  }); // end of extend
+  console.log(c4g.projects.c4gGui.prototype);
 })(jQuery, this.c4g);  // single execution function
 
