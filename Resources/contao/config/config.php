@@ -13,7 +13,7 @@
 
 use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
 
-$GLOBALS['con4gis']['version'] = '4.2';
+$GLOBALS['con4gis']['version'] = '4.3';
 $GLOBALS['con4gis']['core']['installed'] = true;
 
 // API-Registration
@@ -43,6 +43,9 @@ array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE
         'c4g_core' => array
         (
             'callback' => 'con4gis\CoreBundle\Resources\contao\classes\C4GInfo'
+        ),
+        'c4g_settings' => array(
+            'tables'        => array('tl_c4g_settings')
         )
     )
 ));
@@ -65,6 +68,8 @@ array_insert($GLOBALS['TL_CTE']['con4gis'], 2, array
     'c4g_activationpage' => 'con4gis\CoreBundle\Resources\contao\modules\ContentC4gActivationpage'
 ));
 $GLOBALS['TL_MODELS']['tl_c4g_activationkey'] = 'con4gis\CoreBundle\Resources\contao\models\C4gActivationkeyModel';
+
+$GLOBALS['TL_MODELS']['tl_c4g_settings'] = 'con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel';
 
 /**
  * Purge jobs

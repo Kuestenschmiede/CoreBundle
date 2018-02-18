@@ -15,3 +15,11 @@
  */
 $GLOBALS['TL_LANG']['MOD']['con4gis'] = array('con4gis '.$GLOBALS['con4gis']['version'].' - Baukasten', 'Geoinformationssysteme für Contao');
 $GLOBALS['TL_LANG']['MOD']['con4gis_bricks'] = array('con4gis '.$GLOBALS['con4gis']['version'].' - Bausteine', 'con4gis Erweiterungen');
+
+$GLOBALS['TL_LANG']['MOD']['c4g_core'] = array('Info & Help', 'con4gis Infoseite' );
+$GLOBALS['TL_LANG']['MOD']['c4g_settings'] = array('Einstellungen', 'Einstellungen für alle Bausteine.');
+
+/**
+ * Content elements
+ */
+$GLOBALS['TL_LANG']['CTE']['c4g_activationpage'] = array('Aktivierungsseite (con4gis)', 'Modul zur Einbindung einer Aktivierungsseite.');
