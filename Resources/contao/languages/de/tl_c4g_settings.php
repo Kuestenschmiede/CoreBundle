@@ -22,7 +22,7 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
     'Alle hier aufgeführten Einstellungsmöglichkeiten können von verschiedenen con4gis Bausteinen verwendet werden. Bitte beachten Sie ggf. vorhandene Zusatzeinstellungen in den Frontendmodulen.';
 
 /** LEGENDS **/
-$GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "Layouteinstellungen";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "Grundeinstellungen (Layout)";
 
 /** Field References */
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['base']      = 'base';
