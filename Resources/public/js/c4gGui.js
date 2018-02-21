@@ -1226,9 +1226,13 @@ this.c4g.projects = this.c4g.projects || {};
         if (navigator.language === 'de') {
           title = 'Benutzerhinweis';
         }
+        var callback;
 
         if (content.title) {
           title = content.title;
+        }
+        if (content.callback) {
+          callback = content.callback;
         }
 
         var dh = new DialogHandler();
@@ -1236,7 +1240,7 @@ this.c4g.projects = this.c4g.projects || {};
         if (content.jump_after_message) {
           messageJump = content.jump_after_message;
         }
-        dh.show(title, content.usermessage, messageJump);
+        dh.show(title, content.usermessage, messageJump, callback);
       }
 
       // additional action to be performed via ajax

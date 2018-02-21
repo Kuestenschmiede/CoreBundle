@@ -21,7 +21,7 @@ function DialogHandler() {
     this.buttons    = {'OK': function() {jQuery(this).dialog('close');}};
     this.modal      = true;
 
-    this.show = function (title, msg, linkUrl) {
+    this.show = function (title, msg, linkUrl, opt_callback) {
         var date        = new Date();
         var randomId    = Math.random() * Math.random() + date.getTime();
         var uiMessage   = jQuery('<div class="uiMessage" id="uiMessage-' + randomId + '">' + msg + '</div>');
@@ -43,6 +43,9 @@ function DialogHandler() {
                         linkUrl = linkUrl.replace('index.php/', "");
                         window.location = linkUrl;
                     }
+                }
+                if (opt_callback) {
+                    window[opt_callback]();
                 }
             }
         });
