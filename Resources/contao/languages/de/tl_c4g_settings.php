@@ -6,7 +6,7 @@
  * @package   con4gis-Core (CoreBundle)
  * @author    con4gis contributors
  * @license   GNU/LGPL http://opensource.org/licenses/lgpl-3.0.html
- * @copyright Küstenschmiede GmbH Software & Design 2015 - 2018
+ * @copyright Küstenschmiede GmbH Software & Design 2011 - 2018 - 2018
  * @link      https://www.kuestenschmiede.de
  */
 
