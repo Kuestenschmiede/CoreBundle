@@ -24,8 +24,8 @@ $GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Classes\C4GFileUpload';
 $GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Resources\contao\classes\C4GImageUpload';
 $GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Resources\contao\classes\C4GDeliverFileApi';
 
-array_insert($GLOBALS['BE_MOD'],1, array('con4gis' => array()));
-array_insert($GLOBALS['BE_MOD'],2, array('con4gis_bricks' => array()));
+array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array('con4gis' => array()));
+array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 2, array('con4gis_bricks' => array()));
 
 /** Damit die CSS nicht nur im Modul selbst geladen wird */
 if(TL_MODE == "BE") {

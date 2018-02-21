@@ -119,6 +119,5 @@ class tl_c4g_settings extends Backend
         }
 
         \Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_settings']['infotext']);
-
     }
 }
