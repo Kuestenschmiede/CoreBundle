@@ -388,7 +388,7 @@ this.c4g.projects = this.c4g.projects || {};
             state = $(scope.contentDiv).attr('data-state');
           }
           if ($(element).prev().hasClass('c4gGuiContent')) {
-            $(buttonDiv).show();
+            $(scope.buttonDiv).show();
           }
 
           if ((state !== "") && (History != null)) {
