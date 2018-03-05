@@ -1338,13 +1338,10 @@ this.c4g.projects = this.c4g.projects || {};
       if (history != null) {
         this.pushingState = true;
         var newHref = window.location.href;
-        console.log(newHref);
         var index = newHref.indexOf('?state=');
-        console.log(index);
         if (index !== -1) {
           newHref = newHref.substr(0, index);
         }
-        console.log(newHref);
         if (document.location.hash) {
           history.pushState({}, document.title, newHref + '?state=' + state + document.location.hash);
         } else {
