@@ -1342,9 +1342,9 @@ this.c4g.projects = this.c4g.projects || {};
       if (History != null) {
         this.pushingState = true;
         if (document.location.hash) {
-          // History.pushState(null, document.title, '?state=' + state + document.location.hash);
+          History.pushState(null, document.title, '?state=' + state + document.location.hash);
         } else {
-          // History.pushState(null, document.title, '?state=' + state);
+          History.pushState(null, document.title, '?state=' + state);
         }
 
         // strange workaround for Opera >= 11.60 bug
