@@ -44,10 +44,6 @@ this.c4g.projects = this.c4g.projects || {};
     this.pushingState = false;
     this.mainDiv = options.mainDiv;
     var scope = this;
-    var History = null;
-    if ((typeof(window.History) !== 'undefined') && window.History.enabled) {
-      History = window.History;
-    }
 
     // -----------------------------------
     // $.fn.c4gGui()
@@ -391,7 +387,7 @@ this.c4g.projects = this.c4g.projects || {};
             $(scope.buttonDiv).show();
           }
 
-          if ((state !== "") && (History != null)) {
+          if ((state !== "") && (history != null)) {
             scope.fnHistoryPush(state);
           }
           $(element).remove();
@@ -431,7 +427,7 @@ this.c4g.projects = this.c4g.projects || {};
 
       var currentState = "";
 
-      if (History != null) {
+      if (history != null) {
         if (typeof(content.state) !== 'undefined') {
           currentState = content.state;
         }
@@ -917,7 +913,7 @@ this.c4g.projects = this.c4g.projects || {};
         dialogoptions.close = function () {
           $('#c4gGuiDialog' + dialogid).remove();
           var state = $(scope.contentDiv).attr('data-state');
-          if ((state !== "") && (History != null)) {
+          if ((state !== "") && (history != null)) {
             scope.fnHistoryPush(state);
           }
 
@@ -1106,7 +1102,7 @@ this.c4g.projects = this.c4g.projects || {};
               .dialog({
                 focus: function (event, ui) {
                   var state = $(this).attr('data-state');
-                  if ((state !== "") && (History != null)) {
+                  if ((state !== "") && (history != null)) {
                     scope.fnHistoryPush(state);
                   }
                 }
@@ -1339,12 +1335,20 @@ this.c4g.projects = this.c4g.projects || {};
     }, // end of fnInitContentDiv
 
     fnHistoryPush: function (state) {
-      if (History != null) {
+      if (history != null) {
         this.pushingState = true;
+        var newHref = window.location.href;
+        console.log(newHref);
+        var index = newHref.indexOf('?state=');
+        console.log(index);
+        if (index !== -1) {
+          newHref = newHref.substr(0, index);
+        }
+        console.log(newHref);
         if (document.location.hash) {
-          History.pushState(null, document.title, '?state=' + state + document.location.hash);
+          history.pushState({}, document.title, newHref + '?state=' + state + document.location.hash);
         } else {
-          History.pushState(null, document.title, '?state=' + state);
+          history.pushState({}, document.title, newHref + '?state=' + state);
         }
 
         // strange workaround for Opera >= 11.60 bug
