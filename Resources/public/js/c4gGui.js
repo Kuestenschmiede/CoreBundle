@@ -1342,10 +1342,20 @@ this.c4g.projects = this.c4g.projects || {};
         if (index !== -1) {
           newHref = newHref.substr(0, index);
         }
-        if (document.location.hash) {
-          history.pushState({}, document.title, newHref + '?state=' + state + document.location.hash);
+        var queryString = '';
+        if (newHref.indexOf('?') !== -1) {
+          queryString = '&state=';
+          index = newHref.indexOf('&state=');
+          if (index !== -1) {
+            newHref = newHref.substr(0, index);
+          }
         } else {
-          history.pushState({}, document.title, newHref + '?state=' + state);
+          queryString = '?state='
+        }
+        if (document.location.hash) {
+          history.pushState({}, document.title, newHref + queryString + state + document.location.hash);
+        } else {
+          history.pushState({}, document.title, newHref + queryString + state);
         }
 
         // strange workaround for Opera >= 11.60 bug
