@@ -56,7 +56,6 @@ this.c4g.projects = this.c4g.projects || {};
     });
 
     var oDataTable = null;  // TODO enable more than one
-    // this.c4gGui.setup();
   };
 
 
@@ -169,7 +168,7 @@ this.c4g.projects = this.c4g.projects || {};
             dataType: "json",
             type: "GET",
             success: function( data ) {
-              scope.fnHandleAjaxResponse( data, this.internalId );
+              scope.fnHandleAjaxResponse( data, scope.internalId );
             },
             error: function(jqXHR, textStatus, errorThrown) {
               scope.fnInitContentDiv();
@@ -179,33 +178,33 @@ this.c4g.projects = this.c4g.projects || {};
         }
         if (history != null) {
           var internalId = options.id;
-          // history.Adapter.bind(window,'statechange',function(){
-          //   if (!scope.pushingState) {
-          //     var State = History.getState();
-          //     $.ajax({
-          //       internalId: internalId,
-          //       url: options.ajaxUrl + '/' + options.ajaxData,
-          //       data: 'historyreq='+decodeURI(
-          //         (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
-          //       ),
-          //       dataType: "json",
-          //       type: "GET",
-          //       success: function( data ) {
-          //         scope.fnHandleAjaxResponse( data, this.internalId );
-          //       },
-          //       error: function(jqXHR, textStatus, errorThrown) {
-          //         $(this.contentDiv).text('Error: '+errorThrown);
-          //       }
-          //     });
-          //   }
-          // });
+          History.Adapter.bind(window, 'statechange', function() {
+            if (!scope.pushingState) {
+              var State = History.getState();
+              $.ajax({
+                internalId: internalId,
+                url: options.ajaxUrl + '/' + options.ajaxData,
+                data: 'historyreq='+decodeURI(
+                  (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
+                ),
+                dataType: "json",
+                type: "GET",
+                success: function( data ) {
+                  scope.fnHandleAjaxResponse( data, this.internalId );
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                  $(scope.contentDiv).text('Error: '+errorThrown);
+                }
+              });
+            }
+          });
         }
 
         // set next Id in case there is more than one element to be set
         options.id++;
         nextId = options.id;
       });
-    }, // end of init
+    }, // end of setup
 
     // -----------------------------------
     // handle Ajax response
@@ -238,7 +237,7 @@ this.c4g.projects = this.c4g.projects || {};
           },
           error: function (jqXHR, textStatus, errorThrown) {
             scope.fnInitContentDiv();
-            $(this.contentDiv).text('Error: ' + errorThrown);
+            $(scope.contentDiv).text('Error: ' + errorThrown);
           }
         });
       };
@@ -1353,9 +1352,9 @@ this.c4g.projects = this.c4g.projects || {};
           queryString = '?state='
         }
         if (document.location.hash) {
-          history.pushState({}, document.title, newHref + queryString + state + document.location.hash);
+          history.pushState(null, document.title, newHref + queryString + state + document.location.hash);
         } else {
-          history.pushState({}, document.title, newHref + queryString + state);
+          history.pushState(null, document.title, newHref + queryString + state);
         }
 
         // strange workaround for Opera >= 11.60 bug
@@ -1369,6 +1368,7 @@ this.c4g.projects = this.c4g.projects || {};
             }
           }
         }
+
         this.pushingState = false;
       }
     } // end of fnHistoryPush
