@@ -178,26 +178,28 @@ this.c4g.projects = this.c4g.projects || {};
         }
         if (history != null) {
           var internalId = options.id;
-          History.Adapter.bind(window, 'statechange', function() {
-            if (!scope.pushingState) {
-              var State = History.getState();
-              $.ajax({
-                internalId: internalId,
-                url: options.ajaxUrl + '/' + options.ajaxData,
-                data: 'historyreq='+decodeURI(
-                  (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
-                ),
-                dataType: "json",
-                type: "GET",
-                success: function( data ) {
-                  scope.fnHandleAjaxResponse( data, this.internalId );
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                  $(scope.contentDiv).text('Error: '+errorThrown);
-                }
-              });
-            }
-          });
+          if (History && History.Adapter) {
+            History.Adapter.bind(window, 'statechange', function() {
+              if (!scope.pushingState) {
+                var State = History.getState();
+                $.ajax({
+                  internalId: internalId,
+                  url: options.ajaxUrl + '/' + options.ajaxData,
+                  data: 'historyreq='+decodeURI(
+                    (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
+                  ),
+                  dataType: "json",
+                  type: "GET",
+                  success: function( data ) {
+                    scope.fnHandleAjaxResponse( data, this.internalId );
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    $(scope.contentDiv).text('Error: '+errorThrown);
+                  }
+                });
+              }
+            });
+          }
         }
 
         // set next Id in case there is more than one element to be set
