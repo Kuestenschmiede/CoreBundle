@@ -52,7 +52,7 @@ class C4GJQueryGUI
 		if ($addJQueryUI || $useTree || $useMaps)
    		{
 			// Include JQuery UI JS - only js to append the css files to the end of $GLOBALS['TL_CSS'] array.
-			$GLOBALS['TL_JAVASCRIPT']['c4g_jquery_ui'] 		= 'bundles/con4giscore/vendor/jQuery/jquery-ui-1.12.1.custom/jquery-ui.min.js';
+			$GLOBALS['TL_JAVASCRIPT']['c4g_jquery_ui'] 		= 'assets/jquery-ui/js/jquery-ui.min.js';
             $GLOBALS['TL_JAVASCRIPT']['c4g_jquery_ui_i18n'] = 'bundles/con4giscore/vendor/jQuery/jquery-ui-i18n.min.js';
             $GLOBALS ['TL_JAVASCRIPT']['c4g_a'] 	        = 'bundles/con4giscore/vendor/jQuery/plugins/jquery.legacy.min.js';
 
@@ -181,7 +181,7 @@ class C4GJQueryGUI
 		if ($addJQueryUI || $useTree || $useMaps)
 		{
 			// Add the JQuery UI CSS to the bottom of the $GLOBALS['TL_CSS'] array to prevent overriding from other plugins
-			$GLOBALS['TL_CSS']['c4g_jquery_ui_core'] = 'bundles/con4giscore/vendor/jQuery/jquery-ui-1.12.1.custom/jquery-ui.min.css';
+            $GLOBALS['TL_CSS']['c4g_jquery_ui_core'] = 'bundles/con4giscore/vendor/jQuery/jquery-ui-1.12.1.custom/jquery-ui.min.css';
 			// Set the JQuery UI theme to be used
 			if (empty($GLOBALS['TL_CSS']['c4g_jquery_ui'])) {
 				$GLOBALS['TL_CSS']['c4g_jquery_ui'] = 'bundles/con4giscore/vendor/jQuery/jquery-ui-1.12.1.custom/jquery-ui.theme.min.css';

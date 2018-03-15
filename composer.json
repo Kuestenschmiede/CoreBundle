@@ -21,15 +21,10 @@
     },
     "require": {
         "php": "^5.6|^7.0",
-        "symfony/framework-bundle": "^3.3",
-        "contao/core-bundle": "^4.4.2",
+        "contao/core-bundle": "^4.4",
         "doctrine/ORM": "^2.5",
         "doctrine/data-fixtures": "^1.2",
-        "doctrine/dbal": "~2.5",
-        "menatwork/contao-multicolumnwizard": "^3.3",
-        "fortawesome/font-awesome":"^4.7",
-        "contao-components/jquery": "^1.11.3",
-        "terminal42/notification_center": "^1.4"
+        "menatwork/contao-multicolumnwizard": "^3.3"
     },
     "conflict": {
         "contao/core": "*",
