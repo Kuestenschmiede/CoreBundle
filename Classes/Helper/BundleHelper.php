@@ -39,7 +39,7 @@ class BundleHelper
      * @param $bundles
      * @return array
      */
-    public static function generateContaoBundles($path, $bundles)
+    public static function generateContaoBundles($path, &$bundles)
     {
         $bundelPatteren = dirname($path) . self::$extensionsPath . '/*';
         $dirs           = glob($bundelPatteren);
@@ -58,7 +58,7 @@ class BundleHelper
      * @param $bundles
      * @return array
      */
-    public static function generateSymfonyBundles($path, $bundles)
+    public static function generateSymfonyBundles($path, &$bundles)
     {
         $bundleRoot     = dirname($path) . self::$bundlePath;
         $bundelPatteren = $bundleRoot . '/*/*/*Bundle.php';
