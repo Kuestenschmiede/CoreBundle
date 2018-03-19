@@ -19,7 +19,7 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'] = array
 
 /** INFO **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
-    'Alle hier aufgeführten Einstellungsmöglichkeiten können von verschiedenen con4gis Bausteinen verwendet werden. Bitte beachten Sie ggf. vorhandene Zusatzeinstellungen in den Frontendmodulen.';
+    'Alle hier aufgeführten Einstellungsmöglichkeiten können von verschiedenen con4gis Bausteinen verwendet werden. Eventuell vorhandene Zusatzeinstellungen in den Frontendmodulen können diese ggf. überschreiben.';
 
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "Grundeinstellungen (Layout)";
