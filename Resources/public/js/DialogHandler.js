@@ -18,38 +18,53 @@
  * @constructor
  */
 function DialogHandler() {
-    this.buttons    = {'OK': function() {jQuery(this).dialog('close');}};
-    this.modal      = true;
-
-    this.show = function (title, msg, linkUrl, opt_callback) {
-        var date        = new Date();
-        var randomId    = Math.random() * Math.random() + date.getTime();
-        var uiMessage   = jQuery('<div class="uiMessage" id="uiMessage-' + randomId + '">' + msg + '</div>');
-
-        uiMessage.dialog({
-            title:      title,
-            modal:      this.modal,
-            buttons:    this.buttons,
-
-            open: function() {
-                var parent = jQuery(this).parent();
-                parent.next().css('z-index', parent.css('z-index'));
-            },
-
-            close: function() {
-                jQuery(this).dialog('destroy').remove();
-                if (linkUrl) {
-                    if ((linkUrl.indexOf(':')<0) && (linkUrl[0]!='/')) {
-                        linkUrl = linkUrl.replace('index.php/', "");
-                        window.location = linkUrl;
-                    }
-                }
-                if (opt_callback) {
-                    window[opt_callback]();
-                }
-            }
-        });
-
-        uiMessage.dialog('moveToTop');
+  var scope = this;
+  this.buttons    = {
+    'OK': function() {jQuery(this).dialog('close');},
+    'Abbruch': function() {
+      scope.callback = null;
+      jQuery(this).dialog('close');
     }
+  };
+  this.modal      = true;
+  this.callback = null;
+
+  this.show = function (title, msg, linkUrl, opt_callback) {
+    var date        = new Date();
+    var randomId    = Math.random() * Math.random() + date.getTime();
+    var uiMessage   = jQuery('<div class="uiMessage" id="uiMessage-' + randomId + '">' + msg + '</div>');
+    if (opt_callback) {
+      scope.callback = opt_callback;
+    } else {
+        delete scope.buttons['Abbruch'];
+    }
+
+    uiMessage.dialog({
+      title:      title,
+      modal:      this.modal,
+      buttons:    this.buttons,
+
+      open: function() {
+        var parent = jQuery(this).parent();
+        parent.next().css('z-index', parent.css('z-index'));
+      },
+
+      close: function() {
+        jQuery(this).dialog('destroy').remove();
+        if (linkUrl) {
+          if ((linkUrl.indexOf(':')<0) && (linkUrl[0]!='/')) {
+            linkUrl = linkUrl.replace('index.php/', "");
+            window.location = linkUrl;
+          }
+        }
+        if (scope.callback && scope.callback.function && scope.callback.params) {
+          window[scope.callback.function](scope.callback.params);
+        } else if (scope.callback && scope.callback.function) {
+          window[scope.callback.function]();
+        }
+      }
+    });
+
+    uiMessage.dialog('moveToTop');
+  }
 }
