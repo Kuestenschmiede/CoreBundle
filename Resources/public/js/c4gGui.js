@@ -1370,6 +1370,9 @@ this.c4g.projects = this.c4g.projects || {};
             }
           }
         }
+        if (c4g.projects.clearUrl && typeof clearBrowserUrl === 'function') {
+          clearBrowserUrl();
+        }
 
         this.pushingState = false;
       }
