@@ -1220,7 +1220,7 @@ this.c4g.projects = this.c4g.projects || {};
       if (typeof(content.usermessage) !== 'undefined') {
         //ToDo auslagern
         var title = 'Usermessage';
-        if (navigator.language === 'de') {
+        if (navigator.language === 'de' || navigator.language === 'de-DE') {
           title = 'Benutzerhinweis';
         }
         var callback;
