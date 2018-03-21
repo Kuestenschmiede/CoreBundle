@@ -33,7 +33,7 @@ function DialogHandler() {
     var date        = new Date();
     var randomId    = Math.random() * Math.random() + date.getTime();
     var uiMessage   = jQuery('<div class="uiMessage" id="uiMessage-' + randomId + '">' + msg + '</div>');
-    if (opt_callback) {
+    if (opt_callback && opt_callback.function && typeof window[opt_callback.function] === 'function' ) {
       scope.callback = opt_callback;
     } else {
         delete scope.buttons['Abbruch'];
@@ -57,9 +57,9 @@ function DialogHandler() {
             window.location = linkUrl;
           }
         }
-        if (scope.callback && scope.callback.function && scope.callback.params) {
+        if (scope.callback && scope.callback.function && typeof window[scope.callback.function] === 'function' && scope.callback.params) {
           window[scope.callback.function](scope.callback.params);
-        } else if (scope.callback && scope.callback.function) {
+        } else if (scope.callback && scope.callback.function && typeof scope.callback.function === 'function') {
           window[scope.callback.function]();
         }
       }
