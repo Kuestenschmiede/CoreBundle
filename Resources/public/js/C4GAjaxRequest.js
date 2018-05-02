@@ -114,11 +114,3 @@ class C4GAjaxRequest {
     this._settings = value;
   }
 }
-
-jQuery(document).ready(function () {
-  let req = new C4GAjaxRequest("/con4gis/layerService/1");
-  req.addDoneCallback(function (data) {
-    console.log(data);
-  });
-  req.execute();
-});
