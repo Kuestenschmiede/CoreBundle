@@ -16,6 +16,7 @@ use con4gis\CoreBundle\Resources\contao\classes\C4GApiCache;
 use Contao\Database;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class BaseController extends Controller
@@ -31,9 +32,15 @@ class BaseController extends Controller
      */
     protected $entityManager = null;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher = null;
+
     protected function initialize()
     {
         $this->entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $this->eventDispatcher = $this->container->get('event_dispatcher');
     }
 
     protected function getCacheRequest(Request $request)

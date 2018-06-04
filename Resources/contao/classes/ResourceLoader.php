@@ -162,4 +162,8 @@ class ResourceLoader
         $GLOBALS['TL_BODY'][$key] = '<script src="'. $jsFile . '" defer></script>' . "\n";
     }
 
+    public static function removeJavaScriptRessource($key)
+    {
+        unset($GLOBALS['TL_BODY'][$key]);
+    }
 }
