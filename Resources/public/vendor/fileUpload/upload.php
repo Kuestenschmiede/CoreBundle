@@ -28,7 +28,8 @@
     require_once($initialize);
 
     // User not logged in...
-    if (!FE_USER_LOGGED_IN) {
+    $user = \FrontendUser::getInstance();
+    if (!$user->authenticate()) {
         header('HTTP/1.0 403 Forbidden');
         echo "Forbidden";
         die();
