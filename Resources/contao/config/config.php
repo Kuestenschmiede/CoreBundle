@@ -59,6 +59,8 @@ $apiBaseUrl = 'con4gis/api';
 
 $GLOBALS['TL_HEAD'][] = "<script>var apiBaseUrl = '" . $apiBaseUrl . "';</script>";
 
+$GLOBALS['TL_HEAD'][] = "<script>window.FontAwesomeConfig = {searchPseudoElements: true}</script>";
+
 /**
  * Content Elements
  */
