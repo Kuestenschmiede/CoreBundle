@@ -56,12 +56,10 @@ class BaseController extends Controller
 
     protected function checkForCacheSettings($configParam)
     {
-
         $this->container->get('contao.framework')->initialize();
         $cacheSettings = Database::getInstance()->execute("SELECT * FROM tl_c4g_settings LIMIT 1")->fetchAllAssoc();
         $cacheSettings = $cacheSettings[0]['caching'];
         self::$useCache = (is_array(deserialize($cacheSettings)) && in_array($configParam, deserialize($cacheSettings)));
-
     }
 
     protected function checkAndStoreCachedData(Request $request)
@@ -76,5 +74,13 @@ class BaseController extends Controller
     protected function storeDataInCache(Request $request)
     {
         C4GApiCache::putCacheData($this->getCacheRequest($request), $this->getCacheFragments($request), $this->responseData);
+    }
+
+    /**
+     * Returns whether a frontend user is currently logged in.
+     */
+    protected function checkFeUser()
+    {
+        return $this->container->get('contao.security.token_checker')->hasFrontendUser();
     }
 }
