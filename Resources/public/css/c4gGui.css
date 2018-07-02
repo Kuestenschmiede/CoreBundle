@@ -1,13 +1,9 @@
 @CHARSET "ISO-8859-1";
 
+@import url("../bundles/con4giscore/vendor/fontawesome/css/all.css");
 @font-face {
-	font-family: 'FontAwesome';
-	src: url('../vendor/font-awesome/fonts/fontawesome-webfont.eot?v=4.2.0');
-	src: url('../vendor/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'),
-	url('../vendor/font-awesome/fonts/fontawesome-webfont.woff?v=4.2.0') format('woff'),
-	url('../vendor/font-awesome/fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'),
-	url('../vendor/font-awesome/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
-	font-weight: 100;
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
 	font-style: normal;
 }
 

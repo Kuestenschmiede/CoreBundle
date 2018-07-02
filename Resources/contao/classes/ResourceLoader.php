@@ -113,6 +113,8 @@ class ResourceLoader
                 self::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
             }
         }
+        // TODO test, später richtig einbinden
+        self::loadJavaScriptRessource('ajax-request', 'bundles/con4giscore/js/C4GAjaxRequest.js', true);
         if ($resources['magnific-popup']) {
             // load magnific-popup
             self::loadJavaScriptRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js', true);
@@ -136,13 +138,30 @@ class ResourceLoader
         $GLOBALS['TL_CSS'][$key] = $cssFile;
     }
 
-    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false) {
+    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false) {
         if ($inHeader) {
             $GLOBALS['TL_JAVASCRIPT'][$key] = $jsFile;
-        } else
-        {
-            $GLOBALS['TL_BODY'][$key] = \Template::generateScriptTag($jsFile) . "\n";
+        } else {
+            if ($es6Module) {
+                $GLOBALS['TL_BODY'][$key] = '<script src="' . $jsFile . '" type="module" ></script>' . "\n";
+            } else {
+                $GLOBALS['TL_BODY'][$key] = \Template::generateScriptTag($jsFile) . "\n";
+            }
         }
     }
 
+    public static function loadJavaScriptModule($key, $jsFile)
+    {
+        self::loadJavaScriptRessource($key, $jsFile, false, true);
+    }
+
+    public static function loadJavaScriptDeferred($key, $jsFile)
+    {
+        $GLOBALS['TL_BODY'][$key] = '<script src="'. $jsFile . '" defer></script>' . "\n";
+    }
+
+    public static function removeJavaScriptRessource($key)
+    {
+        unset($GLOBALS['TL_BODY'][$key]);
+    }
 }
