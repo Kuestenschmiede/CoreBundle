@@ -22,6 +22,9 @@ class C4GApiCache extends \Frontend
 
     protected static $hasInstance = false;
 
+    /**
+     * @var FilesystemAdapter
+     */
     protected static $instance;
 
     public static function getInstance() {
