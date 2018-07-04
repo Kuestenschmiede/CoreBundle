@@ -18,29 +18,22 @@
 
 .jspVerticalBar
 {
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 5px;
+	background: red;
 	height: 100%;
-	background: #000;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 16px;
 }
 
 .jspHorizontalBar
 {
-	position: absolute;
+	background: red;
 	bottom: 0;
+	height: 16px;
 	left: 0;
+	position: absolute;
 	width: 100%;
-	height: 5px;
-	background: #000;
-}
-
-.jspVerticalBar *,
-.jspHorizontalBar *
-{
-	margin: 0;
-	padding: 0;
 }
 
 .jspCap
@@ -55,21 +48,17 @@
 
 .jspTrack
 {
-	background: #111;
-	opacity: 0.85;
+	background: #dde;
 	position: relative;
-	border-radius: 2px;
 }
 
 .jspDrag
 {
-	background: #eee;
-	opacity: 0.85;
+	background: #bbd;
+	cursor: pointer;
+	left: 0;
 	position: relative;
 	top: 0;
-	left: 0;
-	cursor: pointer;
-	border-radius: 2px;
 }
 
 .jspHorizontalBar .jspTrack,
@@ -81,17 +70,19 @@
 
 .jspArrow
 {
-	background: #aaa;
-	opacity: 0.85;
-	text-indent: -20000px;
-	display: block;
+	background: #50506d;
 	cursor: pointer;
+        direction: ltr;
+	display: block;
+	margin: 0;
+	padding: 0;
+	text-indent: -20000px;
 }
 
-.jspArrow.jspDisabled
+.jspDisabled
 {
+	background: #80808d;
 	cursor: default;
-	background: #555;
 }
 
 .jspVerticalBar .jspArrow
@@ -101,19 +92,20 @@
 
 .jspHorizontalBar .jspArrow
 {
-	width: 16px;
 	float: left;
 	height: 100%;
+	width: 16px;
 }
 
 .jspVerticalBar .jspArrow:focus
 {
+        border: 1px solid red;
 	outline: none;
 }
 
 .jspCorner
 {
-	background: #ddd;
+	background: #eeeef4;
 	float: left;
 	height: 100%;
 }
