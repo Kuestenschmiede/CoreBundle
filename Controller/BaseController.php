@@ -43,6 +43,11 @@ class BaseController extends Controller
         $this->eventDispatcher = $this->container->get('event_dispatcher');
     }
 
+    protected function initializeContao()
+    {
+        $this->container->get('contao.framework')->initialize();
+    }
+
     protected function getCacheRequest(Request $request)
     {
         return $request->getRequestUri();
@@ -56,7 +61,7 @@ class BaseController extends Controller
 
     protected function checkForCacheSettings($configParam)
     {
-        $this->container->get('contao.framework')->initialize();
+        $this->initializeContao();
         $cacheSettings = Database::getInstance()->execute("SELECT * FROM tl_c4g_settings LIMIT 1")->fetchAllAssoc();
         $cacheSettings = $cacheSettings[0]['caching'];
         self::$useCache = (is_array(deserialize($cacheSettings)) && in_array($configParam, deserialize($cacheSettings)));
