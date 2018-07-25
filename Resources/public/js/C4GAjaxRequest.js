@@ -16,7 +16,7 @@ class C4GAjaxRequest {
       settings = {};
     }
     // use the request as this in the callbacks instead of the ajax parameters
-    settings['context'] = this;
+    //settings['context'] = this;
     // set other params
     settings['method'] = method;
     // set async to true, to avoid deprecated synchronous requests
@@ -28,18 +28,19 @@ class C4GAjaxRequest {
    * Executes the request with the given settings and calls defined callbacks, if there are any.
    */
   execute() {
+    let scope = this;
     jQuery.ajax(this._url, this._settings).done(function(data, textStatus, jqXHR) {
-      if (this._settings['done'] && typeof this._settings['done'] === "function") {
-        this._settings['done'](data, textStatus, jqXHR);
+      if (scope._settings['done'] && typeof scope._settings['done'] === "function") {
+          scope._settings['done'](data, textStatus, jqXHR);
       }
     }).fail(function(data, textStatus, errorThrown) {
-      if (this._settings['fail'] && typeof this._settings['fail'] === "function") {
-        this._settings['fail'](data, textStatus, errorThrown);
+      if (scope._settings['fail'] && typeof scope._settings['fail'] === "function") {
+          scope._settings['fail'](data, textStatus, errorThrown);
       }
     }).always(function(data, textStatus, alt_jqXHR) {
       // the param alt_jqXHR is the jqXHR or the thrown error, depending on the status of the request
-      if (this._settings['always'] && typeof this._settings['always'] === "function") {
-        this._settings['always'](data, textStatus, alt_jqXHR);
+      if (scope._settings['always'] && typeof scope._settings['always'] === "function") {
+          scope._settings['always'](data, textStatus, alt_jqXHR);
       }
     });
   }

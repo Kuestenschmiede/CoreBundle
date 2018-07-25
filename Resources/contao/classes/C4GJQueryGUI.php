@@ -35,7 +35,7 @@ class C4GJQueryGUI
 		if ($addJQuery)
 		{
 			if (is_array( $GLOBALS['TL_JAVASCRIPT'] ) &&
-				(array_search( 'assets/jquery/core/' . JQUERY . '/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
+				(array_search( 'assets/jquery/js/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
 			{
 				// jQuery is already loaded by Contao, don't load again!
 			}

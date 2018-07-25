@@ -167,10 +167,10 @@ this.c4g.projects = this.c4g.projects || {};
             data: options.ajaxData+'/initnav',
             dataType: "json",
             type: "GET",
-            success: function( data ) {
+            done: function( data ) {
               scope.fnHandleAjaxResponse( data, scope.internalId );
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            fail: function(jqXHR, textStatus, errorThrown) {
               scope.fnInitContentDiv();
               $(this.contentDiv).text('Error: '+errorThrown);
             }
@@ -190,10 +190,10 @@ this.c4g.projects = this.c4g.projects || {};
                   ),
                   dataType: "json",
                   type: "GET",
-                  success: function( data ) {
+                  done: function( data ) {
                     scope.fnHandleAjaxResponse( data, this.internalId );
                   },
-                  error: function(jqXHR, textStatus, errorThrown) {
+                  fail: function(jqXHR, textStatus, errorThrown) {
                     $(scope.contentDiv).text('Error: '+errorThrown);
                   }
                 });
@@ -234,10 +234,10 @@ this.c4g.projects = this.c4g.projects || {};
           data: ajaxData,
           dataType: "json",
           type: ajaxMethod,
-          success: function (data) {
+          done: function (data) {
             scope.fnHandleAjaxResponse(data, this.internalId);
           },
-          error: function (jqXHR, textStatus, errorThrown) {
+          fail: function (jqXHR, textStatus, errorThrown) {
             scope.fnInitContentDiv();
             $(scope.contentDiv).text('Error: ' + errorThrown);
           }
@@ -1264,7 +1264,7 @@ this.c4g.projects = this.c4g.projects || {};
           $.ajax({
             url: options.ajaxUrl + '/' + options.ajaxData + '/cron:' + element,
             data: null,
-            success: function () {
+            done: function () {
             },
             global: false
           });
