@@ -94,6 +94,15 @@ affiliatetheme:
   styles:
     - brands
   unicode: f36b
+air-freshener:
+  changes:
+    - 5.2.0
+  label: Air Freshener
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5d0
 algolia:
   changes:
     - 5.0.0
@@ -352,7 +361,12 @@ angry:
     - 5.1.0
   label: Angry Face
   search:
-    terms: []
+    terms:
+      - disapprove
+      - emoticon
+      - face
+      - mad
+      - upset
   styles:
     - solid
     - regular
@@ -416,6 +430,15 @@ apple:
   styles:
     - brands
   unicode: f179
+apple-alt:
+  changes:
+    - 5.2.0
+  label: Fruit Apple
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5d1
 apple-pay:
   changes:
     - 5.0.0
@@ -445,6 +468,7 @@ archway:
   label: Archway
   search:
     terms:
+      - arc
       - monument
       - road
       - street
@@ -681,12 +705,22 @@ atlas:
   search:
     terms:
       - book
+      - directions
       - geography
       - map
       - wayfinding
   styles:
     - solid
   unicode: f558
+atom:
+  changes:
+    - 5.2.0
+  label: Atom
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5d2
 audible:
   changes:
     - 5.0.0
@@ -736,9 +770,15 @@ aviato:
 award:
   changes:
     - 5.1.0
+    - 5.2.0
   label: Award
   search:
-    terms: []
+    terms:
+      - honor
+      - praise
+      - prize
+      - recognition
+      - ribbon
   styles:
     - solid
   unicode: f559
@@ -964,6 +1004,8 @@ bed:
   label: Bed
   search:
     terms:
+      - lodging
+      - sleep
       - travel
   styles:
     - solid
@@ -1009,6 +1051,7 @@ bell:
   changes:
     - '2'
     - 5.0.0
+    - 5.2.0
   label: bell
   search:
     terms:
@@ -1023,6 +1066,7 @@ bell-slash:
   changes:
     - '4.2'
     - 5.0.0
+    - 5.2.0
   label: Bell Slash
   search:
     terms: []
@@ -1071,6 +1115,7 @@ binoculars:
   changes:
     - '4.2'
     - 5.0.0
+    - 5.2.0
   label: Binoculars
   search:
     terms: []
@@ -1227,6 +1272,15 @@ bomb:
   styles:
     - solid
   unicode: f1e2
+bone:
+  changes:
+    - 5.2.0
+  label: Bone
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5d7
 bong:
   changes:
     - 5.1.0
@@ -1258,15 +1312,28 @@ book-open:
   changes:
     - 5.0.13
     - 5.1.0
+    - 5.2.0
   label: Book Open
   search:
     terms:
+      - flyer
       - notebook
       - open book
+      - pamphlet
       - reading
   styles:
     - solid
   unicode: f518
+book-reader:
+  changes:
+    - 5.2.0
+  label: Book Reader
+  search:
+    terms:
+      - library
+  styles:
+    - solid
+  unicode: f5da
 bookmark:
   changes:
     - '1'
@@ -1326,6 +1393,15 @@ braille:
   styles:
     - solid
   unicode: f2a1
+brain:
+  changes:
+    - 5.2.0
+  label: Brain
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5dc
 briefcase:
   changes:
     - '2'
@@ -1380,6 +1456,7 @@ brush:
     terms:
       - bristles
       - color
+      - handle
       - painting
   styles:
     - solid
@@ -1667,6 +1744,7 @@ car:
   changes:
     - '4.1'
     - 5.0.0
+    - 5.2.0
   label: Car
   search:
     terms:
@@ -1676,6 +1754,42 @@ car:
   styles:
     - solid
   unicode: f1b9
+car-alt:
+  changes:
+    - 5.2.0
+  label: Car Alt
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5de
+car-battery:
+  changes:
+    - 5.2.0
+  label: Car Battery
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5df
+car-crash:
+  changes:
+    - 5.2.0
+  label: Car Crash
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5e1
+car-side:
+  changes:
+    - 5.2.0
+  label: Car Side
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5e4
 caret-down:
   changes:
     - '2'
@@ -1960,6 +2074,15 @@ chalkboard-teacher:
   styles:
     - solid
   unicode: f51c
+charging-station:
+  changes:
+    - 5.2.0
+  label: Charging Station
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5e7
 chart-area:
   changes:
     - '4.2'
@@ -2066,7 +2189,21 @@ check-double:
     - 5.1.0
   label: Check Double
   search:
-    terms: []
+    terms:
+      - accept
+      - agree
+      - checkmark
+      - confirm
+      - correct
+      - done
+      - notice
+      - notification
+      - notify
+      - ok
+      - select
+      - success
+      - tick
+      - todo
   styles:
     - solid
   unicode: f560
@@ -2694,6 +2831,7 @@ compass:
   changes:
     - '3.2'
     - 5.0.0
+    - 5.2.0
   label: Compass
   search:
     terms:
@@ -2757,7 +2895,13 @@ cookie:
     - 5.1.0
   label: Cookie
   search:
-    terms: []
+    terms:
+      - baked good
+      - chips
+      - food
+      - snack
+      - sweet
+      - treat
   styles:
     - solid
   unicode: f563
@@ -2766,7 +2910,15 @@ cookie-bite:
     - 5.1.0
   label: Cookie Bite
   search:
-    terms: []
+    terms:
+      - baked good
+      - bitten
+      - chips
+      - eating
+      - food
+      - snack
+      - sweet
+      - treat
   styles:
     - solid
   unicode: f564
@@ -3296,6 +3448,15 @@ digital-tachograph:
   styles:
     - solid
   unicode: f566
+directions:
+  changes:
+    - 5.2.0
+  label: Directions
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5eb
 discord:
   changes:
     - 5.0.0
@@ -3329,7 +3490,11 @@ dizzy:
     - 5.1.0
   label: Dizzy Face
   search:
-    terms: []
+    terms:
+      - dazed
+      - disapprove
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -3475,10 +3640,22 @@ drafting-compass:
     - 5.1.0
   label: Drafting Compass
   search:
-    terms: []
+    terms:
+      - mechanical drawing
+      - plot
+      - plotting
   styles:
     - solid
   unicode: f568
+draw-polygon:
+  changes:
+    - 5.2.0
+  label: Draw Polygon
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5ee
 dribbble:
   changes:
     - 5.0.0
@@ -3513,7 +3690,12 @@ drum:
     - 5.1.0
   label: Drum
   search:
-    terms: []
+    terms:
+      - instrument
+      - music
+      - percussion
+      - snare
+      - sound
   styles:
     - solid
   unicode: f569
@@ -3522,7 +3704,16 @@ drum-steelpan:
     - 5.1.0
   label: Drum Steelpan
   search:
-    terms: []
+    terms:
+      - calypso
+      - instrument
+      - music
+      - percussion
+      - reggae
+      - snare
+      - sound
+      - steel
+      - tropical
   styles:
     - solid
   unicode: f56a
@@ -3666,6 +3857,15 @@ ellipsis-v:
   styles:
     - solid
   unicode: f142
+ello:
+  changes:
+    - 5.2.0
+  label: Ello
+  search:
+    terms: []
+  styles:
+    - brands
+  unicode: f5f1
 ember:
   changes:
     - 5.0.0
@@ -4080,7 +4280,11 @@ feather:
     - 5.1.0
   label: Feather
   search:
-    terms: []
+    terms:
+      - bird
+      - light
+      - plucked
+      - quill
   styles:
     - solid
   unicode: f52d
@@ -4089,7 +4293,11 @@ feather-alt:
     - 5.1.0
   label: Feather Alt
   search:
-    terms: []
+    terms:
+      - bird
+      - light
+      - plucked
+      - quill
   styles:
     - solid
   unicode: f56b
@@ -4393,7 +4601,11 @@ fill:
     - 5.1.0
   label: Fill
   search:
-    terms: []
+    terms:
+      - bucket
+      - color
+      - paint
+      - paint bucket
   styles:
     - solid
   unicode: f575
@@ -4402,7 +4614,13 @@ fill-drip:
     - 5.1.0
   label: Fill Drip
   search:
-    terms: []
+    terms:
+      - bucket
+      - color
+      - drop
+      - paint
+      - paint bucket
+      - spill
   styles:
     - solid
   unicode: f576
@@ -4434,7 +4652,15 @@ fingerprint:
     - 5.1.0
   label: Fingerprint
   search:
-    terms: []
+    terms:
+      - human
+      - id
+      - identification
+      - lock
+      - smudge
+      - touch
+      - unique
+      - unlock
   styles:
     - solid
   unicode: f577
@@ -4587,7 +4813,10 @@ flushed:
     - 5.1.0
   label: Flushed Face
   search:
-    terms: []
+    terms:
+      - embarrassed
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -4670,6 +4899,7 @@ font-awesome-logo-full:
   label: Font Awesome Full Logo
   ligatures:
     - Font Awesome
+  private: true
   search:
     terms: []
   styles:
@@ -4816,7 +5046,12 @@ frown-open:
     - 5.1.0
   label: Frowning Face With Open Mouth
   search:
-    terms: []
+    terms:
+      - disapprove
+      - emoticon
+      - face
+      - rating
+      - sad
   styles:
     - solid
     - regular
@@ -5319,6 +5554,7 @@ graduation-cap:
   changes:
     - '4.1'
     - 5.0.0
+    - 5.2.0
   label: Graduation Cap
   search:
     terms:
@@ -5375,7 +5611,10 @@ grimace:
     - 5.1.0
   label: Grimacing Face
   search:
-    terms: []
+    terms:
+      - cringe
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -5385,7 +5624,11 @@ grin:
     - 5.1.0
   label: Grinning Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - laugh
+      - smile
   styles:
     - solid
     - regular
@@ -5395,7 +5638,11 @@ grin-alt:
     - 5.1.0
   label: Alternate Grinning Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - laugh
+      - smile
   styles:
     - solid
     - regular
@@ -5405,7 +5652,11 @@ grin-beam:
     - 5.1.0
   label: Grinning Face With Smiling Eyes
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - laugh
+      - smile
   styles:
     - solid
     - regular
@@ -5415,7 +5666,10 @@ grin-beam-sweat:
     - 5.1.0
   label: Grinning Face With Sweat
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - smile
   styles:
     - solid
     - regular
@@ -5425,7 +5679,11 @@ grin-hearts:
     - 5.1.0
   label: Smiling Face With Heart-Eyes
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - love
+      - smile
   styles:
     - solid
     - regular
@@ -5435,7 +5693,11 @@ grin-squint:
     - 5.1.0
   label: Grinning Squinting Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - laugh
+      - smile
   styles:
     - solid
     - regular
@@ -5445,7 +5707,11 @@ grin-squint-tears:
     - 5.1.0
   label: Rolling on the Floor Laughing
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - happy
+      - smile
   styles:
     - solid
     - regular
@@ -5455,7 +5721,10 @@ grin-stars:
     - 5.1.0
   label: Star-Struck
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - star-struck
   styles:
     - solid
     - regular
@@ -5465,7 +5734,10 @@ grin-tears:
     - 5.1.0
   label: Face With Tears of Joy
   search:
-    terms: []
+    terms:
+      - LOL
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -5475,7 +5747,10 @@ grin-tongue:
     - 5.1.0
   label: Face With Tongue
   search:
-    terms: []
+    terms:
+      - LOL
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -5485,7 +5760,10 @@ grin-tongue-squint:
     - 5.1.0
   label: Squinting Face With Tongue
   search:
-    terms: []
+    terms:
+      - LOL
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -5495,7 +5773,10 @@ grin-tongue-wink:
     - 5.1.0
   label: Winking Face With Tongue
   search:
-    terms: []
+    terms:
+      - LOL
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -5503,9 +5784,15 @@ grin-tongue-wink:
 grin-wink:
   changes:
     - 5.1.0
+    - 5.1.1
   label: Grinning Winking Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - flirt
+      - laugh
+      - smile
   styles:
     - solid
     - regular
@@ -5517,6 +5804,8 @@ grip-horizontal:
   search:
     terms:
       - affordance
+      - drag
+      - drop
       - grab
       - handle
   styles:
@@ -5529,6 +5818,8 @@ grip-vertical:
   search:
     terms:
       - affordance
+      - drag
+      - drop
       - grab
       - handle
   styles:
@@ -5592,6 +5883,15 @@ hacker-news-square:
   styles:
     - brands
   unicode: f3af
+hackerrank:
+  changes:
+    - 5.2.0
+  label: Hackerrank
+  search:
+    terms: []
+  styles:
+    - brands
+  unicode: f5f7
 hand-holding:
   changes:
     - 5.0.9
@@ -5861,7 +6161,12 @@ headphones-alt:
     - 5.1.0
   label: Headphones Alt
   search:
-    terms: []
+    terms:
+      - audio
+      - listen
+      - music
+      - sound
+      - speaker
   styles:
     - solid
   unicode: f58f
@@ -5870,7 +6175,17 @@ headset:
     - 5.1.0
   label: Headset
   search:
-    terms: []
+    terms:
+      - audio
+      - gamer
+      - gaming
+      - listen
+      - live chat
+      - microphone
+      - shot caller
+      - sound
+      - support
+      - telemarketer
   styles:
     - solid
   unicode: f590
@@ -6442,6 +6757,15 @@ jsfiddle:
   styles:
     - brands
   unicode: f1cc
+kaggle:
+  changes:
+    - 5.2.0
+  label: Kaggle
+  search:
+    terms: []
+  styles:
+    - brands
+  unicode: f5fa
 key:
   changes:
     - '1'
@@ -6506,9 +6830,15 @@ kickstarter-k:
 kiss:
   changes:
     - 5.1.0
+    - 5.1.1
   label: Kissing Face
   search:
-    terms: []
+    terms:
+      - beso
+      - emoticon
+      - face
+      - love
+      - smooch
   styles:
     - solid
     - regular
@@ -6518,7 +6848,12 @@ kiss-beam:
     - 5.1.0
   label: Kissing Face With Smiling Eyes
   search:
-    terms: []
+    terms:
+      - beso
+      - emoticon
+      - face
+      - love
+      - smooch
   styles:
     - solid
     - regular
@@ -6528,7 +6863,12 @@ kiss-wink-heart:
     - 5.1.0
   label: Face Blowing a Kiss
   search:
-    terms: []
+    terms:
+      - beso
+      - emoticon
+      - face
+      - love
+      - smooch
   styles:
     - solid
     - regular
@@ -6557,7 +6897,13 @@ language:
     - 5.0.0
   label: Language
   search:
-    terms: []
+    terms:
+      - dialect
+      - idiom
+      - localize
+      - speech
+      - translate
+      - vernacular
   styles:
     - solid
   unicode: f1ab
@@ -6565,6 +6911,7 @@ laptop:
   changes:
     - '3'
     - 5.0.0
+    - 5.2.0
   label: Laptop
   search:
     terms:
@@ -6582,6 +6929,15 @@ laptop:
   styles:
     - solid
   unicode: f109
+laptop-code:
+  changes:
+    - 5.2.0
+  label: Laptop Code
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f5fc
 laravel:
   changes:
     - 5.0.0
@@ -6618,7 +6974,11 @@ laugh:
     - 5.1.0
   label: Grinning Face With Big Eyes
   search:
-    terms: []
+    terms:
+      - LOL
+      - emoticon
+      - face
+      - laugh
   styles:
     - solid
     - regular
@@ -6628,7 +6988,10 @@ laugh-beam:
     - 5.1.0
   label: Laugh Face with Beaming Eyes
   search:
-    terms: []
+    terms:
+      - LOL
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -6638,7 +7001,10 @@ laugh-squint:
     - 5.1.0
   label: Laughing Squinting Face
   search:
-    terms: []
+    terms:
+      - LOL
+      - emoticon
+      - face
   styles:
     - solid
     - regular
@@ -6648,11 +7014,24 @@ laugh-wink:
     - 5.1.0
   label: Laughing Winking Face
   search:
-    terms: []
+    terms:
+      - LOL
+      - emoticon
+      - face
   styles:
     - solid
     - regular
   unicode: f59c
+layer-group:
+  changes:
+    - 5.2.0
+  label: Layer Group
+  search:
+    terms:
+      - layers
+  styles:
+    - solid
+  unicode: f5fd
 leaf:
   changes:
     - '1'
@@ -7196,6 +7575,7 @@ map-pin:
   changes:
     - '4.4'
     - 5.0.0
+    - 5.2.0
   label: Map Pin
   search:
     terms:
@@ -7217,12 +7597,22 @@ map-signs:
   changes:
     - '4.4'
     - 5.0.0
+    - 5.2.0
   label: Map Signs
   search:
     terms: []
   styles:
     - solid
   unicode: f277
+markdown:
+  changes:
+    - 5.2.0
+  label: Markdown
+  search:
+    terms: []
+  styles:
+    - brands
+  unicode: f60f
 marker:
   changes:
     - 5.1.0
@@ -7408,7 +7798,11 @@ meh-blank:
     - 5.1.0
   label: Face Without Mouth
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - neutral
+      - rating
   styles:
     - solid
     - regular
@@ -7418,7 +7812,11 @@ meh-rolling-eyes:
     - 5.1.0
   label: Face With Rolling Eyes
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - neutral
+      - rating
   styles:
     - solid
     - regular
@@ -7514,6 +7912,15 @@ microphone-slash:
   styles:
     - solid
   unicode: f131
+microscope:
+  changes:
+    - 5.2.0
+  label: Microscope
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f610
 microsoft:
   changes:
     - 5.0.0
@@ -7806,6 +8213,7 @@ music:
   changes:
     - '1'
     - 5.0.0
+    - 5.2.0
   label: Music
   search:
     terms:
@@ -7823,6 +8231,15 @@ napster:
   styles:
     - brands
   unicode: f3d2
+neos:
+  changes:
+    - 5.2.0
+  label: Neos
+  search:
+    terms: []
+  styles:
+    - brands
+  unicode: f612
 neuter:
   changes:
     - '4.3'
@@ -7972,6 +8389,15 @@ odnoklassniki-square:
   styles:
     - brands
   unicode: f264
+oil-can:
+  changes:
+    - 5.2.0
+  label: Oil Can
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f613
 old-republic:
   changes:
     - 5.0.12
@@ -8733,6 +9159,15 @@ poo:
   styles:
     - solid
   unicode: f2fe
+poop:
+  changes:
+    - 5.2.0
+  label: Poop
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f619
 portrait:
   changes:
     - 5.0.0
@@ -9213,6 +9648,16 @@ retweet:
   styles:
     - solid
   unicode: f079
+rev:
+  changes:
+    - 5.1.0
+    - 5.1.1
+  label: Rev.io
+  search:
+    terms: []
+  styles:
+    - brands
+  unicode: f5b2
 ribbon:
   changes:
     - 5.0.9
@@ -9230,6 +9675,7 @@ road:
   changes:
     - '1'
     - 5.0.0
+    - 5.2.0
   label: road
   search:
     terms:
@@ -9275,6 +9721,15 @@ rockrms:
   styles:
     - brands
   unicode: f3e9
+route:
+  changes:
+    - 5.0.9
+  label: Route
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f4d7
 rss:
   changes:
     - '2'
@@ -9363,7 +9818,11 @@ sad-cry:
     - 5.1.0
   label: Crying Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - tear
+      - tears
   styles:
     - solid
     - regular
@@ -9373,7 +9832,11 @@ sad-tear:
     - 5.1.0
   label: Loudly Crying Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - tear
+      - tears
   styles:
     - solid
     - regular
@@ -9558,6 +10021,18 @@ servicestack:
   styles:
     - brands
   unicode: f3ec
+shapes:
+  changes:
+    - 5.2.0
+  label: Shapes
+  search:
+    terms:
+      - circle
+      - square
+      - triangle
+  styles:
+    - solid
+  unicode: f61f
 share:
   changes:
     - '1'
@@ -9961,7 +10436,10 @@ smile-beam:
     - 5.1.0
   label: Beaming Face With Smiling Eyes
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - happy
   styles:
     - solid
     - regular
@@ -9971,7 +10449,10 @@ smile-wink:
     - 5.1.0
   label: Winking Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - happy
   styles:
     - solid
     - regular
@@ -10356,6 +10837,15 @@ star-half-alt:
   styles:
     - solid
   unicode: f5c0
+star-of-life:
+  changes:
+    - 5.2.0
+  label: Star Of-life
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f621
 staylinked:
   changes:
     - 5.0.0
@@ -10528,6 +11018,7 @@ street-view:
   changes:
     - '4.3'
     - 5.0.0
+    - 5.2.0
   label: Street View
   search:
     terms:
@@ -10708,7 +11199,10 @@ surprise:
     - 5.1.0
   label: Hushed Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - shocked
   styles:
     - solid
     - regular
@@ -10851,6 +11345,7 @@ tablets:
 tachometer-alt:
   changes:
     - 5.0.0
+    - 5.2.0
   label: Alternate Tachometer
   search:
     terms:
@@ -10935,6 +11430,24 @@ teamspeak:
   styles:
     - brands
   unicode: f4f9
+teeth:
+  changes:
+    - 5.2.0
+  label: Teeth
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f62e
+teeth-open:
+  changes:
+    - 5.2.0
+  label: Teeth Open
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f62f
 telegram:
   changes:
     - '4.7'
@@ -11043,6 +11556,15 @@ th-list:
   styles:
     - solid
   unicode: f00b
+theater-masks:
+  changes:
+    - 5.2.0
+  label: Theater Masks
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f630
 themeco:
   changes:
     - 5.1.0
@@ -11263,7 +11785,10 @@ tired:
     - 5.1.0
   label: Tired Face
   search:
-    terms: []
+    terms:
+      - emoticon
+      - face
+      - grumpy
   styles:
     - solid
     - regular
@@ -11310,7 +11835,12 @@ tooth:
     - 5.1.0
   label: Tooth
   search:
-    terms: []
+    terms:
+      - bicuspid
+      - dental
+      - molar
+      - mouth
+      - teeth
   styles:
     - solid
   unicode: f5c9
@@ -11333,6 +11863,15 @@ trademark:
   styles:
     - solid
   unicode: f25c
+traffic-light:
+  changes:
+    - 5.2.0
+  label: Traffic Light
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f637
 train:
   changes:
     - '4.3'
@@ -11464,6 +12003,15 @@ truck-loading:
   styles:
     - solid
   unicode: f4de
+truck-monster:
+  changes:
+    - 5.2.0
+  label: Truck Monster
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f63b
 truck-moving:
   changes:
     - 5.0.9
@@ -11473,6 +12021,15 @@ truck-moving:
   styles:
     - solid
   unicode: f4df
+truck-pickup:
+  changes:
+    - 5.2.0
+  label: Truck Side
+  search:
+    terms: []
+  styles:
+    - solid
+  unicode: f63c
 tshirt:
   changes:
     - 5.0.13
@@ -12105,7 +12662,10 @@ vector-square:
     - 5.1.0
   label: Vector Square
   search:
-    terms: []
+    terms:
+      - anchors
+      - lines
+      - object
   styles:
     - solid
   unicode: f5cb
@@ -12794,3 +13354,12 @@ youtube-square:
   styles:
     - brands
   unicode: f431
+zhihu:
+  changes:
+    - 5.2.0
+  label: Zhihu
+  search:
+    terms: []
+  styles:
+    - brands
+  unicode: f63f
