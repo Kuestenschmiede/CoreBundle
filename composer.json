@@ -22,7 +22,9 @@
     "require": {
         "php": "^5.6|^7.0",
         "contao/core-bundle": "^4.4",
-        "menatwork/contao-multicolumnwizard": "^3.3"
+        "menatwork/contao-multicolumnwizard": "^3.3",
+        "doctrine/orm": "^2.5.14",
+        "doctrine/data-fixtures": "^1.2.2"
     },
     "conflict": {
         "contao/core": "*",
