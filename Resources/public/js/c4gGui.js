@@ -234,7 +234,7 @@ this.c4g.projects = this.c4g.projects || {};
           scope.fnHandleAjaxResponse(data, this.internalId);
         }).fail(function(data) {
           scope.fnInitContentDiv();
-          $(scope.contentDiv).text('Error: ' + errorThrown);
+          $(scope.contentDiv).text('Error: ' + data);
         });
       };
 
