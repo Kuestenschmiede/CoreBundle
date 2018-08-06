@@ -166,14 +166,12 @@ this.c4g.projects = this.c4g.projects || {};
             url: options.ajaxUrl,
             data: options.ajaxData+'/initnav',
             dataType: "json",
-            type: "GET",
-            done: function( data ) {
-              scope.fnHandleAjaxResponse( data, scope.internalId );
-            },
-            fail: function(jqXHR, textStatus, errorThrown) {
-              scope.fnInitContentDiv();
-              $(this.contentDiv).text('Error: '+errorThrown);
-            }
+            type: "GET"
+          }).done(function(data) {
+            scope.fnHandleAjaxResponse( data, scope.internalId );
+          }).fail(function(data) {
+            scope.fnInitContentDiv();
+            $(this.contentDiv).text('Error: '+errorThrown);
           });
         }
         if (history != null) {
@@ -189,13 +187,11 @@ this.c4g.projects = this.c4g.projects || {};
                     (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
                   ),
                   dataType: "json",
-                  type: "GET",
-                  done: function( data ) {
-                    scope.fnHandleAjaxResponse( data, this.internalId );
-                  },
-                  fail: function(jqXHR, textStatus, errorThrown) {
-                    $(scope.contentDiv).text('Error: '+errorThrown);
-                  }
+                  type: "GET"
+                }).done(function(data) {
+                  scope.fnHandleAjaxResponse( data, this.internalId );
+                }).fail(function(data) {
+                  $(scope.contentDiv).text('Error: '+errorThrown);
                 });
               }
             });
@@ -233,14 +229,12 @@ this.c4g.projects = this.c4g.projects || {};
           url: ajaxUrl,
           data: ajaxData,
           dataType: "json",
-          type: ajaxMethod,
-          done: function (data) {
-            scope.fnHandleAjaxResponse(data, this.internalId);
-          },
-          fail: function (jqXHR, textStatus, errorThrown) {
-            scope.fnInitContentDiv();
-            $(scope.contentDiv).text('Error: ' + errorThrown);
-          }
+          type: ajaxMethod
+        }).done(function(data) {
+          scope.fnHandleAjaxResponse(data, this.internalId);
+        }).fail(function(data) {
+          scope.fnInitContentDiv();
+          $(scope.contentDiv).text('Error: ' + errorThrown);
         });
       };
 
@@ -1215,7 +1209,7 @@ this.c4g.projects = this.c4g.projects || {};
        * Create a JQuery UI dialog for the usermessage instead of an alert.
        * When opening the dialog raise the dialogs background overlay just beneath the dialogs z-index to ensure the user cannot interact with any other dialogs.
        * When closing the dialog remove itself entirely to keep the dom clean.
-       * TODO: Consider providing a specific title based upon the usermessage or hiding the titlebar completely. This can be done via a CSS defition.
+       * TODO: Consider providing a specific title based upon the usermessage or hiding the titlebar completely. This can be success via a CSS defition.
        */
       if (typeof(content.usermessage) !== 'undefined') {
         //ToDo auslagern
@@ -1264,7 +1258,7 @@ this.c4g.projects = this.c4g.projects || {};
           $.ajax({
             url: options.ajaxUrl + '/' + options.ajaxData + '/cron:' + element,
             data: null,
-            done: function () {
+            success: function () {
             },
             global: false
           });
