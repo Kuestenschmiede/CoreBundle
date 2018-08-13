@@ -50,7 +50,7 @@ class BaseController extends Controller
 
     protected function getCacheRequest(Request $request)
     {
-        return $request->getRequestUri();
+        return $request->getHost() . $request->getRequestUri();
     }
 
     protected function getCacheFragments(Request $request)
