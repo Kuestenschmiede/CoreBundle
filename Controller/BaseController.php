@@ -13,6 +13,7 @@
 namespace con4gis\CoreBundle\Controller;
 
 use con4gis\CoreBundle\Resources\contao\classes\C4GApiCache;
+use con4gis\CoreBundle\Resources\contao\classes\C4GUtils;
 use Contao\Database;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -86,6 +87,6 @@ class BaseController extends Controller
      */
     protected function checkFeUser()
     {
-        return $this->container->get('contao.security.token_checker')->hasFrontendUser();
+        return C4GUtils::checkFrontendUserLogin();
     }
 }
