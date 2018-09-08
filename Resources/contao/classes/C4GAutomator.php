@@ -37,9 +37,8 @@ class C4GAutomator extends \System
     public static function purgeApiCache()
     {
 
-        C4GApiCache::clearCache();
+        C4GApiCache::getInstance()->clearCache();
         // Add a log entry
-
     }
 
 }

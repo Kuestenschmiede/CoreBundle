@@ -13,59 +13,53 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
+use Contao\System;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Contao\FrontendUser;
 
 
-class C4GApiCache extends \Frontend
+class C4GApiCache
 {
-
-    protected static $hasInstance = false;
-
     /**
      * @var FilesystemAdapter
      */
-    protected static $instance;
+    protected $cacheInstance;
+
+    /**
+     * @var C4GApiCache
+     */
+    protected static $instance = null;
 
     public static function getInstance() {
-
-        if (static::$hasInstance) {
-            return static::$instance;
-        } else {
-
-            $container = \System::getContainer();
-
-            self::$instance = new FilesystemAdapter(
-                $namespace = 'con4gis',
-                $defaultLifetime = 0,
-                $directory = $container->getParameter('kernel.cache_dir')
-            );
+        if (!static::$instance) {
+            static::$instance = new self();
         }
-
+        return static::$instance;
     }
 
-    public static function clearCache() {
-        if (!static::$hasInstance)
-        {
-            self::getInstance();
-        }
-
-        self::$instance->clear();
-    }
-
-    public static function getCacheKey($strApiEndpoint, $arrFragments)
+    /**
+     * C4GApiCache constructor.
+     */
+    protected function __construct()
     {
+        $container = System::getContainer();
+        $this->cacheInstance = new FilesystemAdapter(
+            $namespace = 'con4gis',
+            $defaultLifetime = 0,
+            $directory = $container->getParameter('kernel.cache_dir')
+        );
+    }
 
-        if (!static::$hasInstance)
-        {
-            self::getInstance();
-        }
+    public function clearCache() {
+        $this->cacheInstance->clear();
+    }
 
+    public function getCacheKey($strApiEndpoint, $arrFragments)
+    {
         $frontendIndex = new \FrontendIndex();
 
         if (FE_USER_LOGGED_IN) {
-            $frontendIndex->import('FrontendUser', 'User');
-            $arrFragments['userId'] = $frontendIndex->User->id;
+            $arrFragments['userId'] = FrontendUser::getInstance();
         }
 
         $strCacheKey =  $strApiEndpoint . "#" . serialize($arrFragments);
@@ -74,75 +68,36 @@ class C4GApiCache extends \Frontend
         return $strChecksum;
     }
 
-    public static function hasCacheData($cacheChecksum)
+    public function hasCacheData($cacheChecksum)
     {
-
-        if (!static::$hasInstance)
-        {
-            self::getInstance();
-        }
-
-        return self::$instance->hasItem($cacheChecksum);
-
+        return $this->cacheInstance->hasItem($cacheChecksum);
     }
 
-    private static function getCacheFile($strChecksum)
+    private function getCacheFile($strChecksum)
     {
-        if (!static::$hasInstance)
-        {
-            self::getInstance();
-        }
-
         return 'system/cache/con4gis/' . $strChecksum . '.json';
     }
 
-    public static function getCacheData($strApiEndpoint, $arrFragments)
+    public function getCacheData($strApiEndpoint, $arrFragments)
     {
-
-        if (!static::$hasInstance)
-        {
-            self::getInstance();
+        $strChecksum = $this->getCacheKey($strApiEndpoint, $arrFragments);
+        if ($this->hasCacheData($strChecksum)) {
+            return $this->cacheInstance->getItem($strChecksum)->get();
         }
-
-        $strChecksum = self::getCacheKey($strApiEndpoint, $arrFragments);
-
-        if (self::hasCacheData($strChecksum))
-        {
-
-            return self::$instance->getItem($strChecksum)->get();
-
-        }
-
         return false;
-
     }
 
-    private static function saveCacheData($strChecksum, $strContent)
+    private function saveCacheData($strChecksum, $strContent)
     {
-        if (!static::$hasInstance)
-        {
-            self::getInstance();
-        }
-
-        $cacheData = self::$instance->getItem($strChecksum);
+        $cacheData = $this->cacheInstance->getItem($strChecksum);
         $cacheData->set($strContent);
-
-        return self::$instance->save($cacheData);
-
-
+        return $this->cacheInstance->save($cacheData);
     }
 
-    public static function putCacheData($strApiEndpoint, $arrFragments, $strContent)
+    public function putCacheData($strApiEndpoint, $arrFragments, $strContent)
     {
-        if (!static::$hasInstance)
-        {
-            self::getInstance();
-        }
-
-        $strChecksum = self::getCacheKey($strApiEndpoint, $arrFragments);
-
-        self::saveCacheData($strChecksum, $strContent);
-
+        $strChecksum = $this->getCacheKey($strApiEndpoint, $arrFragments);
+        $this->saveCacheData($strChecksum, $strContent);
     }
 
 

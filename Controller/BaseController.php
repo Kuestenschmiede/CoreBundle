@@ -27,6 +27,8 @@ class BaseController extends Controller
 
     protected $responseData = "";
 
+    protected $cacheInstance = null;
+
     /**
      * @var EntityManager
      */
@@ -36,6 +38,15 @@ class BaseController extends Controller
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher = null;
+
+    /**
+     * BaseController constructor.
+     */
+    public function __construct()
+    {
+        $this->cacheInstance = C4GApiCache::getInstance();
+    }
+
 
     protected function initialize()
     {
@@ -69,7 +80,7 @@ class BaseController extends Controller
 
     protected function checkAndStoreCachedData(Request $request)
     {
-        if (($returnData = C4GApiCache::getCacheData($this->getCacheRequest($request), $this->getCacheFragments($request)))  !== false)
+        if (($returnData = $this->cacheInstance->getCacheData($this->getCacheRequest($request), $this->getCacheFragments($request)))  !== false)
         {
             self::$outputFromCache = true;
             $this->responseData = $returnData;
@@ -78,7 +89,7 @@ class BaseController extends Controller
 
     protected function storeDataInCache(Request $request)
     {
-        C4GApiCache::putCacheData($this->getCacheRequest($request), $this->getCacheFragments($request), $this->responseData);
+        $this->cacheInstance->putCacheData($this->getCacheRequest($request), $this->getCacheFragments($request), $this->responseData);
     }
 
     /**
