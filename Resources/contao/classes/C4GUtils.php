@@ -345,4 +345,19 @@ class C4GUtils
             return FE_USER_LOGGED_IN;
         }
     }
+
+    /**
+     * Checks if a backend user is logged in. Works for multiple contao authentication models
+     * (speak for contao 4 in general)
+     */
+    public static function checkBackendUserLogin()
+    {
+        $name = "Contao\CoreBundle\Security\Authentication\Token\TokenChecker";
+        // check if the symfony authentication model is used
+        if (class_exists($name)) {
+            return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+        } else {
+            return BE_USER_LOGGED_IN;
+        }
+    }
 }
