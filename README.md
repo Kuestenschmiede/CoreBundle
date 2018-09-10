@@ -7,7 +7,8 @@ The basic brick of the Contao GIS-kit **con4gis**.
 **Website:** [con4gis.org](https://con4gis.org)
 
 **Requires:**
-- [Contao](https://github.com/contao/core) (***4.4.x***)   
+- PHP (***>= 7.0***) 
+- [Contao](https://github.com/contao/core) (***>= 4.4***)   
 For Contao 3 you can use [con4igs_core](https://github.com/Kuestenschmiede/con4gis_core/releases) Extension.
 
 **Extendable with all other con4gis bundles**  
