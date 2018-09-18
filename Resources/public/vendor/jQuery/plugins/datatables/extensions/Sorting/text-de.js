@@ -11,6 +11,7 @@ function checkGermanText(value){
   value = value.replace('&uuml;', 'ue');
   value = value.replace('&Uuml;', 'ue');
   value = value.replace('&slig;', 'ss');
+  value = value.replace('&szlig;', 'ss');
   return value;
 }
 
