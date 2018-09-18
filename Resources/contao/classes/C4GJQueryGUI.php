@@ -77,6 +77,7 @@ class C4GJQueryGUI
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_jszip'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Buttons/js/jszip.min.js';
             $GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_scroller'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Scroller/js/dataTables.scroller.min.js';
 			$GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_sort_date_de'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Sorting/date-de.js';
+            $GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_sort_text_de'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Sorting/text-de.js';
             $GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_responsive'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js';
             $GLOBALS['TL_JAVASCRIPT']['c4g_jq_datatables_responsive_ui'] = 'bundles/con4giscore/vendor/jQuery/plugins/datatables/extensions/Responsive/js/responsive.jqueryui.min.js';
 
