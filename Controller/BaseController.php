@@ -49,9 +49,11 @@ class BaseController extends Controller
     }
 
 
-    protected function initialize()
+    protected function initialize($withEntityManager=true)
     {
-        $this->entityManager = $this->container->get('doctrine.orm.entity_manager');
+        if ($withEntityManager) {
+            $this->entityManager = $this->container->get('doctrine.orm.entity_manager');
+        }
         $this->eventDispatcher = $this->container->get('event_dispatcher');
     }
 
