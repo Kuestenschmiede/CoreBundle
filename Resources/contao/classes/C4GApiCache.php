@@ -59,7 +59,7 @@ class C4GApiCache
         $frontendIndex = new \FrontendIndex();
 
         if (FE_USER_LOGGED_IN) {
-            $arrFragments['userId'] = FrontendUser::getInstance();
+            $arrFragments['userId'] = FrontendUser::getInstance()->id;
         }
 
         $strCacheKey =  $strApiEndpoint . "#" . serialize($arrFragments);
