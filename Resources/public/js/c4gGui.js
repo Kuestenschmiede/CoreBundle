@@ -394,7 +394,6 @@ this.c4g.projects = this.c4g.projects || {};
         window.scrollTo(0, 0);
       };
 
-
       var content;
       if (data && data.content) {
         content = data.content;
@@ -1269,6 +1268,18 @@ this.c4g.projects = this.c4g.projects || {};
         fnJumpToLink(content.jump_to_url);
       }
 
+      // TODO hier hook aufrufen um weitere funktionen nach aufbau der liste aufrufen zu können
+      // TODO callHookFunctions aus maps in den core auslagern, dann kann das auch hier verwendet werden
+
+      if (c4g.projects.hook && c4g.projects.hook.responseHandled && c4g.projects.hook.responseHandled.length > 0) {
+        for (let j = 0; j < c4g.projects.hook.responseHandled.length; j++) {
+          if (typeof c4g.projects.hook.responseHandled[j] === 'function') {
+            if (content.searchValue) {
+              c4g.projects.hook.responseHandled[j]({searchValue: content.searchValue});
+            }
+          }
+        }
+      }
     }, // end of fnHandleAjaxResponse
 
     fnDataTableColumnVis: function(dataTable) {
