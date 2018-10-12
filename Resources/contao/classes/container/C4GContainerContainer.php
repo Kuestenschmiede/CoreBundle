@@ -22,4 +22,14 @@ class C4GContainerContainer extends C4GBaseContainer
     public function deleteContainer($key) {
         return $this->delete($key);
     }
+
+    public function addContainersFromArray(array $array) {
+        foreach ($array as $key => $value) {
+            $container = new C4GContainer();
+            foreach ($value as $k => $v) {
+                $container->addElement($v, $k);
+            }
+            $this->addContainer($container);
+        }
+    }
 }

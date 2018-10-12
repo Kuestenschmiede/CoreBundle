@@ -77,7 +77,7 @@ abstract class C4GBaseContainer implements \Iterator
 
     protected final function add($element, $key = null) {
         $this->elements[] = $element;
-        if ($key === null) {
+        if ($key === null || (!is_string($key) && !is_int($key))) {
             $key = count($this->elements) - 1;
         }
         $this->keys[] = $key;
@@ -88,6 +88,7 @@ abstract class C4GBaseContainer implements \Iterator
         $index = array_search($key, $this->keys);
         if ($index !== false) {
             $this->keys = array_splice($this->keys, $index);
+            $this->elements = array_splice($this->elements, $index);
             return true;
         } else {
             return false;
@@ -102,4 +103,20 @@ abstract class C4GBaseContainer implements \Iterator
             return null;
         }
     }
+
+    public function containsKey($key) {
+        return ($this->getByKey($key) !== null);
+    }
+
+    public function clear() {
+        $this->elements = array();
+        $this->keys = array();
+        $this->current = 0;
+    }
+
+    public function isEmpty() {
+        return empty($this->elements);
+    }
+
+
 }

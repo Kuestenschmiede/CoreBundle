@@ -15,11 +15,20 @@ namespace con4gis\CoreBundle\Resources\contao\classes\container;
 
 class C4GContainer extends C4GBaseContainer
 {
-    public function addElement($element) {
-        return $this->add($element);
+    public function addElement($element, $key = null) {
+        if (is_object($element) || is_array($element)) {
+            throw new \Exception('C4GContainer instances may not take objects or arrays as elements.');
+        }
+        return $this->add($element, $key);
     }
 
     public function deleteElement($key) {
         return $this->delete($key);
+    }
+
+    public function addElementsFromArray(array $array) {
+        foreach ($array as $key => $value) {
+            $this->addElement($value, $key);
+        }
     }
 }
