@@ -15,7 +15,7 @@ namespace con4gis\CoreBundle\Resources\contao\classes\container;
 
 class C4GContainerContainer extends C4GBaseContainer
 {
-    public function addContainer(C4GBaseContainer $container) {
+    public function addContainer(C4GContainer $container) {
         return $this->add($container);
     }
 
