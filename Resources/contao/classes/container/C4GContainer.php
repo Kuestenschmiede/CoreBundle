@@ -16,8 +16,14 @@ namespace con4gis\CoreBundle\Resources\contao\classes\container;
 class C4GContainer extends C4GBaseContainer
 {
     public function addElement($element, $key = null) {
-        if (is_object($element) || is_array($element)) {
-            throw new \Exception('C4GContainer instances may not take objects or arrays as elements.');
+        if (is_array($element)) {
+            throw new \Exception('C4GContainer instances may not take arrays or objects other than C4GContainer instances as elements.');
+        } elseif (is_object($element)) {
+            if (!$element instanceof self) {
+                throw new \Exception('C4GContainer instances may not take arrays or objects other than C4GContainer instances as elements.');
+            } elseif ($element === $this) {
+                throw new \Exception('C4GContainer instances may not take themselves as instances.');
+            }
         }
         return $this->add($element, $key);
     }
@@ -26,9 +32,30 @@ class C4GContainer extends C4GBaseContainer
         return $this->delete($key);
     }
 
+    /**
+     * Add a one-dimensional array to the container, where every array element becomes a container element.
+     * @param array $array
+     * @throws \Exception
+     */
     public function addElementsFromArray(array $array) {
         foreach ($array as $key => $value) {
-            $this->addElement($value, $key);
+            $this->addElement($value);
+        }
+    }
+
+    /**
+     * Add a two-dimensional array to the container, where every outer array element becomes a container
+     *  and every inner array element becomes an element of the corresponding container.
+     * @param array $array
+     * @throws \Exception
+     */
+    public function addContainersFromArray(array $array) {
+        foreach ($array as $key => $value) {
+            $container = new C4GContainer();
+            foreach ($value as $k => $v) {
+                $container->addElement($v, $k);
+            }
+            $this->addElement($container);
         }
     }
 }
