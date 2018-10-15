@@ -342,7 +342,7 @@ class C4GUtils
         if (class_exists($name)) {
             return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
         } else {
-            return FE_USER_LOGGED_IN;
+            return (\Contao\FrontendUser::getInstance() !== null);
         }
     }
 
@@ -357,7 +357,7 @@ class C4GUtils
         if (class_exists($name)) {
             return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
         } else {
-            return BE_USER_LOGGED_IN;
+            return (\Contao\BackendUser::getInstance() !== null);
         }
     }
 }
