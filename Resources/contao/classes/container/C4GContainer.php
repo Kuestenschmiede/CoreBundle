@@ -22,7 +22,7 @@ class C4GContainer extends C4GBaseContainer
             if (!$element instanceof self) {
                 throw new \Exception('C4GContainer instances may not take arrays or objects other than C4GContainer instances as elements.');
             } elseif ($element === $this) {
-                throw new \Exception('C4GContainer instances may not take themselves as instances.');
+                throw new \Exception('C4GContainer instances may not take themselves as elements.');
             }
         }
         return $this->add($element, $key);
