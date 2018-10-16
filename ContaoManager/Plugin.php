@@ -8,11 +8,13 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Config\ConfigInterface;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
+use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class Plugin implements RoutingPluginInterface, BundlePluginInterface
+class Plugin implements RoutingPluginInterface, BundlePluginInterface, ConfigPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -38,5 +40,10 @@ class Plugin implements RoutingPluginInterface, BundlePluginInterface
                 ->setLoadAfter([ContaoCoreBundle::class])
                 ->setReplace(['con4gis_api']),
         ];
+    }
+
+    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
+    {
+        $loader->load('@con4gisCoreBundle/Resources/config/config.yml');
     }
 }
