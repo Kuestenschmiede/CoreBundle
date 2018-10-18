@@ -50,7 +50,7 @@ class C4GContainer extends C4GBaseContainer
      * @throws \Exception
      */
     public function addContainersFromArray(array $array) {
-        foreach ($array as $key => $value) {
+        foreach ($array as $value) {
             $container = new C4GContainer();
             foreach ($value as $k => $v) {
                 $container->addElement($v, $k);
