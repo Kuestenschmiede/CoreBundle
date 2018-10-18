@@ -22,7 +22,7 @@ use NotificationCenter\Model\Notification;
 class C4GNotification
 {
     protected $tokens;
-    
+
     public function __construct(array $notification)
     {
         foreach ($notification as $key => $value) {
@@ -40,7 +40,7 @@ class C4GNotification
         if (is_string($this->tokens[$token]) === true) {
             $this->tokens[$token] = $value;
         } else {
-            throw new \Exception("C4GNotification: The token $token has not been defined.");
+            throw new \Exception("C4GNotification: Unknown token '$token'.");
         }
     }
 
@@ -48,7 +48,7 @@ class C4GNotification
     {
         foreach ($this->tokens as $key => $token) {
             if ($token === '') {
-                throw new \Exception("C4GNotification: The token $key has not been defined.");
+                throw new \Exception("C4GNotification: The token '$key' has not been defined.");
             }
         }
         $notification->send($this->tokens);
