@@ -58,4 +58,27 @@ class C4GContainer extends C4GBaseContainer
             $this->addElement($container);
         }
     }
+
+    public function hasSameContentAs(C4GContainer $container) {
+        foreach ($container as $key => $value) {
+            if ($this->containsKey($key) === false) {
+                return false;
+            }
+            if ($value instanceof C4GContainer) {
+                if ($value->hasSameContentAs($this->getByKey($key)) === false) {
+                    return false;
+                }
+            } else {
+                if ($value !== $this->getByKey($key)) {
+                    return false;
+                }
+            }
+        }
+        foreach ($this as $key => $value) {
+            if ($container->containsKey($key) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
