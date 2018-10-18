@@ -171,7 +171,7 @@ this.c4g.projects = this.c4g.projects || {};
             scope.fnHandleAjaxResponse( data, scope.internalId );
           }).fail(function(data) {
             scope.fnInitContentDiv();
-            $(this.contentDiv).text('Error: '+errorThrown);
+            $(this.contentDiv).text('Error1: '+errorThrown);
           });
         }
         if (history != null) {
@@ -191,7 +191,7 @@ this.c4g.projects = this.c4g.projects || {};
                 }).done(function(data) {
                   scope.fnHandleAjaxResponse( data, this.internalId );
                 }).fail(function(data) {
-                  $(scope.contentDiv).text('Error: '+errorThrown);
+                  $(scope.contentDiv).text('Error2: '+errorThrown);
                 });
               }
             });
@@ -203,6 +203,24 @@ this.c4g.projects = this.c4g.projects || {};
         nextId = options.id;
       });
     }, // end of setup
+
+    handlePdfResponse(data, id) {
+      // var blob = new Blob([data], {type:"application/pdf"});
+      // //Create a link element, hide it, direct
+      // //it towards the blob, and then 'click' it programatically
+      let a = document.createElement("a");
+      // a.style = "display: none";
+      document.body.appendChild(a);
+      // //Create a DOMString representing the blob
+      // //and point the link element towards it
+      // let url = window.URL.createObjectURL(blob);
+      a.href = data.filePath;
+      a.download = data.fileName;
+      //programatically click the link to trigger the download
+      a.click();
+      //release the reference to the file by revoking the Object URL
+      // window.URL.revokeObjectURL(url);
+    },
 
     // -----------------------------------
     // handle Ajax response
@@ -231,10 +249,15 @@ this.c4g.projects = this.c4g.projects || {};
           dataType: "json",
           type: ajaxMethod
         }).done(function(data) {
-          scope.fnHandleAjaxResponse(data, this.internalId);
+          if (data.filePath && data.fileName) {
+            // check if it is a pdf response
+            scope.handlePdfResponse(data, this.internalId);
+          } else {
+            scope.fnHandleAjaxResponse(data, this.internalId);
+          }
         }).fail(function(data) {
           scope.fnInitContentDiv();
-          $(scope.contentDiv).text('Error: ' + data);
+          $(scope.contentDiv).text('Error3: ' + data);
         });
       };
 
@@ -405,6 +428,20 @@ this.c4g.projects = this.c4g.projects || {};
       }
       if (content == null) {
         return;
+      }
+
+      // check for pdf
+      if (content.pdfPath) {
+        var pdfPath = content.pdfPath;
+        var file = new File([], pdfPath);
+        console.log(file);
+        console.log(file.name);
+
+        var link = document.createElement('a');
+        link.href = pdfPath;
+        link.setAttribute('download', "");
+        link.dispatchEvent(new MouseEvent('click'));
+        console.log(link);
       }
 
       if (typeof(content.title) !== "undefined") {
