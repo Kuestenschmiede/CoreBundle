@@ -22,7 +22,6 @@ this.c4g.projects = this.c4g.projects || {};
 
   // Extend jQuery, so c4gGui can be used with $(...).c4gGui(...)
   c4g.projects.c4gGui = function(options) {
-
     options = $.extend({
       ajaxUrlPrefix: 'ajax.php',
       navPanel: true,
@@ -52,7 +51,8 @@ this.c4g.projects = this.c4g.projects || {};
       $('.c4gGuiCenterDiv').each(function(i,element){
         scope.fnCenterDiv(element);
       });
-      scope.fnDataTableColumnVis(oDataTable);
+      // scope.fnDataTableColumnVis(oDataTable);
+      oDataTable.columns.adjust().draw();
     });
 
     var oDataTable = null;  // TODO enable more than one
@@ -430,18 +430,32 @@ this.c4g.projects = this.c4g.projects || {};
         return;
       }
 
+      if (content.initAction) {
+        // execute the action initially
+        // store the id, since scope.internalId gets undefined in the done callback
+        var keepId = options.id;
+        $.ajax({
+          internalId: options.id,
+          url: options.ajaxUrl + "/" + options.id + "/" + content.initAction,
+          dataType: "json",
+          type: "GET"
+        }).done(function(data) {
+          scope.fnHandleAjaxResponse( data, keepId );
+        }).fail(function(data) {
+          scope.fnInitContentDiv();
+          $(this.contentDiv).text('Error1: '+data);
+        });
+      }
+
       // check for pdf
       if (content.pdfPath) {
         var pdfPath = content.pdfPath;
         var file = new File([], pdfPath);
-        console.log(file);
-        console.log(file.name);
 
         var link = document.createElement('a');
         link.href = pdfPath;
         link.setAttribute('download', "");
         link.dispatchEvent(new MouseEvent('click'));
-        console.log(link);
       }
 
       if (typeof(content.title) !== "undefined") {
@@ -637,7 +651,7 @@ this.c4g.projects = this.c4g.projects || {};
           $(scope.contentDiv).attr('data-state', content.state);
         }
 
-        //var fnAddContent = function(contenttype,contentoptions,contentdata) {
+
         var fnAddContent = function (content) {
           var contenttype = content.contenttype;
           var contentoptions = content.contentoptions;
@@ -648,7 +662,6 @@ this.c4g.projects = this.c4g.projects || {};
             if (typeof ($.fn.dataTable) === 'undefined') {
               $(scope.contentDiv).html('<h1>jQuery.dataTable missing</h1>');
             } else {
-
               var tableDiv = $('<table />')
                 .attr('id', 'c4gGuiDataTable:' + content.state)
                 // .attr('id','c4gGuiDataTable'+internalId)
@@ -783,11 +796,9 @@ this.c4g.projects = this.c4g.projects || {};
                     });
                 }
               }, contentdata);
-
-              var oDataTable = $(tableDiv).dataTable(contentdata);
-              scope.dataTableApi = oDataTable.api();
+              var oDataTable = $(tableDiv).DataTable(contentdata);
+              // scope.dataTableApi = oDataTable.api();
               scope.fnDataTableColumnVis(oDataTable);
-
             }
 
           }
@@ -1321,7 +1332,7 @@ this.c4g.projects = this.c4g.projects || {};
 
     fnDataTableColumnVis: function(dataTable) {
       if ((typeof(dataTable) !== 'undefined') && (dataTable!=null)) {
-        var settings = dataTable.fnSettings();
+        var settings = dataTable.settings();
         if (settings!=null) {
           $(settings.aoColumns).each(function(i,element){
             if (typeof(element.c4gMinTableSize) !== 'undefined') {
@@ -1347,7 +1358,7 @@ this.c4g.projects = this.c4g.projects || {};
           dataTable.fnDraw();
         }
         else {
-          dataTable.fnAdjustColumnSizing();
+          // dataTable.fnAdjustColumnSizing();
         }
         // this.dataTable = dataTable;
       }
