@@ -52,7 +52,9 @@ this.c4g.projects = this.c4g.projects || {};
         scope.fnCenterDiv(element);
       });
       // scope.fnDataTableColumnVis(oDataTable);
-      oDataTable.columns.adjust().draw();
+      if (oDataTable) {
+        oDataTable.columns.adjust().draw();
+      }
     });
 
     var oDataTable = null;  // TODO enable more than one
