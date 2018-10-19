@@ -13,7 +13,7 @@
 namespace con4gis\CoreBundle\Resources\contao\classes\container;
 
 
-abstract class C4GBaseContainer implements \Iterator
+abstract class C4GBaseContainer implements \Iterator, \Countable
 {
     protected $elements = array();
     protected $keys = array();
@@ -116,6 +116,10 @@ abstract class C4GBaseContainer implements \Iterator
 
     public function isEmpty() {
         return empty($this->elements);
+    }
+
+    public function count() {
+        return count($this->keys);
     }
 
 
