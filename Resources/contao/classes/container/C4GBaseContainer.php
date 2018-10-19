@@ -105,7 +105,7 @@ abstract class C4GBaseContainer implements \Iterator
     }
 
     public function containsKey($key) {
-        return ($this->getByKey($key) !== null);
+        return array_search($key, $this->keys) === false ? false : true;
     }
 
     public function clear() {
