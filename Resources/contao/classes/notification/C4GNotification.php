@@ -53,7 +53,7 @@ class C4GNotification
         }
 
         foreach ($notificationIds as $notificationId) {
-            $notificationModel = \NotificationCenter\Model\Notification::findByPk($notificationId);
+            $notificationModel = Notification::findByPk($notificationId);
             if ($notificationModel !== null) {
                 $notificationModel->send($this->tokens);
             } else {
