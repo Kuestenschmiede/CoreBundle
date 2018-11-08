@@ -1289,7 +1289,7 @@ this.c4g.projects = this.c4g.projects || {};
       }
 
       // show map
-      if (typeof(content.mapdata) !== 'undefined') {
+      if ((typeof(content.mapdata) !== 'undefined') && (typeof(c4g.maps) !== 'undefined')) {
         if (typeof(c4g.maps.MapController) === 'function') {
           // Version 3
           //
