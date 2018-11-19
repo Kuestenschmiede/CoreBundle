@@ -18,7 +18,7 @@ namespace con4gis\CoreBundle\Resources\contao\models;
  * Class C4gSettingsModel
  * @package con4gis\CoreBundle\Resources\contao\models
  */
-class C4gSettingsModel extends \Model
+class C4gSettingsModel extends \Contao\Model
 {
 	/**
 	 * Table name
