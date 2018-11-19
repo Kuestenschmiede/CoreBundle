@@ -19,6 +19,10 @@ namespace con4gis\CoreBundle\Resources\contao\classes;
  */
 class ResourceLoader
 {
+    const JAVASCRIPT = 'TL_JAVASCRIPT';
+    const CSS = 'TL_CSS';
+    const HEAD = 'TL_HEAD';
+    const BODY = 'TL_BODY';
 
     /**
      * Function loadResourcesForModule
@@ -134,30 +138,131 @@ class ResourceLoader
         return true;
     }
 
+    /**
+     * @param $key
+     * @param $cssFile
+     * @deprecated
+     */
     public static function loadCssRessource($key, $cssFile) {
-        $GLOBALS['TL_CSS'][$key] = $cssFile;
+        self::loadCssResource($cssFile, $key);
     }
 
-    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false) {
-        if ($inHeader) {
-            $GLOBALS['TL_JAVASCRIPT'][$key] = $jsFile;
+    /**
+     * @param $cssFile
+     * @param string $key
+     */
+    public static function loadCssResource($cssFile, $key = '') {
+        if ($key === '') {
+            $GLOBALS[self::CSS][] = $cssFile;
         } else {
-            if ($es6Module) {
-                $GLOBALS['TL_BODY'][$key] = '<script src="' . $jsFile . '" type="module" ></script>' . "\n";
-            } else {
-                $GLOBALS['TL_BODY'][$key] = \Template::generateScriptTag($jsFile) . "\n";
-            }
+            $GLOBALS[self::CSS][$key] = $cssFile;
         }
     }
 
-    public static function loadJavaScriptModule($key, $jsFile)
-    {
-        self::loadJavaScriptRessource($key, $jsFile, false, true);
+    /**
+     * @param $key
+     * @param $jsFile
+     * @param bool $inHeader
+     * @param bool $es6Module
+     * @deprecated
+     */
+    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false) {
+        if ($inHeader) {
+            self::loadJavaScriptResource($jsFile, self::JAVASCRIPT, $key);
+        } else {
+            if ($es6Module) {
+                self::loadJavaScriptResourceModule($jsFile, $key);
+            } else {
+                self::loadJavaScriptResource($jsFile, self::BODY, $key);
+            }
+        }
+
     }
 
+    /**
+     * @param $jsFile
+     * @param string $location
+     * @param string $key
+     */
+    public static function loadJavaScriptResource($jsFile, $location = self::JAVASCRIPT, $key = '') {
+        switch ($location) {
+            case self::JAVASCRIPT:
+                if ($key === '') {
+                    $GLOBALS[self::JAVASCRIPT][] = $jsFile;
+                } else {
+                    $GLOBALS[self::JAVASCRIPT][$key] = $jsFile;
+                }
+                break;
+            case self::HEAD:
+                if ($key === '') {
+                    $GLOBALS[self::HEAD][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                } else {
+                    $GLOBALS[self::HEAD][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                }
+                break;
+            case self::BODY:
+                if ($key === '') {
+                    $GLOBALS[self::BODY][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                } else {
+                    $GLOBALS[self::BODY][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @param $jsFile
+     * @param string $key
+     */
+    public static function loadJavaScriptResourceModule($jsFile, $key = '') {
+        if ($key === '') {
+            $GLOBALS['TL_BODY'][] = '<script src="' . $jsFile . '" type="module"></script>' . "\n";
+        } else {
+            $GLOBALS['TL_BODY'][$key] = '<script src="' . $jsFile . '" type="module"></script>' . "\n";
+        }
+    }
+
+    public static function loadJavaScriptResourceTag($code, $location = self::HEAD, $key = '') {
+        switch ($location) {
+            case self::HEAD:
+                if ($key === '') {
+                    $GLOBALS[self::HEAD][] = "<script>$code</script>\n";
+                } else {
+                    $GLOBALS[self::HEAD][$key] = "<script>$code</script>\n";
+                }
+                break;
+            case self::BODY:
+                if ($key === '') {
+                    $GLOBALS[self::BODY][] = "<script>$code</script>\n";
+                } else {
+                    $GLOBALS[self::BODY][$key] = "<script>$code</script>\n";
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @param $key
+     * @param $jsFile
+     * @deprecated
+     */
+    public static function loadJavaScriptModule($key, $jsFile)
+    {
+        self::loadJavaScriptResourceModule($jsFile, $key);
+    }
+
+    /**
+     * @param $key
+     * @param $jsFile
+     * @deprecated
+     */
     public static function loadJavaScriptDeferred($key, $jsFile)
     {
-        $GLOBALS['TL_BODY'][$key] = '<script src="'. $jsFile . '" defer></script>' . "\n";
+        self::loadJavaScriptResource($jsFile, self::BODY, $key);
     }
 
     public static function removeJavaScriptRessource($key)
