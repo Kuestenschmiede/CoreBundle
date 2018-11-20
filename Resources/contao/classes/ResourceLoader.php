@@ -25,9 +25,93 @@ class ResourceLoader
     const BODY = 'TL_BODY';
 
     /**
+     * @param $jsFile
+     * @param string $location
+     * @param string $key
+     */
+    public static function loadJavaScriptResource($jsFile, $location = self::JAVASCRIPT, $key = '') {
+        switch ($location) {
+            case self::JAVASCRIPT:
+                if ($key === '') {
+                    $GLOBALS[self::JAVASCRIPT][] = $jsFile;
+                } else {
+                    $GLOBALS[self::JAVASCRIPT][$key] = $jsFile;
+                }
+                break;
+            case self::HEAD:
+                if ($key === '') {
+                    $GLOBALS[self::HEAD][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                } else {
+                    $GLOBALS[self::HEAD][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                }
+                break;
+            case self::BODY:
+                if ($key === '') {
+                    $GLOBALS[self::BODY][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                } else {
+                    $GLOBALS[self::BODY][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @param $jsFile
+     * @param string $key
+     */
+    public static function loadJavaScriptResourceModule($jsFile, $key = '') {
+        if ($key === '') {
+            $GLOBALS[self::BODY][] = '<script src="' . $jsFile . '" type="module"></script>' . "\n";
+        } else {
+            $GLOBALS[self::BODY][$key] = '<script src="' . $jsFile . '" type="module"></script>' . "\n";
+        }
+    }
+
+    /**
+     * @param $code
+     * @param string $location
+     * @param string $key
+     */
+    public static function loadJavaScriptResourceTag($code, $location = self::HEAD, $key = '') {
+        switch ($location) {
+            case self::HEAD:
+                if ($key === '') {
+                    $GLOBALS[self::HEAD][] = "<script>$code</script>\n";
+                } else {
+                    $GLOBALS[self::HEAD][$key] = "<script>$code</script>\n";
+                }
+                break;
+            case self::BODY:
+                if ($key === '') {
+                    $GLOBALS[self::BODY][] = "<script>$code</script>\n";
+                } else {
+                    $GLOBALS[self::BODY][$key] = "<script>$code</script>\n";
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @param $cssFile
+     * @param string $key
+     */
+    public static function loadCssResource($cssFile, $key = '') {
+        if ($key === '') {
+            $GLOBALS[self::CSS][] = $cssFile;
+        } else {
+            $GLOBALS[self::CSS][$key] = $cssFile;
+        }
+    }
+
+    /**
      * Function loadResourcesForModule
      *
      * Loads core-resources needed by the given module
+     * @deprecated
      */
     public static function loadResourcesForModule($module)
     {
@@ -86,6 +170,7 @@ class ResourceLoader
      * Function loadResources
      *
      * Loads the requested resources
+     * @deprecated
      */
     public static function loadResources($resources=array())
     {
@@ -148,18 +233,6 @@ class ResourceLoader
     }
 
     /**
-     * @param $cssFile
-     * @param string $key
-     */
-    public static function loadCssResource($cssFile, $key = '') {
-        if ($key === '') {
-            $GLOBALS[self::CSS][] = $cssFile;
-        } else {
-            $GLOBALS[self::CSS][$key] = $cssFile;
-        }
-    }
-
-    /**
      * @param $key
      * @param $jsFile
      * @param bool $inHeader
@@ -177,72 +250,6 @@ class ResourceLoader
             }
         }
 
-    }
-
-    /**
-     * @param $jsFile
-     * @param string $location
-     * @param string $key
-     */
-    public static function loadJavaScriptResource($jsFile, $location = self::JAVASCRIPT, $key = '') {
-        switch ($location) {
-            case self::JAVASCRIPT:
-                if ($key === '') {
-                    $GLOBALS[self::JAVASCRIPT][] = $jsFile;
-                } else {
-                    $GLOBALS[self::JAVASCRIPT][$key] = $jsFile;
-                }
-                break;
-            case self::HEAD:
-                if ($key === '') {
-                    $GLOBALS[self::HEAD][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
-                } else {
-                    $GLOBALS[self::HEAD][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
-                }
-                break;
-            case self::BODY:
-                if ($key === '') {
-                    $GLOBALS[self::BODY][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
-                } else {
-                    $GLOBALS[self::BODY][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * @param $jsFile
-     * @param string $key
-     */
-    public static function loadJavaScriptResourceModule($jsFile, $key = '') {
-        if ($key === '') {
-            $GLOBALS['TL_BODY'][] = '<script src="' . $jsFile . '" type="module"></script>' . "\n";
-        } else {
-            $GLOBALS['TL_BODY'][$key] = '<script src="' . $jsFile . '" type="module"></script>' . "\n";
-        }
-    }
-
-    public static function loadJavaScriptResourceTag($code, $location = self::HEAD, $key = '') {
-        switch ($location) {
-            case self::HEAD:
-                if ($key === '') {
-                    $GLOBALS[self::HEAD][] = "<script>$code</script>\n";
-                } else {
-                    $GLOBALS[self::HEAD][$key] = "<script>$code</script>\n";
-                }
-                break;
-            case self::BODY:
-                if ($key === '') {
-                    $GLOBALS[self::BODY][] = "<script>$code</script>\n";
-                } else {
-                    $GLOBALS[self::BODY][$key] = "<script>$code</script>\n";
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     /**
