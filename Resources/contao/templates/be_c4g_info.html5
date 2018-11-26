@@ -241,6 +241,33 @@
             <?php endif; ?>
         </div>
     </fieldset>
+<!-- con4gis-Maps -->
+    <fieldset id="pal_c4g_routing" class="tl_box collapsed">
+        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_routing')">
+        con4gis-Routing
+           <?php if ($this->packages['con4gis/routing']) {
+               echo ' [' . $this->packages['con4gis/routing'] . ']';
+           } else if ($GLOBALS['con4gis']['routing']['installed']) {
+               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
+           }?>
+        </legend>
+        <div>
+            <?php if ($this->packages['con4gis/routing'] || $GLOBALS['con4gis']['routing']['installed']): ?>
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                    target      => '_blank',
+                    href        => 'https://www.github.com/kuestenschmiede/RoutingBundle',
+                    c4gImg      => 'github',
+                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+                )); ?>
+            <?php else: ?>
+               <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                     c4gImg      => 'install',
+                     href        => 'https://packagist.org/packages/con4gis/routing',
+                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'RoutingBundle')
+                 )); ?>
+            <?php endif; ?>
+        </div>
+    </fieldset>
 
 <!-- con4gis-Projects -->
     <fieldset id="pal_c4g_projects" class="tl_box collapsed">
