@@ -13,7 +13,7 @@
 
 use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
 
-$GLOBALS['con4gis']['version'] = '5.0';
+$GLOBALS['con4gis']['version'] = '5.1';
 $GLOBALS['con4gis']['core']['installed'] = true;
 
 // API-Registration
