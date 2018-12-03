@@ -106,6 +106,12 @@ class con4gisInsertTags extends \System
                         } else {
                             return 'not installed';
                         }
+                    case 'routing':
+                        if ($packages['con4gis/routing']) {
+                            return $packages['con4gis/routing'];
+                        } else {
+                            return 'not installed';
+                        }
                     case 'tracking':
                         if ($packages['con4gis/tracking']) {
                             return $packages['con4gis/tracking'];
