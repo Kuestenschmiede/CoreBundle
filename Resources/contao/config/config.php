@@ -13,7 +13,7 @@
 
 use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
 
-$GLOBALS['con4gis']['version'] = '5.0';
+$GLOBALS['con4gis']['version'] = '5.1';
 $GLOBALS['con4gis']['core']['installed'] = true;
 
 // API-Registration
@@ -66,7 +66,6 @@ $GLOBALS['TL_HEAD'][] = "<script>window.FontAwesomeConfig = {searchPseudoElement
  */
 array_insert($GLOBALS['TL_CTE']['con4gis'], 2, array
 (
-    'tables' => array('tl_c4g_activationkey'),
     'c4g_activationpage' => 'con4gis\CoreBundle\Resources\contao\modules\ContentC4gActivationpage'
 ));
 $GLOBALS['TL_MODELS']['tl_c4g_activationkey'] = 'con4gis\CoreBundle\Resources\contao\models\C4gActivationkeyModel';
