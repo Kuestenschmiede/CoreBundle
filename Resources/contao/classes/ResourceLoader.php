@@ -23,6 +23,7 @@ class ResourceLoader
     const CSS = 'TL_CSS';
     const HEAD = 'TL_HEAD';
     const BODY = 'TL_BODY';
+    const JQ_UI = 'c4g_jquery_ui';
 
     /**
      * @param $jsFile
@@ -105,6 +106,29 @@ class ResourceLoader
         } else {
             $GLOBALS[self::CSS][$key] = $cssFile;
         }
+    }
+
+    /**
+     * @param $location
+     * @param $key
+     * @return bool
+     */
+    public static function isResourceLoaded($location, $key) {
+        return isset($GLOBALS[$location][$key]);
+    }
+
+    /**
+     * @param $theme
+     */
+    public static function loadJqueryUiTheme($theme) {
+        self::loadCssResource("bundles/con4giscore/vendor/jQuery/ui-themes/themes/$theme/jquery-ui.css", self::JQ_UI);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isJqueryUiThemeLoaded() {
+        return self::isResourceLoaded(self::CSS, self::JQ_UI);
     }
 
     /**

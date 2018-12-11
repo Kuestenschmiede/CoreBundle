@@ -25,7 +25,7 @@
         "menatwork/contao-multicolumnwizard": "^3.3",
         "doctrine/orm": "^2.5.14",
         "doctrine/data-fixtures": "^1.2.2",
-        "terminal42/notification_center": "^1.4",
+        "terminal42/notification_center": "^1.5",
         "bugbuster/contao-mobiledetection-bundle": "^1.0"
     },
     "conflict": {
@@ -51,7 +51,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev"
+            "dev-master": "3.1.x-dev"
         },
         "contao-manager-plugin": "con4gis\\CoreBundle\\ContaoManager\\Plugin"
     }

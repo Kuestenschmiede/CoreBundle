@@ -1,5 +1,5 @@
 <div id="c4g_header">
-    <img src="bundles/con4giscore/images/logo-con4gis.png" width="250" height="90" alt="con4gis_logo">
+    <img src="bundles/con4giscore/images/logo_con4gis.svg" width="250" height="90" alt="con4gis Logo">
     <span class="version">v<?php echo $GLOBALS['con4gis']['version'] ?></span>
     <span class="sub"><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['TITLESUB'] ?></span>
 </div>
@@ -237,6 +237,33 @@
                      c4gImg      => 'install',
                      href        => 'https://packagist.org/packages/con4gis/maps',
                      label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'MapsBundle')
+                 )); ?>
+            <?php endif; ?>
+        </div>
+    </fieldset>
+<!-- con4gis-Maps -->
+    <fieldset id="pal_c4g_routing" class="tl_box collapsed">
+        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_routing')">
+        con4gis-Routing
+           <?php if ($this->packages['con4gis/routing']) {
+               echo ' [' . $this->packages['con4gis/routing'] . ']';
+           } else if ($GLOBALS['con4gis']['routing']['installed']) {
+               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
+           }?>
+        </legend>
+        <div>
+            <?php if ($this->packages['con4gis/routing'] || $GLOBALS['con4gis']['routing']['installed']): ?>
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                    target      => '_blank',
+                    href        => 'https://www.github.com/kuestenschmiede/RoutingBundle',
+                    c4gImg      => 'github',
+                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+                )); ?>
+            <?php else: ?>
+               <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                     c4gImg      => 'install',
+                     href        => 'https://packagist.org/packages/con4gis/routing',
+                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'RoutingBundle')
                  )); ?>
             <?php endif; ?>
         </div>
