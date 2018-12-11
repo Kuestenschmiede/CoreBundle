@@ -1,0 +1,31 @@
+.suggestion-list-item {
+    /*background-color: red;*/
+
+}
+
+.suggestion-list-item:hover {
+    background-color: lightblue;
+}
+
+.c4g-cached-input {
+    z-index: 100;
+}
+
+.c4g-cached-input > ul {
+    list-style-type: none;
+    /*width: fit-content;*/
+    margin: 0;
+    position: relative;
+    border: 1px solid grey;
+    border-top: none;
+    margin-bottom: 2px;
+}
+
+.c4g-cached-input > ul > li {
+    display: block;
+    padding: 2px;
+}
+
+.remove-suggestion-btn {
+    float: right;
+}
