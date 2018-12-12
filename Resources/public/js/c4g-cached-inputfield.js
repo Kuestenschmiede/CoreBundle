@@ -6,34 +6,42 @@ class CachedInputfield {
 
   /**
    * Constructor.
-   * @param cssDiv          The div that shall contain the cachable input element.
-   * @param inputClass      The class(es) that the input field should have.
+   * @param inputSelector   The input element that shall cache its inputs.
    * @param defaultSaving   If true, the storing of input values will be bound to the change event of the input field.
    *                        This value can be set to false if you wish to take care of the input storing yourself.
    *                        This is recommended, as you have more control over when things get stored. You can add a
    *                        value to the suggestions and store it into the browser by calling the "storeValue" method.
-   * @param opt_cacheKey    If set, this will be used as cache key for the suggestions of this field.
+   * @param cacheKey        This will be used as cache key for the suggestions of this field.
+   * @param highlightColor  The color used to highlight the options.
    */
-  constructor(cssDiv, inputClass, defaultSaving, opt_cacheKey) {
-    this.container = $(cssDiv);
-    $(this.container).addClass("c4g-cached-input");
-    this.cacheKey = opt_cacheKey || cssDiv;
-    if (!this.container) {
+  constructor(inputSelector, defaultSaving, cacheKey, highlightColor) {
+    this.cacheKey = cacheKey;
+    this.inputField = $(inputSelector);
+    this.highlightColor = highlightColor || "lightgrey";
+    this.setHoverStyle(this.highlightColor);
+    if (!this.inputField) {
       console.warn("The given CSS selector matches no DOM element...");
       return;
     }
-    this.inputField = document.createElement("input");
-    $(this.inputField).addClass(inputClass);
-    this.container.append(this.inputField);
     this.suggestions = [];
     this.suggestionList = document.createElement("ul");
-    let offset = $(this.inputField).offset();
+    $(this.suggestionList).addClass("suggestion-list");
+    let offset = this.inputField.offset();
     this.suggestionList.style.left = offset.left + "px";
     // the -2 is needed to have equal widths of the input field and the list
-    this.suggestionList.style.width = (parseInt(this.inputField.offsetWidth, 10) - 2) + "px";
+    console.log(parseInt(this.inputField.outerWidth(), 10));
+    this.suggestionList.style.width = (parseInt(this.inputField.outerWidth(), 10) - 2) + "px";
     this.suggestionList.style.display = "none";
-    this.container.append(this.suggestionList);
+    this.inputField.parent().append(this.suggestionList);
     this.init(defaultSaving);
+  }
+
+  setHoverStyle(color) {
+    // create rule with hover style
+    let rule = ".suggestion-list-item:hover {background-color: " + color + "; }"
+    let ruleString = "<style>" + rule + "</style>";
+    // add it to dom
+    $("body").append(ruleString);
   }
 
   /**
@@ -50,9 +58,7 @@ class CachedInputfield {
     }
     // set input listener for checking inputs
     $(this.inputField).on('input', function () {
-      // if ($(this).val().length >= 3) {
-        scope.checkInput($(this).val());
-      // }
+      scope.checkInput($(this).val());
     });
 
   }
@@ -128,8 +134,13 @@ class CachedInputfield {
       textElem = document.createElement("span");
       textElem.innerText = currentValue;
       currentItem.appendChild(textElem);
+      // click
       $(currentItem).on('click', function() {
         scope.selectSuggestion(this.childNodes[0]);
+      });
+      $(currentItem).on('mouseenter', function() {
+        scope.highlightOption(this.childNodes[0].innerText, false);
+        scope.selectedOption = suggestions.indexOf(this.childNodes[0].innerText) + 1;
       });
       rmButton = document.createElement("button");
       rmButton.innerText = "X";
@@ -163,7 +174,6 @@ class CachedInputfield {
    */
   showSuggestions(suggestions) {
     const scope = this;
-    // TODO man sollte auch mit den richtungstasten durch die optionen navigieren können
     this.createSuggestions(suggestions);
     // only show list when it has entries
     if (suggestions.length > 0) {
@@ -177,7 +187,7 @@ class CachedInputfield {
   setupListNavigation(options) {
     const scope = this;
     // we index the options here from 1 to n, so 0 means no selection
-    let selectedOption = 0;
+    this.selectedOption = 0;
     // a direction of -1 means we go up, 1 means down
     let direction = 0;
     let select = false;
@@ -198,21 +208,18 @@ class CachedInputfield {
           return;
         }
       }
-      selectedOption += direction;
+      scope.selectedOption += direction;
       // check if there is an option with the desired index
-      if (options[selectedOption - 1]) {
+      if (options[scope.selectedOption - 1]) {
         // highlight option
-        console.log("highlighted option is: " + options[selectedOption - 1]);
-        scope.highlightOption(options[selectedOption - 1], select);
+        scope.highlightOption(options[scope.selectedOption - 1], select);
       } else {
         // there is no option
         // overflow index
-        selectedOption = (selectedOption > options.length) ? selectedOption - options.length : options.length;
-        scope.highlightOption(options[selectedOption - 1]);
+        scope.selectedOption = (scope.selectedOption > options.length) ? scope.selectedOption - options.length : options.length;
+        scope.highlightOption(options[scope.selectedOption - 1]);
       }
     });
-    // TODO mouseover muss auch einträge highlighten
-    // TODO mouseclick wählt bereits aus, enter soll den aktuellen bestätigen
   }
 
   detachListNavigation() {
@@ -227,7 +234,7 @@ class CachedInputfield {
           this.selectSuggestion(childs[i].firstChild);
         } else {
           // TODO nicht hart setzen hier!
-          childs[i].style.backgroundColor = "rebeccapurple";
+          childs[i].style.backgroundColor = this.highlightColor;
         }
       } else {
         childs[i].style.backgroundColor = "";
