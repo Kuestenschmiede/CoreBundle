@@ -14,26 +14,25 @@ class CachedInputfield {
    * @param cacheKey        This will be used as cache key for the suggestions of this field.
    * @param highlightColor  The color used to highlight the options.
    */
-  constructor(inputSelector, defaultSaving, cacheKey, highlightColor) {
+  constructor(inputSelector, defaultSaving, cacheKey) {
     this.cacheKey = cacheKey;
     this.inputField = $(inputSelector);
-    this.highlightColor = highlightColor || "lightgrey";
-    this.setHoverStyle(this.highlightColor);
+    // this.setHoverStyle(this.highlightColor);
     if (!this.inputField) {
       console.warn("The given CSS selector matches no DOM element...");
       return;
     }
-    this.suggestions = [];
-    this.suggestionList = document.createElement("ul");
-    $(this.suggestionList).addClass("suggestion-list");
-    let offset = this.inputField.offset();
-    this.suggestionList.style.left = offset.left + "px";
-    // the -2 is needed to have equal widths of the input field and the list
-    console.log(parseInt(this.inputField.outerWidth(), 10));
-    this.suggestionList.style.width = (parseInt(this.inputField.outerWidth(), 10) - 2) + "px";
-    this.suggestionList.style.display = "none";
-    this.inputField.parent().append(this.suggestionList);
-    this.init(defaultSaving);
+    this.suggestions = this.loadValues();
+    this.inputField.autocomplete({
+      source: this.suggestions,
+      delay: 0
+    });
+    const scope = this;
+    if (defaultSaving) {
+      $(this.inputField).on('change', function() {
+        scope.storeValue($(this).val());
+      });
+    }
   }
 
   setHoverStyle(color) {
@@ -77,6 +76,8 @@ class CachedInputfield {
   storeValue(value) {
     if (value && !this.suggestions.includes(value)) {
       this.suggestions.push(value);
+      console.log(this.suggestions);
+      this.inputField.autocomplete("option", "source", this.suggestions);
       this.serializeValues();
     }
   }
@@ -98,6 +99,7 @@ class CachedInputfield {
       // only assign when a defined value was loaded
       // the loaded value is encoded json
       this.suggestions = JSON.parse(tmpResult);
+      return this.suggestions || [];
     } else {
       this.suggestions = [];
     }
