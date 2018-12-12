@@ -1,6 +1,6 @@
 /**
  * This class generates an input field, which caches inputs into the browser's storage and suggests them, when they
- * match future inputs. Requires jQuery.
+ * match future inputs. Requires jQueryUI.
  */
 class CachedInputfield {
 
@@ -11,8 +11,7 @@ class CachedInputfield {
    *                        This value can be set to false if you wish to take care of the input storing yourself.
    *                        This is recommended, as you have more control over when things get stored. You can add a
    *                        value to the suggestions and store it into the browser by calling the "storeValue" method.
-   * @param cacheKey        This will be used as cache key for the suggestions of this field.
-   * @param highlightColor  The color used to highlight the options.
+   * @param cacheKey        This will be used as cache key for the inputs of this field.
    */
   constructor(inputSelector, defaultSaving, cacheKey) {
     this.cacheKey = cacheKey;
@@ -36,7 +35,7 @@ class CachedInputfield {
   }
 
   /**
-   * Returns the cache key for this input field. Currently the CSS selector of the div is used.
+   * Returns the cache key for this input field.
    * @returns {*}
    */
   getCacheKey() {
@@ -49,7 +48,6 @@ class CachedInputfield {
   storeValue(value) {
     if (value && !this.suggestions.includes(value)) {
       this.suggestions.push(value);
-      console.log(this.suggestions);
       this.inputField.autocomplete("option", "source", this.suggestions);
       this.serializeValues();
     }
