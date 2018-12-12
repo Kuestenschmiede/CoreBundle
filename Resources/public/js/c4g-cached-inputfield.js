@@ -70,9 +70,12 @@ class CachedInputfield {
       // only assign when a defined value was loaded
       // the loaded value is encoded json
       this.suggestions = JSON.parse(tmpResult);
-      return this.suggestions || [];
+      if (!this.suggestions) {
+        this.suggestions = [];
+      }
     } else {
       this.suggestions = [];
     }
+    return this.suggestions;
   }
 }
