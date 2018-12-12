@@ -32,6 +32,10 @@ class CachedInputfield {
         scope.storeValue($(this).val());
       });
     }
+    $(this.inputField).on('input', function() {
+      let options = scope.loadValues();
+      $(this).autocomplete("option", "source", options);
+    });
   }
 
   /**
