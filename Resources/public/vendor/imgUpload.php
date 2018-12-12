@@ -15,12 +15,11 @@ ini_set("display_errors","1");
         require_once($initialize);
 
         // User not logged in...
-        $user = \FrontendUser::getInstance();
-        if (!$user->authenticate()) {
-            header('HTTP/1.0 403 Forbidden');
-            echo "Forbidden";
-            die();
-        }
+//        if (!$user = \con4gis\CoreBundle\Resources\contao\classes\C4GUtils::isFrontendUserLoggedIn()) {
+//            header('HTTP/1.0 403 Forbidden');
+//            echo "Forbidden";
+//            die();
+//        }
 
 
         \System::loadLanguageFile("default");

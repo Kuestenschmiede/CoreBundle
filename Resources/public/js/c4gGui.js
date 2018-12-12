@@ -373,7 +373,7 @@ this.c4g.projects = this.c4g.projects || {};
                 language: options.contaoLanguage,
                 defaultLanguage: "en",
                 disableObjectResizing: true,
-                filebrowserImageUploadUrl: options.contaoPath + "bundles/con4giscore/vendor/imgUpload.php",
+                filebrowserImageUploadUrl: options.contaoPath + "con4gis/upload/image",
                 filebrowserUploadUrl: options.contaoPath + uploadApiUrl
               });
             }, 500);

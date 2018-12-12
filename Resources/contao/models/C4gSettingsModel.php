@@ -15,12 +15,13 @@
 namespace con4gis\CoreBundle\Resources\contao\models;
 
 use Contao\Database;
+use Contao\Model;
 
 /**
  * Class C4gSettingsModel
  * @package con4gis\CoreBundle\Resources\contao\models
  */
-class C4gSettingsModel extends \Contao\Model
+class C4gSettingsModel extends Model
 {
 	/**
 	 * Table name

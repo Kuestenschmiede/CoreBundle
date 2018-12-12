@@ -15,7 +15,22 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'] = array(
     'jQuery UI ThemeRoller CSS Theme',
     'Wählen Sie hier eines der Standard UI-Themes aus. Sollten Sie im nächsten Schritt eine eigene Datei auswählen, wird die geladen.'
 );
-$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'] = array('jQuery UI ThemeRoller CSS Datei', 'Optional: wählen Sie eine, mit dem jQuery UI ThemeRoller erstellte, CSS-Datei aus, um den Stil der Frontendmodule einfach anzupassen.');
+$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'] = array(
+    'jQuery UI ThemeRoller CSS Datei',
+    'Optional: wählen Sie eine, mit dem jQuery UI ThemeRoller erstellte, CSS-Datei aus, um den Stil der Frontendmodule einfach anzupassen.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageTypes'] = array(
+    'Erlaubte Bilddatei-Typen',
+    'Bildformate, die mit con4gis hochgeladen werden dürfen.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedDocumentTypes'] = array(
+    'Erlaubte Dokument-Typen',
+    'Dokumentformate, die mit con4gis hochgeladen werden dürfen.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedGenericTypes'] = array(
+    'Erlaubte Typen sonstiger Dateien',
+    'Formate, die mit con4gis außerhalb von Bild- und Dokumentkontext hochgeladen werden dürfen.'
+);
 
 /** INFO **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
