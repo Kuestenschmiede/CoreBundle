@@ -1,0 +1,23 @@
+{
+  "name": "corebundle",
+  "version": "1.0.0",
+  "description": "con4gis-Core ============ The core brick of the Contao GIS-kit **con4gis**.",
+  "main": "webpack.config.js",
+  "scripts": {
+    "encore": "encore",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kuestenschmiede/CoreBundle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kuestenschmiede/CoreBundle/issues"
+  },
+  "homepage": "https://github.com/Kuestenschmiede/CoreBundle#readme",
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.22.2"
+  }
+}

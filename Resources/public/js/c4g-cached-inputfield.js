@@ -2,7 +2,7 @@
  * This class generates an input field, which caches inputs into the browser's storage and suggests them, when they
  * match future inputs. Requires jQueryUI.
  */
-class CachedInputfield {
+export class CachedInputfield {
 
   /**
    * Constructor.
