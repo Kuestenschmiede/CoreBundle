@@ -10,14 +10,16 @@
  * @link      https://www.kuestenschmiede.de
  */
 
-$array = $GLOBALS['TL_LANG']['con4gis']['core']['frontend'];
+$array = &$GLOBALS['TL_LANG']['con4gis']['core']['frontend'];
 $array['genericUploadErrorTitle'] = 'Fehler';
 $array['genericUploadErrorMessage'] = 'Ein Fehler ist aufgetreten.';
 $array['invalidFormatErrorMessage'] = 'Das Dateiformat is ungültig.';
 $array['fileSizeErrorMessage'] = 'Die Datei überschreitet die maximale Größe von ';
-$array['fileSizeErrorMessageBytes'] = ' Bytes.';
+$array['fileSizeErrorMessageMegaBytes'] = ' MB.';
 $array['imageDimensionsErrorMessage'] = 'Das Bild überschreitet die maximale Größe.';
 $array['imageDimensionsErrorMessageWidth'] = "\nErlaubte Breite: ";
 $array['imageDimensionsErrorMessageMaxWidth'] = " Breite der Datei: ";
 $array['imageDimensionsErrorMessageHeight'] = "\nErlaubte Höhe: ";
 $array['imageDimensionsErrorMessageMaxHeight'] = " Höhe der Datei: ";
+$array['successTitle'] = "Erfolg";
+$array['successMessage'] = "Der Upload war erfolgreich.";
