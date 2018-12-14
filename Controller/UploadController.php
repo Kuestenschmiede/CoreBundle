@@ -16,6 +16,7 @@ use con4gis\CoreBundle\Resources\contao\classes\exception\C4GFileSizeException;
 use con4gis\CoreBundle\Resources\contao\classes\exception\C4GGenericException;
 use con4gis\CoreBundle\Resources\contao\classes\exception\C4GImageDimensionsException;
 use con4gis\CoreBundle\Resources\contao\classes\exception\C4GInvalidFileFormatException;
+use con4gis\CoreBundle\Resources\contao\classes\utility\C4GByteConverter;
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -90,8 +91,8 @@ class UploadController extends Controller
 
                     if ($type === 'json') {
                         $response = array(
-                            'title' => 'Erfolg',
-                            'message' => 'Der Upload war erfolgreich.',
+                            'title' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['successTitle'],
+                            'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['successMessage'],
                             'url' => $url,
                         );
                     } else {
@@ -112,7 +113,7 @@ class UploadController extends Controller
                 'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorMessage'],
             );
             if ($type === 'ckeditor') {
-                $response = '<script>alert("'.$response['message'].'");</script>';
+                $response = "<script>window.parent.CKEDITOR.tools.callFunction(".$request->query->get('CKEditorFuncNum').", '', '".$response['message']."');</script>";
             }
 
         } catch (C4GInvalidFileFormatException $e) {
@@ -121,15 +122,17 @@ class UploadController extends Controller
                 'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['invalidFormatErrorMessage'],
             );
             if ($type === 'ckeditor') {
-                $response = '<script>alert("'.$response['message'].'");</script>';
+                $response = "<script>window.parent.CKEDITOR.tools.callFunction(".$request->query->get('CKEditorFuncNum').", '', '".$response['message']."');</script>";
             }
         } catch (C4GFileSizeException $e) {
+            $converter = new C4GByteConverter();
+            $converter->setBytes($e->getMaxFileSize());
             $response = array(
                 'title' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorTitle'],
-                'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['fileSizeErrorMessage'].$e->getMaxFileSize().$GLOBALS['TL_LANG']['con4gis']['core']['frontend']['fileSizeErrorMessageBytes'],
+                'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['fileSizeErrorMessage'].round($converter->getMegaBytes(),2).$GLOBALS['TL_LANG']['con4gis']['core']['frontend']['fileSizeErrorMessageMegaBytes'],
             );
             if ($type === 'ckeditor') {
-                $response = '<script>alert("'.$response['message'].'");</script>';
+                $response = "<script>window.parent.CKEDITOR.tools.callFunction(".$request->query->get('CKEditorFuncNum').", '', '".$response['message']."');</script>";
             }
         } catch (C4GImageDimensionsException $e) {
             $response = array(
@@ -144,7 +147,7 @@ class UploadController extends Controller
             }
 
             if ($type === 'ckeditor') {
-                $response = '<script>alert("'.$response['message'].'");</script>';
+                $response = "<script>window.parent.CKEDITOR.tools.callFunction(".$request->query->get('CKEditorFuncNum').", '', '".$response['message']."');</script>";
             }
         } catch (\Throwable $e) {
             $response = array(
@@ -152,7 +155,7 @@ class UploadController extends Controller
                 'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorMessage'],
             );
             if ($type === 'ckeditor') {
-                $response = '<script>alert("'.$response['message'].'");</script>';
+                $response = "<script>window.parent.CKEDITOR.tools.callFunction(".$request->query->get('CKEditorFuncNum').", '', '".$response['message']."');</script>";
             }
         }
         if ($type === 'json') {
