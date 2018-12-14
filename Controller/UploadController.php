@@ -12,7 +12,6 @@
 
 namespace con4gis\CoreBundle\Controller;
 
-use con4gis\CoreBundle\Resources\contao\classes\C4GUtils;
 use con4gis\CoreBundle\Resources\contao\classes\exception\C4GFileSizeException;
 use con4gis\CoreBundle\Resources\contao\classes\exception\C4GGenericException;
 use con4gis\CoreBundle\Resources\contao\classes\exception\C4GImageDimensionsException;
@@ -23,12 +22,20 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UploadController extends Controller
 {
     public function imageUploadAction(Request $request) {
 
-        $beginHere = '';
+        if ($request->query->get('CKEditor')) {
+            $type = 'ckeditor';
+        } else {
+            $type = 'json';
+        }
+
+        \System::loadLanguageFile('con4giscoreupload');
+
         try {
             if ($request->files instanceof FileBag) {
                 $files = $request->files;
@@ -65,26 +72,33 @@ class UploadController extends Controller
                     $uploadDirectoryString = \FilesModel::findByUuid(\Contao\StringUtil::binToUuid($uploadDirectoryBinary))->path;
 
                     $subDirectory = date("Y-m-d");
-                    $uploadDirectoryString = $uploadDirectoryString . $subDirectory;
+                    $uploadDirectoryString = $uploadDirectoryString . "/" .$subDirectory;
                     if (!is_dir(TL_ROOT . "/" . $uploadDirectoryString)) {
                         $success = mkdir(TL_ROOT . "/" . $uploadDirectoryString, 0777, true);
                         if (!$success) {
                             throw new C4GGenericException();
                         }
                     }
-
-                    $img_name   = md5(uniqid('', true)) . "." .$uploadedFile->getExtension();
+                    $fileExtension = explode('/', $uploadedFile->getMimeType())[1];
+                    $img_name   = md5(uniqid('', true)) . "." .$fileExtension;
                     $uploadPath = TL_ROOT . '/' . $uploadDirectoryString;
                     $newFile = $uploadedFile->move($uploadPath, $img_name);
                     $protocol = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
                     $site     = $protocol . $_SERVER['SERVER_NAME'] . '/';
-                    $url = $site.$uploadPath."/".$img_name;
-                    $message = sprintf($GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['image_upload_successful'], $uploadedFile->getClientOriginalName(), number_format( $uploadedFile->getSize() / 1024, 3, '.', ''), $imageWidth, $imageHeight);
-                    $response = array(
-                        'title' => 'Erfolg',
-                        'message' => 'Der Upload war erfolgreich.',
-                        'ckScript' => "<script>window.parent.CKEDITOR.tools.callFunction(".$request->request->get('CKEditorFuncNum').", '$url', '$message');</script>",
-                    );
+                    $url = \Contao\Controller::replaceInsertTags('{{env::url}}')."/".$uploadDirectoryString."/".$img_name;
+                    $message = sprintf($GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['image_upload_successful'], $uploadedFile->getClientOriginalName(), number_format( $newFile->getSize() / 1024, 3, '.', ''), $imageWidth, $imageHeight);
+
+                    if ($type === 'json') {
+                        $response = array(
+                            'title' => 'Erfolg',
+                            'message' => 'Der Upload war erfolgreich.',
+                            'url' => $url,
+                        );
+                    } else {
+                        $response = "<script>window.parent.CKEDITOR.tools.callFunction(".$request->query->get('CKEditorFuncNum').", '$url', '$message');</script>";
+                    }
+
+
 
                 } else {
                     throw new C4GGenericException();
@@ -94,38 +108,58 @@ class UploadController extends Controller
             }
         } catch (C4GGenericException $e) {
             $response = array(
-                'title' => 'Fehler',
-                'message' => 'Ein Fehler ist aufgetreten.',
+                'title' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorTitle'],
+                'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorMessage'],
             );
+            if ($type === 'ckeditor') {
+                $response = '<script>alert("'.$response['message'].'");</script>';
+            }
+
         } catch (C4GInvalidFileFormatException $e) {
             $response = array(
-                'title' => 'Fehler',
-                'message' => 'Das Dateiformat is ungültig.',
+                'title' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorTitle'],
+                'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['invalidFormatErrorMessage'],
             );
+            if ($type === 'ckeditor') {
+                $response = '<script>alert("'.$response['message'].'");</script>';
+            }
         } catch (C4GFileSizeException $e) {
             $response = array(
-                'title' => 'Fehler',
-                'message' => "Die Datei unterschreitet die maximale Größe von ".$e->getMaxFileSize()." Bytes.",
+                'title' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorTitle'],
+                'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['fileSizeErrorMessage'].$e->getMaxFileSize().$GLOBALS['TL_LANG']['con4gis']['core']['frontend']['fileSizeErrorMessageBytes'],
             );
+            if ($type === 'ckeditor') {
+                $response = '<script>alert("'.$response['message'].'");</script>';
+            }
         } catch (C4GImageDimensionsException $e) {
             $response = array(
-                'title' => 'Fehler',
-                'message' => "Das Bild überschreitet die maximale Größe. ",
+                'title' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorTitle'],
+                'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['imageDimensionsErrorMessage'],
             );
             if ($e->getMaxHeight() < $e->getFileHeight()) {
-                $response['message'] .= "\nErlaubte Höhe: ".$e->getMaxHeight()." Höhe der Datei: ".$e->getFileHeight();
+                $response['message'] .= $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['imageDimensionsErrorMessageWidth'].$e->getMaxHeight().$GLOBALS['TL_LANG']['con4gis']['core']['frontend']['imageDimensionsErrorMessageMaxWidth'].$e->getFileHeight();
             }
             if ($e->getMaxWidth() < $e->getFileWidth()) {
-                $response['message'] .= "\nErlaubte Breite: ".$e->getMaxWidth()." Breite der Datei: ".$e->getFileWidth();
+                $response['message'] .= $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['imageDimensionsErrorMessageHeight'].$e->getMaxWidth().$GLOBALS['TL_LANG']['con4gis']['core']['frontend']['imageDimensionsErrorMessageMaxHeight'].$e->getFileWidth();
+            }
+
+            if ($type === 'ckeditor') {
+                $response = '<script>alert("'.$response['message'].'");</script>';
             }
         } catch (\Throwable $e) {
             $response = array(
-                'title' => 'Fehler',
-                'message' => 'Ein Fehler ist aufgetreten.',
+                'title' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorTitle'],
+                'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorMessage'],
             );
+            if ($type === 'ckeditor') {
+                $response = '<script>alert("'.$response['message'].'");</script>';
+            }
         }
-
-        return new JsonResponse($response);
+        if ($type === 'json') {
+            return new JsonResponse($response);
+        } else {
+            return new Response($response);
+        }
     }
 
     public function documentUploadAction(Request $request) {
