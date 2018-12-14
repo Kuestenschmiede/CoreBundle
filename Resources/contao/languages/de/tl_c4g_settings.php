@@ -21,15 +21,39 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'] = array
 );
 $GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageTypes'] = array(
     'Erlaubte Bilddatei-Typen',
-    'Bildformate, die mit con4gis hochgeladen werden dürfen.'
+    'Kommagetrennte Liste von Bildformaten, die mit con4gis hochgeladen werden dürfen, z.B. image/png.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageWidth'] = array(
+    'Maximale Bildbreite',
+    'Maximale Breite für mit con4gis hochgeladene Bilder.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageHeight'] = array(
+    'Maximale Bildhöhe',
+    'Maximale Höhe für mit con4gis hochgeladene Bilder.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathImages'] = array(
+    'Uploadverzeichnis für Bilder',
+    'Verzeichnis, in das Bilder mit con4gis hochgeladen werden.'
 );
 $GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedDocumentTypes'] = array(
     'Erlaubte Dokument-Typen',
-    'Dokumentformate, die mit con4gis hochgeladen werden dürfen.'
+    'Kommagetrennte Liste von Dokumentformaten, die mit con4gis hochgeladen werden dürfen, z.B. application/pdf.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathDocuments'] = array(
+    'Uploadverzeichnis für Dokumente',
+    'Verzeichnis, in das Dokumente mit con4gis hochgeladen werden.'
 );
 $GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedGenericTypes'] = array(
     'Erlaubte Typen sonstiger Dateien',
-    'Formate, die mit con4gis außerhalb von Bild- und Dokumentkontext hochgeladen werden dürfen.'
+    'Kommagetrennte Liste von Formaten, die mit con4gis außerhalb von Bild- und Dokumentkontext hochgeladen werden dürfen, z.B. application/zip.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathGeneric'] = array(
+    'Uploadverzeichnis für sonstige Dateien',
+    'Verzeichnis, in das sonstige Dateien mit con4gis hochgeladen werden.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'] = array(
+    'Maximale Dateigröße',
+    'Maximale Dateigröße für Uploads aller Art.'
 );
 
 /** INFO **/
@@ -38,6 +62,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
 
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "Grundeinstellungen (Layout)";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Uploadeinstellungen";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Sonstige Einstellungen";
 
 /** Field References */
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['base']      = 'base';
