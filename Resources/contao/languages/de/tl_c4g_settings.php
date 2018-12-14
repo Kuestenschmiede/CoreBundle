@@ -15,7 +15,46 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'] = array(
     'jQuery UI ThemeRoller CSS Theme',
     'Wählen Sie hier eines der Standard UI-Themes aus. Sollten Sie im nächsten Schritt eine eigene Datei auswählen, wird die geladen.'
 );
-$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'] = array('jQuery UI ThemeRoller CSS Datei', 'Optional: wählen Sie eine, mit dem jQuery UI ThemeRoller erstellte, CSS-Datei aus, um den Stil der Frontendmodule einfach anzupassen.');
+$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'] = array(
+    'jQuery UI ThemeRoller CSS Datei',
+    'Optional: wählen Sie eine, mit dem jQuery UI ThemeRoller erstellte, CSS-Datei aus, um den Stil der Frontendmodule einfach anzupassen.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageTypes'] = array(
+    'Erlaubte Bilddatei-Typen',
+    'Kommagetrennte Liste von Bildformaten, die mit con4gis hochgeladen werden dürfen, z.B. image/png.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageWidth'] = array(
+    'Maximale Bildbreite',
+    'Maximale Breite für mit con4gis hochgeladene Bilder.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageHeight'] = array(
+    'Maximale Bildhöhe',
+    'Maximale Höhe für mit con4gis hochgeladene Bilder.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathImages'] = array(
+    'Uploadverzeichnis für Bilder',
+    'Verzeichnis, in das Bilder mit con4gis hochgeladen werden.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedDocumentTypes'] = array(
+    'Erlaubte Dokument-Typen',
+    'Kommagetrennte Liste von Dokumentformaten, die mit con4gis hochgeladen werden dürfen, z.B. application/pdf.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathDocuments'] = array(
+    'Uploadverzeichnis für Dokumente',
+    'Verzeichnis, in das Dokumente mit con4gis hochgeladen werden.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedGenericTypes'] = array(
+    'Erlaubte Typen sonstiger Dateien',
+    'Kommagetrennte Liste von Formaten, die mit con4gis außerhalb von Bild- und Dokumentkontext hochgeladen werden dürfen, z.B. application/zip.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathGeneric'] = array(
+    'Uploadverzeichnis für sonstige Dateien',
+    'Verzeichnis, in das sonstige Dateien mit con4gis hochgeladen werden.'
+);
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'] = array(
+    'Maximale Dateigröße',
+    'Maximale Dateigröße für Uploads aller Art.'
+);
 
 /** INFO **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
@@ -23,6 +62,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
 
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "Grundeinstellungen (Layout)";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Uploadeinstellungen";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Sonstige Einstellungen";
 
 /** Field References */
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['base']      = 'base';

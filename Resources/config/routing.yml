@@ -11,3 +11,8 @@ Con4gisCoreBundle:
     requirements:
         _url_fragment: .*
 
+con4gisUploadImage:
+    path: /con4gis/upload/image
+    defaults:
+        _scope: frontend
+        _controller: "con4gisCoreBundle:Upload:imageUpload"
