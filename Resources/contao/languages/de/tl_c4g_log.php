@@ -16,6 +16,6 @@ $GLOBALS['TL_LANG']['tl_c4g_log']['bundle'] = array('Bundle', '');
 $GLOBALS['TL_LANG']['tl_c4g_log']['message'] = array('Nachricht', '');
 
 /** OPERATIONS **/
-$GLOBALS['TL_LANG']['tl_c4g_settings']['new'] = array("Eintrag hinzufügen","");
-$GLOBALS['TL_LANG']['tl_c4g_settings']['delete'] = array("Eintrag löschen","");
-$GLOBALS['TL_LANG']['tl_c4g_settings']['show'] = array("Eintrag anzeigen","");
+$GLOBALS['TL_LANG']['tl_c4g_log']['new'] = array("Eintrag hinzufügen","");
+$GLOBALS['TL_LANG']['tl_c4g_log']['delete'] = array("Eintrag löschen","");
+$GLOBALS['TL_LANG']['tl_c4g_log']['show'] = array("Eintrag anzeigen","");

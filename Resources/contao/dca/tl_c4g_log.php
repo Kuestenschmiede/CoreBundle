@@ -121,6 +121,7 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
             'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
+            'filter'                  => true,
         ),
         'message' => array
         (
