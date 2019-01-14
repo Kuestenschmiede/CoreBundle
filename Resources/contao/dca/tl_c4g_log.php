@@ -108,9 +108,11 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
         'tstamp' => array
         (
             'sql'                     => "int(10) NULL default 0",
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_log']['tstamp'],
             'default'                 => 0,
             'sorting'                 => true,
             'search'                  => true,
+            'inputType'               => 'text',
         ),
         'bundle' => array
         (

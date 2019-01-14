@@ -11,7 +11,8 @@
  */
 
 /** FIELDS **/
-$GLOBALS['TL_LANG']['tl_c4g_log']['tstamp'] = array('Zeitstempel', '');
+$GLOBALS['TL_LANG']['tl_c4g_log']['id'] = array('ID', '');
+$GLOBALS['TL_LANG']['tl_c4g_log']['tstamp'] = array('Datum', '');
 $GLOBALS['TL_LANG']['tl_c4g_log']['bundle'] = array('Bundle', '');
 $GLOBALS['TL_LANG']['tl_c4g_log']['message'] = array('Nachricht', '');
 
