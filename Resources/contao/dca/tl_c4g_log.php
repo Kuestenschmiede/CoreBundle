@@ -27,7 +27,8 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
             (
                 'id'     => 'primary',
             )
-        )
+        ),
+        'closed' => true,
     ),
     'list' => array
     (
@@ -36,11 +37,11 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
             'mode'                    => 2,
             'fields'                  => array('id'),
             'panelLayout'             => 'filter;sort,search,limit',
-            'headerFields'            => array('id', 'tstamp', 'bundle', 'message'),
+            'headerFields'            => array('id', 'bundle', 'message'),
         ),
         'label' => array
         (
-            'fields'                  => array('id', 'tstamp', 'bundle', 'message'),
+            'fields'                  => array('id', 'bundle', 'message'),
             'showColumns'             => true,
         ),
         'global_operations' => array
