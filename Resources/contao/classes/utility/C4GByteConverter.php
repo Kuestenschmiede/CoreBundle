@@ -34,7 +34,7 @@ class C4GByteConverter
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getKiloBytes(): float
     {
@@ -52,7 +52,7 @@ class C4GByteConverter
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getMegaBytes(): float
     {
@@ -70,7 +70,7 @@ class C4GByteConverter
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getGigaBytes(): float
     {
@@ -88,7 +88,7 @@ class C4GByteConverter
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getTeraBytes(): float
     {

@@ -109,6 +109,26 @@ class ResourceLoader
     }
 
     /**
+     * There is no HTML solution to load CSS deferred. This will actually add a JS block that will load the css when
+     *  the page is loaded. Be careful with this because it can make the page look terrible before the CSS is actually
+     *  loaded.
+     * @param $cssFile
+     * @param string $key
+     */
+    public static function loadCssResourceDeferred($cssFile) {
+        self::loadJavaScriptResourceTag(
+            "window.addEventListener('load', function() {".
+                "console.log('loadCssResourceDeferred');".
+                "var link = document.createElement('link');".
+                "link.rel = 'stylesheet';".
+                "link.href = '$cssFile';".
+                "link.type = 'text/css';".
+                "document.head.appendChild(link);".
+            "})"
+        );
+    }
+
+    /**
      * @param $location
      * @param $key
      * @return bool
@@ -265,7 +285,7 @@ class ResourceLoader
      */
     public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false) {
         if ($inHeader) {
-            self::loadJavaScriptResource($jsFile, self::JAVASCRIPT, $key);
+            self::loadJavaScriptResource($jsFile, self::HEAD, $key);
         } else {
             if ($es6Module) {
                 self::loadJavaScriptResourceModule($jsFile, $key);

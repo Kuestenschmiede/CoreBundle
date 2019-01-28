@@ -22,3 +22,7 @@
 {
   background: url("con4gis.svg") 7px center no-repeat;
 }
+
+li .c4g_log {
+  display: none !important;
+}

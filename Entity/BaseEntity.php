@@ -28,6 +28,7 @@ abstract class BaseEntity
 
     /**
      * Setzt die Daten eines Arrays als Eigenschaften der Klasse.
+     *  ¿Por qué no inglés? ¡No entendo alemán!
      * @param $data
      */
     public function setData($data)
