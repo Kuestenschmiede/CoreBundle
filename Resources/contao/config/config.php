@@ -46,6 +46,9 @@ array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE
         ),
         'c4g_settings' => array(
             'tables'        => array('tl_c4g_settings')
+        ),
+        'c4g_log' => array(
+            'tables'        => array('tl_c4g_log')
         )
     )
 ));

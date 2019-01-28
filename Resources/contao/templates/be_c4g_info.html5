@@ -401,10 +401,19 @@
             <?php endif; ?>
         </div>
     </fieldset>
+
+
     <!--fieldset id="pal_c4g_links" class="tl_box">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_links')">links</legend-->
         <div id="pal_c4g_links">
             <ul>
+                <li>
+                    <a href="contao?do=c4g_log">
+                        <span>
+                            Interner Serverlog
+                        </span>
+                    </a>
+                </li>
                 <li>
                     <a href="https://con4gis.org" target="_blank"><span>
                         <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']?>

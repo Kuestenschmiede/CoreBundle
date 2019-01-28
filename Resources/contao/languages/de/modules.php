@@ -18,6 +18,7 @@ $GLOBALS['TL_LANG']['MOD']['con4gis_bricks'] = array('con4gis '.$GLOBALS['con4gi
 
 $GLOBALS['TL_LANG']['MOD']['c4g_core'] = array('Info & Hilfe', 'con4gis Infoseite' );
 $GLOBALS['TL_LANG']['MOD']['c4g_settings'] = array('Einstellungen', 'Einstellungen für alle Bausteine.');
+$GLOBALS['TL_LANG']['MOD']['c4g_log'] = array('Log', 'Internes Log für con4gis.');
 
 /**
  * Content elements
