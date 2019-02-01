@@ -118,7 +118,6 @@ class ResourceLoader
     public static function loadCssResourceDeferred($cssFile) {
         self::loadJavaScriptResourceTag(
             "window.addEventListener('load', function() {".
-                "console.log('loadCssResourceDeferred');".
                 "var link = document.createElement('link');".
                 "link.rel = 'stylesheet';".
                 "link.href = '$cssFile';".
