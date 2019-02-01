@@ -41,7 +41,7 @@ class C4GJQueryGUI
 			}
 			else {
                 // Include JQuery JS
-                ResourceLoader::loadJavaScriptResource('assets/jquery/js/jquery.min.js|static', $location = ResourceLoader::HEAD, $key = 'c4g_jquery');
+                ResourceLoader::loadJavaScriptResource('assets/jquery/js/jquery.min.js|static', $location = ResourceLoader::JAVASCRIPT, $key = 'c4g_jquery');
                 // just until the old plugins are replaced
                 // Set JQuery to noConflict mode immediately after load of jQuery
                 ResourceLoader::loadJavaScriptResource('bundles/con4giscore/js/c4gjQueryNoConflict.js', $location = ResourceLoader::HEAD, $key = 'c4g_jquery_noconflict');
@@ -154,12 +154,12 @@ class C4GJQueryGUI
             // Load magnific-popup.js for projects
             if ($GLOBALS['con4gis']['projects']['installed']) {
 
-                ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|static', $location = ResourceLoader::HEAD, $key = 'magnific-popup');
+                ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|static', $location = ResourceLoader::JAVASCRIPT, $key = 'magnific-popup');
                 $GLOBALS['TL_CSS']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css';
             }
 
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|static', $location = ResourceLoader::HEAD, $key = 'clipboard');
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jQuery/plugins/jquery-simple-datetimepicker/1.13.0/jquery.simple-dtpicker.js|static', $location = ResourceLoader::HEAD, $key = 'datetimepicker');
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|static', $location = ResourceLoader::JAVASCRIPT, $key = 'clipboard');
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jQuery/plugins/jquery-simple-datetimepicker/1.13.0/jquery.simple-dtpicker.js|static', $location = ResourceLoader::JAVASCRIPT, $key = 'datetimepicker');
 
 		}
 
