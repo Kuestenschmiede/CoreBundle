@@ -341,7 +341,8 @@ class C4GUtils
         if (class_exists($name)) {
             return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
         } else {
-            return (\Contao\FrontendUser::getInstance() !== null);
+//            return (\Contao\FrontendUser::getInstance() !== null);
+            return FE_USER_LOGGED_IN;
         }
     }
 

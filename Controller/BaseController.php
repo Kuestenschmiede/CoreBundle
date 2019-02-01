@@ -100,6 +100,6 @@ class BaseController extends Controller
      */
     protected function checkFeUser()
     {
-        return C4GUtils::checkFrontendUserLogin();
+        return C4GUtils::isFrontendUserLoggedIn();
     }
 }
