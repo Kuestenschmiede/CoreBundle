@@ -1289,13 +1289,11 @@ this.c4g.projects = this.c4g.projects || {};
       }
 
       // show map
-      if ((typeof(content.mapdata) !== 'undefined') && (typeof(c4g.maps) !== 'undefined')) {
-        if (typeof(c4g.maps.MapController) === 'function') {
-          // Version 3
-          //
-          content.mapdata.addIdToDiv = false;
-          c4g.maps.MapController(content.mapdata);
-        }
+      if ((typeof(content.mapdata) !== 'undefined')) {
+        content.mapdata.addIdToDiv = false;
+        window.mapData = window.mapData || {};
+        window.mapData[content.mapdata['id']] = content.mapdata;
+        initMaps(window.mapData);
       }
 
       if ((typeof(content.cronexec) !== 'undefined') && (content.cronexec != null)) {
