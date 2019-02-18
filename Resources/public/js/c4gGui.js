@@ -237,6 +237,7 @@ this.c4g.projects = this.c4g.projects || {};
       var headlineDiv = '#c4gGuiHeadline' + internalId;
       var scope = this;
       var options = this.options;
+      var oDataTable;
 
       var fnExecAjax = function (ajaxMethod, ajaxUrl, ajaxData) {
         if (ajaxUrl.indexOf("?") <= 0) {
@@ -558,7 +559,6 @@ this.c4g.projects = this.c4g.projects || {};
                   fnExecAjaxPut(
                     options.ajaxUrl + '/' + options.ajaxData + '/' + value['id'],
                     formdata);
-
                 }
                 return false;
 
@@ -798,7 +798,7 @@ this.c4g.projects = this.c4g.projects || {};
                     });
                 }
               }, contentdata);
-              var oDataTable = $(tableDiv).DataTable(contentdata);
+              oDataTable = $(tableDiv).DataTable(contentdata);
               // scope.dataTableApi = oDataTable.api();
               scope.fnDataTableColumnVis(oDataTable);
             }

@@ -14,6 +14,7 @@
 namespace con4gis\CoreBundle\Resources\contao\modules;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gActivationkeyModel;
+use Contao\System;
 
 /**
  * Class Content_c4g_activationpage
@@ -55,6 +56,7 @@ class ContentC4gActivationpage extends \Module
     {
         // prepare stuff
         $this->import('FrontendUser', 'User');
+        System::loadLanguageFile('tl_content');
         $stateClass = array
         (
             1 => 'c4g_ap_success',

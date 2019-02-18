@@ -159,7 +159,7 @@ class C4GUtils
     /**
      * function to send mails
      * @param array $mailData
-     * @return multitype:string
+     * @return bool
      */
     public static function sendMail ($mailData)
     {
