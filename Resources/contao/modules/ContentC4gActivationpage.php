@@ -98,7 +98,7 @@ class ContentC4gActivationpage extends \Module
             $this->Template->output = $this->c4g_activationpage_confirmation_text;
             $delim = (preg_match('/\?/', $this->replaceInsertTags('{{env::request}}')) > 0) ? '&' : '?';
             $this->Template->output .= '<a href="{{env::path}}{{env::request}}' . $delim . 'confirm=true" class="c4g_button"><span class="c4g_button_text">' . ($this->c4g_activationpage_confirmation_button ?: $GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['msc']['default_confirmation_button']) . '</span></a>';
-       } else {
+        } else {
             // 1) check key
             $action = '';
             $this->Template->state = $stateClass[-1];
