@@ -7,6 +7,17 @@
  * @copyright Küstenschmiede GmbH Software & Design 2011 - 2018
  * @link      https://www.kuestenschmiede.de
  */
+import swal from 'sweetalert';
+
+export class AlertHandler {
+  showErrorDialog(title, content) {
+    swal(title, content, "error");
+  }
+
+  showInfoDialog(title, content) {
+    swal(title, content, "info");
+  }
+}
 
 /**
  * DialogHandler
@@ -17,7 +28,7 @@
  *
  * @constructor
  */
-function DialogHandler() {
+export function DialogHandler() {
   var scope = this;
   this.buttons    = {
     'OK': function() {jQuery(this).dialog('close');},
