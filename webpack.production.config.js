@@ -1,9 +1,9 @@
 var path = require('path');
 var config = {
-  entry: './Resources/public/js/DialogHandler.js',
+  entry: './Resources/public/js/AlertHandler.js',
   mode: "production",
   output: {
-    filename: 'DialogHandler.js',
+    filename: 'AlertHandler.js',
     path: path.resolve('./Resources/public/build/')
   },
   devtool: "source-map",

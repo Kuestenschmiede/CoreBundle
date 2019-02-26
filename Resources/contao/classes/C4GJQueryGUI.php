@@ -54,7 +54,8 @@ class C4GJQueryGUI
             ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jQuery/jquery-ui-1.12.1.custom/jquery-ui.min.js', $location = ResourceLoader::HEAD, $key = 'c4g_jquery_ui');
             ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jQuery/jquery-ui-i18n.min.js', $location = ResourceLoader::HEAD, $key = 'c4g_jquery_ui_i18n');
             ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jQuery/plugins/jquery.legacy.min.js', $location = ResourceLoader::HEAD, $key = 'c4g_a');
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/js/DialogHandler.js', $location = ResourceLoader::HEAD, $key = 'c4g_jquery');
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/js/DialogHandler.js', $location = ResourceLoader::HEAD, $key = 'dialog_handler');
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/build/AlertHandler.js', $location = ResourceLoader::HEAD, $key = 'alert_handler');
    		}
 
 		if ($useTable)
