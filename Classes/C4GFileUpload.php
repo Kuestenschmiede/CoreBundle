@@ -1,4 +1,15 @@
 <?php
+/*
+ * This file is part of con4gis,
+ * the gis-kit for Contao CMS.
+ *
+ * @package    con4gis
+ * @version    6
+ * @author     con4gis contributors (see "authors.txt")
+ * @license    LGPL-3.0-or-later
+ * @copyright  Küstenschmiede GmbH Software & Design
+ * @link       https://www.con4gis.org
+ */
 namespace con4gis\CoreBundle\Classes;
 
 class C4GFileUpload {
@@ -6,8 +17,6 @@ class C4GFileUpload {
         try {
             define("TL_MODE", "FE");
             define("TL_SCRIPT", "SOMETHING");
-//            $sRootPath = dirname($_SERVER['SCRIPT_FILENAME']) . "/../../../../../";
-//            require_once($sRootPath . "system/initialize.php");
             $initialize = $_SERVER["DOCUMENT_ROOT"] . '/../system/initialize.php';
             if (!file_exists($initialize)) {
                 $initialize = '../system/initialize.php';

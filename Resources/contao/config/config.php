@@ -1,14 +1,15 @@
 <?php
 
-/**
- * con4gis - the gis-kit
+/*
+ * This file is part of con4gis,
+ * the gis-kit for Contao CMS.
  *
- * @version   php 7
- * @package   con4gis
- * @author    con4gis contributors (see "authors.txt")
- * @license   GNU/LGPL http://opensource.org/licenses/lgpl-3.0.html
- * @copyright Küstenschmiede GmbH Software & Design 2011 - 2018
- * @link      https://www.kuestenschmiede.de
+ * @package    con4gis
+ * @version    6
+ * @author     con4gis contributors (see "authors.txt")
+ * @license    LGPL-3.0-or-later
+ * @copyright  Küstenschmiede GmbH Software & Design
+ * @link       https://www.con4gis.org
  */
 
 use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
@@ -17,8 +18,6 @@ $GLOBALS['con4gis']['version'] = '5.1';
 $GLOBALS['con4gis']['core']['installed'] = true;
 
 // API-Registration
-
-//ToDO so werden die Klassen nicht gefunden
 $GLOBALS['TL_API'] = array();
 $GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Classes\C4GFileUpload';
 $GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Resources\contao\classes\C4GImageUpload';
@@ -27,7 +26,6 @@ $GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Resources\contao\classes
 array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array('con4gis' => array()));
 array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 2, array('con4gis_bricks' => array()));
 
-/** Damit die CSS nicht nur im Modul selbst geladen wird */
 if(TL_MODE == "BE") {
     $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/con4gis.css';
 }
