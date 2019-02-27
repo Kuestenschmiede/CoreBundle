@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
 	(
 		'default' => '{layout_legend},c4g_uitheme_css_select,c4g_appearance_themeroller_css;'.
                      '{upload_legend},uploadAllowedImageTypes,uploadAllowedImageWidth,uploadAllowedImageHeight,uploadPathImages,'.
-                     'uploadAllowedDocumentTypes,uploadPathDocuments,uploadAllowedGenericTypes,uploadPathGeneric,uploadMaxFileSize;'
+                     'uploadAllowedDocumentTypes,uploadPathDocuments,uploadAllowedGenericTypes,uploadPathGeneric,uploadMaxFileSize;{c4g_io_legend},con4gisIoUrl,con4gisIoKey;'
 	),
 
 	// Fields
