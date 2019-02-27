@@ -56,6 +56,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'] = array(
     'Maximale Dateigröße',
     'Maximale Dateigröße für Uploads aller Art.'
 );
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL für con4gis-IO', 'Geben Sie hier die URL für con4gis-IO-Kartendienste ein.'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Schlüssel für con4gis-Io', 'Geben Sie hier Ihren Schlüssel für con4gis-IO-Kartendienste ein.'];
 
 /** INFO **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =

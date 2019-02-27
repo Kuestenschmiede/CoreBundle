@@ -12,14 +12,52 @@
  */
 
 /** FIELDS **/
-$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'] = array(
+$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'] = [
     'jQuery UI ThemeRoller CSS theme',
     'Select a standart UI-Theme.'
-);
-$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'] = array(
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'] = [
     'jQuery UI ThemeRoller CSS file',
     'Optionally: select the CSS file you created with the jQuery UI ThemeRoller.'
-);
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageTypes'] = [
+    'Permitted image formats',
+    'Comma-seperated list of formats, which are permitted to be uploaded over con4gis, e.g. image/png.'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageWidth'] = [
+    'Maximum image width',
+    'Maximum width for images uploaded over con4gis'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageHeight'] = [
+    'Maximum image height',
+    'Maximum height for images uploaded over con4gis'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathImages'] = [
+    'Upload path for images',
+    'Directory to store uploaded images.'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedDocumentTypes'] = [
+    'Permitted document formats',
+    'Comma-seperated list of formats, which are permitted to be uploaded over con4gis, e.g. application/pdf.'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathDocuments'] = [
+    'Upload path for documents',
+    'Directory to store uploaded documents.'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedGenericTypes'] = [
+    'Other permitted formats',
+    'Comma-seperated list of formats of other files, which are permitted to be uploaded over con4gis, e.g. application/zip.'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathGeneric'] = [
+        'Upload path for other files',
+        'Directory to store other uploaded files.'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'] = [
+    'Maximum file size',
+    'Maximum file size for other files.'
+];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL for con4gis-IO', 'Please enter a URL for con4gis-IO map services'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Key for con4gis-Io', 'Please enter your key for con4gis-IO map services'];
 
 /** INFO **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
@@ -27,6 +65,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
 
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "Layout settings";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Upload settings";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Miscellaneous settings";
 
 /** Field References */
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['base']      = 'base';
@@ -56,8 +96,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['ui-lightness']  = 'ui-
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['vader']         = 'vader';
 
 /** OPERATIONS **/
-$GLOBALS['TL_LANG']['tl_c4g_settings']['new'] = array("add settings","");
-$GLOBALS['TL_LANG']['tl_c4g_settings']['edit'] = array("edit settings","");
-$GLOBALS['TL_LANG']['tl_c4g_settings']['copy'] = array("copy settings","");
-$GLOBALS['TL_LANG']['tl_c4g_settings']['delete'] = array("delete settings","");
-$GLOBALS['TL_LANG']['tl_c4g_settings']['show'] = array("show settings","");
+$GLOBALS['TL_LANG']['tl_c4g_settings']['new'] = ["add settings",""];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['edit'] = ["edit settings",""];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['copy'] = ["copy settings",""];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['delete'] = ["delete settings",""];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['show'] = ["show settings",""];

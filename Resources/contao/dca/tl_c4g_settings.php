@@ -180,6 +180,21 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'eval'      => array('mandatory' => true, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
             'sql'       => "varchar(255) NOT NULL default '2048000'"
         ),
+        'con4gisIoURL' =>[
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_map_profiles']['con4gisIoUrl'],
+            'exclude'                 => true,
+            'inputType'               => 'text',
+            'eval'                    => ['maxlength' => 100],
+            'sql'                     => "varchar(100) default ''"
+        ],
+        'con4gisIoKey' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_map_profiles']['con4gisIoKey'],
+            'exclude'                 => true,
+            'inputType'               => 'text',
+            'eval'                    => ['maxlength' => 32],
+            'sql'                     => "varchar(32) default ''"
+        ]
+        
     )
 );
 
