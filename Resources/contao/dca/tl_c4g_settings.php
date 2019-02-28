@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
 	(
 		'default' => '{layout_legend},c4g_uitheme_css_select,c4g_appearance_themeroller_css;'.
                      '{upload_legend},uploadAllowedImageTypes,uploadAllowedImageWidth,uploadAllowedImageHeight,uploadPathImages,'.
-                     'uploadAllowedDocumentTypes,uploadPathDocuments,uploadAllowedGenericTypes,uploadPathGeneric,uploadMaxFileSize;{c4g_io_legend},con4gisIoUrl,con4gisIoKey;'
+                     'uploadAllowedDocumentTypes,uploadPathDocuments,uploadAllowedGenericTypes,uploadPathGeneric,uploadMaxFileSize;{con4gisIoLegend},con4gisIoUrl,con4gisIoKey;'
 	),
 
 	// Fields
@@ -180,15 +180,15 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'eval'      => array('mandatory' => true, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
             'sql'       => "varchar(255) NOT NULL default '2048000'"
         ),
-        'con4gisIoURL' =>[
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_map_profiles']['con4gisIoUrl'],
+        'con4gisIoUrl' =>[
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'],
             'exclude'                 => true,
             'inputType'               => 'text',
             'eval'                    => ['maxlength' => 100],
             'sql'                     => "varchar(100) default ''"
         ],
         'con4gisIoKey' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_map_profiles']['con4gisIoKey'],
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'],
             'exclude'                 => true,
             'inputType'               => 'text',
             'eval'                    => ['maxlength' => 32],

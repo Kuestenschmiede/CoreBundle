@@ -67,6 +67,7 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "Layout settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Upload settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Miscellaneous settings";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = "con4gis-IO";
 
 /** Field References */
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['base']      = 'base';
