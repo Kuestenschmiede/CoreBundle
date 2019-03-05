@@ -110,7 +110,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'label' => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageTypes'],
             'inputType' => 'text',
             'default' => 'image/jpg,image/jpeg,image/png,image/gif',
-            'eval' => array('mandatory' => true),
+            'eval' => array('mandatory' => false),
             'sql' => 'varchar(255) NOT NULL default "image/jpg,image/jpeg,image/png,image/gif"'
         ),
         'uploadAllowedImageWidth' => array
@@ -118,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageWidth'],
             'inputType' => 'text',
             'default'   => '800',
-            'eval'      => array('mandatory' => true, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
+            'eval'      => array('mandatory' => false, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
             'sql'       => "varchar(10) NOT NULL default '800'"
         ),
         'uploadAllowedImageHeight' => array
@@ -126,7 +126,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageHeight'],
             'inputType' => 'text',
             'default'   => '600',
-            'eval'      => array('mandatory' => true, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
+            'eval'      => array('mandatory' => false, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
             'sql'       => "varchar(10) NOT NULL default '600'"
         ),
         'uploadPathImages'  => array
@@ -143,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'label' => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedDocumentTypes'],
             'inputType' => 'text',
             'default' => 'application/pdf',
-            'eval' => array('mandatory' => true),
+            'eval' => array('mandatory' => false),
             'sql' => 'varchar(255) NOT NULL default "application/pdf"'
         ),
         'uploadPathDocuments'  => array
@@ -160,7 +160,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'label' => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedGenericTypes'],
             'inputType' => 'text',
             'default' => 'application/zip',
-            'eval' => array('mandatory' => true),
+            'eval' => array('mandatory' => false),
             'sql' => 'varchar(255) NOT NULL default "application/zip"'
         ),
         'uploadPathGeneric'  => array
@@ -169,7 +169,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'exclude'   => true,
             'default'   => null,
             'inputType' => 'fileTree',
-            'eval'      => array('fieldType' => 'radio', 'mandatory' => true, 'tl_class' => 'clr'),
+            'eval'      => array('fieldType' => 'radio', 'mandatory' => false, 'tl_class' => 'clr'),
             'sql'       => "blob NULL"
         ),
         'uploadMaxFileSize' => array
@@ -177,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'],
             'inputType' => 'text',
             'default'   => '2048000',
-            'eval'      => array('mandatory' => true, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
+            'eval'      => array('mandatory' => false, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
             'sql'       => "varchar(255) NOT NULL default '2048000'"
         ),
         'con4gisIoUrl' =>[
