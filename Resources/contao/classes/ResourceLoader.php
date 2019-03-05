@@ -123,8 +123,10 @@ class ResourceLoader
                 "link.rel = 'stylesheet';".
                 "link.href = '$cssFile';".
                 "link.type = 'text/css';".
-                "document.head.appendChild(link);".
-            "})"
+                "var defer = document.getElementsByTagName('link')[0];" .
+                "defer.parentNode.insertBefore(link, defer);" .
+//                "document.head.appendChild(link);".
+            "});"
         );
     }
 
@@ -141,7 +143,8 @@ class ResourceLoader
      * @param $theme
      */
     public static function loadJqueryUiTheme($theme) {
-        self::loadCssResource("bundles/con4giscore/vendor/jQuery/ui-themes/themes/$theme/jquery-ui.css", self::JQ_UI);
+        self::loadCssResourceDeferred("bundles/con4giscore/vendor/jQuery/ui-themes/themes/$theme/jquery-ui.css");
+//        self::loadCssResource("bundles/con4giscore/vendor/jQuery/ui-themes/themes/$theme/jquery-ui.css", self::JQ_UI);
     }
 
     /**
