@@ -64,6 +64,24 @@ class con4gisInsertTags extends \System
                         } else {
                             return 'not installed';
                         }
+                    case 'olcesium':
+                        if ($GLOBALS['con4gis']['maps']['ol-cesium-version']) {
+                            return $GLOBALS['con4gis']['maps']['ol-cesium-version'];
+                        } else {
+                            return 'not installed';
+                        }
+                    case 'olms':
+                        if ($GLOBALS['con4gis']['maps']['olms-version']) {
+                            return $GLOBALS['con4gis']['maps']['olms-version'];
+                        } else {
+                            return 'not installed';
+                        }
+                    case 'olext':
+                        if ($GLOBALS['con4gis']['maps']['ol-ext']) {
+                            return $GLOBALS['con4gis']['maps']['ol-ext'];
+                        } else {
+                            return 'not installed';
+                        }
                     case 'core':
                         if ($packages['con4gis/core']) {
                             return $packages['con4gis/core'];
@@ -121,6 +139,12 @@ class con4gisInsertTags extends \System
                     case 'routing':
                         if ($packages['con4gis/routing']) {
                             return $packages['con4gis/routing'];
+                        } else {
+                            return 'not installed';
+                        }
+                    case 'editor':
+                        if ($packages['con4gis/editor']) {
+                            return $packages['con4gis/editor'];
                         } else {
                             return 'not installed';
                         }

@@ -87,17 +87,9 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODETOOL']  = 'con4gis 3 bbCode<br>entfernen';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL']                = '%s installieren';
 
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']  = 'con4gis Compendium (Handbuch)';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']        = 'con4gis Projektwebsite';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['github_coastforge']      = 'Küstenschmiede @ GitHub';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['osm_website']            = 'Website der OpenStreetMap';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['ol_website']             = 'OpenLayers Website';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['overpassapi_website']    = 'Overpass-API Informationen (OpenStreetMap Abfragen)';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['nominatim_website']      = 'Nominatim Informationen (Suche- und Rückwärtssuche)';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['osrm_website']           = 'OSRM Informationen (Open Source Routing Machine)';
-
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_support']        = 'con4gis Website';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['coastforge_support']     = 'Küstenschmiede Website';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']        = 'con4gis Website';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']  = 'con4gis Docs';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['github_coastforge']      = 'con4gis @ GitHub';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_successful']         = "%s erfolgreich hochgeladen: \\n- Größe: %s KB";
     $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_error']              = "Die Datei konnte nicht hochgeladen werden";

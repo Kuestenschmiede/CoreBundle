@@ -3,17 +3,10 @@
     <span class="version">v<?php echo $GLOBALS['con4gis']['version'] ?></span>
     <span class="sub"><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['TITLESUB'] ?></span>
 </div>
-
 <br><br>
-<!--
-<div id="c4g_intro">
-    <div><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INTRO'] ?></div>
-    <img src="bundles/con4giscore/images/comingsoon.png" width="300" height="75" alt="coming_soon">
-</div>
--->
 <div class="tl_formbody_edit c4g_info">
 
-<!-- con4gis-Core -->
+    <!-- con4gis-Core -->
     <fieldset id="pal_c4g_core" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_core')">
             con4gis-Core
@@ -59,13 +52,12 @@
                                      label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'DocumentsBundle')
                  )); ?>
             <?php endif; ?>
-        <!--<img src="bundles/con4giscore/images/comingsoon.png" width="300" height="75" alt="coming_soon">-->
         </div>
     </fieldset>
-<!-- con4gis-Editor -->
+    <!-- con4gis-Editor -->
     <fieldset id="pal_c4g_editor" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_editor')">
-        con4gis-Routing
+        con4gis-Editor
            <?php if ($this->packages['con4gis/editor']) {
                echo ' [' . $this->packages['con4gis/editor'] . ']';
            } else if ($GLOBALS['con4gis']['editor']['installed']) {
@@ -90,7 +82,7 @@
         </div>
     </fieldset>
 
-<!-- con4gis-Export -->
+    <!-- con4gis-Export -->
     <fieldset id="pal_c4g_export" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_export')">
             con4gis-Export
@@ -115,12 +107,11 @@
                                      label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'ExportBundle')
                  )); ?>
             <?php endif; ?>
-        <!--<img src="bundles/con4giscore/images/comingsoon.png" width="300" height="75" alt="coming_soon">-->
         </div>
     </fieldset>
 
 
-<!-- con4gis-Forum -->
+    <!-- con4gis-Forum -->
     <fieldset id="pal_c4g_forum" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_forum')">
             con4gis-Forum
@@ -146,14 +137,6 @@
                                     href        => 'https://community.contao.org/de/showthread.php?55910-con4gis_forum-Offizieller-Support-Thread',
                                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
-                <!--
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                    addClass    => 'floatR',
-                                    href        => 'contao/main.php?do=c4g_core&perf=forumremovebbcode',
-                                    c4gImg      => 'forumremovebbcode',
-                                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODETOOL']
-                )); ?>
-                -->
             <?php else: ?>
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     c4gImg      => 'install',
@@ -164,7 +147,7 @@
         </div>
     </fieldset>
 
-<!-- con4gis-Groups -->
+    <!-- con4gis-Groups -->
     <fieldset id="pal_c4g_groups" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_groups')">
             con4gis-Groups
@@ -188,14 +171,6 @@
                                     c4gImg      => 'contao-board',
                                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
                 )); ?>
-                <!--
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    addClass    => 'floatR',
-                    href        => 'contao/main.php?do=c4g_core&perf=membergroupsync',
-                    c4gImg      => 'membergroupsync',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNCTOOL']
-                )); ?>
-                -->
            <?php else: ?>
                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                    c4gImg      => 'install',
@@ -205,7 +180,7 @@
            <?php endif; ?>
         </div>
     </fieldset>
-<!-- con4gis-Import -->
+    <!-- con4gis-Import -->
     <fieldset id="pal_c4g_import" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_import')">
             con4gis-Import
@@ -230,11 +205,10 @@
                                      label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'ImportBundle')
                  )); ?>
             <?php endif; ?>
-        <!--<img src="bundles/con4giscore/images/comingsoon.png" width="300" height="75" alt="coming_soon">-->
         </div>
     </fieldset>
 
-<!-- con4gis-Maps -->
+    <!-- con4gis-Maps -->
     <fieldset id="pal_c4g_maps" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_maps')">
         con4gis-Maps
@@ -267,7 +241,8 @@
             <?php endif; ?>
         </div>
     </fieldset>
-<!-- con4gis-Routing -->
+
+    <!-- con4gis-Routing -->
     <fieldset id="pal_c4g_routing" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_routing')">
         con4gis-Routing
@@ -295,7 +270,7 @@
         </div>
     </fieldset>
 
-<!-- con4gis-Projects -->
+    <!-- con4gis-Projects -->
     <fieldset id="pal_c4g_projects" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_projects')">
             con4gis-Projects
@@ -320,7 +295,6 @@
                                      label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'ProjectsBundle')
                  )); ?>
             <?php endif; ?>
-        <!--<img src="bundles/con4giscore/images/comingsoon.png" width="300" height="75" alt="coming_soon">-->
         </div>
     </fieldset>
 
@@ -349,7 +323,6 @@
                                      label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'QueueBundle')
                  )); ?>
             <?php endif; ?>
-        <!--<img src="bundles/con4giscore/images/comingsoon.png" width="300" height="75" alt="coming_soon">-->
         </div>
     </fieldset>
 
@@ -429,82 +402,34 @@
     </fieldset>
 
 
-    <!--fieldset id="pal_c4g_links" class="tl_box">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_links')">links</legend-->
-        <div id="pal_c4g_links">
-            <ul>
-                <li>
-                    <a href="contao?do=c4g_log">
-                        <span>
-                            Interner Serverlog
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://con4gis.org" target="_blank"><span>
-                        <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']?>
-                    </span></a>
-                </li>
-                <li>
-                    <a href="http://github.com/Kuestenschmiede/" target="_blank"><span>
-                        <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['github_coastforge']?>
-                    </span></a>
-                </li>
-                <li>
-                    <a href="http://openstreetmap.org" target="_blank"><span>
-                        <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['osm_website']?>
-                    </span></a>
-                </li>
-                <li>
-                    <a href="http://openlayers.org" target="_blank"><span>
-                        <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['ol_website']?>
-                    </span></a>
-                </li>
-                <li>
-                    <a href="http://wiki.openstreetmap.org/wiki/Overpass_API" target="_blank"><span>
-                        <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['overpassapi_website']?>
-                    </span></a>
-                </li>
-                <li>
-                    <a href="http://wiki.openstreetmap.org/wiki/Nominatim" target="_blank"><span>
-                        <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['nominatim_website']?>
-                    </span></a>
-                </li>
-                <li>
-                    <a href="https://github.com/Project-OSRM/osrm-backend/wiki" target="_blank"><span>
-                        <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['osrm_website']?>
-                    </span></a>
-                </li>
-            </ul>
-        </div>
-    <!--/fieldset-->
-<!--
-    <fieldset id="pal_c4g_support" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_support')">support</legend>
-        <div>
-            <ul>
-                <li>
-                    <a href="https://con4gis.org/downloads.html#handbuch" target="_blank"><span>
-                            <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']?>
-                        </span></a>
-                </li>
-                <li>
-                    <a href="https://con4gis.org" target="_blank"><span>
-                            <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_support']?>
-                        </span></a>
-                </li>
-                <li>
-                    <a href="https://kuestenschmiede.de" target="_blank"><span>
-                            <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['coastforge_support']?>
-                        </span></a>
-                </li>
-            </ul>
-        </div>
-    </fieldset>
--->
+    <div id="pal_c4g_links">
+        <ul>
+            <li>
+                <a href="https://con4gis.org" target="_blank"><span>
+                    <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']?>
+                </span></a>
+            </li>
+            <li>
+                <a href="https://docs.con4gis.org" target="_blank"><span>
+                    <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']?>
+                </span></a>
+            </li>
+            <li>
+                <a href="http://github.com/Kuestenschmiede/" target="_blank"><span>
+                    <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['github_coastforge']?>
+                </span></a>
+            </li>
+            <li>
+                <a href="contao?do=c4g_log">
+                    <span>
+                        Interner Serverlog
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 <div id="c4g_footer" class="tl_box c4g_info">
-    <!-- <img src="bundles/con4giscore/images/con4gis_info_head.png" width="741" height="100" alt="con4gis_info_head"> -->
     <span><?php
         echo sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FOOTER'],
                  '<a href="https://kuestenschmiede.de" target="_blank">K&uuml;stenschmiede</a>'
