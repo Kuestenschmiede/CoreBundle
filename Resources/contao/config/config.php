@@ -51,6 +51,9 @@ array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE
     )
 ));
 
+$GLOBALS['BE_MOD']['con4gis'] =
+    \con4gis\CoreBundle\Resources\contao\classes\C4GUtils::sortBackendModules($GLOBALS['BE_MOD']['con4gis']);
+
 if(TL_MODE == "FE") {
     // TODO replace with symfony csrf token
     $rq = \Contao\RequestToken::get();
