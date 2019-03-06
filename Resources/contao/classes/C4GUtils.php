@@ -384,9 +384,9 @@ class C4GUtils
         System::loadLanguageFile('modules');
         $arrKeys = array_keys($arrModules);
         // extract help and settings module
-        $arrInfoModule = array_splice($arrModules, array_search('c4g_core', $arrKeys), 1);
+        $arrInfoModule = array_splice($arrModules, array_search('c4g_core', $arrKeys), 1)['c4g_core'];
         array_splice($arrKeys, array_search('c4g_core', $arrKeys), 1);
-        $arrSettingsModule = array_splice($arrModules, array_search('c4g_settings', $arrKeys), 1);
+        $arrSettingsModule = array_splice($arrModules, array_search('c4g_settings', $arrKeys), 1)['c4g_settings'];
         array_splice($arrKeys, array_search('c4g_settings', $arrKeys), 1);
         $langArray = $GLOBALS['TL_LANG']['MOD'];
         usort($arrKeys, function($a, $b) use ($langArray) {
