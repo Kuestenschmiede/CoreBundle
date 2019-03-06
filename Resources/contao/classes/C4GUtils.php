@@ -14,6 +14,8 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
+use Contao\System;
+
 /**
  * Class C4GUtils
  * @package con4gis\CoreBundle\Resources\contao\classes
@@ -375,5 +377,29 @@ class C4GUtils
      */
     public static function checkBackendUserLogin() {
         return self::isBackendUserLoggedIn();
+    }
+    
+    public static function sortBackendModules($arrModules)
+    {
+        System::loadLanguageFile('modules');
+        $arrKeys = array_keys($arrModules);
+        // extract help and settings module
+        $arrInfoModule = array_splice($arrModules, array_search('c4g_core', $arrKeys), 1);
+        array_splice($arrKeys, array_search('c4g_core', $arrKeys), 1);
+        $arrSettingsModule = array_splice($arrModules, array_search('c4g_settings', $arrKeys), 1);
+        array_splice($arrKeys, array_search('c4g_settings', $arrKeys), 1);
+        $langArray = $GLOBALS['TL_LANG']['MOD'];
+        usort($arrKeys, function($a, $b) use ($langArray) {
+            // access offset 0 because the lang ref is a two element array
+            return strnatcmp($langArray[$a][0], $langArray[$b][0]);
+        });
+        $arrResult = [];
+        $arrResult['c4g_core'] = $arrInfoModule;
+        $arrResult['c4g_settings'] = $arrSettingsModule;
+        foreach ($arrKeys as $value) {
+            // check because of previous splice
+            $arrResult[$value] = $arrModules[$value];
+        }
+        return $arrResult;
     }
 }
