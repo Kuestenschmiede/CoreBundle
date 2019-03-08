@@ -845,6 +845,14 @@ this.c4g.projects = this.c4g.projects || {};
                   return false;
                 }
 
+                if (ckeditor5instances) {
+                  let i = Object.keys(ckeditor5instances).length;
+                  while (i > 0) {
+                    i -= 1;
+                    ckeditor5instances[i].updateSourceElement();
+                  }
+                }
+
                 if ($(this).hasClass('c4gGuiSend')) {
                   var formdata = {};
                   $(scope.contentDiv).find('.formdata').each(function (index, element) {
@@ -982,9 +990,19 @@ this.c4g.projects = this.c4g.projects || {};
                     }
                   }
 
+                  if (ckeditor5instances) {
+                    console.log(ckeditor5instances);
+                    for (var key in ckeditor5instances) {
+                      if (ckeditor5instances.hasOwnProperty(key)) {
+                        ckeditor5instances[key].updateSourceElement();
+                      }
+                    }
+                  }
+
                   var formdata = {};
                   $('#c4gGuiDialog' + dialogid).find('.formdata').each(function (index, element) {
                     $(element).trigger('c4g_before_save');
+                    //console.log(element);
                     if ($(element).attr('type') === 'checkbox') {
                       // formdata[$(element).attr('name')] = ($(element).attr('checked') == 'checked');
                       formdata[$(element).attr('name')] = $(element).is(':checked');
