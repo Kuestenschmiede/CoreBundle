@@ -845,7 +845,7 @@ this.c4g.projects = this.c4g.projects || {};
                   return false;
                 }
 
-                if (ckeditor5instances) {
+                if ((typeof ckeditor5instances !== 'undefined') && (ckeditor5instances)) {
                   let i = Object.keys(ckeditor5instances).length;
                   while (i > 0) {
                     i -= 1;
