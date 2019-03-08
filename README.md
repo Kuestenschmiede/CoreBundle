@@ -1,16 +1,16 @@
-con4gis-Core
-============
-The basic brick of the Contao GIS-kit **con4gis**.
+# con4gis-CoreBundle
+## Overview
+The core brick of the Contao GIS-kit **con4gis**. It collects several resources and classes that are used by other con4gis bundles.
 
-**Git Repository:** CoreBundle  
-**Composer Vendor/Package:** [con4gis/core](https://packagist.org/packages/con4gis/core)  
-**Website:** [con4gis.org](https://con4gis.org)
+## Installation
+Via composer:
+```
+composer require con4gis/core
+```
+Alternatively, you can use the Contao Manager to install the con4gis-CoreBundle.
 
-**Requires:**
-- PHP (***>= 7.0***) 
-- [Contao](https://github.com/contao/core) (***>= 4.4***)   
-For Contao 3 you can use [con4igs_core](https://github.com/Kuestenschmiede/con4gis_core/releases) Extension.
+## Requirements
+- [Contao](https://github.com/contao/core-bundle) (***4.4.x LTS*** or latest stable release)
 
-**Extendable with all other con4gis bundles**  
-con4gis is not a connectable application. It's a collection of content 
-elements for your website. So you can build your own individual and limitless web applications.
+## Documentation
+Visit [docs.con4gis.org](https://docs.con4gis.org) for a user documentation. You can also contact us via the support forum there.
