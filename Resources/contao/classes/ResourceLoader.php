@@ -249,7 +249,6 @@ class ResourceLoader
                 self::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
             }
         }
-        // TODO test, später richtig einbinden
         self::loadJavaScriptRessource('ajax-request', 'bundles/con4giscore/js/C4GAjaxRequest.js', true);
         if ($resources['magnific-popup']) {
             // load magnific-popup
