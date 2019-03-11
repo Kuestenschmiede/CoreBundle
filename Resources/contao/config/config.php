@@ -27,7 +27,7 @@ array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE
 array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 2, array('con4gis_bricks' => array()));
 
 if(TL_MODE == "BE") {
-    $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/con4gis.css';
+    $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/css/con4gis.css';
 }
 $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
 
