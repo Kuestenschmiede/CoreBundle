@@ -33,16 +33,16 @@ class C4GJQueryGUI
 	public static function initializeLibraries ( $addCore=true, $addJQuery=true, $addJQueryUI=true, $useTree=true, $useTable=true, $useHistory=true, $useTooltip=true,
 											   		$useMaps=false, $useGoogleMaps=false, $useMapsEditor=false, $useWswgEditor=false, $useScrollpane=false, $usePopups=false )
 	{
-		if ($addJQuery)
+        if ($addJQuery)
 		{
 			if (is_array( $GLOBALS['TL_JAVASCRIPT'] ) &&
-				(array_search( 'assets/jquery/js/jquery.min.js|static', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
+				(array_search( 'assets/jquery/js/jquery.min.js', $GLOBALS['TL_JAVASCRIPT'] ) !== false))
 			{
 				// jQuery is already loaded by Contao, don't load again!
 			}
 			else {
                 // Include JQuery JS
-                ResourceLoader::loadJavaScriptResource('assets/jquery/js/jquery.min.js|static', $location = ResourceLoader::JAVASCRIPT, $key = 'c4g_jquery');
+                ResourceLoader::loadJavaScriptResource('assets/jquery/js/jquery.min.js', $location = ResourceLoader::JAVASCRIPT, $key = 'c4g_jquery');
                 // just until the old plugins are replaced
                 // Set JQuery to noConflict mode immediately after load of jQuery
                 ResourceLoader::loadJavaScriptResource('bundles/con4giscore/js/c4gjQueryNoConflict.js', $location = ResourceLoader::HEAD, $key = 'c4g_jquery_noconflict');
