@@ -156,12 +156,12 @@ class C4GJQueryGUI
             // Load magnific-popup.js for projects
             if ($GLOBALS['con4gis']['projects']['installed']) {
 
-                ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|static', $location = ResourceLoader::JAVASCRIPT, $key = 'magnific-popup');
+                ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js', $location = ResourceLoader::JAVASCRIPT, $key = 'magnific-popup');
                 $GLOBALS['TL_CSS']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css';
             }
 
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|static', $location = ResourceLoader::JAVASCRIPT, $key = 'clipboard');
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jQuery/plugins/jquery-simple-datetimepicker/1.13.0/jquery.simple-dtpicker.js|static', $location = ResourceLoader::JAVASCRIPT, $key = 'datetimepicker');
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js', $location = ResourceLoader::JAVASCRIPT, $key = 'clipboard');
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jQuery/plugins/jquery-simple-datetimepicker/1.13.0/jquery.simple-dtpicker.js', $location = ResourceLoader::JAVASCRIPT, $key = 'datetimepicker');
 
 		}
 
