@@ -135,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'exclude'   => true,
             'default'   => null,
             'inputType' => 'fileTree',
-            'eval'      => array('fieldType' => 'radio', 'tl_class' => 'clr'),
+            'eval'      => array('fieldType' => 'radio', 'tl_class' => 'clr', 'mandatory' => false),
             'sql'       => "blob NULL"
         ),
         'uploadAllowedDocumentTypes' => array
@@ -152,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'exclude'   => true,
             'default'   => null,
             'inputType' => 'fileTree',
-            'eval'      => array('fieldType' => 'radio', 'tl_class' => 'clr'),
+            'eval'      => array('fieldType' => 'radio', 'tl_class' => 'clr', 'mandatory' => false),
             'sql'       => "blob NULL"
         ),
         'uploadAllowedGenericTypes' => array
