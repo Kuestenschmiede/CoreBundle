@@ -43,6 +43,13 @@ class con4gisInsertTags extends \System
         }
     }
 
+    private function checkVersionTag($versionTag) {
+        if (trim($versionTag)[0] !== 'v') {
+            return 'v'.$versionTag;
+        } else {
+            return $versionTag;
+        }
+    }
 
     /**
      * @param $strTag
@@ -84,79 +91,79 @@ class con4gisInsertTags extends \System
                         }
                     case 'core':
                         if ($packages['con4gis/core']) {
-                            return $packages['con4gis/core'];
+                            return $this->checkVersionTag($packages['con4gis/core']);
                         } else {
                             return 'not installed';
                         }
                     case 'maps':
                         if ($packages['con4gis/maps']) {
-                            return $packages['con4gis/maps'];
+                            return $this->checkVersionTag($packages['con4gis/maps']);
                         } else {
                             return 'not installed';
                         }
                     case 'forum':
                         if ($packages['con4gis/forum']) {
-                            return $packages['con4gis/forum'];
+                            return $this->checkVersionTag($packages['con4gis/forum']);
                         } else {
                             return 'not installed';
                         }
                     case 'import':
                         if ($packages['con4gis/import']) {
-                            return $packages['con4gis/import'];
+                            return $this->checkVersionTag($packages['con4gis/import']);
                         } else {
                             return 'not installed';
                         }
                     case 'export':
                         if ($packages['con4gis/export']) {
-                            return $packages['con4gis/export'];
+                            return $this->checkVersionTag($packages['con4gis/export']);
                         } else {
                             return 'not installed';
                         }
                     case 'documents':
                         if ($packages['con4gis/documents']) {
-                            return $packages['con4gis/documents'];
+                            return $this->checkVersionTag($packages['con4gis/documents']);
                         } else {
                             return 'not installed';
                         }
                     case 'queue':
                         if ($packages['con4gis/queue']) {
-                            return $packages['con4gis/queue'];
+                            return $this->checkVersionTag($packages['con4gis/queue']);
                         } else {
                             return 'not installed';
                         }
                     case 'groups':
                         if ($packages['con4gis/groups']) {
-                            return $packages['con4gis/groups'];
+                            return $this->checkVersionTag($packages['con4gis/groups']);
                         } else {
                             return 'not installed';
                         }
                     case 'projects':
                         if ($packages['con4gis/projects']) {
-                            return $packages['con4gis/projects'];
+                            return $this->checkVersionTag($packages['con4gis/projects']);
                         } else {
                             return 'not installed';
                         }
                     case 'routing':
                         if ($packages['con4gis/routing']) {
-                            return $packages['con4gis/routing'];
+                            return $this->checkVersionTag($packages['con4gis/routing']);
                         } else {
                             return 'not installed';
                         }
                     case 'editor':
                         if ($packages['con4gis/editor']) {
-                            return $packages['con4gis/editor'];
+                            return $this->checkVersionTag($packages['con4gis/editor']);
                         } else {
                             return 'not installed';
                         }
                     case 'tracking':
                         if ($packages['con4gis/tracking']) {
-                            return $packages['con4gis/tracking'];
+                            return $this->checkVersionTag($packages['con4gis/tracking']);
                         } else {
                             return 'not installed';
                         }
                     case 'tracking-android':
                         if ($packages['con4gis/tracking-android']) {
-                            return $packages['con4gis/tracking-android'];
+                            return $this->checkVersionTag($packages['con4gis/tracking-android']);
                         } else {
                             return 'not installed';
                         }

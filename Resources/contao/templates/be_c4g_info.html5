@@ -222,7 +222,7 @@
             <?php if ($this->packages['con4gis/maps'] || $GLOBALS['con4gis']['maps']['installed']): ?>
                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                     target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/con4gis_maps3',
+                    href        => 'https://www.github.com/kuestenschmiede/MapsBundle',
                     c4gImg      => 'github',
                     label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
                 )); ?>
