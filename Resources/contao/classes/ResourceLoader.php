@@ -14,6 +14,8 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
+use Contao\LayoutModel;
+
 /**
  * Class ResourceLoader
  * @package c4g\Core
@@ -241,12 +243,19 @@ class ResourceLoader
         
         if ($resources['jquery']) {
             // load jQuery
+
+            //workaround hasJQuery param with contao >= 4.5
+            if ($objPage->layout) {
+                $objLayout = LayoutModel::findByPk($objPage->layout);
+                $objPage->hasJQuery = $objLayout->addJQuery;
+            }
+
             if ($objPage->hasJQuery)
             {
                 // jQuery is already loaded by Contao, don't load again!
             }
             else {
-                self::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
+                self::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js', true);
             }
         }
         self::loadJavaScriptRessource('ajax-request', 'bundles/con4giscore/js/C4GAjaxRequest.js', true);

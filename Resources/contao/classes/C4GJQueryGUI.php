@@ -36,6 +36,13 @@ class C4GJQueryGUI
         if ($addJQuery)
 		{
 		    global $objPage;
+
+		    //workaround hasJQuery param with contao >= 4.5
+		    if ($objPage->layout) {
+                $objLayout = LayoutModel::findByPk($objPage->layout);
+                $objPage->hasJQuery = $objLayout->addJQuery;
+            }
+
 			if ($objPage->hasJQuery) {
 				// jQuery is already loaded by Contao, don't load again!
 			}

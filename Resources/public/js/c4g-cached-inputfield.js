@@ -15,7 +15,7 @@ export class CachedInputfield {
    */
   constructor(inputSelector, defaultSaving, cacheKey) {
     this.cacheKey = cacheKey;
-    this.inputField = $(inputSelector);
+    this.inputField = jQuery(inputSelector);
     // this.setHoverStyle(this.highlightColor);
     if (!this.inputField) {
       console.warn("The given CSS selector matches no DOM element...");
@@ -28,13 +28,13 @@ export class CachedInputfield {
     });
     const scope = this;
     if (defaultSaving) {
-      $(this.inputField).on('change', function() {
-        scope.storeValue($(this).val());
+      jQuery(this.inputField).on('change', function() {
+        scope.storeValue(jQuery(this).val());
       });
     }
-    $(this.inputField).on('input', function() {
+    jQuery(this.inputField).on('input', function() {
       let options = scope.loadValues();
-      $(this).autocomplete("option", "source", options);
+      jQuery(this).autocomplete("option", "source", options);
     });
   }
 
