@@ -2,6 +2,7 @@
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
 use con4gis\CoreBundle\Resources\contao\classes\ResourceLoader;
+use Contao\LayoutModel;
 
 if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
