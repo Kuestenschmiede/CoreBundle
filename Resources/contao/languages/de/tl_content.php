@@ -15,7 +15,7 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['fields']['action_handler']           = array('Action handler', 'Der Handler der aufgerufen wird, wenn ein Mitglied mit einem gültigen Schlüssel die Seite aufruft.');
+$GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['fields']['action_handler']           = array('Action handler', 'Der Handler, der aufgerufen wird, wenn ein Mitglied mit einem gültigen Schlüssel die Seite aufruft.');
 $GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['fields']['confirmation']             = array('Aktionsbestätigung aktivieren', 'Aktiviert eine Bestätigungsseite, auf der der Benutzer die Aktion vor der Ausführung bestätigen kann.');
 $GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['fields']['confirmation_text']        = array('Bestätigungs-Info', 'Dieser Text wird auf der Bestätigungsseite angezeigt und sollte Informationen über die auszuführende Aktion beinhalten.');
 $GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['fields']['confirmation_button']      = array('Benutzerdefinierte Bestätigungs-Button-Beschriftung', 'Dieser Text erscheint auf dem Bestätigungs-Button. (Leer = Standard-Beschriftung)');
