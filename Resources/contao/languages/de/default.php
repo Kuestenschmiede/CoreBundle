@@ -65,8 +65,8 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNC']['ERROR_GROUPLIMITREACHED'] = 'Das Mitglied mit der ID %s konnte der Gruppen mit der ID %s nicht zugeordnet werden, da dies das Gruppenlimit überschreiten würde.';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']['HEADLINE'] = 'Entferne bbCode aus con4gis 3 Beiträgen.';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']['INTRO']    = 'Dieses Tool entfernt bbCode aus con4gis 4 Beiträgen und wandeln diesen in die neue Darstellung um.';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']['WARNING']  = 'Bei diesem Vorgang werden die Beiträge neu formatiert gespeichert. D.h. alte Beiträge werden umformatiert und dem entsprechend verändert.';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']['INTRO']    = 'Dieses Tool entfernt bbCode aus con4gis 4 Beiträgen und wandelt diesen in die neue Darstellung um.';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']['WARNING']  = 'Bei diesem Vorgang werden die Beiträge neu formatiert gespeichert. D.h. alte Beiträge werden umformatiert und dementsprechend verändert.';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']['SUCCESS']  = 'Der bbCode wurde erfolgreich entfernt.';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODE']['FAILED']   = 'Der bbCode konnte nicht erfolgreich entfernt werden.';
 
