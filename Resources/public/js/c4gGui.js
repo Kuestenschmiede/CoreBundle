@@ -991,7 +991,7 @@ this.c4g.projects = this.c4g.projects || {};
                   }
 
                   if ((typeof ckeditor5instances !== 'undefined') && (ckeditor5instances)) {
-                    console.log(ckeditor5instances);
+                    //console.log(ckeditor5instances);
                     for (var key in ckeditor5instances) {
                       if (ckeditor5instances.hasOwnProperty(key)) {
                         ckeditor5instances[key].updateSourceElement();
