@@ -65,30 +65,6 @@ class con4gisInsertTags extends \System
                 $fieldName = $arrSplit[1];
                 switch($fieldName) {
                     case 'version': return $GLOBALS['con4gis']['version'];
-                    case 'ol':
-                        if ($GLOBALS['con4gis']['maps']['ol-version']) {
-                            return $GLOBALS['con4gis']['maps']['ol-version'];
-                        } else {
-                            return 'not installed';
-                        }
-                    case 'olcesium':
-                        if ($GLOBALS['con4gis']['maps']['ol-cesium-version']) {
-                            return $GLOBALS['con4gis']['maps']['ol-cesium-version'];
-                        } else {
-                            return 'not installed';
-                        }
-                    case 'olms':
-                        if ($GLOBALS['con4gis']['maps']['olms-version']) {
-                            return $GLOBALS['con4gis']['maps']['olms-version'];
-                        } else {
-                            return 'not installed';
-                        }
-                    case 'olext':
-                        if ($GLOBALS['con4gis']['maps']['ol-ext']) {
-                            return $GLOBALS['con4gis']['maps']['ol-ext'];
-                        } else {
-                            return 'not installed';
-                        }
                     case 'core':
                         if ($packages['con4gis/core']) {
                             return $this->checkVersionTag($packages['con4gis/core']);
