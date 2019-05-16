@@ -298,6 +298,34 @@
         </div>
     </fieldset>
 
+    <!-- con4gis-PWA -->
+        <fieldset id="pal_c4g_pwa" class="tl_box collapsed">
+            <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_pwa')">
+                con4gis-PWA
+                <?php if ($this->packages['con4gis/pwa']) {
+                               echo ' [' . $this->packages['con4gis/pwa'] . ']';
+                           } else if ($GLOBALS['con4gis']['pwa']['installed']) {
+                               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
+                }?>
+            </legend>
+            <div>
+                <?php if ($this->packages['con4gis/pwa'] || $GLOBALS['con4gis']['pwa']['installed']): ?>
+                    <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                        target      => '_blank',
+                        href        => 'https://www.github.com/kuestenschmiede/PwaBundle',
+                        c4gImg      => 'github',
+                        label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+                    )); ?>
+                <?php else: ?>
+                     <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                                         c4gImg      => 'install',
+                                         href        => 'https://packagist.org/packages/con4gis/pwa',
+                                         label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'PwaBundle')
+                     )); ?>
+                <?php endif; ?>
+            </div>
+        </fieldset>
+
     <!-- con4gis-Queue -->
     <fieldset id="pal_c4g_queue" class="tl_box collapsed">
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_queue')">

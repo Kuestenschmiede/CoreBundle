@@ -131,6 +131,12 @@ class con4gisInsertTags extends \System
                         } else {
                             return 'not installed';
                         }
+                    case 'pwa':
+                        if ($packages['con4gis/pwa']) {
+                            return $this->checkVersionTag($packages['con4gis/pwa']);
+                        } else {
+                            return 'not installed';
+                        }
                     case 'groups':
                         if ($packages['con4gis/groups']) {
                             return $this->checkVersionTag($packages['con4gis/groups']);
