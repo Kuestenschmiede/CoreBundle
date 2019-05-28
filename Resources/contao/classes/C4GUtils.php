@@ -416,7 +416,7 @@ class C4GUtils
 
             $hour = date("YmdH",time());
 
-            $key = \Session::getInstance()->get('ciokey_'.$service);
+            $key = \Session::getInstance()->get('ciokey_'.$service . '_'.$params);
             if ($key) {
                 $ciokey = explode('_', $key);
                 if ($ciokey[0] == $hour) {
@@ -448,7 +448,7 @@ class C4GUtils
                 }
 
                 if ($response && $response->key && (strlen($response->key) == 64)) {
-                    \Session::getInstance()->set('ciokey_'.$service, $hour.'_'.$response->key);
+                    \Session::getInstance()->set('ciokey_'.$service . '_' . $params, $hour.'_'.$response->key);
                     return $response->key;
                 }
             }
