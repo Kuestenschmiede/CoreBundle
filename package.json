@@ -29,6 +29,6 @@
     "babel-preset-env": "^1.7.0"
   },
   "dependencies": {
-    "sweetalert": "^2.1.2"
+    "sweetalert2": "^8.11.7"
   }
 }
