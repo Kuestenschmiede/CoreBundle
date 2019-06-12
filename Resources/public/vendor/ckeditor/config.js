@@ -43,8 +43,12 @@ CKEDITOR.editorConfig = function( config ) {
 	config.removePlugins = 'bbcode';
 	config.image_previewText = ' ';
 
-    config.entermode = CKEDITOR.ENTER_BR;
-    config.shiftEnterMode = CKEDITOR.ENTER_P;
-    config.autoParagraph = false;
+	//config.entermode = CKEDITOR.ENTER_BR;
+  //config.shiftEnterMode = CKEDITOR.ENTER_P;
+
+  config.entermode = CKEDITOR.ENTER_P;
+  config.shiftEnterMode = CKEDITOR.ENTER_BR;
+
+  config.autoParagraph = false;
 
 };
