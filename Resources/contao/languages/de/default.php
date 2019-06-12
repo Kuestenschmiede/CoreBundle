@@ -24,6 +24,7 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INTRO'] = '<b>con4gis4</b> ist bereits im Feuer. Ende 2017 präsentieren wir Euch die neue Version. Nur für Contao 4 und mit Openlayers 4 im Bauch. Seid gespannt auf den besten GIS-Baukasten aller Zeiten!';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FOOTER'] = 'Ein Projekt der %s.';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] = 'Nicht über Composer installiert!';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'] = '<span title="Installierte Version">%s</span> / <span title="Neueste Version">%s</span>';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['HEADLINE']      = 'Migration (cfs_%1$s -> con4gis_%1$s)';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['INTRO']         = 'Diese Migration kopiert die Daten von "cfs_%1$s" nach "con4gis_%1$s" und konfiguriert Contao anschließend "con4gis_%1$s" zu verwenden.';

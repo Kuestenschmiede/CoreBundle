@@ -11,7 +11,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_core')">
             con4gis-Core
             <?php if ($this->packages['con4gis/core']) {
-                echo ' [' . $this->packages['con4gis/core'] . ']';
+                echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/core'],$this->versions['con4gis/core']) . ']';
             }else {
                 echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
                 }
@@ -32,7 +32,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_documents')">
             con4gis-Documents
             <?php if ($this->packages['con4gis/documents']) {
-                           echo ' [' . $this->packages['con4gis/documents'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/documents'],$this->versions['con4gis/documents']) . ']';
                        } else if ($GLOBALS['con4gis']['documents']['installed']) {
                            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
@@ -59,7 +59,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_editor')">
         con4gis-Editor
            <?php if ($this->packages['con4gis/editor']) {
-               echo ' [' . $this->packages['con4gis/editor'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/editor'],$this->versions['con4gis/editor']) . ']';
            } else if ($GLOBALS['con4gis']['editor']['installed']) {
                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
            }?>
@@ -87,7 +87,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_export')">
             con4gis-Export
             <?php if ($this->packages['con4gis/export']) {
-                           echo ' [' . $this->packages['con4gis/export'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/export'],$this->versions['con4gis/export']) . ']';
                        } else if ($GLOBALS['con4gis']['export']['installed']) {
                            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
@@ -116,7 +116,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_forum')">
             con4gis-Forum
             <?php if ($this->packages['con4gis/forum']) {
-                echo ' [' . $this->packages['con4gis/forum'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/forum'],$this->versions['con4gis/forum']) . ']';
             } else if ($GLOBALS['con4gis']['forum']['installed']) {
                 echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
@@ -152,7 +152,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_groups')">
             con4gis-Groups
             <?php if ($this->packages['con4gis/groups']) {
-                echo ' [' . $this->packages['con4gis/groups'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/groups'],$this->versions['con4gis/groups']) . ']';
             } else if ($GLOBALS['con4gis']['groups']['installed']) {
                 echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
@@ -185,7 +185,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_import')">
             con4gis-Import
             <?php if ($this->packages['con4gis/import']) {
-                           echo ' [' . $this->packages['con4gis/import'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/import'],$this->versions['con4gis/import']) . ']';
                        } else if ($GLOBALS['con4gis']['import']['installed']) {
                            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
@@ -213,7 +213,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_maps')">
         con4gis-Maps
            <?php if ($this->packages['con4gis/maps']) {
-               echo ' [' . $this->packages['con4gis/maps'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/maps'],$this->versions['con4gis/maps']) . ']';
            } else if ($GLOBALS['con4gis']['maps']['installed']) {
                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
            }?>
@@ -247,7 +247,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_routing')">
         con4gis-Routing
            <?php if ($this->packages['con4gis/routing']) {
-               echo ' [' . $this->packages['con4gis/routing'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/routing'],$this->versions['con4gis/routing']) . ']';
            } else if ($GLOBALS['con4gis']['routing']['installed']) {
                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
            }?>
@@ -275,7 +275,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_projects')">
             con4gis-Projects
             <?php if ($this->packages['con4gis/projects']) {
-                           echo ' [' . $this->packages['con4gis/projects'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/projects'],$this->versions['con4gis/projects']) . ']';
                        } else if ($GLOBALS['con4gis']['projects']['installed']) {
                            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
@@ -303,7 +303,7 @@
             <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_pwa')">
                 con4gis-PWA
                 <?php if ($this->packages['con4gis/pwa']) {
-                               echo ' [' . $this->packages['con4gis/pwa'] . ']';
+                echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/pwa'],$this->versions['con4gis/pwa']) . ']';
                            } else if ($GLOBALS['con4gis']['pwa']['installed']) {
                                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
                 }?>
@@ -331,7 +331,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_queue')">
             con4gis-Queue
             <?php if ($this->packages['con4gis/queue']) {
-                           echo ' [' . $this->packages['con4gis/queue'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/queue'],$this->versions['con4gis/queue']) . ']';
                        } else if ($GLOBALS['con4gis']['queue']['installed']) {
                            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
@@ -359,7 +359,7 @@
         <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_tracking')">
             con4gis-Tracking
             <?php if ($this->packages['con4gis/tracking']) {
-                echo ' [' . $this->packages['con4gis/tracking'] . ']';
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/tracking'],$this->versions['con4gis/tracking']) . ']';
             } else if ($GLOBALS['con4gis']['tracking']['installed']) {
                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
