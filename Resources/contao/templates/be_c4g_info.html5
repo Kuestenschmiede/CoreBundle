@@ -388,47 +388,37 @@
         </div>
     </fieldset>
 
-
-    <fieldset id="pal_c4g_tracking_android" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_tracking_android')">
-            con4gis-Tracking-Android
-            <?php if ($this->packages['con4gis/tracking-android']) {
-                echo ' [' . $this->packages['con4gis/tracking-android'] . ']';
-            } else if ($GLOBALS['con4gis']['trackingAndroid']['installed']) {
-               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
+    <fieldset id="pal_c4g_routing_expenses" class="tl_box collapsed">
+        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_routing_expenses')">
+            con4gis-Routing-Expenses
+            <?php if ($this->packages['con4gis/routing-expense']) {
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/routing-expense'],$this->versions['con4gis/routing-expense']) . ']';
+            } else if ($GLOBALS['con4gis']['routingExpenses']['installed']) {
+            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
         </legend>
         <div>
-            <?php if ($GLOBALS['con4gis']['trackingAndroid']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+            <?php if ($this->packages['con4gis/routing-expense']): ?>
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                         target      => '_blank',
-                href        => 'https://www.github.com/kuestenschmiede/TrackingAndroidBundle',
-                c4gImg      => 'github',
-                label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                        target      => '_blank',
-                href        => 'https://community.contao.org/de/showthread.php?55911-con4gis_tracking-Offizieller-Support-Thread',
-                c4gImg      => 'contao-board',
-                label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
-                )); ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                        target      => '_blank',
-                addClass    => 'floatR',
-                href        => 'https://play.google.com/store/apps/details?id=org.con4gis.app4gis_tracking',
-                c4gImg      => 'playstore',
-                label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['PLAYSTORE']
-                )); ?>
-            <?php else: ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+            href        => 'https://www.github.com/kuestenschmiede/RoutingExpensesBundle',
+            c4gImg      => 'github',
+            label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+            )); ?>
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                                      c4gImg      => 'install',
-                                     href        => 'https://packagist.org/packages/con4gis/tracking-android',
-                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'TrackingAndroidBundle')
-                 )); ?>
+            href        => 'https://packagist.org/packages/con4gis/routing-expense',
+            label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'RoutingExpensesBundle')
+            )); ?>
+            <?php else: ?>
+            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                                         c4gImg      => 'install',
+            href        => 'https://packagist.org/packages/con4gis/routing-expense',
+            label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'RoutingExpensesBundle')
+            )); ?>
             <?php endif; ?>
         </div>
     </fieldset>
-
 
     <div id="pal_c4g_links">
         <ul>
