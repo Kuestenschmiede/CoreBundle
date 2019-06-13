@@ -22,7 +22,7 @@
         "issues": "https://github.com/Kuestenschmiede/CoreBundle/issues"
     },
     "require": {
-        "php": "^7.0",
+        "php": "^7.1",
         "contao/core-bundle": "^4.4",
         "menatwork/contao-multicolumnwizard": "^3.3",
         "doctrine/orm": "^2.5.14",
