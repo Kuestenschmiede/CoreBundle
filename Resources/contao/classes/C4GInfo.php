@@ -67,6 +67,7 @@ class C4GInfo extends \BackendModule
             'con4gis/pwa',
             'con4gis/queue',
             'con4gis/tracking',
+            'con4gis/travel-costs'
         ];
         // only check installed packages
         $packages = array_intersect(array_keys($installedPackages), $packages);
