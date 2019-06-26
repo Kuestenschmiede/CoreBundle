@@ -415,14 +415,13 @@ class C4GUtils
         if ($settings && $settings->con4gisIoUrl && $settings->con4gisIoKey) {
 
             $hour = date("YmdH",time());
-
-            $key = \Session::getInstance()->get('ciokey_'.$service . '_'.$params);
-            if ($key) {
-                $ciokey = explode('_', $key);
-                if ($ciokey[0] == $hour) {
-                    return $ciokey[1];
-                }
-            }
+//            $key = \Session::getInstance()->get('ciokey_'.$service . '_'.$params);
+//            if ($key) {
+//                $ciokey = explode('_', $key);
+//                if ($ciokey[0] == $hour) {
+//                    return $ciokey[1];
+//                }
+//            }
 
             $keySearchUrl = rtrim($settings->con4gisIoUrl, "/") . "/";
             $keySearchUrl = $keySearchUrl . "getKey.php";
@@ -449,11 +448,10 @@ class C4GUtils
 
                 if ($response && $response->key && (strlen($response->key) == 64)) {
                     \Session::getInstance()->set('ciokey_'.$service . '_' . $params, $hour.'_'.$response->key);
-                    return $response->key;
+                    return $response;
                 }
             }
         }
-
         return false;
     }
 }
