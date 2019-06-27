@@ -410,7 +410,7 @@ class C4GUtils
      * @param $serviceId
      * @return bool
      */
-    public static function getKey($settings, $service, $params="")
+    public static function getKey($settings, $service, $params="", $getKeyOnly = true)
     {
         if ($settings && $settings->con4gisIoUrl && $settings->con4gisIoKey) {
 
@@ -448,7 +448,11 @@ class C4GUtils
 
                 if ($response && $response->key && (strlen($response->key) == 64)) {
                     \Session::getInstance()->set('ciokey_'.$service . '_' . $params, $hour.'_'.$response->key);
-                    return $response;
+                    if ($getKeyOnly) {
+                        return $response->key;
+                    } else {
+                        return $response;
+                    }
                 }
             }
         }
