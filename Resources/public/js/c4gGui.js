@@ -173,7 +173,7 @@ this.c4g.projects = this.c4g.projects || {};
             scope.fnHandleAjaxResponse( data, scope.internalId );
           }).fail(function(data) {
             scope.fnInitContentDiv();
-            jQuery(this.contentDiv).text('Error1: '+errorThrown);
+            jQuery(this.contentDiv).text('Error1: could not update history');
           });
         }
         if (history != null) {
