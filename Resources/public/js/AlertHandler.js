@@ -10,17 +10,37 @@
 
 import Swal from 'sweetalert2';
 
+/**
+ * The "cssClass" parameter in the functions can either be a string or an object. If it's a string, it will be applied
+ * as class for the popup. If an object is passed, the classes can be set more precise. The following properties are
+ * possible in the object:
+ * cssClass: {
+ *   container: 'container-class',
+ *   popup: 'popup-class',
+ *   header: 'header-class',
+ *   title: 'title-class',
+ *   closeButton: 'close-button-class',
+ *   icon: 'icon-class',
+ *   image: 'image-class',
+ *   content: 'content-class',
+ *   input: 'input-class',
+ *   actions: 'actions-class',
+ *   confirmButton: 'confirm-button-class',
+ *   cancelButton: 'cancel-button-class',
+ *   footer: 'footer-class'
+ * }
+ */
 export class AlertHandler {
 
-  showErrorDialog(title, content) {
+  showErrorDialog(title, content, cssClass) {
     Swal.fire(title, content, "error");
   }
 
-  showInfoDialog(title, content) {
+  showInfoDialog(title, content, cssClass) {
     Swal.fire(title, content, "info");
   }
 
-  showConfirmDialog(title, text, confirmCallback, cancelCallback, confirmText, cancelText) {
+  showConfirmDialog(title, text, confirmCallback, cancelCallback, confirmText, cancelText, cssClass) {
     Swal.fire({
       title: title,
       text: text,
@@ -28,7 +48,8 @@ export class AlertHandler {
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
-      dangerMode: true
+      dangerMode: true,
+      customClass: cssClass ? cssClass : ''
     }).then((willDelete) => {
       if (willDelete.value) {
         confirmCallback();
@@ -38,7 +59,7 @@ export class AlertHandler {
     });
   }
 
-  async showSelectDialog(title, objOptions, confirmText, cancelText) {
+  async showSelectDialog(title, objOptions, confirmText, cancelText, cssClass) {
     const {value: selectedValue} = await Swal.fire({
       title: title,
       input: 'select',
@@ -46,7 +67,8 @@ export class AlertHandler {
       inputPlaceholder: 'Select a fruit',
       showCancelButton: true,
       confirmButtonText: confirmText,
-      cancelButtonText: cancelText
+      cancelButtonText: cancelText,
+      customClass: cssClass ? cssClass : ''
     });
     return selectedValue;
   }
