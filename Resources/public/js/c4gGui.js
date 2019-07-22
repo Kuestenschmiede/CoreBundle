@@ -1311,7 +1311,7 @@ this.c4g.projects = this.c4g.projects || {};
         content.mapdata.addIdToDiv = false;
         window.mapData = window.mapData || {};
         window.mapData[content.mapdata['id']] = content.mapdata;
-        initMaps(window.mapData);
+        window.initMap(window.mapData[content.mapdata['id']]);
       }
 
       if ((typeof(content.cronexec) !== 'undefined') && (content.cronexec != null)) {
