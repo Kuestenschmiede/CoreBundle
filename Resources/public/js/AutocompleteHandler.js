@@ -15,6 +15,9 @@ export class AutocompleteHandler {
         this.objSettings = objSettings;
         this.containerAddresses = containerAddresses;
     }
+    setCenter (center) {
+        this.objSettings.center = center;
+    }
     handleInput () {
         const scope = this;
         this.inputField.autocomplete({
@@ -66,8 +69,14 @@ export class AutocompleteHandler {
     autocompleteAddress(input, cssClass) {
         const scope = this;
         let center;
-        if (scope.objSettings.center) {
-            center = scope.objSettings.center[0] + "," + scope.objSettings.center[1];
+        if (scope.objSettings.center) { 
+            if (typeof scope.objSettings.center === "function") {
+                let objCenter = scope.objSettings.center();
+                center = objCenter[0] + "," + objCenter[1];
+            }
+            else {
+                center = scope.objSettings.center[0] + "," + scope.objSettings.center[1];    
+            }
         }
         else if(scope.objSettings.bBox){
             center = (parseFloat(scope.objSettings.bBox[0]) + parseFloat(scope.objSettings.bBox[2])) / 2 + "," + (parseFloat(scope.objSettings.bBox[1]) + parseFloat(scope.objSettings.bBox[3])) / 2;
