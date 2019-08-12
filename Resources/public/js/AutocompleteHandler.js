@@ -88,6 +88,9 @@ export class AutocompleteHandler {
         else {
             url = scope.objSettings.proxyUrl + "autocomplete.php?format=json&key=" + scope.objSettings.keyAutocomplete + "&q=" + input;
         }
+        if (this.objSettings.autoLength) {
+            url += "&limit=" + this.objSettings.autoLength;
+        }
         $.ajax({url: url}).done(function(data) {
             let center;
             if (scope.objSettings.center) {
