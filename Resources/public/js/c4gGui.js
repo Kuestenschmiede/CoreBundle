@@ -206,7 +206,7 @@ this.c4g.projects = this.c4g.projects || {};
       });
     }, // end of setup
 
-    handlePdfResponse(data, id) {
+    handlePdfResponse: function(data, id) {
       // var blob = new Blob([data], {type:"application/pdf"});
       // //Create a link element, hide it, direct
       // //it towards the blob, and then 'click' it programatically
