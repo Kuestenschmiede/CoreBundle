@@ -18,6 +18,7 @@ use con4gis\CoreBundle\Resources\contao\classes\C4GUtils;
 use Contao\Database;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -44,12 +45,11 @@ class BaseController extends Controller
     /**
      * BaseController constructor.
      */
-    public function __construct()
+    public function __construct(ContainerInterface $container)
     {
-        $this->cacheInstance = C4GApiCache::getInstance();
+        $this->cacheInstance = C4GApiCache::getInstance($container);
     }
-
-
+    
     protected function initialize($withEntityManager=true)
     {
         if ($withEntityManager) {
