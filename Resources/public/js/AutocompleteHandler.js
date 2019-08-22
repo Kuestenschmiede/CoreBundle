@@ -25,6 +25,7 @@ export class AutocompleteHandler {
         });
         let enterListener = function(event, opt_this) {
             //const scope = this;
+            opt_this = opt_this || scope;
             if (event.keyCode === 13) {
                 opt_this.objFunctions.submitFunction(opt_this, event.currentTarget.classList[0]);
             } else if (event.keyCode === 8 || (event.keyCode >= 37 && event.keyCode <= 40) || event.keyCode === 9) {
@@ -32,16 +33,14 @@ export class AutocompleteHandler {
                 // event.preventDefault();
             } else {
                 if ($(event.currentTarget).val().length == 0 && !event.keyCode) { //deleted
-                    this.objFunctions.deleteFunction(event.currentTarget, event.currentTarget.classList[0]);
+                    opt_this.objFunctions.deleteFunction(event.currentTarget, event.currentTarget.classList[0]);
 
                     let cssClass = event.currentTarget.classList[0];
                     if (cssClass.indexOf('from') != -1) {
-                        travelData.routeFrom = {};
                         opt_this.containerAddresses.arrFromPositions = [];
                         opt_this.containerAddresses.arrFromPositions = [];
                     }
                     else if (cssClass.indexOf('to') != -1){
-                        travelData.routeTo = {};
                         opt_this.containerAddresses.arrToNames = [];
                         opt_this.containerAddresses.arrToPositions = [];
                     }
