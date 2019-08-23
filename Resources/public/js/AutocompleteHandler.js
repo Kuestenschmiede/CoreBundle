@@ -27,7 +27,7 @@ export class AutocompleteHandler {
             //const scope = this;
             opt_this = opt_this || scope;
             if (event.keyCode === 13) {
-                opt_this.objFunctions.submitFunction(opt_this, event.currentTarget.classList[0]);
+                opt_this.objFunctions.submitFunction(event.currentTarget, event.currentTarget.classList[0]);
             } else if (event.keyCode === 8 || (event.keyCode >= 37 && event.keyCode <= 40) || event.keyCode === 9) {
                 // event.stopPropagation();
                 // event.preventDefault();
