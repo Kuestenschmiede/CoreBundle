@@ -126,8 +126,8 @@ class ResourceLoader
                 "link.href = '$cssFile';".
                 "link.type = 'text/css';".
                 "var defer = document.getElementsByTagName('link')[0];" .
-                "defer.parentNode.insertBefore(link, defer);" .
-//                "document.head.appendChild(link);".
+                "if  (typeof defer !== 'undefined') { defer.parentNode.insertBefore(link, defer); }" .
+                "else { document.head.appendChild(link); }".
             "});"
         );
     }
