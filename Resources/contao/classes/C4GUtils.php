@@ -41,7 +41,7 @@ class C4GUtils
         return trim(htmlspecialchars($result));
     }
 
-    public static function cleanHtml($html, $img=false) {
+    public static function cleanHtml($html, $img=false, $allowedTags = []) {
         $javascript = '/<script[^>]*?javascript{1}[^>]*?>.*?<\/script>/si';
         $noscript = '';
         $html = preg_replace($javascript, $noscript, $html);
@@ -66,6 +66,7 @@ class C4GUtils
             '/<html(.*?)>/is',
             '/<\/html>/is');
 
+        $unsafe = array_diff($unsafe, $allowedTags);
         // Remove graphic too if the user wants
         if ($img==true)
         {

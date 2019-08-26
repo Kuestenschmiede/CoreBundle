@@ -17,6 +17,7 @@ namespace con4gis\CoreBundle\Resources\contao\classes;
 use Contao\System;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Contao\FrontendUser;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 class C4GApiCache
@@ -31,9 +32,9 @@ class C4GApiCache
      */
     protected static $instance = null;
 
-    public static function getInstance() {
+    public static function getInstance(ContainerInterface $container) {
         if (!static::$instance) {
-            static::$instance = new self();
+            static::$instance = new self($container);
         }
         return static::$instance;
     }
@@ -41,9 +42,8 @@ class C4GApiCache
     /**
      * C4GApiCache constructor.
      */
-    protected function __construct()
+    protected function __construct(ContainerInterface $container)
     {
-        $container = System::getContainer();
         $this->cacheInstance = new FilesystemAdapter(
             $namespace = 'con4gis',
             $defaultLifetime = 0,

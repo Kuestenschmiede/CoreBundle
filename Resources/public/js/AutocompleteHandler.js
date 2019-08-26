@@ -15,6 +15,9 @@ export class AutocompleteHandler {
         this.objSettings = objSettings;
         this.containerAddresses = containerAddresses;
     }
+    setCenter (center) {
+        this.objSettings.center = center;
+    }
     handleInput () {
         const scope = this;
         this.inputField.autocomplete({
@@ -22,31 +25,28 @@ export class AutocompleteHandler {
         });
         let enterListener = function(event, opt_this) {
             //const scope = this;
+            opt_this = opt_this || scope;
             if (event.keyCode === 13) {
-                opt_this.objFunctions.submitFunction(opt_this, event.currentTarget.classList[0]);
+                opt_this.objFunctions.submitFunction(event.currentTarget, event.currentTarget.classList[0]);
             } else if (event.keyCode === 8 || (event.keyCode >= 37 && event.keyCode <= 40) || event.keyCode === 9) {
                 // event.stopPropagation();
                 // event.preventDefault();
             } else {
                 if ($(event.currentTarget).val().length == 0 && !event.keyCode) { //deleted
-                    this.objFunctions.deleteFunction(event.currentTarget, event.currentTarget.classList[0]);
+                    opt_this.objFunctions.deleteFunction(event.currentTarget, event.currentTarget.classList[0]);
 
-                    let tableNode = $(".route-output");
                     let cssClass = event.currentTarget.classList[0];
-                    if (cssClass === "route-from") {
-                        travelData.routeFrom = {};
+                    if (cssClass.indexOf('from') != -1) {
                         opt_this.containerAddresses.arrFromPositions = [];
                         opt_this.containerAddresses.arrFromPositions = [];
                     }
-                    else if (cssClass === "route-to"){
-                        travelData.routeTo = {};
+                    else if (cssClass.indexOf('to') != -1){
                         opt_this.containerAddresses.arrToNames = [];
                         opt_this.containerAddresses.arrToPositions = [];
                     }
                     else{
                         console.log("This is weird");
                     }
-                    tableNode.css("display","none");
                 }
                 else {
                     let currTime = Math.floor(Date.now());
@@ -65,33 +65,48 @@ export class AutocompleteHandler {
         this.inputField.on('autocompleteselect', this.objFunctions.selectListener);
         this.inputField.on('change', this.objFunctions.changeListener);
     }
-    autocompleteAddress(input, cssId) {
+    autocompleteAddress(input, cssClass) {
         const scope = this;
         let center;
-        if (objSettings.center) {
-            center = objSettings.center[0] + "," + objSettings.center[1];
-        }
-        else {
-            center = (parseFloat(objSettings.bBox[0]) + parseFloat(objSettings.bBox[2])) / 2 + "," + (parseFloat(objSettings.bBox[1]) + parseFloat(objSettings.bBox[3])) / 2;
-        }
-        let url = objSettings.proxyUrl + "autocomplete.php?format=json&key=" + objSettings.keyAutocomplete + "&q=" + input +"&center=" + center;
-        $.ajax({url: url}).done(function(data) {
-            let center;
-            if (objSettings.center) {
-                center = objSettings.center;
+        if (scope.objSettings.center) { 
+            if (typeof scope.objSettings.center === "function") {
+                let objCenter = scope.objSettings.center();
+                center = objCenter[0] + "," + objCenter[1];
             }
             else {
-                center = [(parseFloat(objSettings.bBox[0]) + parseFloat(objSettings.bBox[2])) / 2, (parseFloat(objSettings.bBox[1]) + parseFloat(objSettings.bBox[3])) / 2];
+                center = scope.objSettings.center[0] + "," + scope.objSettings.center[1];    
+            }
+        }
+        else if(scope.objSettings.bBox){
+            center = (parseFloat(scope.objSettings.bBox[0]) + parseFloat(scope.objSettings.bBox[2])) / 2 + "," + (parseFloat(scope.objSettings.bBox[1]) + parseFloat(scope.objSettings.bBox[3])) / 2;
+        }
+        let url;
+        if (center) {
+            url = scope.objSettings.proxyUrl + "autocomplete.php?format=json&key=" + scope.objSettings.keyAutocomplete + "&q=" + input +"&center=" + center;
+        }
+        else {
+            url = scope.objSettings.proxyUrl + "autocomplete.php?format=json&key=" + scope.objSettings.keyAutocomplete + "&q=" + input;
+        }
+        if (this.objSettings.autoLength) {
+            url += "&limit=" + this.objSettings.autoLength;
+        }
+        $.ajax({url: url}).done(function(data) {
+            let center;
+            if (scope.objSettings.center) {
+                center = scope.objSettings.center;
+            }
+            else if (scope.objSettings.bBox){
+                center = [(parseFloat(scope.objSettings.bBox[0]) + parseFloat(scope.objSettings.bBox[2])) / 2, (parseFloat(scope.objSettings.bBox[1]) + parseFloat(scope.objSettings.bBox[3])) / 2];
             }
             if (data.length > 0) {
 
-                if (data[0] && data[0].display_name) {
+                if (data[0] && data[0].display_name  && center) {
                     // $(cssId).val(data[0].display_name);
                     let arrAddresses = [];
                     for (let i in data) {
                         if (data.hasOwnProperty(i)) {
-                            if (objSettings.bBox && objSettings.bBox[0]) {
-                                if (scope.isInBoundingBox(data[i].lon, data[i].lat, objSettings.bBox)) {
+                            if (scope.objSettings.bBox && scope.objSettings.bBox[0]) {
+                                if (scope.isInBoundingBox(data[i].lon, data[i].lat, scope.objSettings.bBox)) {
                                     let distance = Math.sqrt((center[0] - data[i].lon) * (center[0] - data[i].lon) + (center[1] - data[i].lat) * (center[1] - data[i].lat));
                                     let element = {
                                         'dist' : distance,
@@ -107,25 +122,52 @@ export class AutocompleteHandler {
 
                     for (let i in arrAddresses) {
                         if (arrAddresses.hasOwnProperty(i)) {
-                            if (cssId === ".route-from") {
+                            if (cssClass.indexOf('from') != -1) {
                                 // do not add twice
                                 if (!scope.containerAddresses.arrFromNames.includes(arrAddresses[i].name)) {
                                     scope.containerAddresses.arrFromNames.push(arrAddresses[i].name);
                                     scope.containerAddresses.arrFromPositions.push(arrAddresses[i].pos);
                                 }
                             }
-                            else {
+                            else if (cssClass.indexOf('to') != -1){
                                 if (!scope.containerAddresses.arrToNames.includes(arrAddresses[i].name)) {
                                     scope.containerAddresses.arrToNames.push(arrAddresses[i].name);
                                     scope.containerAddresses.arrToPositions.push(arrAddresses[i].pos);
                                 }
                             }
+                            else {
+                                console.log("This is weird");
+                            }
+
                         }
                     }
                     // trigger keydown event to show autocomplete options
                     let event = jQuery.Event("keydown", {keyCode: 8});
-                    $(cssId).trigger(event);
+                    $(cssClass).trigger(event);
                 }
+                for(let i in data) {
+                    if(data.hasOwnProperty(i)) {
+                        if (cssClass.indexOf('from') != -1) {
+                            // do not add twice
+                            if (!scope.containerAddresses.arrFromNames.includes(data[i].display_name)) {
+                                scope.containerAddresses.arrFromNames.push(data[i].display_name);
+                                scope.containerAddresses.arrFromPositions.push([data[i].lat, data[i].lon]);
+                            }
+                        }
+                        else if (cssClass.indexOf('to') != -1){
+                            if (!scope.containerAddresses.arrToNames.includes(data[i].display_name)) {
+                                scope.containerAddresses.arrToNames.push(data[i].display_name);
+                                scope.containerAddresses.arrToPositions.push([data[i].lat, data[i].lon]);
+                            }
+                        }
+                        else {
+                            console.log("This is weird");
+                        }
+                    }
+                }
+                // trigger keydown event to show autocomplete options
+                let event = jQuery.Event("keydown", {keyCode: 8});
+                $(cssClass).trigger(event);
             }
         });
     }
