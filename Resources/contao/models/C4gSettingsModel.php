@@ -30,7 +30,12 @@ class C4gSettingsModel extends Model
 	protected static $strTable = 'tl_c4g_settings';
 
 	public static function findSettings() {
-	    $db = Database::getInstance();
+        $objRegistry = Model\Registry::getInstance();
+        $fetcher = $objRegistry->fetch(self::$strTable, 1);
+        if ($fetcher) {
+            return $fetcher;
+        }
+        $db = Database::getInstance();
 	    $stmt = $db->prepare("SELECT * FROM " . self::$strTable . " LIMIT 1");
 	    return new self($stmt->execute());
 	}
