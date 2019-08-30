@@ -388,28 +388,28 @@
         </div>
     </fieldset>
 
-    <fieldset id="pal_c4g_travel_costs" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_travel_costs')">
-            con4gis-TravelCosts
-            <?php if ($this->packages['con4gis/travel-costs']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/travel-costs'],$this->versions['con4gis/travel-costs']) . ']';
-            } else if ($GLOBALS['con4gis']['routingExpenses']['installed']) {
+    <fieldset id="pal_c4g_io_travel_costs" class="tl_box collapsed">
+        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_io_travel_costs')">
+            con4gis-IOTravelCosts
+            <?php if ($this->packages['con4gis/io-travel-costs']) {
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/io-travel-costs'],$this->versions['con4gis/io-travel-costs']) . ']';
+            } else if ($GLOBALS['con4gis']['io-travel-costs']['installed']) {
             echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
             }?>
         </legend>
         <div>
-            <?php if ($this->packages['con4gis/travel-costs']): ?>
+            <?php if ($this->packages['con4gis/io-travel-costs']): ?>
             <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                         target      => '_blank',
-            href        => 'https://github.com/Kuestenschmiede/TravelCostsBundle',
+            href        => 'https://github.com/Kuestenschmiede/IOTravelCostsBundle',
             c4gImg      => 'github',
             label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
             )); ?>
             <?php else: ?>
             <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                                          c4gImg      => 'install',
-            href        => 'https://packagist.org/packages/con4gis/travel-costs',
-            label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'TravelCostsBundle')
+            href        => 'https://packagist.org/packages/con4gis/io-travel-costs',
+            label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'IOTravelCostsBundle')
             )); ?>
             <?php endif; ?>
         </div>
