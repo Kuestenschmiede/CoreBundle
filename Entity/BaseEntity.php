@@ -20,7 +20,7 @@ abstract class BaseEntity
 {
 
     /**
-     * BaseEntiy constructor.
+     * BaseEntity constructor.
      * @param array $data
      */
     public function __construct($data = array())
