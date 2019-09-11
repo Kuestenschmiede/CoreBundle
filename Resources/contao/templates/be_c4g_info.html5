@@ -1,6 +1,6 @@
 <div id="c4g_header">
     <img src="bundles/con4giscore/images/logo_con4gis.svg" width="250" height="90" alt="con4gis Logo">
-    <span class="version"><?php echo sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/maps'],$this->versions['con4gis/maps']) ?></span>
+    <span class="version"><?php echo $GLOBALS['con4gis']['version'] ?></span>
     <span class="sub"><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['TITLESUB'] ?></span>
 </div>
 <br><br>
@@ -383,6 +383,34 @@
                                      c4gImg      => 'install',
                                      href        => 'https://packagist.org/packages/con4gis/tracking',
                                      label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'TrackingBundle')
+                 )); ?>
+            <?php endif; ?>
+        </div>
+    </fieldset>
+
+    <!-- con4gis-Firefighter -->
+    <fieldset id="pal_c4g_firefighter" class="tl_box collapsed">
+        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_firefighter')">
+            con4gis-Firefighter
+            <?php if ($this->packages['con4gis/firefighter']) {
+            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/firefighter'],$this->versions['con4gis/firefighter']) . ']';
+            } else if ($GLOBALS['con4gis']['firefighter']['installed']) {
+               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
+            }?>
+        </legend>
+        <div>
+            <?php if ($GLOBALS['con4gis']['firefighter']['installed']): ?>
+                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                    target      => '_blank',
+                    href        => 'https://www.github.com/kuestenschmiede/FirefighterBundle',
+                    c4gImg      => 'github',
+                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+                )); ?>
+            <?php else: ?>
+                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                                     c4gImg      => 'install',
+                                     href        => 'https://packagist.org/packages/con4gis/firefighter',
+                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'FirefighterBundle')
                  )); ?>
             <?php endif; ?>
         </div>
