@@ -15,7 +15,7 @@
   "scripturl": true,
   "strict": true,
   "quotmark": "single",
-
+  "esversion": 6,
   "globals": {"define": true},
   "browser": true,
   "node": true,
