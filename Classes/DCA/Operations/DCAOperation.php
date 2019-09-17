@@ -21,8 +21,8 @@ class DCAOperation
         return $this->name;
     }
 
-    public function label(string $label) {
-        $this->global['label'] = $label;
+    public function label(string $dcaName, string $operationName) {
+        $this->global['label'] = $GLOBALS['TL_LANG'][$dcaName][$operationName];
     }
 
     public function href(string $href) {

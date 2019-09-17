@@ -9,7 +9,7 @@ class CopyOperation extends DCAOperation
 {
     public function __construct(DCA $dca) {
         parent::__construct($dca, 'copy');
-        $this->label($GLOBALS['TL_LANG']['tl_c4g_visualization_chart']['copy']);
+        $this->label($dca->getName(), 'copy');
         $this->href('act=copy');
         $this->icon('copy.gif');
     }

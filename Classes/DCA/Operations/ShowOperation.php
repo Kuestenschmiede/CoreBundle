@@ -9,7 +9,7 @@ class ShowOperation extends DCAOperation
 {
     public function __construct(DCA $dca) {
         parent::__construct($dca, 'show');
-        $this->label($GLOBALS['TL_LANG']['tl_c4g_visualization_chart']['show']);
+        $this->label($dca->getName(), 'show');
         $this->href('act=show');
         $this->icon('show.gif');
     }

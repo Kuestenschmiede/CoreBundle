@@ -9,7 +9,7 @@ class CutOperation extends DCAOperation
 {
     public function __construct(DCA $dca) {
         parent::__construct($dca, 'cut');
-        $this->label($GLOBALS['TL_LANG']['tl_c4g_visualization_chart']['cut']);
+        $this->label($dca->getName(), 'cut');
         $this->href('act=paste&amp;mode=cut');
         $this->icon('cut.gif');
         $this->attributes('onclick="Backend.getScrollOffset();"');

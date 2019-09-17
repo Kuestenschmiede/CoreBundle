@@ -9,7 +9,7 @@ class EditOperation extends DCAOperation
 {
     public function __construct(DCA $dca) {
         parent::__construct($dca, 'edit');
-        $this->label($GLOBALS['TL_LANG']['tl_c4g_visualization_chart']['edit']);
+        $this->label($dca->getName(), 'edit');
         $this->href('act=edit');
         $this->icon('edit.gif');
     }
