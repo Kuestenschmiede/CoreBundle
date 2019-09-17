@@ -71,12 +71,12 @@ class DCAField
     }
 
     public function saveCallback(string $class, string $method) {
-        $this->global['save_callback'] = [$class, $method];
+        $this->global['save_callback'] = [[$class, $method]];
         return $this;
     }
 
     public function loadCallback(string $class, string $method) {
-        $this->global['load_callback'] = [$class, $method];
+        $this->global['load_callback'] = [[$class, $method]];
         return $this;
     }
 
