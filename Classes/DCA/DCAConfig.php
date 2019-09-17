@@ -12,7 +12,7 @@ class DCAConfig
         $GLOBALS[DCA::TL_DCA][$dcaName][DCA::CONFIG] = [];
         $this->global = &$GLOBALS[DCA::TL_DCA][$dcaName][DCA::CONFIG];
 
-        $this->label($GLOBALS['TL_CONFIG']['websiteTitle']);
+        $this->label(strval($GLOBALS['TL_CONFIG']['websiteTitle']));
         $this->dataContainer('Table');
         $this->enableVersioning(true);
         $this->sqlKeys('id', 'primary');
