@@ -9,6 +9,8 @@ class DCAField
     protected $name;
     protected $global;
     protected $eval;
+    protected $multiColumnField;
+    protected $doctrine = false;
 
     public function __construct(string $name, DCA $dca, DCAField $multiColumnField = null) {
         $this->name = $name;
@@ -17,6 +19,7 @@ class DCAField
             $this->global = &$GLOBALS[DCA::TL_DCA][$dca->getName()][DCA::FIELDS][$name];
             $this->global['label'] = &$GLOBALS[DCA::TL_LANG][$dca->getName()][$name];
             $this->eval = new DCAFieldEval($dca->getName(), $name);
+            $this->doctrine = $dca->isDoctrine();
             $dca->addField($this);
         } else {
             $GLOBALS[DCA::TL_DCA][$dca->getName()][DCA::FIELDS][$multiColumnField->getName()][DCA::EVAL][DCA::COLUMN_FIELDS][$name] = [];
@@ -24,6 +27,8 @@ class DCAField
             $this->global['label'] = &$GLOBALS[DCA::TL_LANG][$dca->getName()][$name];
             $this->eval = new DCAFieldEval($dca->getName(), $name);
             $multiColumnField->eval()->addColumnField($this);
+            $this->multiColumnField = $multiColumnField;
+            $this->doctrine = $dca->isDoctrine();
         }
 
     }
@@ -90,7 +95,9 @@ class DCAField
     }
 
     public function sql(string $sql) {
-        $this->global['sql'] = $sql;
+        if ($this->multiColumnField === null && $this->doctrine === false) {
+            $this->global['sql'] = $sql;
+        }
         return $this;
     }
 

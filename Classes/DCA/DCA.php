@@ -25,18 +25,21 @@ class DCA
     protected $list;
     protected $palette;
     protected $fields;
+    protected $doctrine;
 
     protected static $instances = [];
 
-    public function __construct(string $name) {
+    public function __construct(string $name, bool $doctrine = false) {
         $GLOBALS[self::TL_DCA][$name] = [];
         $this->global = &$GLOBALS[self::TL_DCA][$name];
         static::$instances[$name] = $this;
 
+        $this->name = $name;
         $this->config = new DCAConfig($name);
         $this->list = new DCAList($this);
         $this->palette = new DCAPalette($name);
         $this->fields = [];
+        $this->doctrine = $doctrine;
     }
 
     public function getName() : string {
@@ -57,6 +60,10 @@ class DCA
 
     public function addField(DCAField $field) {
         $this->fields[$field->getName()] = $field;
+    }
+
+    public function isDoctrine() : bool {
+        return $this->doctrine;
     }
 
     public static function getByName(string $name): ?DCA {
