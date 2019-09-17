@@ -80,6 +80,21 @@ class DCAFieldEval
         return $this;
     }
 
+    public function colorPicker(bool $colorPicker = true) {
+        $this->global['colorpicker'] = $colorPicker;
+        return $this;
+    }
+
+    public function isHexColor(bool $isHexColor = true) {
+        $this->global['isHexColor'] = $isHexColor;
+        return $this;
+    }
+
+    public function decodeEntities(bool $decodeEntities = true) {
+        $this->global['decodeEntities'] = $decodeEntities;
+        return $this;
+    }
+
     public function getColumnFields() {
         return $this->columnFields;
     }
