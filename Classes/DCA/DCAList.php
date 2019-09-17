@@ -44,13 +44,17 @@ class DCAList
         return $this->operations;
     }
 
-    public function addOperation(DCAOperation $operation) {
-        $this->operations[$operation->getName()] = $operation;
+    public function addRegularOperations(DCA $dca) {
+        new EditOperation($dca);
+        new CopyOperation($dca);
+        new CutOperation($dca);
+        new DeleteOperation($dca);
+        new ShowOperation($dca);
         return $this;
     }
 
-    public function removeOperation(string $name) {
-        unset($this->operations[$name]);
+    public function addOperation(DCAOperation $operation) {
+        $this->operations[$operation->getName()] = $operation;
         return $this;
     }
 }
