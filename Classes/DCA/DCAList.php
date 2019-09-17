@@ -47,7 +47,6 @@ class DCAList
     public function addRegularOperations(DCA $dca) {
         new EditOperation($dca);
         new CopyOperation($dca);
-        new CutOperation($dca);
         new DeleteOperation($dca);
         new ShowOperation($dca);
         return $this;
