@@ -18,13 +18,16 @@ class DCAPalette
 
     public function selector(array $fields) {
         $this->palettesGlobal['__selector__'] = $fields;
+        return $this;
     }
 
     public function default(string $fields) {
         $this->palettesGlobal['default'] = $fields;
+        return $this;
     }
 
     public function subPalette(string $field, string $option, string $fields) {
         $this->subPalettesGlobal[$field . '_' . $option] = $fields;
+        return $this;
     }
 }

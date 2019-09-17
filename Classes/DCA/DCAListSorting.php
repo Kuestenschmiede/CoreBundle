@@ -17,13 +17,16 @@ class DCAListSorting
 
     public function mode(int $mode) {
         $this->global['mode'] = $mode;
+        return $this;
     }
 
     public function panelLayout(string $panelLayout) {
         $this->global['panelLayout'] = $panelLayout;
+        return $this;
     }
 
     public function headerFields(array $headerFields) {
         $this->global['headerFields'] = $headerFields;
+        return $this;
     }
 }
