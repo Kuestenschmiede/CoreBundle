@@ -30,11 +30,6 @@ class DCAList
                 'attributes'          => 'onclick="Backend.getScrollOffset();" accesskey="e"'
             ]
         ];
-        $this->addOperation(new EditOperation($dca))
-            ->addOperation(new CopyOperation($dca))
-            ->addOperation(new CutOperation($dca))
-            ->addOperation(new DeleteOperation($dca))
-            ->addOperation(new ShowOperation($dca));
     }
 
     public function sorting() : DCAListSorting {
