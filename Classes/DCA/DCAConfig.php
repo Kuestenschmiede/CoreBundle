@@ -32,7 +32,9 @@ class DCAConfig
 
     public function sqlKeys(string $field, string $value) {
         $this->global['sql'] = [
-            $field => $value
+            'keys' => [
+                $field => $value
+            ]
         ];
     }
 }
