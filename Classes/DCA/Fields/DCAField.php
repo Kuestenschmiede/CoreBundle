@@ -21,7 +21,7 @@ class DCAField
         } else {
             $GLOBALS[DCA::TL_DCA][$dca->getName()][DCA::FIELDS][$multiColumnField->getName()][DCA::EVAL][DCA::COLUMN_FIELDS][$name] = [];
             $this->global = &$GLOBALS[DCA::TL_DCA][$dca->getName()][DCA::FIELDS][$multiColumnField->getName()][DCA::EVAL][DCA::COLUMN_FIELDS][$name];
-            $this->global['label'] = &$GLOBALS[DCA::TL_LANG][$dca->getName()][$multiColumnField->getName()][DCA::EVAL][DCA::COLUMN_FIELDS][$name];
+            $this->global['label'] = &$GLOBALS[DCA::TL_LANG][$dca->getName()][$name];
             $this->eval = new DCAFieldEval($dca->getName(), $name);
             $multiColumnField->eval()->addColumnField($this);
         }
