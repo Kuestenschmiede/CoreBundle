@@ -47,7 +47,7 @@ class DCAField
         return $this;
     }
 
-    public function search(bool $search) {
+    public function search(bool $search = true) {
         if ($search === true) {
             $this->global['search'] = 'true';
         } else {
@@ -56,7 +56,7 @@ class DCAField
         return $this;
     }
 
-    public function sorting(bool $sorting) {
+    public function sorting(bool $sorting = true) {
         if ($sorting === true) {
             $this->global['sorting'] = 'true';
         } else {
