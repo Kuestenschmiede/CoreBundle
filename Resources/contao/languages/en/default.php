@@ -76,19 +76,24 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['UNINSTALL']       = 'Uninstall "cfs_%s"';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['DBUPDATE']        = 'Update database';
 
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_installed_bundles'] = 'Installed bricks';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_other_bundles']     = 'Other bricks';
+
 // links
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']           = 'Community Board (DE)';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']                 = 'Fork on github';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']                 = 'github.com';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['PLAYSTORE']              = 'Get the App <br>(Android)';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATIONTOOL']          = 'Migrationtool';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECKTOOL']           = 'API-Check';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNCTOOL']    = 'Sync group-bindings';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODETOOL']  = 'Remove con4gis 3 bbCode';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL']                = 'Install %s';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL']                = 'packagist.org';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']        = 'con4gis website';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']  = 'con4gis Docs';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['github_coastforge']      = 'con4gis @ GitHub';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_io']             = 'con4gis.io map services';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['server_log']             = 'con4gis serverlog';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_successful']           = "%s successfully uploaded: \\n- Size: %s KB";
     $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_error']                = "Unable to upload the file";

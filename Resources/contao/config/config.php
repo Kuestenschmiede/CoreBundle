@@ -17,6 +17,25 @@ use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
 $GLOBALS['con4gis']['version'] = "6.2";
 $GLOBALS['con4gis']['core']['installed'] = true;
 
+$GLOBALS['con4gis']['bundles'] = array (
+    'core' => 'CoreBundle',
+    'documents' => 'DocumentsBundle',
+    'editor' => 'EditorBundle',
+    'export' => 'ExportBundle',
+    'firefighter' => 'FirefighterBundle',
+    'forum'  => 'ForumBundle',
+    'groups' => 'GroupsBundle',
+    'import' => 'ImportBundle',
+    'maps'   => 'MapsBundle',
+    'routing' => 'RoutingBundle',
+    'projects' => 'ProjectsBundle',
+    'pwa' => 'PwaBundle',
+    'queue' => 'QueueBundle',
+    'tracking' => 'TrackingBundle',
+    'visualization' => 'VisualizationBundle',
+    'io-travel-costs' => 'IOTravelCostsBundle'
+);
+
 // API-Registration
 $GLOBALS['TL_API'] = array();
 $GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Classes\C4GFileUpload';

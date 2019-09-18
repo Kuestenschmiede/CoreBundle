@@ -37,11 +37,11 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
             'mode'                    => 2,
             'fields'                  => array('id'),
             'panelLayout'             => 'filter;sort,search,limit',
-            'headerFields'            => array('id', 'bundle', 'message'),
+            'headerFields'            => array('tstamp', 'bundle', 'message', 'id'),
         ),
         'label' => array
         (
-            'fields'                  => array('id', 'bundle', 'message'),
+            'fields'                  => array('tstamp', 'bundle', 'message', 'id'),
             'showColumns'             => true,
         ),
         'global_operations' => array
@@ -108,6 +108,7 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
         ),
         'tstamp' => array
         (
+            'flag'                    => 6,
             'sql'                     => "int(10) NULL default 0",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_log']['tstamp'],
             'default'                 => 0,
