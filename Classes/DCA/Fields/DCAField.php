@@ -7,6 +7,7 @@ use con4gis\CoreBundle\Classes\DCA\DCA;
 class DCAField
 {
     protected $name;
+    protected $dcaName;
     protected $global;
     protected $eval;
     protected $multiColumnField;
@@ -14,6 +15,7 @@ class DCAField
 
     public function __construct(string $name, DCA $dca, DCAField $multiColumnField = null) {
         $this->name = $name;
+        $this->dcaName = $dca->getName();
         if ($multiColumnField === null) {
             $GLOBALS[DCA::TL_DCA][$dca->getName()][DCA::FIELDS][$name] = [];
             $this->global = &$GLOBALS[DCA::TL_DCA][$dca->getName()][DCA::FIELDS][$name];
@@ -70,6 +72,16 @@ class DCAField
         return $this;
     }
 
+    public function options(array $options) {
+        $this->global['options'] = $options;
+        return $this;
+    }
+
+    public function reference(string $reference) {
+        $this->global['reference'] = $GLOBALS['TL_LANG'][$this->dcaName][$reference];
+        return $this;
+    }
+
     public function optionsCallback(string $class, string $method) {
         $this->global['options_callback'] = [$class, $method];
         return $this;
@@ -87,6 +99,11 @@ class DCAField
 
     public function foreignKey(string $table, string $column) {
         $this->global['foreignKey'] = "$table.$column";
+        return $this;
+    }
+
+    public function wizard(string $class, string $method) {
+        $this->global['wizard'] = [[$class, $method]];
         return $this;
     }
 

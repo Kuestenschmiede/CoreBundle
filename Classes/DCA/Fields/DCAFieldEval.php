@@ -51,6 +51,11 @@ class DCAFieldEval
         return $this;
     }
 
+    public function preserveTags(bool $preserveTags = true) {
+        $this->global['preserve_tags'] = $preserveTags;
+        return $this;
+    }
+
     public function submitOnChange(bool $submitOnChange = true) {
         $this->global['submitOnChange'] = $submitOnChange;
         return $this;
@@ -92,6 +97,16 @@ class DCAFieldEval
 
     public function decodeEntities(bool $decodeEntities = true) {
         $this->global['decodeEntities'] = $decodeEntities;
+        return $this;
+    }
+
+    public function chosen(bool $chosen = true) {
+        $this->global['chosen'] = $chosen;
+        return $this;
+    }
+
+    public function multiple(bool $multiple = true) {
+        $this->global['multiple'] = $multiple;
         return $this;
     }
 

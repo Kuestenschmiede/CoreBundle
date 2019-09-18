@@ -25,6 +25,11 @@ class DCAListSorting
         return $this;
     }
 
+    public function fields(array $fields) {
+        $this->global['fields'] = $fields;
+        return $this;
+    }
+
     public function headerFields(array $headerFields) {
         $this->global['headerFields'] = $headerFields;
         return $this;
