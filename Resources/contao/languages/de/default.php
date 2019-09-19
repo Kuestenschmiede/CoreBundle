@@ -78,19 +78,24 @@
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['UNINSTALL']       = '"cfs_%s" deinstallieren';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['DBUPDATE']        = 'Datenbank aktualisieren';
 
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_installed_bundles'] = 'Installierte Bausteine';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_other_bundles']     = 'Weitere Bausteine';
+
 // links
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']           = 'Community Forum (DE)';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']                 = 'Fork on github';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']                 = 'github.com';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['PLAYSTORE']              = 'App beziehen <br>(Android)';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATIONTOOL']          = 'Migrationstool';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECKTOOL']           = 'API-Check';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNCTOOL']    = 'Gruppen-Zuordnungen<br>synchronisieren';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['FORUMREMOVEBBCODETOOL']  = 'con4gis 3 bbCode<br>entfernen';
-    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL']                = '%s installieren';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL']                = 'packagist.org';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']        = 'con4gis Website';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']  = 'con4gis Docs';
     $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['github_coastforge']      = 'con4gis @ GitHub';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_io']             = 'con4gis.io Kartendienste';
+    $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['server_log']             = 'con4gis Serverlog';
 
     $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_successful']         = "%s erfolgreich hochgeladen: \\n- Größe: %s KB";
     $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_error']              = "Die Datei konnte nicht hochgeladen werden";

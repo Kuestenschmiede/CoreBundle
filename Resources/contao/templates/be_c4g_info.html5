@@ -5,446 +5,66 @@
 </div>
 <br><br>
 <div class="tl_formbody_edit c4g_info">
-
-    <!-- con4gis-Core -->
-    <fieldset id="pal_c4g_core" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_core')">
-            con4gis-Core
-            <?php if ($this->packages['con4gis/core']) {
-                echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/core'],$this->versions['con4gis/core']) . ']';
-            }else {
-                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-                }
-            ?>
-        </legend>
-        <div>
-        <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                target      => '_blank',
-        href        => 'https://www.github.com/kuestenschmiede/CoreBundle',
-        c4gImg      => 'github',
-        label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-        )); ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-Documents -->
-    <fieldset id="pal_c4g_documents" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_documents')">
-            con4gis-Documents
-            <?php if ($this->packages['con4gis/documents']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/documents'],$this->versions['con4gis/documents']) . ']';
-                       } else if ($GLOBALS['con4gis']['documents']['installed']) {
+     <h2><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_installed_bundles']; ?></h2>
+     <?php foreach ($GLOBALS['con4gis']['bundles'] as $bundle => $repo): ?>
+        <?php if ($this->packages['con4gis/'.$bundle]): ?>
+        <fieldset id="pal_c4g_<?php echo $bundle?>" class="tl_box collapsed">
+            <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_<?php echo $bundle?>')">
+                <?php echo $repo ?>
+                <?php if ($this->packages['con4gis/'.$bundle]) {
+                echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/'.$bundle],$this->versions['con4gis/'.$bundle]) . ']';
+                       } else if ($GLOBALS['con4gis'][$bundle]['installed']) {
                            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/documents'] || $GLOBALS['con4gis']['documents']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/DocumentsBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-            <?php else: ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                     c4gImg      => 'install',
-                                     href        => 'https://packagist.org/packages/con4gis/documents',
-                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'DocumentsBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-    <!-- con4gis-Editor -->
-    <fieldset id="pal_c4g_editor" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_editor')">
-        con4gis-Editor
-           <?php if ($this->packages['con4gis/editor']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/editor'],$this->versions['con4gis/editor']) . ']';
-           } else if ($GLOBALS['con4gis']['editor']['installed']) {
-               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-           }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/editor'] || $GLOBALS['con4gis']['editor']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/EditorBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-            <?php else: ?>
-               <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                     c4gImg      => 'install',
-                     href        => 'https://packagist.org/packages/con4gis/editor',
-                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'EditorBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-Export -->
-    <fieldset id="pal_c4g_export" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_export')">
-            con4gis-Export
-            <?php if ($this->packages['con4gis/export']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/export'],$this->versions['con4gis/export']) . ']';
-                       } else if ($GLOBALS['con4gis']['export']['installed']) {
-                           echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/export'] || $GLOBALS['con4gis']['export']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/ExportBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-            <?php else: ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                     c4gImg      => 'install',
-                                     href        => 'https://packagist.org/packages/con4gis/export',
-                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'ExportBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-
-    <!-- con4gis-Forum -->
-    <fieldset id="pal_c4g_forum" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_forum')">
-            con4gis-Forum
-            <?php if ($this->packages['con4gis/forum']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/forum'],$this->versions['con4gis/forum']) . ']';
-            } else if ($GLOBALS['con4gis']['forum']['installed']) {
-                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-
-        <div>
-
-            <?php if ($this->packages['con4gis/forum'] || $GLOBALS['con4gis']['forum']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/ForumBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                    target      => '_blank',
-                                    c4gImg      => 'contao-board',
-                                    href        => 'https://community.contao.org/de/showthread.php?55910-con4gis_forum-Offizieller-Support-Thread',
-                                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
-                )); ?>
-            <?php else: ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    c4gImg      => 'install',
-                    href        => 'https://packagist.org/packages/con4gis/forum',
-                    label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'ForumBundle')
-                )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-Groups -->
-    <fieldset id="pal_c4g_groups" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_groups')">
-            con4gis-Groups
-            <?php if ($this->packages['con4gis/groups']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/groups'],$this->versions['con4gis/groups']) . ']';
-            } else if ($GLOBALS['con4gis']['groups']['installed']) {
-                echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/groups'] || $GLOBALS['con4gis']['groups']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/GroupsBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                    target      => '_blank',
-                                    href        => 'https://community.contao.org/de/showthread.php?55912-con4gis_groups-Offizieller-Support-Thread',
-                                    c4gImg      => 'contao-board',
-                                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
-                )); ?>
-           <?php else: ?>
-               <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                   c4gImg      => 'install',
-                   href        => 'https://packagist.org/packages/con4gis/groups',
-                   label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'GroupsBundle')
-               )); ?>
-           <?php endif; ?>
-        </div>
-    </fieldset>
-    <!-- con4gis-Import -->
-    <fieldset id="pal_c4g_import" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_import')">
-            con4gis-Import
-            <?php if ($this->packages['con4gis/import']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/import'],$this->versions['con4gis/import']) . ']';
-                       } else if ($GLOBALS['con4gis']['import']['installed']) {
-                           echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/import'] || $GLOBALS['con4gis']['import']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/ImportBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-            <?php else: ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                     c4gImg      => 'install',
-                                     href        => 'https://packagist.org/packages/con4gis/import',
-                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'ImportBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-Maps -->
-    <fieldset id="pal_c4g_maps" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_maps')">
-        con4gis-Maps
-           <?php if ($this->packages['con4gis/maps']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/maps'],$this->versions['con4gis/maps']) . ']';
-           } else if ($GLOBALS['con4gis']['maps']['installed']) {
-               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-           }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/maps'] || $GLOBALS['con4gis']['maps']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/MapsBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                    target      => '_blank',
-                                    href        => 'https://community.contao.org/de/showthread.php?55909-con4gis_maps-Offizieller-Support-Thread',
-                                    c4gImg      => 'contao-board',
-                                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
-                 )); ?>
-            <?php else: ?>
-               <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                     c4gImg      => 'install',
-                     href        => 'https://packagist.org/packages/con4gis/maps',
-                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'MapsBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-Routing -->
-    <fieldset id="pal_c4g_routing" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_routing')">
-        con4gis-Routing
-           <?php if ($this->packages['con4gis/routing']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/routing'],$this->versions['con4gis/routing']) . ']';
-           } else if ($GLOBALS['con4gis']['routing']['installed']) {
-               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-           }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/routing'] || $GLOBALS['con4gis']['routing']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/RoutingBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-            <?php else: ?>
-               <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                     c4gImg      => 'install',
-                     href        => 'https://packagist.org/packages/con4gis/routing',
-                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'RoutingBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-Projects -->
-    <fieldset id="pal_c4g_projects" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_projects')">
-            con4gis-Projects
-            <?php if ($this->packages['con4gis/projects']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/projects'],$this->versions['con4gis/projects']) . ']';
-                       } else if ($GLOBALS['con4gis']['projects']['installed']) {
-                           echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/projects'] || $GLOBALS['con4gis']['projects']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/con4gis_projects',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-            <?php else: ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                     c4gImg      => 'install',
-                                     href        => 'https://packagist.org/packages/con4gis/projects',
-                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'ProjectsBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-PWA -->
-        <fieldset id="pal_c4g_pwa" class="tl_box collapsed">
-            <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_pwa')">
-                con4gis-PWA
-                <?php if ($this->packages['con4gis/pwa']) {
-                echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/pwa'],$this->versions['con4gis/pwa']) . ']';
-                           } else if ($GLOBALS['con4gis']['pwa']['installed']) {
-                               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
                 }?>
             </legend>
             <div>
-                <?php if ($this->packages['con4gis/pwa'] || $GLOBALS['con4gis']['pwa']['installed']): ?>
                     <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                         target      => '_blank',
-                        href        => 'https://www.github.com/kuestenschmiede/PwaBundle',
+                        href        => 'https://www.github.com/kuestenschmiede/'.$repo,
                         c4gImg      => 'github',
                         label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
                     )); ?>
-                <?php else: ?>
                      <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                                          c4gImg      => 'install',
-                                         href        => 'https://packagist.org/packages/con4gis/pwa',
-                                         label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'PwaBundle')
-                     )); ?>
-                <?php endif; ?>
+                                         href        => 'https://packagist.org/packages/con4gis/'.$bundle,
+                                         label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], $repo)
+                    )); ?>
             </div>
         </fieldset>
+        <?php endif;?>
+    <?php endforeach ?>
 
-    <!-- con4gis-Queue -->
-    <fieldset id="pal_c4g_queue" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_queue')">
-            con4gis-Queue
-            <?php if ($this->packages['con4gis/queue']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/queue'],$this->versions['con4gis/queue']) . ']';
-                       } else if ($GLOBALS['con4gis']['queue']['installed']) {
+     <h2><?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_other_bundles']; ?></h2>
+     <?php foreach ($GLOBALS['con4gis']['bundles'] as $bundle => $repo): ?>
+        <?php if (!$this->packages['con4gis/'.$bundle]): ?>
+        <fieldset id="pal_c4g_<?php echo $bundle?>" class="tl_box collapsed">
+            <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_<?php echo $bundle?>')">
+                <?php echo $repo ?>
+                <?php if ($this->packages['con4gis/'.$bundle]) {
+                echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/'.$bundle],$this->versions['con4gis/'.$bundle]) . ']';
+                       } else if ($GLOBALS['con4gis'][$bundle]['installed']) {
                            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/queue'] || $GLOBALS['con4gis']['queue']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/QueueBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-            <?php else: ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                     c4gImg      => 'install',
-                                     href        => 'https://packagist.org/packages/con4gis/queue',
-                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'QueueBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-Tracking -->
-    <fieldset id="pal_c4g_tracking" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_tracking')">
-            con4gis-Tracking
-            <?php if ($this->packages['con4gis/tracking']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/tracking'],$this->versions['con4gis/tracking']) . ']';
-            } else if ($GLOBALS['con4gis']['tracking']['installed']) {
-               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($GLOBALS['con4gis']['tracking']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/TrackingBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://community.contao.org/de/showthread.php?55911-con4gis_tracking-Offizieller-Support-Thread',
-                    c4gImg      => 'contao-board',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CONTAO_BOARD']
-                )); ?>
-            <?php else: ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                     c4gImg      => 'install',
-                                     href        => 'https://packagist.org/packages/con4gis/tracking',
-                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'TrackingBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <!-- con4gis-Firefighter -->
-    <fieldset id="pal_c4g_firefighter" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_firefighter')">
-            con4gis-Firefighter
-            <?php if ($this->packages['con4gis/firefighter']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/firefighter'],$this->versions['con4gis/firefighter']) . ']';
-            } else if ($GLOBALS['con4gis']['firefighter']['installed']) {
-               echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($GLOBALS['con4gis']['firefighter']['installed']): ?>
-                <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                    target      => '_blank',
-                    href        => 'https://www.github.com/kuestenschmiede/FirefighterBundle',
-                    c4gImg      => 'github',
-                    label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-                )); ?>
-            <?php else: ?>
-                 <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
-                                     c4gImg      => 'install',
-                                     href        => 'https://packagist.org/packages/con4gis/firefighter',
-                                     label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'FirefighterBundle')
-                 )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
-
-    <fieldset id="pal_c4g_io_travel_costs" class="tl_box collapsed">
-        <legend onclick="AjaxRequest.toggleFieldset(this,'c4g_io_travel_costs')">
-            con4gis-IOTravelCosts
-            <?php if ($this->packages['con4gis/io-travel-costs']) {
-            echo ' [' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['VERSION_REFERENCE'],$this->packages['con4gis/io-travel-costs'],$this->versions['con4gis/io-travel-costs']) . ']';
-            } else if ($GLOBALS['con4gis']['io-travel-costs']['installed']) {
-            echo ' [' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['DEVELOP'] . ']';
-            }?>
-        </legend>
-        <div>
-            <?php if ($this->packages['con4gis/io-travel-costs']): ?>
-            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                }?>
+            </legend>
+            <div>
+                    <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                         target      => '_blank',
-            href        => 'https://github.com/Kuestenschmiede/IOTravelCostsBundle',
-            c4gImg      => 'github',
-            label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
-            )); ?>
-            <?php else: ?>
-            <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
+                        href        => 'https://www.github.com/kuestenschmiede/'.$repo,
+                        c4gImg      => 'github',
+                        label       => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['GITHUB']
+                    )); ?>
+                     <?php echo \con4gis\CoreBundle\Resources\contao\classes\C4GHTMLFactory::imgLink( array(
                                          c4gImg      => 'install',
-            href        => 'https://packagist.org/packages/con4gis/io-travel-costs',
-            label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], 'IOTravelCostsBundle')
-            )); ?>
-            <?php endif; ?>
-        </div>
-    </fieldset>
+                                         href        => 'https://packagist.org/packages/con4gis/'.$bundle,
+                                         label       => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL'], $repo)
+                    )); ?>
+            </div>
+        </fieldset>
+        <?php endif;?>
+    <?php endforeach ?>
 
     <div id="pal_c4g_links">
-        <ul>
+         <ul>
             <li>
                 <a href="https://con4gis.org" target="_blank"><span>
                     <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']?>
@@ -461,9 +81,14 @@
                 </span></a>
             </li>
             <li>
+                <a href="https://con4gis.io" target="_blank"><span>
+                    <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_io']?>
+                </span></a>
+            </li>
+            <li>
                 <a href="contao?do=c4g_log">
                     <span>
-                        Interner Serverlog
+                        <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['server_log']; ?>
                     </span>
                 </a>
             </li>

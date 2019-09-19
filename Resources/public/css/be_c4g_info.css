@@ -5,6 +5,11 @@
 	float: left;
 }
 
+#main .c4g_info h2 {
+  padding: 14px;
+  margin-top: 28px;
+}
+
 /* links */
 #main .c4g_info a:link,
 #main .c4g_info a:visited {
@@ -152,19 +157,13 @@ a.c4g_imgLink:focus {
 }
 #c4g_intro div {
 	padding: 10px;
-	/*color: #eee;*/
 	background: rgba(44, 62, 80, .3);
 }
 
-/* links */
-/*#pal_c4g_links ul li {
-    padding: 5px;
-    margin-bottom: 1px;
-    background: rgba(44, 62, 80, .1);
+#pal_c4g_links {
+  margin-top: 28px;
 }
-#pal_c4g_links ul li a {
-    float: right;
-}*/
+
 #main #pal_c4g_links a,#main #pal_c4g_support a{
     padding: 5px;
     margin-bottom: 1px;
