@@ -56,8 +56,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'] = [
     'Maximum file size',
     'Maximum file size for other files.'
 ];
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL for con4gis.io', 'Please enter a URL for the con4gis.io mapservices'];
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Key for con4gis.io', 'Please enter your key for the con4gis.io mapservices'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL for con4gis.io', 'Enter the URL for the con4gis.io map services here. The URL will be displayed in your IO Account.'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Key for con4gis.io', 'Enter one of your keys for the con4gis.io map services here.'];
 
 /** INFO **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
