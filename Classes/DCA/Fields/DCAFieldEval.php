@@ -11,9 +11,14 @@ class DCAFieldEval
     protected $global;
     protected $columnFields = [];
 
-    public function __construct($dcaName, $fieldName) {
-        $GLOBALS[DCA::TL_DCA][$dcaName][DCA::FIELDS][$fieldName]['eval'] = [];
-        $this->global = &$GLOBALS[DCA::TL_DCA][$dcaName][DCA::FIELDS][$fieldName]['eval'];
+    public function __construct($dcaName, $fieldName, DCAField $multiColumnField = null) {
+        if ($multiColumnField === null) {
+            $GLOBALS[DCA::TL_DCA][$dcaName][DCA::FIELDS][$fieldName][DCA::EVAL] = [];
+            $this->global = &$GLOBALS[DCA::TL_DCA][$dcaName][DCA::FIELDS][$fieldName][DCA::EVAL];
+        } else {
+            $GLOBALS[DCA::TL_DCA][$dcaName][DCA::FIELDS][$multiColumnField->getName()][DCA::EVAL][DCA::COLUMN_FIELDS][$fieldName][DCA::EVAL] = [];
+            $this->global = &$GLOBALS[DCA::TL_DCA][$dcaName][DCA::FIELDS][$multiColumnField->getName()][DCA::EVAL][DCA::COLUMN_FIELDS][$fieldName][DCA::EVAL];
+        }
     }
 
     public function mandatory(bool $mandatory = true) {
