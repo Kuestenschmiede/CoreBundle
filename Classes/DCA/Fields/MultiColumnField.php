@@ -12,10 +12,4 @@ class MultiColumnField extends DCAField
         parent::__construct($name, $dca);
         $this->inputType('multiColumnWizard')->eval()->doNotSaveEmpty();
     }
-
-    public function sql(string $sql)
-    {
-        return $this;
-    }
-
 }
