@@ -53,22 +53,12 @@ class C4GInfo extends \BackendModule
     
     private function getLatestVersions($installedPackages)
     {
-        $packages = [
-            'con4gis/core',
-            'con4gis/documents',
-            'con4gis/editor',
-            'con4gis/export',
-            'con4gis/forum',
-            'con4gis/groups',
-            'con4gis/import',
-            'con4gis/maps',
-            'con4gis/routing',
-            'con4gis/projects',
-            'con4gis/pwa',
-            'con4gis/queue',
-            'con4gis/tracking',
-            'con4gis/travel-costs'
-        ];
+        $bundles = $GLOBALS['con4gis']['bundles'];
+        $packages = [];
+        foreach ($bundles as $package=>$bundle) {
+            $packages[] = 'con4gis/'.$package;
+        }
+        
         // only check installed packages
         $packages = array_intersect(array_keys($installedPackages), $packages);
         
