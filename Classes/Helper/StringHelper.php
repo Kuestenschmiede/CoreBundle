@@ -27,7 +27,7 @@ class StringHelper
     public function removeSpecialSigns($string, $allowedSigns = '')
     {
         // Erlaubte Zeichen festlegen:
-        $defaultSigns = 'a-zA-Z0-9' . preg_quote(" üöäÜÖÄß!§$%&/()=?`}][{@<>;:_,.-#'+*\\àÀèÈòÒùÙ");
+        $defaultSigns = 'a-zA-Z0-9' . preg_quote("\+*?[^]$(){}=!<>|:-#");
         $allowedSigns = ($allowedSigns) ? $allowedSigns : $defaultSigns;
 
         // String filtern:
