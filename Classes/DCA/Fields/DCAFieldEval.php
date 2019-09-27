@@ -115,6 +115,11 @@ class DCAFieldEval
         return $this;
     }
 
+    public function rte(string $rte) {
+        $this->global['rte'] = $rte;
+        return $this;
+    }
+
     public function getColumnFields() {
         return $this->columnFields;
     }
