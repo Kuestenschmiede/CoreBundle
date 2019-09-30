@@ -60,10 +60,14 @@ class DcaHelper
      * @param $dc
      * @return array
      */
-    public function cbGetFields($dc)
+    public function cbGetFields($dc, $srcTable = "")
     {
         $data   = array();
-        $table  = $dc->activeRecord->srctable;
+        if ($srcTable !== "") {
+            $table = $srcTable;
+        } else {
+            $table  = $dc->activeRecord->srctable;
+        }
         $db     = Database::getInstance();
 
         if ($table) {
@@ -75,7 +79,7 @@ class DcaHelper
                     if ($field['name'] != 'PRIMARY') {
                         if (isset($GLOBALS['TL_LANG'][$table][$field['name']][0])) {
                             $label                  = $GLOBALS['TL_LANG'][$table][$field['name']][0];
-                            $label                 .= ' [' . $field['name'] . ']';
+                            $label                 .= ' [' . $field['name'] . ' (' . $table . ')]';
                             $data[$field['name']]   = $label;
                         } else {
                             $data[$field['name']] = $field['name'];
