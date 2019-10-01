@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'format'            => '%s',
         ),
 
-        'global_operations' => '',
+        'global_operations' => [],
 
         'operations' => array
         (
