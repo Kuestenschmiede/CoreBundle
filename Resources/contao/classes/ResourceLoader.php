@@ -116,7 +116,6 @@ class ResourceLoader
      *  the page is loaded. Be careful with this because it can make the page look terrible before the CSS is actually
      *  loaded.
      * @param $cssFile
-     * @param string $key
      */
     public static function loadCssResourceDeferred($cssFile) {
         self::loadJavaScriptResourceTag(
