@@ -27,7 +27,11 @@ class DCAPalette
     }
 
     public function subPalette(string $field, string $option, string $fields) {
-        $this->subPalettesGlobal[$field . '_' . $option] = $fields;
+        if (isset($this->subPalettesGlobal[$field . '_' . $option])) {
+            $this->subPalettesGlobal[$field . '_' . $option] .= $fields;
+        } else {
+            $this->subPalettesGlobal[$field . '_' . $option] = $fields;
+        }
         return $this;
     }
 }

@@ -66,22 +66,22 @@
     <div id="pal_c4g_links">
          <ul>
             <li>
-                <a href="https://con4gis.org" target="_blank"><span>
+                <a href="https://con4gis.org" target="_blank" rel="noopener"><span>
                     <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']?>
                 </span></a>
             </li>
             <li>
-                <a href="https://docs.con4gis.org" target="_blank"><span>
+                <a href="https://docs.con4gis.org" target="_blank" rel="noopener"><span>
                     <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']?>
                 </span></a>
             </li>
             <li>
-                <a href="http://github.com/Kuestenschmiede/" target="_blank"><span>
+                <a href="http://github.com/Kuestenschmiede/" target="_blank" rel="noopener"><span>
                     <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['github_coastforge']?>
                 </span></a>
             </li>
             <li>
-                <a href="https://con4gis.io" target="_blank"><span>
+                <a href="https://con4gis.io" target="_blank" rel="noopener"><span>
                     <?php echo $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_io']?>
                 </span></a>
             </li>
