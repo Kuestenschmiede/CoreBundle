@@ -149,6 +149,24 @@ class con4gisInsertTags extends \System
                         } else {
                             return 'not installed';
                         }
+                    case 'visualization':
+                        if ($packages['con4gis/visualization']) {
+                            return $this->checkVersionTag($packages['con4gis/visualization']);
+                        } else {
+                            return 'not installed';
+                        }
+                    case 'firefighter':
+                        if ($packages['con4gis/firefighter']) {
+                            return $this->checkVersionTag($packages['con4gis/firefighter']);
+                        } else {
+                            return 'not installed';
+                        }
+                    case 'io-travel-costs':
+                        if ($packages['con4gis/io-travel-costs']) {
+                            return $this->checkVersionTag($packages['con4gis/io-travel-costs']);
+                        } else {
+                            return 'not installed';
+                        }
                     default:
                         return 'unknown';
                 }
