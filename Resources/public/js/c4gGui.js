@@ -182,19 +182,21 @@ this.c4g.projects = this.c4g.projects || {};
             History.Adapter.bind(window, 'statechange', function() {
               if (!scope.pushingState) {
                 var State = History.getState();
-                jQuery.ajax({
-                  internalId: internalId,
-                  url: options.ajaxUrl + '/' + options.ajaxData,
-                  data: 'historyreq='+decodeURI(
-                    (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
-                  ),
-                  dataType: "json",
-                  type: "GET"
-                }).done(function(data) {
-                  scope.fnHandleAjaxResponse( data, this.internalId );
-                }).fail(function(data) {
-                  jQuery(scope.contentDiv).text('Error2: could not update history');
-                });
+                if (options.ajaxUrl !== 'undefined' && typeof options.ajaxUrl !== 'undefined') {
+                  jQuery.ajax({
+                    internalId: internalId,
+                    url: options.ajaxUrl + '/' + options.ajaxData,
+                    data: 'historyreq='+decodeURI(
+                        (RegExp('state=(.+?)(&|$)').exec(State.url)||[,null])[1]
+                    ),
+                    dataType: "json",
+                    type: "GET"
+                  }).done(function(data) {
+                    scope.fnHandleAjaxResponse( data, this.internalId );
+                  }).fail(function(data) {
+                    jQuery(scope.contentDiv).text('Error2: could not update history');
+                  });
+                }
               }
             });
           }
