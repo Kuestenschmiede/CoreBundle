@@ -24,7 +24,7 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "^4.4",
-        "menatwork/contao-multicolumnwizard": "^3.3",
+        "menatwork/contao-multicolumnwizard": "^3.4",
         "doctrine/orm": "^2.5.14",
         "doctrine/data-fixtures": "^1.2.2",
         "terminal42/notification_center": "^1.5",
