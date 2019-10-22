@@ -60,11 +60,7 @@ class DCAField
     }
 
     public function search(bool $search = true) {
-        if ($search === true) {
-            $this->global['search'] = 'true';
-        } else {
-            $this->global['search'] = 'false';
-        }
+        $this->global['search'] = $search;
         return $this;
     }
 
