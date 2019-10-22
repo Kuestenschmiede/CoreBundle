@@ -49,6 +49,11 @@ class DCAField
         return $this;
     }
 
+    public function filter($filter = true) {
+        $this->global['filter'] = $filter;
+        return $this;
+    }
+
     public function inputType($inputType) {
         $this->global['inputType'] = $inputType;
         return $this;
