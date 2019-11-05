@@ -10,7 +10,7 @@ class SQLField extends DCAField
 {
     public function __construct(string $name, DCA $dca, string $sql) {
         parent::__construct($name, $dca);
-        $this->sql($sql);
+        $this->sql($sql)->exclude(false);
     }
 
 }
