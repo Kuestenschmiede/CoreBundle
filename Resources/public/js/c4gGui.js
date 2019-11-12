@@ -1204,7 +1204,7 @@ this.c4g.projects = this.c4g.projects || {};
           });
 
           jQuery(tmpDialogDiv)
-            .find('a.c4gGuiAction')
+            .find('.c4gGuiAction')
             .click(function () {
               if (jQuery(this).hasClass('c4gGuiSend')) {
                 var formdata = {};

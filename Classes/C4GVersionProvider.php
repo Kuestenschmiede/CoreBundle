@@ -38,7 +38,11 @@ class C4GVersionProvider
         $url = str_replace('[package]', $arrPackage[1], $url);
         $request = new Request();
         $request->send($url);
-        return $this->parseLatestVersion($request->response, $package);
+        $response = $request->response;
+        if (!$response) {
+            $response = '';
+        }
+        return $this->parseLatestVersion($response, $package);
     }
     
     private function parseLatestVersion(string $json, string $package)
