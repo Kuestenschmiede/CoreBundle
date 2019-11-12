@@ -120,6 +120,11 @@ class DCAFieldEval
         return $this;
     }
 
+    public function readOnly(string $readOnly) {
+        $this->global['readOnly'] = $readOnly;
+        return $this;
+    }
+
     public function getColumnFields() {
         return $this->columnFields;
     }
@@ -128,6 +133,4 @@ class DCAFieldEval
         $this->columnFields[] = $field;
         return $this;
     }
-
-
 }
