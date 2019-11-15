@@ -61,6 +61,11 @@ class DCAFieldEval
         return $this;
     }
 
+    public function allowHtml(bool $allowHtml = true) {
+        $this->global['allowHtml'] = $allowHtml;
+        return $this;
+    }
+
     public function submitOnChange(bool $submitOnChange = true) {
         $this->global['submitOnChange'] = $submitOnChange;
         return $this;
