@@ -43,7 +43,6 @@ $GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Resources\contao\classes
 $GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Resources\contao\classes\C4GDeliverFileApi';
 
 array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array('con4gis_core' => array()));
-array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 2, array('con4gis_bricks' => array()));
 
 if(TL_MODE == "BE") {
     $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/css/con4gis.css';
@@ -69,9 +68,6 @@ array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE
         )
     )
 ));
-
-//$GLOBALS['BE_MOD']['con4gis'] =
-//    \con4gis\CoreBundle\Resources\contao\classes\C4GUtils::sortBackendModules($GLOBALS['BE_MOD']['con4gis']);
 
 if(TL_MODE == "FE") {
     // TODO replace with symfony csrf token

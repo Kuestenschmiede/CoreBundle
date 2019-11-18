@@ -32,11 +32,16 @@ class DCAField
             $this->multiColumnField = $multiColumnField;
             $this->doctrine = $dca->isDoctrine();
         }
-
+        $this->exclude();
     }
 
     public function getName() : string {
         return $this->name;
+    }
+
+    public function exclude(bool $exclude = true) {
+        $this->global['exclude'] = $exclude;
+        return $this;
     }
 
     public function label(string $label) {
