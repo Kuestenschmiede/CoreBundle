@@ -90,6 +90,13 @@ export class AutocompleteHandler {
         if (this.objSettings.autoLength) {
             url += "&limit=" + this.objSettings.autoLength;
         }
+        if (this.objSettings.geosearchParams) {
+            for (let param in this.objSettings.geosearchParams) {
+                if (this.objSettings.geosearchParams.hasOwnProperty(param)) {
+                    url += "&" + param + "=" + this.objSettings.geosearchParams[param];
+                }
+            }
+        }
         $.ajax({url: url}).done(function(data) {
             let center;
             if (scope.objSettings.center) {

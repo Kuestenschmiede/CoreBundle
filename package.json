@@ -5,7 +5,7 @@
   "main": "webpack.config.js",
   "scripts": {
     "build-dev": "webpack --watch --config webpack.development.config.js",
-    "build-prod": "webpack --watch --config webpack.production.config.js"
+    "build-prod": "webpack --config webpack.production.config.js"
   },
   "repository": {
     "type": "git",
