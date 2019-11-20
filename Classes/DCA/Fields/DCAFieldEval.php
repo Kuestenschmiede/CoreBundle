@@ -130,6 +130,11 @@ class DCAFieldEval
         return $this;
     }
 
+    public function spaceToUnderscore(bool $spaceToUnderscore = true) {
+        $this->global['spaceToUnderscore'] = $spaceToUnderscore;
+        return $this;
+    }
+
     public function getColumnFields() {
         return $this->columnFields;
     }
