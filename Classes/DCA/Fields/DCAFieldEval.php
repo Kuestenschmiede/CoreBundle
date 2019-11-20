@@ -120,7 +120,7 @@ class DCAFieldEval
         return $this;
     }
 
-    public function rte(string $rte) {
+    public function rte(string $rte = 'tinyMCE') {
         $this->global['rte'] = $rte;
         return $this;
     }
