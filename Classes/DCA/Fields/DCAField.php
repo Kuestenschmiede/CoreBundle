@@ -45,7 +45,7 @@ class DCAField
     }
 
     public function label(string $label) {
-        $this->global['label'] = $label;
+        $this->global['label'] = &$GLOBALS[DCA::TL_LANG][$this->dcaName][$label];
         return $this;
     }
 
