@@ -124,5 +124,8 @@ class DCAField
         return $this;
     }
 
-
+    public function unsetSql() {
+        unset($this->global['sql']);
+        return $this;
+    }
 }
