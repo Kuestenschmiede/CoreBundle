@@ -135,6 +135,11 @@ class DCAFieldEval
         return $this;
     }
 
+    public function unique(bool $unique = true) {
+        $this->global['unique'] = $unique;
+        return $this;
+    }
+
     public function getColumnFields() {
         return $this->columnFields;
     }

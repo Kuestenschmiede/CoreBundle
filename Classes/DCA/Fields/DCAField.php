@@ -49,6 +49,11 @@ class DCAField
         return $this;
     }
 
+    public function hardLabel(string $title, string $description) {
+        $this->global['label'] = [$title, $description];
+        return $this;
+    }
+
     public function default($default) {
         $this->global['default'] = $default;
         return $this;

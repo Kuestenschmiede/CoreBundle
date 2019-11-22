@@ -30,6 +30,11 @@ class DCAConfig
         $this->global['enableVersioning'] = $enableVersioning;
     }
 
+    public function onloadCallback(string $class, string $method) {
+        $this->global['onload_callback'] = [[$class, $method]];
+        return $this;
+    }
+
     public function sqlKeys(string $field, string $value) {
         $this->global['sql'] = [
             'keys' => [
