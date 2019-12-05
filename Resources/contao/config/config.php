@@ -14,7 +14,7 @@
 
 use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
 
-$GLOBALS['con4gis']['version'] = "6.2";
+$GLOBALS['con4gis']['version'] = "6.3";
 $GLOBALS['con4gis']['core']['installed'] = true;
 
 $GLOBALS['con4gis']['bundles'] = array (
