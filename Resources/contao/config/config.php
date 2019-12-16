@@ -14,8 +14,8 @@
 
 use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
 
-$GLOBALS['con4gis']['version'] = "6.3";
-$GLOBALS['con4gis']['core']['installed'] = true;
+$GLOBALS['con4gis']['version'] = "7.0-snapshot";
+//$GLOBALS['con4gis']['core']['installed'] = true;
 
 $GLOBALS['con4gis']['bundles'] = array (
     'core' => 'CoreBundle',
@@ -54,12 +54,9 @@ $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
  */
 array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array
 (
-    'con4gis_core' => array
+    'con4gis' => array
     (
-        'c4g_core' => array
-        (
-            'callback' => 'con4gis\CoreBundle\Resources\contao\classes\C4GInfo'
-        ),
+        'c4g_bricks' => ['tables' => ['tl_c4g_bricks']],
         'c4g_settings' => array(
             'tables'        => array('tl_c4g_settings')
         ),
