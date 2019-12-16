@@ -20,6 +20,6 @@
   background: url("../images/con4gis.svg") 7px center no-repeat;
 }
 
-li .c4g_log {
+li .c4g_log, li .c4g_settings {
   display: none !important;
 }

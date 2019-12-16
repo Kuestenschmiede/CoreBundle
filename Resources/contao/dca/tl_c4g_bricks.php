@@ -70,6 +70,12 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 		),
 		'operations' => array
 		(
+            'openSettings' => array
+            (
+                'href'                => 'table=tl_c4g_settings',
+                'icon'                => 'settings.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'openSettings']
+            ),
 			'show' => array
 			(
 				'href'                => 'act=show',
@@ -94,43 +100,13 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'icon'                => 'sync.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'showGitHub']
             ),
-/*			'css' => array
-			(
-				'href'                => 'table=tl_style_sheet',
-				'icon'                => 'css.svg',
-				'button_callback'     => array('tl_theme', 'editCss')
-			),
-			'modules' => array
-			(
-				'href'                => 'table=tl_module',
-				'icon'                => 'modules.svg',
-				'button_callback'     => array('tl_theme', 'editModules')
-			),
-			'layout' => array
-			(
-				'href'                => 'table=tl_layout',
-				'icon'                => 'layout.svg',
-				'button_callback'     => array('tl_theme', 'editLayout')
-			),
-			'imageSizes' => array
-			(
-				'href'                => 'table=tl_image_size',
-				'icon'                => 'sizes.svg',
-				'button_callback'     => array('tl_theme', 'editImageSizes')
-			),
-			'exportTheme' => array
-			(
-				'href'                => 'key=exportTheme',
-				'icon'                => 'theme_export.svg',
-				'button_callback'     => array('tl_theme', 'exportTheme')
-			)*/
 		)
 	),
 
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{brick_legend},brickkey,repository,installedVersion,latestVersion;'
+		'default' => '{brick_legend},brickkey,repository,installedVersion,latestVersion;'
 	),
 
 	// Fields
@@ -147,36 +123,24 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 		'brickkey' => array
 		(
 			'inputType'               => 'text',
-			//'exclude'                 => true,
-			//'sorting'                 => true,
-			//'search'                  => true,
 			'eval'                    => array('mandatory'=>false, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'long'),
             'sql'                     => "varchar(128) NOT NULL default ''"
 		),
         'repository' => array
         (
             'inputType'               => 'text',
-            //'exclude'                 => true,
-            //'sorting'                 => true,
-            //'search'                  => true,
             'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>254, 'tl_class'=>'long'),
             'sql'                     => "varchar(254) NOT NULL default ''"
         ),
         'installedVersion' => array
         (
             'inputType'               => 'text',
-            //'exclude'                 => true,
-            //'sorting'                 => true,
-            //'search'                  => true,
             'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>64, 'tl_class'=>'long'),
             'sql'                     => "varchar(64) NOT NULL default ''"
         ),
         'latestVersion' => array
         (
             'inputType'               => 'text',
-            //'exclude'                 => true,
-            //'sorting'                 => true,
-            //'search'                  => true,
             'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>64, 'tl_class'=>'long'),
             'sql'                     => "varchar(64) NOT NULL default ''"
         )
@@ -312,6 +276,28 @@ class tl_c4g_bricks extends Contao\Backend
     public function con4gisVersion($href, $label, $title, $class, $attributes)
     {
         return '<div class="con4gis_version" style="margin-bottom: 16px; color: #0f3b5c;">con4gis '.$GLOBALS['con4gis']['version'].'</div>';
+    }
+
+    /**
+     * openSettings
+     * @param $row
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $icon
+     * @return string
+     */
+    public function openSettings($row, $href, $label, $title, $icon) {
+        //ToDo check permissions
+        $rt = Input::get('rt');
+
+        if ($row['brickkey'] == 'core') {
+            $result = Database::getInstance()->execute("SELECT id FROM tl_c4g_settings LIMIT 1")->fetchAssoc();
+            $href = '/contao?do=c4g_settings&id="' . $row['id'].'"&rt=$rt&key=openSettings';//"/contao?do=c4g_settings&act=edit&rt=".$rt."&key=openSettings&id=".$result['id'];
+        } else {
+            $href = "/contao?do=c4g_settings_".$row['brickkey']."&rt=$rt&key=openSettings";
+        }
+        return  /*$this->User->hasAccess('uploadPathGeneric', 'c4g_settings') ? */'<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '">'.Image::getHtml($icon, $label).'</a>'/* : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' '*/;
     }
 
     /**
