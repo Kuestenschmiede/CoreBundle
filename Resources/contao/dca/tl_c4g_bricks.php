@@ -73,6 +73,20 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'class'               => 'header_server_logs',
                 'button_callback'     => ['tl_c4g_bricks', 'serverLogs'],
                 'icon'                => 'news.svg'
+            ),
+            'con4gisOrg' => array
+            (
+                'href'                => 'key=con4gisOrg',
+                'class'               => 'header_con4gis_org',
+                'button_callback'     => ['tl_c4g_bricks', 'con4gisOrg'],
+                'icon'                => 'news.svg'
+            ),
+            'con4gisIO' => array
+            (
+                'href'                => 'key=con4gisIO',
+                'class'               => 'header_con4gis_io',
+                'button_callback'     => ['tl_c4g_bricks', 'con4gisIO'],
+                'icon'                => 'news.svg'
             )
 		),
 		'operations' => array
@@ -409,6 +423,34 @@ class tl_c4g_bricks extends Contao\Backend
         $rt = Input::get('rt');
         $href = "/contao?do=c4g_log&rt=$rt&key=serverLogs";
         return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+    }
+
+    /**
+     * con4gisOrg
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $class
+     * @param $attributes
+     * @return string
+     */
+    public function con4gisOrg($href, $label, $title, $class, $attributes)
+    {
+        return '<a href="https://con4gis.org"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a>';
+    }
+
+    /**
+     * con4gisIO
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $class
+     * @param $attributes
+     * @return string
+     */
+    public function con4gisIO($href, $label, $title, $class, $attributes)
+    {
+        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a>';
     }
 
     /**
