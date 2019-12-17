@@ -38,11 +38,11 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 			'mode'                    => 1,
 			'fields'                  => ['brickkey'],
 			'panelLayout'             => '',
-            'headerFields'            => ['brickkey','description','installedVersion','latestVersion'],
+            'headerFields'            => ['brickname','description','installedVersion','latestVersion'],
 		),
 		'label' => array
 		(
-            'fields'              =>  ['brickkey','description','installedVersion','latestVersion'],
+            'fields'              =>  ['brickname','description','installedVersion','latestVersion'],
             'showColumns'         => true
 		),
 		'global_operations' => array
@@ -91,18 +91,30 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 		),
 		'operations' => array
 		(
-            'openSettings' => array
+            'firstButton' => array
             (
-                'href'                => 'table=tl_c4g_settings',
-                'icon'                => 'settings.svg',
-                'button_callback'     => ['tl_c4g_bricks', 'openSettings']
-            )/*,
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg',
-				'attributes'          => 'style="margin-right:3px"'
-			)*/,
+                'href'                => 'key=firstButton',
+                'icon'                => 'edit.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
+            'secondButton' => array
+            (
+                'href'                => 'key=secondButton',
+                'icon'                => 'edit.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
+            'thirdButton' => array
+            (
+                'href'                => 'key=thirdButton',
+                'icon'                => 'edit.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
+            'fourthButton' => array
+            (
+                'href'                => 'key=fourthButton',
+                'icon'                => 'edit.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
             'showDocs' => array
             (
                 'href'                => 'key=showDocs',
@@ -127,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default' => '{brick_legend},brickkey,description,installedVersion,latestVersion,withSettings;'
+		'default' => '{brick_legend},brickname,description,installedVersion,latestVersion,withSettings;'
 	),
 
 	// Fields
@@ -147,10 +159,16 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 			'eval'                    => array('mandatory'=>false, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'long'),
             'sql'                     => "varchar(128) NOT NULL default ''"
 		),
+        'brickname' => array
+        (
+            'inputType'               => 'text',
+            'eval'                    => array('mandatory'=>false, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>254, 'tl_class'=>'long'),
+            'sql'                     => "varchar(254) NOT NULL default ''"
+        ),
         'repository' => array
         (
             'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>254, 'tl_class'=>'long'),
+            'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'long'),
             'sql'                     => "varchar(128) NOT NULL default ''"
         ),
         'description' => array
@@ -170,6 +188,12 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             'inputType'               => 'text',
             'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>64, 'tl_class'=>'long'),
             'sql'                     => "varchar(64) NOT NULL default ''"
+        ),
+        'icon' => array
+        (
+            'inputType'               => 'text',
+            'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>254, 'tl_class'=>'long'),
+            'sql'                     => "varchar(254) NOT NULL default ''"
         ),
         'withSettings' => array
         (
@@ -207,71 +231,83 @@ class tl_c4g_bricks extends Contao\Backend
         $this->bundles = [
             'core' => [
                 'repo' => 'CoreBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['core']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['core'],
+                'icon' => 'bundles/con4giscore/images/core_c4g.svg'
             ],
             'documents' => [
                 'repo' => 'DocumentsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'],
+                'icon' => 'bundles/con4giscore/images/documents_c4g.svg'
             ],
             'editor' => [
                 'repo' => 'EditorBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['editor']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'],
+                'icon' => 'bundles/con4giscore/images/editor_c4g.svg'
             ],
             'export' => [
                 'repo' => 'ExportBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['export']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['export'],
+                'icon' => 'bundles/con4giscore/images/export_c4g.svg'
             ],
             'firefighter' => [
                 'repo' => 'FirefighterBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'],
+                'icon' => 'bundles/con4giscore/images/firefighter_c4g.svg'
             ],
             'forum' => [
                 'repo' => 'ForumBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['forum']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
+                'icon' => 'bundles/con4giscore/images/forum_c4g.svg'
             ],
             'groups' => [
                 'repo' => 'GroupsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['groups']
-            ],
-            'groups' => [
-                'repo' => 'GroupsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['groups']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['groups'],
+                'icon' => 'bundles/con4giscore/images/groups_c4g.svg'
             ],
             'import' => [
                 'repo' => 'ImportBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['import']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['import'],
+                'icon' => 'bundles/con4giscore/images/import_c4g.svg'
             ],
             'maps' => [
                 'repo' => 'MapsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
+                'icon' => 'bundles/con4giscore/images/maps_c4g.svg'
             ],
             'routing' => [
                 'repo' => 'RoutingBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['routing']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['routing'],
+                'icon' => 'bundles/con4giscore/images/routing_c4g.svg'
             ],
             'projects' => [
                 'repo' => 'ProjectsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['projects']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'],
+                'icon' => 'bundles/con4giscore/images/projects_c4g.svg'
             ],
             'pwa' => [
                 'repo' => 'PwaBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'],
+                'icon' => 'bundles/con4giscore/images/pwa_c4g.svg'
             ],
             'queue' => [
                 'repo' => 'QueueBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'],
+                'icon' => 'bundles/con4giscore/images/queue_c4g.svg'
             ],
             'tracking' => [
                 'repo' => 'TrackingBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'],
+                'icon' => 'bundles/con4giscore/images/tracking_c4g.svg'
             ],
             'visualization' => [
                 'repo' => 'VisualizationBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'],
+                'icon' => 'bundles/con4giscore/images/visualization_c4g.svg'
             ],
             'io-travel-costs' => [
                 'repo' => 'IOTravelCostsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs']
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'],
+                'icon' => 'bundles/con4giscore/images/io-travel-costs_c4g.svg'
             ]
         ];
 	}
@@ -305,6 +341,28 @@ class tl_c4g_bricks extends Contao\Backend
         }
     }
 
+    private function compareVersions($iv, $lv) {
+	    if (($iv != 0) && ($lv != 0)) {
+            $ivArr = explode('.',$iv);
+            $lvArr = explode('.',$lv);
+
+            if ($lvArr[0] > $ivArr[0]) {
+                return true;
+            } else if ($lvArr[0] == $ivArr[0]) {
+                if ($lvArr[1] > $ivArr[1]) {
+                    return true;
+                } else if ($lvArr[1] == $lvArr[1]) {
+                    if ($lvArr[2] > $ivArr[2]) {
+                        return true;
+                    }
+                }
+            }
+
+        }
+
+	    return false;
+    }
+
 	/**
 	 * load brick versions
 	 */
@@ -324,6 +382,14 @@ class tl_c4g_bricks extends Contao\Backend
                 if ($installedPackages['con4gis/'.$bundle]) {
                     $installedVersion = $installedPackages['con4gis/'.$bundle];
                     $latestVersion    = $versions['con4gis/'.$bundle];
+
+                    $iv = (strpos($installedVersion,'v') == 0) ? substr($installedVersion, 1) : 0;
+                    $lv = (strpos($latestVersion,'v') == 0) ? substr($latestVersion, 1) : 0;
+                    if ($this->compareVersions($iv, $lv)) {
+                        $latestVersion = '<b>'.$latestVersion.'</b>';
+                    }
+
+
                 } else {
                     $installedVersion = '';
                     $latestVersion    = $versions['con4gis/'.$bundle];
@@ -331,11 +397,13 @@ class tl_c4g_bricks extends Contao\Backend
 
                 $set['tstamp'] = date();
                 $set['brickkey'] = $bundle;
+                $set['brickname'] = $values['icon'] ? Image::getHtml($values['icon']) : $bundle;
                 $set['repository'] = $values['repo'];
                 $set['description'] = $values['description'];
                 $set['installedVersion'] = $installedVersion;
                 $set['latestVersion'] = $latestVersion;
                 $set['withSettings'] = intval($this->checkSettings($bundle));
+                $set['icon'] = $values['icon'];
 
                 $this->Database->prepare("INSERT INTO tl_c4g_bricks %s")->set($set)->execute();
             }
@@ -348,6 +416,7 @@ class tl_c4g_bricks extends Contao\Backend
 
                     $set['tstamp'] = date();
                     $set['brickkey'] = $bundle;
+                    $set['brickname'] = $bundle;
                     $set['repository'] = '-';
                     $set['description'] = '-';
                     $set['installedVersion'] = $installedVersion;
@@ -468,7 +537,7 @@ class tl_c4g_bricks extends Contao\Backend
     }
 
     /**
-     * openSettings
+     * loadButton
      * @param $row
      * @param $href
      * @param $label
@@ -476,18 +545,48 @@ class tl_c4g_bricks extends Contao\Backend
      * @param $icon
      * @return string
      */
-    public function openSettings($row, $href, $label, $title, $icon) {
-        //ToDo check permissions
+    public function loadButton($row, $href, $label, $title, $icon) {
         $rt = Input::get('rt');
 
-        if ($row['installedVersion'] && $row['withSettings'] && ($row['brickkey'] != 'core')) {
-            $href = '/contao?do=c4g_'.$row['brickkey'].'_configuration&rt='.$rt.'&key=openSettings';
-        } else if ($row['installedVersion'] && ($row['brickkey'] == 'import')) {
-
+        if (strpos($href, 'firstButton') > 0) {
+            if ($row['installedVersion'] && $row['withSettings'] && ($row['brickkey'] != 'core')) {
+                $href = '/contao?do=c4g_'.$row['brickkey'].'_configuration&rt='.$rt.'&key='.$href;
+                //$icon = $row['icon'];
+            } else if ($row['installedVersion']) {
+                switch ($row['brickkey']) {
+                    case "import":
+                    case "export":
+                    case "queue":
+                        $href = '/contao?do=c4g_'.$row['brickkey'].'&rt='.$rt.'&key='.$row['brickkey'];
+                        break;
+                    case "io-travel-costs":
+                        $href = '/contao?do=c4g_travel_costs_settings&rt='.$rt.'&key='.$row['brickkey'];
+                        break;
+                    default:
+                        return;// Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+                }
+            } else {
+                return;
+            }
+        } else if (strpos($href, 'secondButton') > 0) {
+            if ($row['installedVersion']) {
+                switch ($row['brickkey']) {
+                    case "io-travel-costs":
+                        $href = '/contao?do=c4g_travel_costs_tariffs&rt=' . $rt . '&key=' . $row['brickkey'];
+                        $icon = 'tablewizard.svg';
+                        break;
+                    default:
+                        return;
+                }
+            } else {
+                return;
+            }
         } else {
-            return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+            return;
         }
         $attributes = 'style="margin-right:3px"';
+
+        //ToDo check permissions
         return  /*$this->User->hasAccess('uploadPathGeneric', 'c4g_settings') ? */'<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label).'</a>'/* : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' '*/;
     }
 

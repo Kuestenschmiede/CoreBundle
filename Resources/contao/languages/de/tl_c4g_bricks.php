@@ -13,10 +13,12 @@
 
 /** FIELDS **/
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['brickkey'] = ['con4gis Baustein', ''];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['brickname'] = ['Baustein', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['repository'] = ['Repository', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['description'] = ['Beschreibung', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['installedVersion'] = ['Installiert', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['latestVersion'] = ['Neueste', ''];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['icon'] = ['Icon', ''];
 
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['brick_legend'] = "Bausteininformationen";
@@ -26,7 +28,10 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'] = ["Versionen aktualisier
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'] = ["Server Logs","Logs aus den con4gis Modulen werden angezeigt."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisOrg'] = ["con4gis.org","Alles zum GIS-Baukasten."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisIO'] = ["con4gis.io","Kartendienste für Contao."];
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['openSettings'] = "Einstellungen öffnen";
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['firstButton'] = "Einstellungen öffnen";
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['secondButton'] = "Einstellungen öffnen";
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['thirdButton'] = "Einstellungen öffnen";
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['fourthButton'] = "Einstellungen öffnen";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['showDocs'] = ["Anzeigen in den con4gis Docs",""];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['showPackagist'] = ["Anzeigen auf Packagist",""];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['showGitHub'] = ["Anzeigen auf GitHub",""];
@@ -54,4 +59,4 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'] = 'Progressive Web App';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Stapelverarbeitung von Prozessen (Warteschlange)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Positionsverfolgung';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Fahrzeugverwaltung (erfordert con4gis.io)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Fahrtkostenrechner (erfordert con4gis.io)';
