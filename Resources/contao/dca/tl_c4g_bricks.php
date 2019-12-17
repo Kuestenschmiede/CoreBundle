@@ -36,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 		'sorting' => array
 		(
 			'mode'                    => 1,
-			'fields'                  => ['brickkey'],
+			'fields'                  => ['brickname'],
 			'panelLayout'             => '',
             'headerFields'            => ['brickname','description','installedVersion','latestVersion'],
 		),
@@ -58,7 +58,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=globalSettings',
                 'class'               => 'header_global_settings',
                 'button_callback'     => ['tl_c4g_bricks', 'globalSettings'],
-                'icon'                => 'settings.svg'
+                'icon'                => 'bundles/con4giscore/images/global_settings_16.svg'
             ),
             'reloadVersions' => array
             (
@@ -94,43 +94,61 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             'firstButton' => array
             (
                 'href'                => 'key=firstButton',
-                'icon'                => 'edit.svg',
+                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'secondButton' => array
             (
                 'href'                => 'key=secondButton',
-                'icon'                => 'edit.svg',
+                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'thirdButton' => array
             (
                 'href'                => 'key=thirdButton',
-                'icon'                => 'edit.svg',
+                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'fourthButton' => array
             (
                 'href'                => 'key=fourthButton',
-                'icon'                => 'edit.svg',
+                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
+            'fifthButton' => array
+            (
+                'href'                => 'key=fifthButton',
+                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
+            'sixthButton' => array
+            (
+                'href'                => 'key=sixthButton',
+                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
+            'seventhButton' => array
+            (
+                'href'                => 'key=seventhButton',
+                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'showDocs' => array
             (
                 'href'                => 'key=showDocs',
-                'icon'                => 'help.svg',
+                'icon'                => 'bundles/con4giscore/images/docs_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'showDocs']
             ),
             'showPackagist' => array
             (
                 'href'                => 'key=showPackagist',
-                'icon'                => 'visible.svg',
+                'icon'                => 'bundles/con4giscore/images/packagist_download_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'showPackagist']
             ),
             'showGitHub' => array
             (
                 'href'                => 'key=showGitHub',
-                'icon'                => 'sync.svg',
+                'icon'                => 'bundles/con4giscore/images/github_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'showGitHub']
             ),
 		)
@@ -554,13 +572,22 @@ class tl_c4g_bricks extends Contao\Backend
                 //$icon = $row['icon'];
             } else if ($row['installedVersion']) {
                 switch ($row['brickkey']) {
+                    case "maps":
+                        $href = '/contao?do=c4g_map_baselayers&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/baselayers.png';
+                        break;
                     case "import":
                     case "export":
                     case "queue":
                         $href = '/contao?do=c4g_'.$row['brickkey'].'&rt='.$rt.'&key='.$row['brickkey'];
                         break;
                     case "io-travel-costs":
-                        $href = '/contao?do=c4g_travel_costs_settings&rt='.$rt.'&key='.$row['brickkey'];
+                        $href = '/contao?do=c4g_travel_costs_tariff&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'tablewizard.svg';
+                        break;
+                    case "visualization":
+                        $href = '/contao?do=c4g_visualization_chart_element&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'tablewizard.svg';
                         break;
                     default:
                         return;// Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
@@ -571,9 +598,78 @@ class tl_c4g_bricks extends Contao\Backend
         } else if (strpos($href, 'secondButton') > 0) {
             if ($row['installedVersion']) {
                 switch ($row['brickkey']) {
+                    case "maps":
+                        $href = '/contao?do=c4g_map_locstyles&rt=' . $rt . '&key=' . $row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/locstyles.png';
+                        break;
                     case "io-travel-costs":
-                        $href = '/contao?do=c4g_travel_costs_tariffs&rt=' . $rt . '&key=' . $row['brickkey'];
-                        $icon = 'tablewizard.svg';
+                        $href = '/contao?do=c4g_travel_costs_settings&rt=' . $rt . '&key=' . $row['brickkey'];
+                        break;
+                    case "visualization":
+                        $href = '/contao?do=c4g_visualization_chart&rt=' . $rt . '&key=' . $row['brickkey'];
+                        break;
+                    default:
+                        return;
+                }
+            }
+        }  else if (strpos($href, 'thirdButton') > 0) {
+                if ($row['installedVersion']) {
+                    switch ($row['brickkey']) {
+                        case "maps":
+                            $href = '/contao?do=c4g_map_themes&rt='.$rt.'&key='.$row['brickkey'];
+                            $icon = 'bundles/con4gismaps/images/be-icons/themes.png';
+                            break;
+                        default:
+                            return;
+                    }
+                } else {
+                    return;
+                }
+        }  else if (strpos($href, 'fourthButton') > 0) {
+            if ($row['installedVersion']) {
+                switch ($row['brickkey']) {
+                    case "maps":
+                        $href = '/contao?do=c4g_map_profiles&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/profiles.png';
+                        break;
+                    default:
+                        return;
+                }
+            } else {
+                return;
+            }
+        }  else if (strpos($href, 'fifthButton') > 0) {
+            if ($row['installedVersion']) {
+                switch ($row['brickkey']) {
+                    case "maps":
+                        $href = '/contao?do=c4g_maps&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/map.png';
+                        break;
+                    default:
+                        return;
+                }
+            } else {
+                return;
+            }
+        }  else if (strpos($href, 'sixthButton') > 0) {
+            if ($row['installedVersion']) {
+                switch ($row['brickkey']) {
+                    case "maps":
+                        $href = '/contao?do=c4g_map_tables&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/map_location.png';
+                        break;
+                    default:
+                        return;
+                }
+            } else {
+                return;
+            }
+        }  else if (strpos($href, 'seventhButton') > 0) {
+            if ($row['installedVersion']) {
+                switch ($row['brickkey']) {
+                    case "maps":
+                        $href = '/contao?do=c4g_map_filters&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/mapfolder.png';
                         break;
                     default:
                         return;

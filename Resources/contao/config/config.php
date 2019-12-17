@@ -22,7 +22,7 @@ $GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Classes\C4GFileUpload';
 $GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Resources\contao\classes\C4GImageUpload';
 $GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Resources\contao\classes\C4GDeliverFileApi';
 
-array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array('con4gis_core' => array()));
+//array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array('con4gis_core' => array()));
 
 if(TL_MODE == "BE") {
     $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/css/con4gis.css';
@@ -32,11 +32,15 @@ $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
 /**
  * Backend Modules
  */
-array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array
+$GLOBALS['BE_MOD']['content'] = array_merge($GLOBALS['BE_MOD']['content'], [
+        'c4g_bricks' => ['tables' => ['tl_c4g_bricks']],
+    ]
+);
+
+array_insert($GLOBALS['BE_MOD'], array_search('con4gis_core', array_keys($GLOBALS['BE_MOD'])) + 1, array
 (
     'con4gis' => array
     (
-        'c4g_bricks' => ['tables' => ['tl_c4g_bricks']],
         'c4g_settings' => array(
             'tables'        => array('tl_c4g_settings')
         ),
