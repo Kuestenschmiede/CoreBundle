@@ -879,6 +879,6 @@ class tl_c4g_bricks extends Contao\Backend
      * @return string
      */
     public function showGitHub($row, $href, $label, $title, $icon) {
-        return '<a href="https://docs.con4gis.org/con4gis-'.$row['repository'].'" title="'.specialchars($title).'" target="_blank" rel="noopener">'.Image::getHtml($icon, $label).'</a>';
+        return '<a href="https://github.com/Kuestenschmiede/'.$row['repository'].'" title="'.specialchars($title).'" target="_blank" rel="noopener">'.Image::getHtml($icon, $label).'</a>';
     }
 }
