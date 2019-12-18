@@ -16,11 +16,11 @@
   background-color: #2C3E50;
 }*/
 
-#tl_navigation .tl_level_1_group .group-con4gis {
-  background: url("../images/con4gis.svg") 7px center no-repeat;
-}
+/*#tl_navigation .tl_level_1_group .group-con4gis {*/
+/*  background: url("../images/con4gis.svg") 7px center no-repeat;*/
+/*}*/
 
-li .c4g_log, li .c4g_settings {
+.c4g_log, li .c4g_settings {
   display: none !important;
 }
 
