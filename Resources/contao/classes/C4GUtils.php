@@ -14,6 +14,7 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
+use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\System;
 
 /**
@@ -191,6 +192,7 @@ class C4GUtils
             $eMail->sendTo($mailData['to']);
             unset($eMail);
         } catch ( Swift_RfcComplianceException $e ) {
+            C4gLogModel::addLogEntry('core', $e->getMessage());
             return false;
         }
         return true;
@@ -444,6 +446,7 @@ class C4GUtils
                 try {
                     $response = \GuzzleHttp\json_decode($REQUEST->response);
                 } catch(\Exception $e) {
+                    C4gLogModel::addLogEntry('core', $e->getMessage());
                     return false;
                 }
 
