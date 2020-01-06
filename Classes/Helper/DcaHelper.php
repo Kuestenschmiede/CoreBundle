@@ -157,4 +157,20 @@ class DcaHelper
                 $GLOBALS['TL_LANG']['tl_content']['editalias'][0], 'style="vertical-align:top"') . '</a>';
 
     }
+
+    /**
+     * Springt in die Übersicht zurück.
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $class
+     * @param $attributes
+     * @return string
+     */
+    public function back($href, $label, $title, $class, $attributes)
+    {
+        $rt = Input::get('rt');
+        $href = "/contao?do=c4g_bricks&rt=$rt&key=back";
+        return '<a href="' . $href . '" class="' . $class . '" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+    }
 }

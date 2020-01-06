@@ -19,6 +19,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['description'] = ['Beschreibung', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['installedVersion'] = ['Installiert', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['latestVersion'] = ['Neueste', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['icon'] = ['Icon', ''];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['showBundle'] = ['Bundle anzeigen', ''];
 
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['brick_legend'] = "Bausteininformationen";
