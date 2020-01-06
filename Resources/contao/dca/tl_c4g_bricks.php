@@ -672,9 +672,9 @@ class tl_c4g_bricks extends Contao\Backend
 //                        $icon = 'bundles/con4gismaps/images/be-icons/baselayers.png';
 //                        break;
                     case "io-travel-costs":
-                        $href = '/contao?do=c4g_travel_costs_tariff&rt='.$rt.'&key='.$row['brickkey'];
+                        $href = '/contao?do=c4g_travel_costs_tariffs&rt='.$rt.'&key='.$row['brickkey'];
                         $icon = 'tablewizard.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_travel_costs_tariff'][0];
+                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_travel_costs_tariffs'][0];
                         break;
                     case "visualization":
                         $href = '/contao?do=c4g_visualization_chart_element&rt='.$rt.'&key='.$row['brickkey'];
