@@ -323,6 +323,11 @@ class tl_c4g_bricks extends Contao\Backend
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
                 'icon' => 'bundles/con4giscore/images/maps_c4g.svg'
             ],
+            'map-content' => [
+                'repo' => 'MapContentBundle',
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['mapContent'],
+                'icon' => 'bundles/con4giscore/images/maps_c4g.svg'
+            ],
             'routing' => [
                 'repo' => 'RoutingBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['routing'],
@@ -671,6 +676,11 @@ class tl_c4g_bricks extends Contao\Backend
                         $icon = 'bundles/con4gismaps/images/be-icons/Basiskarte_2_16.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_baselayers'][0];
                         break;
+                    case "map-content":
+                        $href = '/contao?do=c4g_mapcontent_custom_field&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/Basiskarte_2_16.svg';
+                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_custom_field'][0];
+                        break;
                     case "tracking":
                         $href = '/contao?do=c4g_'.$row['brickkey'].'&rt='.$rt.'&key='.$row['brickkey'];
                         $icon = 'bundles/con4gistracking/images/be-icons/trackingconfig.svg';
@@ -720,6 +730,11 @@ class tl_c4g_bricks extends Contao\Backend
                         $icon = 'bundles/con4gismaps/images/be-icons/Lokationsstile_16.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_locstyles'][0];
                         break;
+                    case "map-content":
+                        $href = '/contao?do=c4g_mapcontent_element&rt=' . $rt . '&key=' . $row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/Lokationsstile_16.svg';
+                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_element'][0];
+                        break;
                     case "editor":
                         $href = '/contao?do=c4g_editor_element_category&rt=' . $rt . '&key=' . $row['brickkey'];
                         $icon = 'bundles/con4giseditor/images/be-icons/editor_category.svg';
@@ -761,6 +776,11 @@ class tl_c4g_bricks extends Contao\Backend
                             $icon = 'bundles/con4gismaps/images/be-icons/kartenlayout_16.svg';
                             $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_themes'][0];
                             break;
+                        case "map-content":
+                            $href = '/contao?do=c4g_mapcontent_type&rt='.$rt.'&key='.$row['brickkey'];
+                            $icon = 'bundles/con4gismaps/images/be-icons/kartenlayout_16.svg';
+                            $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_type'][0];
+                            break;
                         case "editor":
                             $href = '/contao?do=c4g_editor_element_type&rt='.$rt.'&key='.$row['brickkey'];
                             $icon = 'bundles/con4giseditor/images/be-icons/editor_type.svg';
@@ -789,6 +809,11 @@ class tl_c4g_bricks extends Contao\Backend
                         $href = '/contao?do=c4g_map_profiles&rt='.$rt.'&key='.$row['brickkey'];
                         $icon = 'bundles/con4gismaps/images/be-icons/map_profile.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_profiles'][0];
+                        break;
+                    case "map-content":
+                        $href = '/contao?do=c4g_mapcontent_directory&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/map_profile.svg';
+                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_dirctory'][0];
                         break;
                     case "pwa":
                         $href = '/contao?do=c4g_push_subscription_type&rt='.$rt.'&key='.$row['brickkey'];
