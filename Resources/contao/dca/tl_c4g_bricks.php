@@ -140,6 +140,12 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'icon'                => 'bundles/con4giscore/images/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
+            'eighthButton' => array
+            (
+                'href'                => 'key=eighthButton',
+                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
             'showDocs' => array
             (
                 'href'                => 'key=showDocs',
@@ -838,7 +844,7 @@ class tl_c4g_bricks extends Contao\Backend
             } else {
                 return;
             }
-        }  else if (strpos($href, 'seventhButton') > 0) {
+        } else if (strpos($href, 'seventhButton') > 0) {
             if ($row['installedVersion']) {
                 switch ($row['brickkey']) {
                     case "maps":
@@ -850,6 +856,20 @@ class tl_c4g_bricks extends Contao\Backend
                         $href = '/contao?do=c4g_firefighter_operations&rt='.$rt.'&key='.$row['brickkey'];
                         $icon = 'bundles/con4gismaps/images/be-icons/mapfolder.png';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_operations'][0];
+                        break;
+                    default:
+                        return;
+                }
+            } else {
+                return;
+            }
+        } else if (strpos($href, 'eighthButton') > 0) {
+            if ($row['installedVersion']) {
+                switch ($row['brickkey']) {
+                    case "maps":
+                        $href = '/contao?do=c4g_maps&rt='.$rt.'&key='.$row['brickkey'];
+                        $icon = 'bundles/con4gismaps/images/be-icons/kartenstruktur_16.svg';
+                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_maps'][0];
                         break;
                     default:
                         return;
