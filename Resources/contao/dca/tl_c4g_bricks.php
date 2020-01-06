@@ -813,7 +813,7 @@ class tl_c4g_bricks extends Contao\Backend
                     case "map-content":
                         $href = '/contao?do=c4g_mapcontent_directory&rt='.$rt.'&key='.$row['brickkey'];
                         $icon = 'bundles/con4gismaps/images/be-icons/map_profile.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_dirctory'][0];
+                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_directory'][0];
                         break;
                     case "pwa":
                         $href = '/contao?do=c4g_push_subscription_type&rt='.$rt.'&key='.$row['brickkey'];
