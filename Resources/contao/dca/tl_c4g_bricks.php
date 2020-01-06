@@ -101,67 +101,67 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             'firstButton' => array
             (
                 'href'                => 'key=firstButton',
-                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'secondButton' => array
             (
                 'href'                => 'key=secondButton',
-                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'thirdButton' => array
             (
                 'href'                => 'key=thirdButton',
-                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'fourthButton' => array
             (
                 'href'                => 'key=fourthButton',
-                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'fifthButton' => array
             (
                 'href'                => 'key=fifthButton',
-                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'sixthButton' => array
             (
                 'href'                => 'key=sixthButton',
-                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'seventhButton' => array
             (
                 'href'                => 'key=seventhButton',
-                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'eighthButton' => array
             (
                 'href'                => 'key=eighthButton',
-                'icon'                => 'bundles/con4giscore/images/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'showDocs' => array
             (
                 'href'                => 'key=showDocs',
-                'icon'                => 'bundles/con4giscore/images/help_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/help_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'showDocs']
             ),
             'showPackagist' => array
             (
                 'href'                => 'key=showPackagist',
-                'icon'                => 'bundles/con4giscore/images/packagist_download_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/packagist_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'showPackagist']
             ),
             'showGitHub' => array
             (
                 'href'                => 'key=showGitHub',
-                'icon'                => 'bundles/con4giscore/images/github_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/github_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'showGitHub']
             ),
 		)
@@ -277,91 +277,93 @@ class tl_c4g_bricks extends Contao\Backend
         $this->versionProvider = new C4GVersionProvider();
 		$this->import('Contao\BackendUser', 'User');
 
+		$iconPath = 'bundles/con4giscore/images/be-icons/';
+
         $this->bundles = [
             'core' => [
                 'repo' => 'CoreBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['core'],
-                'icon' => 'bundles/con4giscore/images/core_c4g.svg'
+                'icon' => $iconPath.'core_c4g.svg'
             ],
             'documents' => [
                 'repo' => 'DocumentsBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'],
-                'icon' => 'bundles/con4giscore/images/documents_c4g.svg'
+                'icon' => $iconPath.'documents_c4g.svg'
             ],
             'editor' => [
                 'repo' => 'EditorBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'],
-                'icon' => 'bundles/con4giscore/images/editor_c4g.svg'
+                'icon' => $iconPath.'editor_c4g.svg'
             ],
             'export' => [
                 'repo' => 'ExportBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['export'],
-                'icon' => 'bundles/con4giscore/images/export_c4g.svg'
+                'icon' => $iconPath.'export_c4g.svg'
             ],
             'firefighter' => [
                 'repo' => 'FirefighterBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'],
-                'icon' => 'bundles/con4giscore/images/firefighter_c4g.svg'
+                'icon' => $iconPath.'firefighter_c4g.svg'
             ],
             'forum' => [
                 'repo' => 'ForumBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
-                'icon' => 'bundles/con4giscore/images/forum_c4g.svg'
+                'icon' => $iconPath.'forum_c4g.svg'
             ],
             'groups' => [
                 'repo' => 'GroupsBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['groups'],
-                'icon' => 'bundles/con4giscore/images/groups_c4g.svg'
+                'icon' => $iconPath.'groups_c4g.svg'
             ],
             'import' => [
                 'repo' => 'ImportBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['import'],
-                'icon' => 'bundles/con4giscore/images/import_c4g.svg'
+                'icon' => $iconPath.'import_c4g.svg'
             ],
             'maps' => [
                 'repo' => 'MapsBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
-                'icon' => 'bundles/con4giscore/images/maps_c4g.svg'
+                'icon' => $iconPath.'maps_c4g.svg'
             ],
             'map-content' => [
                 'repo' => 'MapContentBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['mapContent'],
-                'icon' => 'bundles/con4giscore/images/maps_c4g.svg'
+                'icon' => $iconPath.'maps_c4g.svg'
             ],
             'routing' => [
                 'repo' => 'RoutingBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['routing'],
-                'icon' => 'bundles/con4giscore/images/routing_c4g.svg'
+                'icon' => $iconPath.'routing_c4g.svg'
             ],
             'projects' => [
                 'repo' => 'ProjectsBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'],
-                'icon' => 'bundles/con4giscore/images/projects_c4g.svg'
+                'icon' => $iconPath.'projects_c4g.svg'
             ],
             'pwa' => [
                 'repo' => 'PwaBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'],
-                'icon' => 'bundles/con4giscore/images/pwa_c4g.svg'
+                'icon' => $iconPath.'pwa_c4g.svg'
             ],
             'queue' => [
                 'repo' => 'QueueBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'],
-                'icon' => 'bundles/con4giscore/images/queue_c4g.svg'
+                'icon' => $iconPath.'queue_c4g.svg'
             ],
             'tracking' => [
                 'repo' => 'TrackingBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'],
-                'icon' => 'bundles/con4giscore/images/tracking_c4g.svg'
+                'icon' => $iconPath.'tracking_c4g.svg'
             ],
             'visualization' => [
                 'repo' => 'VisualizationBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'],
-                'icon' => 'bundles/con4giscore/images/visualization_c4g.svg'
+                'icon' => $iconPath.'visualization_c4g.svg'
             ],
             'io-travel-costs' => [
                 'repo' => 'IOTravelCostsBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'],
-                'icon' => 'bundles/con4giscore/images/io-travel-costs_c4g.svg'
+                'icon' => $iconPath.'io-travel-costs_c4g.svg'
             ]
         ];
 	}
