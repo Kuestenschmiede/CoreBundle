@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'class'               => 'header_switch_installed',
                 'button_callback'     => ['tl_c4g_bricks', 'switchInstalled'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/show_install_aktiv.svg',
-                'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled']
+                'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'][0]
             ),
             'reloadVersions' => array
             (
@@ -484,17 +484,18 @@ class tl_c4g_bricks extends Contao\Backend
         $key = Contao\Input::get('key');
         if ($key) {
             switch ($key) {
+                case 'switchAll':
+                    $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter'] = [];
+                    $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'][0];
+                    $icon  = 'bundles/con4giscore/images/be-icons/show_install_passiv.svg';
+
+                    $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['label'] = $label;
+                    $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['icon'] = $icon;
+                    break;
                 case 'switchInstalled':
-                    $label = $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['label'];
-                    if ($label == $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled']) {
-                        $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter']['showBundle'] = ["showBundle = ?", "1"];
-                        $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'];
-                        $icon  = 'bundles/con4giscore/images/be-icons/show_install_aktiv.svg';
-                    } else {
-                        $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter']['showBundle'] = ["showBundle NOT ?", "1"];
-                        $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'];
-                        $icon  = 'bundles/con4giscore/images/be-icons/show_install_passiv.svg';
-                    }
+                    $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter']['showBundle'] = ["showBundle = ?", "1"];
+                    $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'][0];
+                    $icon  = 'bundles/con4giscore/images/be-icons/show_install_aktiv.svg';
 
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['label'] = $label;
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['icon'] = $icon;
@@ -539,7 +540,15 @@ class tl_c4g_bricks extends Contao\Backend
         $rt = Input::get('rt');
         $do = Input::get('do');
 
-        $href = "/contao?do=$do&key=switchInstalled";
+        $actKey = Input::get('key');
+
+        if ($actKey == "switchInstalled") {
+            $actKey = 'switchAll';
+        } else {
+            $actKey = 'switchInstalled';
+        }
+
+        $href = "/contao?do=".$do."&key=".$actKey;
         return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
 
