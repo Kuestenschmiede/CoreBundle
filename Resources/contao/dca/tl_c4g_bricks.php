@@ -15,6 +15,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 	// Config
 	'config' => array
 	(
+        'class' => 'con4gis_bricks',
 		'dataContainer'               => 'Table',
 		'notCopyable'                 => true,
 		'notCreatable'                => true,
@@ -139,13 +140,13 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=seventhButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
-            ),
+            )/*,
             'eighthButton' => array
             (
                 'href'                => 'key=eighthButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
-            ),
+            )*/,
             'showDocs' => array
             (
                 'href'                => 'key=showDocs',
@@ -470,6 +471,11 @@ class tl_c4g_bricks extends Contao\Backend
             foreach ($this->installedPackages as $vendorBundle=>$version) {
                 if ((substr($vendorBundle,0,7) == 'con4gis') && (!$this->versions[$vendorBundle])) {
                     $bundle = substr($vendorBundle,8);
+
+                    if ($bundles[$bundle]) {
+                        continue;
+                    }
+
                     $installedVersion = $version;
 
                     $set['tstamp'] = date();
@@ -675,7 +681,7 @@ class tl_c4g_bricks extends Contao\Backend
                 switch ($row['brickkey']) {
                     case "maps":
                         $href = '/contao?do=c4g_map_baselayers&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/Basiskarte_2_16.svg';
+                        $icon = 'bundles/con4gismaps/images/be-icons/baselayers.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_baselayers'][0];
                         break;
                     case "map-content":
@@ -689,10 +695,17 @@ class tl_c4g_bricks extends Contao\Backend
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][0];
                         break;
                     case "import":
+                        $href = '/contao?do=c4g_'.$row['brickkey'].'&rt='.$rt.'&key='.$row['brickkey'];
+                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][0];
+                        break;
                     case "export":
+                        $href = '/contao?do=c4g_'.$row['brickkey'].'&rt='.$rt.'&key='.$row['brickkey'];
+                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][0];
+                        break;
                     case "queue":
                         $href = '/contao?do=c4g_'.$row['brickkey'].'&rt='.$rt.'&key='.$row['brickkey'];
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][0];
+                        $icon = 'bundles/con4gisqueue/images/be-icons/import_queue_2.svg';
                         break;
 //                    case "pwa":
 //                        $href = '/contao?do=c4g_pwa_configuration&rt='.$rt.'&key='.$row['brickkey'];
@@ -700,7 +713,7 @@ class tl_c4g_bricks extends Contao\Backend
 //                        break;
                     case "io-travel-costs":
                         $href = '/contao?do=c4g_travel_costs_tariffs&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'tablewizard.svg';
+                        $icon = 'bundles/con4gisiotravelcosts/images/be-icons/travelcosts_tariff.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_travel_costs_tariffs'][0];
                         break;
                     case "visualization":
@@ -715,7 +728,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "forum":
                         $href = '/contao?do=c4g_forum&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/baselayers.png';
+                        //$icon = 'bundles/con4gisforum/images/be-icons/forum_structure.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_forum'][0];
                         break;
                     default:
@@ -729,7 +742,7 @@ class tl_c4g_bricks extends Contao\Backend
                 switch ($row['brickkey']) {
                     case "maps":
                         $href = '/contao?do=c4g_map_locstyles&rt=' . $rt . '&key=' . $row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/Lokationsstile_16.svg';
+                        $icon = 'bundles/con4gismaps/images/be-icons/locationstyles.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_locstyles'][0];
                         break;
                     case "map-content":
@@ -763,7 +776,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "forum":
                         $href = '/contao?do=c4g_forum_thread&rt=' . $rt . '&key=' . $row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/locstyles.png';
+                        $icon = 'bundles/con4gisforum/images/be-icons/forum_structure.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_forum_thread'][0];
                         break;
                     default:
@@ -775,7 +788,7 @@ class tl_c4g_bricks extends Contao\Backend
                     switch ($row['brickkey']) {
                         case "maps":
                             $href = '/contao?do=c4g_map_themes&rt='.$rt.'&key='.$row['brickkey'];
-                            $icon = 'bundles/con4gismaps/images/be-icons/kartenlayout_16.svg';
+                            $icon = 'bundles/con4gismaps/images/be-icons/maplayout.svg';
                             $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_themes'][0];
                             break;
                         case "map-content":
@@ -809,7 +822,7 @@ class tl_c4g_bricks extends Contao\Backend
                 switch ($row['brickkey']) {
                     case "maps":
                         $href = '/contao?do=c4g_map_profiles&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/map_profile.svg';
+                        $icon = 'bundles/con4gismaps/images/be-icons/mapprofile.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_profiles'][0];
                         break;
                     case "map-content":
@@ -838,7 +851,7 @@ class tl_c4g_bricks extends Contao\Backend
                 switch ($row['brickkey']) {
                     case "maps":
                         $href = '/contao?do=c4g_maps&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/kartenstruktur_16.png';
+                        $icon = 'bundles/con4gismaps/images/be-icons/mapstructure.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_maps'][0];
                         break;
                     case "firefighter":
@@ -857,7 +870,7 @@ class tl_c4g_bricks extends Contao\Backend
                 switch ($row['brickkey']) {
                     case "maps":
                         $href = '/contao?do=c4g_map_tables&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/source_tables.svg';
+                        $icon = 'bundles/con4gismaps/images/be-icons/sourcetables.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_tables'][0];
                         break;
                     case "firefighter":
@@ -876,7 +889,7 @@ class tl_c4g_bricks extends Contao\Backend
                 switch ($row['brickkey']) {
                     case "maps":
                         $href = '/contao?do=c4g_map_filters&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/mapfolder.png';
+                        $icon = 'bundles/con4gismaps/images/be-icons/mapfilter.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_filters'][0];
                         break;
                     case "firefighter":
@@ -890,27 +903,25 @@ class tl_c4g_bricks extends Contao\Backend
             } else {
                 return;
             }
-        } else if (strpos($href, 'eighthButton') > 0) {
+        } /*else if (strpos($href, 'eighthButton') > 0) {
             if ($row['installedVersion']) {
                 switch ($row['brickkey']) {
                     case "maps":
-                        $href = '/contao?do=c4g_maps&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/kartenstruktur_16.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_maps'][0];
-                        break;
+
                     default:
                         return;
                 }
             } else {
                 return;
             }
-        } else {
+        }*/ else {
             return;
         }
         $attributes = 'style="margin-right:3px"';
 
         //ToDo check permissions
         return  /*$this->User->hasAccess('uploadPathGeneric', 'c4g_settings') ? */'<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label).'</a>'/* : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' '*/;
+
     }
 
     /**
