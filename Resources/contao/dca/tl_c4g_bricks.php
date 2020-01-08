@@ -40,6 +40,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 			'fields'                  => ['brickname'],
 			'panelLayout'             => '',
             'headerFields'            => ['brickname','description','installedVersion','latestVersion'],
+            'filter'                  => ['showBundle' => ["showBundle = ?", "1"]]
 		),
 		'label' => array
 		(
@@ -63,11 +64,11 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             ),
             'switchInstalled' => array
             (
-                'href'                => 'key=switchInstalled',
+                'href'                => 'key=switchAll',
                 'class'               => 'header_switch_installed',
                 'button_callback'     => ['tl_c4g_bricks', 'switchInstalled'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/visible.svg',
-                'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'][0]
+                'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'][0]
             ),
             'reloadVersions' => array
             (
@@ -566,10 +567,10 @@ class tl_c4g_bricks extends Contao\Backend
 
         $actKey = Input::get('key');
 
-        if ($actKey == "switchInstalled") {
-            $actKey = 'switchAll';
-        } else {
+        if ($actKey == "switchAll") {
             $actKey = 'switchInstalled';
+        } else {
+            $actKey = 'switchAll';
         }
 
         $href = "/contao?do=".$do."&key=".$actKey;
@@ -673,17 +674,17 @@ class tl_c4g_bricks extends Contao\Backend
                 $do = 'c4g_'.$row['brickkey'].'_configuration';
                 $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey'].'_configuration'][0];
 
-                switch ($row['brickkey']) {
-                    case "routing":
-                        $icon = 'bundles/con4gisrouting/images/be-icons/routingconfig.svg';
-                        break;
-                    case "pwa":
-                        $icon = 'bundles/con4gispwa/images/be-icons/pwa_config.svg';
-                        break;
-                    case "editor":
-                        $icon = 'bundles/con4giseditor/images/be-icons/editor_config.svg';
-                        break;
-                }
+//                switch ($row['brickkey']) {
+//                    case "routing":
+//                        $icon = 'bundles/con4gisrouting/images/be-icons/routingconfig.svg';
+//                        break;
+//                    case "pwa":
+//                        //$icon = 'bundles/con4gispwa/images/be-icons/pwa_config.svg';
+//                        break;
+//                    case "editor":
+//                        $icon = 'bundles/con4giseditor/images/be-icons/editor_config.svg';
+//                        break;
+//                }
             } else if ($row['installedVersion']) {
                 switch ($row['brickkey']) {
                     case "maps":
@@ -693,12 +694,12 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "map-content":
                         $do = 'c4g_mapcontent_custom_field';
-                        $icon = 'bundles/con4gismapcontent/images/be-icons/customfields.svg';
+                        //$icon = 'bundles/con4gismapcontent/images/be-icons/customfields.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_custom_field'][0];
                         break;
                     case "tracking":
                         $do = 'do=c4g_'.$row['brickkey'];
-                        $icon = 'bundles/con4gistracking/images/be-icons/trackingconfig.svg';
+                        //$icon = 'bundles/con4gistracking/images/be-icons/trackingconfig.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][0];
                         break;
                     case "import":
@@ -839,7 +840,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "pwa":
                         $do = 'c4g_push_subscription_type';
-                        $icon = 'bundles/con4gispwa/images/be-icons/push_abo_type.svg';
+                        $icon = 'bundles/con4gispwa/images/be-icons/push_types.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_push_subscription_type'][0];
                         break;
                     case "firefighter":

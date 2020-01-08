@@ -4,7 +4,7 @@
  * the gis-kit for Contao CMS.
  *
  * @package    con4gis
- * @version    6
+ * @version    7
  * @author     con4gis contributors (see "authors.txt")
  * @license    LGPL-3.0-or-later
  * @copyright  Küstenschmiede GmbH Software & Design
@@ -25,8 +25,8 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['showBundle'] = ['Bundle anzeigen', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['brick_legend'] = "Bausteininformationen";
 
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'] = ["Globale Einstellungen", "Einstellungen die für mehrere Bausteine gelten."];
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'] = ["Nur installierte anzeigen", "Über diesen Button können Sie zwischen nur installierten und allen Bausteinen wechseln."];
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'] = ["Alle anzeigen", "Über diesen Button können Sie zwischen nur installierten und allen Bausteinen wechseln."];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'] = ["Installierte Bausteine", "Über diesen Button können Sie zwischen nur installierten und allen Bausteinen wechseln."];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'] = ["Alle Bausteine", "Über diesen Button können Sie zwischen nur installierten und allen Bausteinen wechseln."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'] = ["Versionen aktualisieren","Die Versionen werden vom Packagist neu geladen."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'] = ["Server Logs","Logs aus den con4gis Modulen werden angezeigt."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisOrg'] = ["con4gis.org","Alles zum GIS-Baukasten."];
