@@ -172,13 +172,11 @@ class DcaHelper
     {
         $rt = Input::get('rt');
         $do = Input::get('do');
-        //$id = Input::get('id');
-        //$ref = Input::get('ref');
 
         if ($id) {
-            $href = "/contao/main.php?do=".$do."&rt=$rt"; //&ref=$ref
+            $href = "/contao/main.php?do=".$do."&rt=$rt";
         } else {
-            $href = "/contao/main.php?do=c4g_bricks&rt=$rt&key=back"; //&ref=$ref
+            $href = "/contao/main.php?do=c4g_bricks&rt=$rt&key=back";
         }
         return '<a href="' . $href . '" class="' . $class . '" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }

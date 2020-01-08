@@ -11,6 +11,6 @@ class CopyOperation extends DCAOperation
         parent::__construct($dca, 'copy');
         $this->label($dca->getName(), 'copy');
         $this->href('act=copy');
-        $this->icon('copy.gif');
+        $this->icon('copy.svg');
     }
 }

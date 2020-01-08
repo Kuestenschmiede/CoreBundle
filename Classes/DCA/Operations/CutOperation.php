@@ -11,7 +11,7 @@ class CutOperation extends DCAOperation
         parent::__construct($dca, 'cut');
         $this->label($dca->getName(), 'cut');
         $this->href('act=paste&amp;mode=cut');
-        $this->icon('cut.gif');
+        $this->icon('cut.svg');
         $this->attributes('onclick="Backend.getScrollOffset();"');
     }
 }

@@ -11,7 +11,7 @@ class DeleteOperation extends DCAOperation
         parent::__construct($dca, 'delete');
         $this->label($dca->getName(), 'delete');
         $this->href('act=delete');
-        $this->icon('delete.gif');
+        $this->icon('delete.svg');
         $this->attributes('onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"');
     }
 }

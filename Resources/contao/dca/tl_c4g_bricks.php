@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=switchInstalled',
                 'class'               => 'header_switch_installed',
                 'button_callback'     => ['tl_c4g_bricks', 'switchInstalled'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/show_install_aktiv.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/visible.svg',
                 'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'][0]
             ),
             'reloadVersions' => array
@@ -87,13 +87,17 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=con4gisOrg',
                 'class'               => 'header_con4gis_org',
-                'button_callback'     => ['tl_c4g_bricks', 'con4gisOrg']
+                'button_callback'     => ['tl_c4g_bricks', 'con4gisOrg'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
+                'label'               => 'con4gis.org'
             ),
             'con4gisIO' => array
             (
                 'href'                => 'key=con4gisIO',
                 'class'               => 'header_con4gis_io',
-                'button_callback'     => ['tl_c4g_bricks', 'con4gisIO']
+                'button_callback'     => ['tl_c4g_bricks', 'con4gisIO'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.io.svg',
+                'label'               => 'con4gis.io'
             )
 		),
 		'operations' => array
@@ -505,7 +509,7 @@ class tl_c4g_bricks extends Contao\Backend
                 case 'switchAll':
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter'] = [];
                     $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'][0];
-                    $icon  = 'bundles/con4giscore/images/be-icons/show_install_passiv.svg';
+                    $icon  = 'bundles/con4giscore/images/be-icons/invisible.svg';
 
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['label'] = $label;
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['icon'] = $icon;
@@ -513,7 +517,7 @@ class tl_c4g_bricks extends Contao\Backend
                 case 'switchInstalled':
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter']['showBundle'] = ["showBundle = ?", "1"];
                     $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'][0];
-                    $icon  = 'bundles/con4giscore/images/be-icons/show_install_aktiv.svg';
+                    $icon  = 'bundles/con4giscore/images/be-icons/visible.svg';
 
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['label'] = $label;
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['icon'] = $icon;
@@ -617,9 +621,7 @@ class tl_c4g_bricks extends Contao\Backend
      */
     public function con4gisOrg($href, $label, $title, $class, $attributes)
     {
-        $icon = 'bundles/con4giscore/images/be-icons/con4gis-org-logo.svg';
-        $label = 'con4gis.org';
-        return '<a href="https://con4gis.org"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '" style="margin-left: 23px;"' . $attributes .' target="_blank" rel="noopener">' . Image::getHtml($icon, $label, "style='width:42px;'") . '</a>';
+        return '<a href="https://con4gis.org"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a>';
     }
 
     /**
@@ -633,9 +635,7 @@ class tl_c4g_bricks extends Contao\Backend
      */
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
-        $icon = 'bundles/con4giscore/images/be-icons/con4gis-io-logo.svg';
-        $label = 'con4gis.io';
-        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '" style="margin-left: 8px;"' . $attributes .' target="_blank" rel="noopener">' . Image::getHtml($icon, $label, 'style="width:42px;"') . '</a>';
+        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a>';
     }
 
     /**
