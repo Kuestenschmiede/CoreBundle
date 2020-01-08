@@ -172,7 +172,7 @@ class DcaHelper
     {
         $rt = Input::get('rt');
         $do = Input::get('do');
-        $id = Input::get('id');
+        //$id = Input::get('id');
         //$ref = Input::get('ref');
 
         if ($id) {

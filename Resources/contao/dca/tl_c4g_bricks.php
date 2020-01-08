@@ -926,12 +926,16 @@ class tl_c4g_bricks extends Contao\Backend
         }
 
         $attributes = 'style="margin-right:3px"';
-        $href = '/contao/main.php?do='.$do.'&amp;table=tl_'.$do.'&amp;rt=' . $rt . '&amp;key='.$key.'&amp;popup=1&amp;nb=0&amp';
-        return ' <a href="'.$href.'" title="' . StringUtil::specialchars($title) . '" class="con4gis_link" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a>';
-
-        //return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\'' . Contao\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])) . '\',\'url\':this.href});return false">' . Contao\Image::getHtml('edit.svg') . '</a>';
+        $ref = Input::get('ref');
+        //$href = '/contao/main.php?do='.$do.'&amp;ref='.$ref.'&amp;popup=1&amp;nb=1&amp';
+        $href = '/contao/main.php?do='.$do.'&amp;ref='.$ref;
         //ToDo check permissions
-        //return  /*$this->User->hasAccess('uploadPathGeneric', 'c4g_settings') ? */'<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label).'</a>'/* : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' '*/;
+
+        //as popup
+        //return ' <a href="'.$href.'" title="' . StringUtil::specialchars($title) . '" class="con4gis_link" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a>';
+
+        //or not as popup
+        return  '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label).'</a>';
 
     }
 
