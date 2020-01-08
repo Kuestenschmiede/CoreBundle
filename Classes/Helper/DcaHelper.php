@@ -15,6 +15,7 @@ namespace con4gis\CoreBundle\Classes\Helper;
 use con4gis\CoreBundle\Resources\contao\classes\C4GUtils;
 use con4gis\MapsBundle\Resources\contao\classes\Utils;
 use con4gis\ProjectsBundle\Classes\Common\C4GBrickCommon;
+use Contao\Controller;
 use Contao\Database;
 use Contao\Image;
 use Contao\Input;
@@ -170,7 +171,15 @@ class DcaHelper
     public function back($href, $label, $title, $class, $attributes)
     {
         $rt = Input::get('rt');
-        $href = "/contao?do=c4g_bricks&rt=$rt&key=back";
+        $do = Input::get('do');
+        $id = Input::get('id');
+        //$ref = Input::get('ref');
+
+        if ($id) {
+            $href = "/contao/main.php?do=".$do."&rt=$rt"; //&ref=$ref
+        } else {
+            $href = "/contao/main.php?do=c4g_bricks&rt=$rt&key=back"; //&ref=$ref
+        }
         return '<a href="' . $href . '" class="' . $class . '" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
 }
