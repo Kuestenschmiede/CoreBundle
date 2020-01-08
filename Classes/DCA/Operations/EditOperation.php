@@ -11,6 +11,6 @@ class EditOperation extends DCAOperation
         parent::__construct($dca, 'edit');
         $this->label($dca->getName(), 'edit');
         $this->href('act=edit');
-        $this->icon('edit.gif');
+        $this->icon('bundles/con4giscore/images/be-icons/edit.svg');
     }
 }

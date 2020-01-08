@@ -50,7 +50,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['delete'] = array("Einstellung löschen",""
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['show'] = array("Einstellung anzeigen","");
 
 /** DESCRIPTIONS */
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['core'] = 'Die Mutter aller Bausteine';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['core'] = 'con4gis Kernfunktionen';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'] = 'PDF Generator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'] = 'Front- und Backend Karteneditor';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['export'] = 'CSV Exporter';
@@ -67,3 +67,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Stapelverarbeitung von Prozesse
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Positionsverfolgung';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Fahrtkostenrechner (erfordert con4gis.io)';
+
+/** INFOTEXT */
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Willkommen in der con4gis Schaltzentrale. Hier könnt Ihr Eure Bausteine verwalten und sehen was con4gis noch zu bieten hat.'.
+    ' Eine Besonderheit ist der neue Grunddaten Button an einigen Bausteinen: darüber könnt Ihr, wenn Ihr einen con4gis.io Zugang habt auch Demodaten einspielen.';

@@ -50,7 +50,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['delete'] = array("Delete settings","");
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['show'] = array("Show settings","");
 
 /** DESCRIPTIONS */
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['core'] = 'The mother of all bricks';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['core'] = 'con4gis core functions';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'] = 'PDF Generator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'] = 'Front- and backend mapeditor';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['export'] = 'CSV Exporter';
@@ -67,3 +67,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Batch processing of processes (
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Position tracking';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Travel cost calculator (requires con4gis.io)';
+
+/** INFOTEXT */
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Welcome to the con4gis control center. Here you can manage your con4gis and see what else con4gis has to offer.'.
+    ' A special feature is the new basic data button on some bricks: if you have con4gis.io access, you can use it to import demo data.';

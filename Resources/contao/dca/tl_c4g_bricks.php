@@ -86,15 +86,13 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=con4gisOrg',
                 'class'               => 'header_con4gis_org',
-                'button_callback'     => ['tl_c4g_bricks', 'con4gisOrg'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg'
+                'button_callback'     => ['tl_c4g_bricks', 'con4gisOrg']
             ),
             'con4gisIO' => array
             (
                 'href'                => 'key=con4gisIO',
                 'class'               => 'header_con4gis_io',
-                'button_callback'     => ['tl_c4g_bricks', 'con4gisIO'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.io.svg'
+                'button_callback'     => ['tl_c4g_bricks', 'con4gisIO']
             )
 		),
 		'operations' => array
@@ -102,49 +100,49 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             'firstButton' => array
             (
                 'href'                => 'key=firstButton',
-                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'secondButton' => array
             (
                 'href'                => 'key=secondButton',
-                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'thirdButton' => array
             (
                 'href'                => 'key=thirdButton',
-                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'fourthButton' => array
             (
                 'href'                => 'key=fourthButton',
-                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'fifthButton' => array
             (
                 'href'                => 'key=fifthButton',
-                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'sixthButton' => array
             (
                 'href'                => 'key=sixthButton',
-                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
             'seventhButton' => array
             (
                 'href'                => 'key=seventhButton',
-                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             )/*,
             'eighthButton' => array
             (
                 'href'                => 'key=eighthButton',
-                'icon'                => 'bundles/con4giscore/images/be-icons/pen_16.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             )*/,
             'showDocs' => array
@@ -526,6 +524,8 @@ class tl_c4g_bricks extends Contao\Backend
         } else {
             $this->loadBricks($dc, false);
         }
+
+        \Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext']);
     }
 
     /**
@@ -616,7 +616,9 @@ class tl_c4g_bricks extends Contao\Backend
      */
     public function con4gisOrg($href, $label, $title, $class, $attributes)
     {
-        return '<a href="https://con4gis.org"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a>';
+        $icon = 'bundles/con4giscore/images/be-icons/con4gis-org-logo.svg';
+        $label = 'con4gis.org';
+        return '<a href="https://con4gis.org"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '" style="margin-left: 23px;"' . $attributes .' target="_blank" rel="noopener">' . Image::getHtml($icon, $label, "style='width:42px;'") . '</a>';
     }
 
     /**
@@ -630,7 +632,9 @@ class tl_c4g_bricks extends Contao\Backend
      */
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
-        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a>';
+        $icon = 'bundles/con4giscore/images/be-icons/con4gis-io-logo.svg';
+        $label = 'con4gis.io';
+        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '" style="margin-left: 8px;"' . $attributes .' target="_blank" rel="noopener">' . Image::getHtml($icon, $label, 'style="width:42px;"') . '</a>';
     }
 
     /**
@@ -644,7 +648,9 @@ class tl_c4g_bricks extends Contao\Backend
      */
     public function con4gisVersion($href, $label, $title, $class, $attributes)
     {
-        return '<div class="con4gis_version" style="margin-bottom: 16px; color: #0f3b5c;">con4gis '.$GLOBALS['con4gis']['version'].'</div>';
+        //$icon = 'bundles/con4giscore/images/be-icons/con4gis-logo.svg';
+        $label = 'con4gis '.$GLOBALS['con4gis']['version'];
+        return '<div class="con4gis_version" style="text-align: left;margin-bottom:8px;color: #0f3b5c;">'.$label/*Image::getHtml($icon, $label)*/.'</div>';
     }
 
     /**
@@ -660,7 +666,6 @@ class tl_c4g_bricks extends Contao\Backend
         $rt = Input::get('rt');
 
         //ToDo set configuration params in bundles
-
         if (strpos($href, 'firstButton') > 0) {
             if ($row['installedVersion'] && $row['withSettings'] && ($row['brickkey'] != 'core')) {
                 $href = '/contao?do=c4g_'.$row['brickkey'].'_configuration&rt='.$rt.'&'.$href;
@@ -686,7 +691,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "map-content":
                         $href = '/contao?do=c4g_mapcontent_custom_field&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/Basiskarte_2_16.svg';
+                        $icon = 'bundles/con4gismapcontent/images/be-icons/customfields.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_custom_field'][0];
                         break;
                     case "tracking":
@@ -723,7 +728,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "firefighter":
                         $href = '/contao?do=c4g_firefighter_operation_types&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/baselayers.png';
+                        $icon = 'bundles/con4gisfirefighter/images/be-icons/operationtypes.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_operation_types'][0];
                         break;
                     case "forum":
@@ -747,7 +752,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "map-content":
                         $href = '/contao?do=c4g_mapcontent_element&rt=' . $rt . '&key=' . $row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/Lokationsstile_16.svg';
+                        $icon = 'bundles/con4gismapcontent/images/be-icons/mapelements.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_element'][0];
                         break;
                     case "editor":
@@ -771,7 +776,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "firefighter":
                         $href = '/contao?do=c4g_firefighter_operation_categories&rt=' . $rt . '&key=' . $row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/locstyles.png';
+                        $icon = 'bundles/con4gisfirefighter/images/be-icons/operationtypes.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_operation_categories'][0];
                         break;
                     case "forum":
@@ -808,7 +813,7 @@ class tl_c4g_bricks extends Contao\Backend
                             break;
                         case "firefighter":
                             $href = '/contao?do=c4g_firefighter_vehicle_types&rt='.$rt.'&key='.$row['brickkey'];
-                            $icon = 'bundles/con4gismaps/images/be-icons/themes.png';
+                            $icon = 'bundles/con4gisfirefighter/images/be-icons/vehicletypes.svg';
                             $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_vehicle_types'][0];
                             break;
                         default:
@@ -832,12 +837,12 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "pwa":
                         $href = '/contao?do=c4g_push_subscription_type&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/profiles.png';
+                        $icon = 'bundles/con4gispwa/images/be-icons/push_abo_type.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_push_subscription_type'][0];
                         break;
                     case "firefighter":
                         $href = '/contao?do=c4g_firefighter_vehicles&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/profiles.png';
+                        $icon = 'bundles/con4gisfirefighter/images/be-icons/vehicles.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_vehicles'][0];
                         break;
                     default:
@@ -856,7 +861,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "firefighter":
                         $href = '/contao?do=c4g_firefighter_unit_types&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/map.png';
+                        $icon = 'bundles/con4gisfirefighter/images/be-icons/unittypes.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_unit_types'][0];
                         break;
                     default:
@@ -875,7 +880,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "firefighter":
                         $href = '/contao?do=c4g_firefighter_units&rt='.$rt.'&key='.$row['brickkey'];
-                        $icon = 'bundles/con4gismaps/images/be-icons/map_location.png';
+                        $icon = 'bundles/con4gisfirefighter/images/be-icons/units.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_units'][0];
                         break;
                     default:
