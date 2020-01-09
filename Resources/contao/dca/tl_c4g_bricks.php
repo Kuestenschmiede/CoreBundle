@@ -77,6 +77,13 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'button_callback'     => ['tl_c4g_bricks', 'reloadVersions'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/update_version.svg'
             ),
+            'importData' => array
+            (
+                'href'                => 'key=importData',
+                'class'               => 'header_import_data',
+                'button_callback'     => ['tl_c4g_bricks', 'importData'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/importData.svg'
+            ),
             'serverLogs' => array
             (
                 'href'                => 'key=serverLogs',
@@ -592,6 +599,22 @@ class tl_c4g_bricks extends Contao\Backend
         $do = Input::get('do');
 
         $href = "/contao?do=$do&key=reloadVersions";
+        return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+    }
+
+    /**
+     * importData
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $class
+     * @param $attributes
+     * @return string
+     */
+    public function importData($href, $label, $title, $class, $attributes)
+    {
+        $rt = Input::get('rt');
+        $href = "/contao?do=c4g_io_data&rt=$rt&key=importData";
         return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
 

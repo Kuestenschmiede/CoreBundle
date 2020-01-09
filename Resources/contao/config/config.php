@@ -30,16 +30,12 @@ $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
 /**
  * Backend Modules
  */
-//$GLOBALS['BE_MOD']['content'] = array_merge($GLOBALS['BE_MOD']['content'], [
-//        'c4g_bricks' => ['tables' => ['tl_c4g_bricks']],
-//    ]
-//);
-
 array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array
 (
     'con4gis' => [
         'c4g_bricks'   => ['tables' => ['tl_c4g_bricks']],
         'c4g_settings' => ['tables' => ['tl_c4g_settings']],
+        'c4g_io_data'  => ['tables' => ['tl_c4g_io_data']],
         'c4g_log'      => ['tables' => ['tl_c4g_log']]
     ]
 ));

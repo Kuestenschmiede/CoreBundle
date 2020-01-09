@@ -20,7 +20,7 @@
   background: url("../images/be-icons/con4gis.svg") 3px 2px no-repeat;
 }
 
-.c4g_log, li .c4g_settings {
+li .c4g_log, li .c4g_settings, li .c4g_io_data {
   display: none !important;
 }
 

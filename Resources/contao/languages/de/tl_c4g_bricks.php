@@ -28,6 +28,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'] = ["Globale Einstellungen
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'] = ["Installierte Bausteine", "Über diesen Button können Sie zwischen nur installierten und allen Bausteinen wechseln."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'] = ["Alle Bausteine", "Über diesen Button können Sie zwischen nur installierten und allen Bausteinen wechseln."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'] = ["Versionen aktualisieren","Die Versionen werden vom Packagist neu geladen."];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['importData'] = ["Daten importieren","con4gis.io stellt Grund- und Demodaten zur Verfügung."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'] = ["Server Logs","Logs aus den con4gis Modulen werden angezeigt."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisOrg'] = ["con4gis.org","Alles zum GIS-Baukasten."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisIO'] = ["con4gis.io","Kartendienste für Contao."];
