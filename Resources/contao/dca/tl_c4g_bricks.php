@@ -721,7 +721,7 @@ class tl_c4g_bricks extends Contao\Backend
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_custom_field'][0];
                         break;
                     case "tracking":
-                        $do = 'do=c4g_'.$row['brickkey'];
+                        $do = 'c4g_'.$row['brickkey'];
                         //$icon = 'bundles/con4gistracking/images/be-icons/trackingconfig.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][0];
                         break;
