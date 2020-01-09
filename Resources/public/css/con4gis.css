@@ -27,3 +27,7 @@ li .c4g_log, li .c4g_settings, li .c4g_io_data {
 .col_brickname img {
   width: 75px;
 }
+
+.header_con4gis_org, .header_con4gis_io {
+  vertical-align: 8px;
+}

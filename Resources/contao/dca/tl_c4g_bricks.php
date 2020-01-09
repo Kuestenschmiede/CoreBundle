@@ -55,6 +55,22 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'class'               => 'header_con4gis_version',
                 'button_callback'     => ['tl_c4g_bricks', 'con4gisVersion']
             ),
+            'con4gisOrg' => array
+            (
+                'href'                => 'key=con4gisOrg',
+                'class'               => 'header_con4gis_org',
+                'button_callback'     => ['tl_c4g_bricks', 'con4gisOrg'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
+                'label'               => 'con4gis.org'
+            ),
+            'con4gisIO' => array
+            (
+                'href'                => 'key=con4gisIO',
+                'class'               => 'header_con4gis_io',
+                'button_callback'     => ['tl_c4g_bricks', 'con4gisIO'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.io.svg',
+                'label'               => 'con4gis.io'
+            ),
             'globalSettings' => array
             (
                 'href'                => 'key=globalSettings',
@@ -90,22 +106,6 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'class'               => 'header_server_logs',
                 'button_callback'     => ['tl_c4g_bricks', 'serverLogs'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/serverlog.svg'
-            ),
-            'con4gisOrg' => array
-            (
-                'href'                => 'key=con4gisOrg',
-                'class'               => 'header_con4gis_org',
-                'button_callback'     => ['tl_c4g_bricks', 'con4gisOrg'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
-                'label'               => 'con4gis.org'
-            ),
-            'con4gisIO' => array
-            (
-                'href'                => 'key=con4gisIO',
-                'class'               => 'header_con4gis_io',
-                'button_callback'     => ['tl_c4g_bricks', 'con4gisIO'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.io.svg',
-                'label'               => 'con4gis.io'
             )
 		),
 		'operations' => array
@@ -659,7 +659,7 @@ class tl_c4g_bricks extends Contao\Backend
      */
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
-        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a>';
+        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a><br>';
     }
 
     /**
@@ -675,7 +675,7 @@ class tl_c4g_bricks extends Contao\Backend
     {
         //$icon = 'bundles/con4giscore/images/be-icons/con4gis-logo.svg';
         $label = 'con4gis '.$GLOBALS['con4gis']['version'];
-        return '<div class="con4gis_version" style="text-align: left;margin-bottom:8px;color: #0f3b5c;">'.$label/*Image::getHtml($icon, $label)*/.'</div>';
+        return '<div class="con4gis_version" style="text-align: left;color: #0f3b5c;">'.$label/*Image::getHtml($icon, $label)*/.'</div>';
     }
 
     /**
