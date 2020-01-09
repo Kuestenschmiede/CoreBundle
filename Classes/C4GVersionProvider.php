@@ -9,11 +9,8 @@
  * @license 	    LGPL-3.0-or-later
  * @copyright 	Küstenschmiede GmbH Software & Design
  * @link              https://www.con4gis.org
- *
  */
-
 namespace con4gis\CoreBundle\Classes;
-
 
 use Contao\Request;
 
@@ -24,16 +21,15 @@ use Contao\Request;
  */
 class C4GVersionProvider
 {
-   
-    const REQUEST_URL = "https://repo.packagist.org/p/[vendor]/[package].json";
-    
+    const REQUEST_URL = 'https://repo.packagist.org/p/[vendor]/[package].json';
+
     /**
      * @param string $package   The package in vendor/package structure.
      * @return string
      */
     public function getLatestVersion(string $package)
     {
-        $arrPackage = explode("/", $package);
+        $arrPackage = explode('/', $package);
         $url = str_replace('[vendor]', $arrPackage[0], self::REQUEST_URL);
         $url = str_replace('[package]', $arrPackage[1], $url);
         $request = new Request();
@@ -42,16 +38,17 @@ class C4GVersionProvider
         if (!$response) {
             $response = '';
         }
+
         return $this->parseLatestVersion($response, $package);
     }
-    
+
     private function parseLatestVersion(string $json, string $package)
     {
         $arrJson = json_decode($json, true);
         $intError = json_last_error();
         if ($intError === JSON_ERROR_NONE) {
             $candidates = array_keys($arrJson['packages'][$package]);
-            $currentLatestVersion = "";
+            $currentLatestVersion = '';
             foreach ($candidates as $candidate) {
                 // ignore dev branches
                 if (strpos($candidate, 'dev') !== false) {
@@ -62,13 +59,13 @@ class C4GVersionProvider
                     $currentLatestVersion = $version;
                 }
             }
+
             return $currentLatestVersion;
-        } else {
-            // TODO handle json error
-            return "";
         }
+        // TODO handle json error
+        return '';
     }
-    
+
     /**
      * Normalizes the version strings, e.g. removes the v-prefixes.
      * @param $version
@@ -79,9 +76,10 @@ class C4GVersionProvider
         if (strpos($version, 'v')) {
             $version = str_replace('v', '', $version);
         }
+
         return $version;
     }
-    
+
     /**
      * Checks if the $comparable version string is higher than the $toCompare version string.
      * Returns true if it's newer, false otherwise.
@@ -111,6 +109,7 @@ class C4GVersionProvider
         } elseif ($toCompareFragments[2] < $comparableFragments[2]) {
             return true;
         }
+
         return false;
     }
 }

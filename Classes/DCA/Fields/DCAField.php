@@ -13,7 +13,8 @@ class DCAField
     protected $multiColumnField;
     protected $doctrine = false;
 
-    public function __construct(string $name, DCA $dca, DCAField $multiColumnField = null) {
+    public function __construct(string $name, DCA $dca, DCAField $multiColumnField = null)
+    {
         $this->name = $name;
         $this->dcaName = $dca->getName();
         if ($multiColumnField === null) {
@@ -35,102 +36,138 @@ class DCAField
         $this->exclude();
     }
 
-    public function getName() : string {
+    public function getName() : string
+    {
         return $this->name;
     }
 
-    public function exclude(bool $exclude = true) {
+    public function exclude(bool $exclude = true)
+    {
         $this->global['exclude'] = $exclude;
+
         return $this;
     }
 
-    public function label(string $label) {
+    public function label(string $label)
+    {
         $this->global['label'] = &$GLOBALS[DCA::TL_LANG][$this->dcaName][$label];
+
         return $this;
     }
 
-    public function hardLabel(string $title, string $description) {
+    public function hardLabel(string $title, string $description)
+    {
         $this->global['label'] = [$title, $description];
+
         return $this;
     }
 
-    public function default($default) {
+    public function default($default)
+    {
         $this->global['default'] = $default;
+
         return $this;
     }
 
-    public function filter($filter = true) {
+    public function filter($filter = true)
+    {
         $this->global['filter'] = $filter;
+
         return $this;
     }
 
-    public function inputType($inputType) {
+    public function inputType($inputType)
+    {
         $this->global['inputType'] = $inputType;
+
         return $this;
     }
 
-    public function search(bool $search = true) {
+    public function search(bool $search = true)
+    {
         $this->global['search'] = $search;
+
         return $this;
     }
 
-    public function sorting(bool $sorting = true) {
+    public function sorting(bool $sorting = true)
+    {
         if ($sorting === true) {
             $this->global['sorting'] = 'true';
         } else {
             $this->global['sorting'] = 'false';
         }
+
         return $this;
     }
 
-    public function options(array $options) {
+    public function options(array $options)
+    {
         $this->global['options'] = $options;
+
         return $this;
     }
 
-    public function reference(string $reference) {
+    public function reference(string $reference)
+    {
         $this->global['reference'] = $GLOBALS['TL_LANG'][$this->dcaName][$reference];
+
         return $this;
     }
 
-    public function optionsCallback(string $class, string $method) {
+    public function optionsCallback(string $class, string $method)
+    {
         $this->global['options_callback'] = [$class, $method];
+
         return $this;
     }
 
-    public function saveCallback(string $class, string $method) {
+    public function saveCallback(string $class, string $method)
+    {
         $this->global['save_callback'] = [[$class, $method]];
+
         return $this;
     }
 
-    public function loadCallback(string $class, string $method) {
+    public function loadCallback(string $class, string $method)
+    {
         $this->global['load_callback'] = [[$class, $method]];
+
         return $this;
     }
 
-    public function foreignKey(string $table, string $column) {
+    public function foreignKey(string $table, string $column)
+    {
         $this->global['foreignKey'] = "$table.$column";
+
         return $this;
     }
 
-    public function wizard(string $class, string $method) {
+    public function wizard(string $class, string $method)
+    {
         $this->global['wizard'] = [[$class, $method]];
+
         return $this;
     }
 
-    public function eval() : DCAFieldEval {
+    public function eval() : DCAFieldEval
+    {
         return $this->eval;
     }
 
-    public function sql(string $sql) {
+    public function sql(string $sql)
+    {
         if ($this->multiColumnField === null && $this->doctrine === false) {
             $this->global['sql'] = $sql;
         }
+
         return $this;
     }
 
-    public function unsetSql() {
+    public function unsetSql()
+    {
         unset($this->global['sql']);
+
         return $this;
     }
 }

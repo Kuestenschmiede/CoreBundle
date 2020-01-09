@@ -15,7 +15,6 @@ namespace con4gis\CoreBundle\Classes\Helper;
 use con4gis\CoreBundle\Resources\contao\classes\C4GUtils;
 use con4gis\MapsBundle\Resources\contao\classes\Utils;
 use con4gis\ProjectsBundle\Classes\Common\C4GBrickCommon;
-use Contao\Controller;
 use Contao\Database;
 use Contao\Image;
 use Contao\Input;
@@ -27,8 +26,6 @@ use Contao\System;
  */
 class DcaHelper
 {
-
-
     /**
      * save_callback: Erstelle eine Uuid.
      * @param $varValue
@@ -44,14 +41,13 @@ class DcaHelper
         return $varValue;
     }
 
-
     /**
      * @param $dc
      * @return array
      */
     public function cbGetTables($dc)
     {
-        $db     = Database::getInstance();
+        $db = Database::getInstance();
         $tables = $db->listTables();
         if ($dc->activeRecord->saveTlTables !== '1') {
             foreach ($tables as $key => $value) {
@@ -60,24 +56,24 @@ class DcaHelper
                 }
             }
         }
+
         return $tables;
     }
-
 
     /**
      * options_callback: Gibt eine Liste der Felder einer Tabelle zurück.
      * @param $dc
      * @return array
      */
-    public function cbGetFields($dc, $srcTable = "")
+    public function cbGetFields($dc, $srcTable = '')
     {
-        $data   = array();
-        if ($srcTable !== "") {
+        $data = [];
+        if ($srcTable !== '') {
             $table = $srcTable;
         } else {
-            $table  = $dc->activeRecord->srctable;
+            $table = $dc->activeRecord->srctable;
         }
-        $db     = Database::getInstance();
+        $db = Database::getInstance();
 
         if ($table) {
             System::loadLanguageFile($table);
@@ -87,9 +83,9 @@ class DcaHelper
                 foreach ($fields as $field) {
                     if ($field['name'] != 'PRIMARY') {
                         if (isset($GLOBALS['TL_LANG'][$table][$field['name']][0])) {
-                            $label                  = $GLOBALS['TL_LANG'][$table][$field['name']][0];
-                            $label                 .= ' [' . $field['name'] . ' (' . $table . ')]';
-                            $data[$field['name']]   = $label;
+                            $label = $GLOBALS['TL_LANG'][$table][$field['name']][0];
+                            $label .= ' [' . $field['name'] . ' (' . $table . ')]';
+                            $data[$field['name']] = $label;
                         } else {
                             $data[$field['name']] = $field['name'];
                         }
@@ -101,20 +97,20 @@ class DcaHelper
         return $data;
     }
 
-
     /**
      * @param $varValue
      * @param $dc
      * @return mixed
      * @throws \Exception
      */
-    public function setLocLon($varValue, $dc) {
+    public function setLocLon($varValue, $dc)
+    {
         if (!Utils::validateLon($varValue)) {
             throw new \Exception($GLOBALS['TL_LANG']['c4g_maps']['geox_invalid']);
         }
+
         return $varValue;
     }
-
 
     /**
      * @param $varValue
@@ -122,10 +118,12 @@ class DcaHelper
      * @return mixed
      * @throws \Exception
      */
-    public function setLocLat($varValue, $dc) {
+    public function setLocLat($varValue, $dc)
+    {
         if (!Utils::validateLat($varValue)) {
             throw new \Exception($GLOBALS['TL_LANG']['c4g_maps']['geoy_invalid']);
         }
+
         return $varValue;
     }
 
@@ -136,27 +134,25 @@ class DcaHelper
      */
     public function getPickerLink(\DataContainer $dc)
     {
-        if (!$GLOBALS['TL_JAVASCRIPT']['c4g-maps-backend'])
-        {
+        if (!$GLOBALS['TL_JAVASCRIPT']['c4g-maps-backend']) {
             $GLOBALS['TL_JAVASCRIPT']['c4g-maps-backend'] = 'bundles/con4gismaps/js/c4g-maps-backend.js';
         }
         $input = Input::get('act');
         $strField = 'ctrl_' . $dc->field . (($input == 'editAll') ? '_' . $dc->id : '');
-        if (substr($strField,-1,1)=='y') {
-            $strFieldX = substr($strField,0,-1).'x';
+        if (substr($strField, -1, 1) == 'y') {
+            $strFieldX = substr($strField, 0, -1) . 'x';
             $strFieldY = $strField;
         } else {
             $strFieldX = $strField;
-            $strFieldY = substr($strField,0,-1).'y';
+            $strFieldY = substr($strField, 0, -1) . 'y';
         }
 
         return ' <a href="con4gis/api/geopickerService?rt=' . REQUEST_TOKEN .
             '" title="' . $GLOBALS['TL_LANG']['c4g_maps']['geopicker'] .
             '" style="padding-left:3px" onclick="c4g.maps.backend.showGeoPicker(this.href,' .
-            $strFieldX . ',' . $strFieldY . ', {title:\'' . $GLOBALS['TL_LANG']['c4g_maps']['geopicker']. '\'});return false">' .
+            $strFieldX . ',' . $strFieldY . ', {title:\'' . $GLOBALS['TL_LANG']['c4g_maps']['geopicker'] . '\'});return false">' .
             Image::getHtml('bundles/con4gismaps/js/images/be-icons/geopicker.png',
                 $GLOBALS['TL_LANG']['tl_content']['editalias'][0], 'style="vertical-align:top"') . '</a>';
-
     }
 
     /**
@@ -174,10 +170,11 @@ class DcaHelper
         $do = Input::get('do');
 
         if ($id) {
-            $href = "/contao/main.php?do=".$do."&rt=$rt";
+            $href = '/contao/main.php?do=' . $do . "&rt=$rt";
         } else {
             $href = "/contao/main.php?do=c4g_bricks&rt=$rt&key=back";
         }
+
         return '<a href="' . $href . '" class="' . $class . '" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
 }

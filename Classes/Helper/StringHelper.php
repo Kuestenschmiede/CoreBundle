@@ -31,7 +31,7 @@ class StringHelper
         $allowedSigns = ($allowedSigns) ? $allowedSigns : $defaultSigns;
 
         // String filtern:
-        $string = preg_replace("|[^" . $allowedSigns . "]|", '', $string);
+        $string = preg_replace('|[^' . $allowedSigns . ']|', '', $string);
 
         return $string;
     }

@@ -20,8 +20,6 @@ use Contao\Input;
  */
 class InputHelper
 {
-
-
     /**
      * Gibt alle Daten einer Eingabemethode [POST|GET] zurück.
      * @param string $methode
@@ -30,7 +28,7 @@ class InputHelper
      */
     public static function getAllData($methode = 'post', $decode = false)
     {
-        $data = array();
+        $data = [];
 
         if ($methode == 'post') {
             $keys = array_keys($_POST);
@@ -49,7 +47,6 @@ class InputHelper
         return $data;
     }
 
-
     /**
      * Gibt den RequestToken zurück.
      * @param string $serviceName
@@ -60,8 +57,9 @@ class InputHelper
         $serviceName = 'security.csrf.token_manager',
         $tokenName = 'contao.csrf_token_name'
     ) {
-        $c      = \System::getContainer();
-        $param  = $c->getParameter($tokenName);
+        $c = \System::getContainer();
+        $param = $c->getParameter($tokenName);
+
         return $c->get($serviceName)->getToken($param)->getValue();
     }
 }

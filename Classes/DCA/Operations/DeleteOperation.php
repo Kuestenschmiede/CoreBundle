@@ -1,13 +1,13 @@
 <?php
 
-
 namespace con4gis\CoreBundle\Classes\DCA\Operations;
 
 use con4gis\CoreBundle\Classes\DCA\DCA;
 
 class DeleteOperation extends DCAOperation
 {
-    public function __construct(DCA $dca) {
+    public function __construct(DCA $dca)
+    {
         parent::__construct($dca, 'delete');
         $this->label($dca->getName(), 'delete');
         $this->href('act=delete');

@@ -11,8 +11,6 @@ namespace con4gis\CoreBundle\Classes\Helper;
  */
 class AutoloadHelper
 {
-
-
     /**
      * Ruft das Laden der Templates (*.html5, *.xhtml und *.html) für den
      * übergebenen Pfad (inkl. Unterordnern) auf.
@@ -21,15 +19,14 @@ class AutoloadHelper
      */
     public static function loadTemplates($strPath, $strRgex = '/^.+\.[x]*html[5]*$/i')
     {
-        $folder     = (substr_count($strPath, 'system/modules')) ? '/templates' : '/Resources/contao/templates';
-        $strPath    = self::makePath($strPath, $folder);
-        $objFiles   = self::getFiles($strPath, $strRgex);
+        $folder = (substr_count($strPath, 'system/modules')) ? '/templates' : '/Resources/contao/templates';
+        $strPath = self::makePath($strPath, $folder);
+        $objFiles = self::getFiles($strPath, $strRgex);
 
         if ($objFiles) {
             self::registerTemplates($objFiles);
         }
     }
-
 
     /**
      * Registriert die gefundenen Templates bei Contao.
@@ -44,7 +41,6 @@ class AutoloadHelper
         }
     }
 
-
     /**
      * Prüft den übergebenen Pfad und ergänzt die fehlenden Bestandteile.
      * @param $strPath
@@ -54,12 +50,11 @@ class AutoloadHelper
     protected static function makePath($strPath, $folder)
     {
         $strPath = (!substr_count($strPath, TL_ROOT)) ? TL_ROOT . '/' . $strPath : $strPath;
-        $strPath.="$folder/";
+        $strPath .= "$folder/";
         $strPath = str_replace('//', '/', $strPath);
 
         return $strPath;
     }
-
 
     /**
      * Sucht die Templates im übergebenen Pfad.
@@ -70,9 +65,9 @@ class AutoloadHelper
     protected static function getFiles($strPath, $strRgex = '/^.+\.php$/i')
     {
         if (is_dir($strPath)) {
-            $objDirectory   = new \RecursiveDirectoryIterator($strPath, \FilesystemIterator::SKIP_DOTS);
-            $objIterator    = new \RecursiveIteratorIterator($objDirectory);
-            $objFiles       = new \RegexIterator($objIterator, $strRgex, \RecursiveRegexIterator::GET_MATCH);
+            $objDirectory = new \RecursiveDirectoryIterator($strPath, \FilesystemIterator::SKIP_DOTS);
+            $objIterator = new \RecursiveIteratorIterator($objDirectory);
+            $objFiles = new \RegexIterator($objIterator, $strRgex, \RecursiveRegexIterator::GET_MATCH);
 
             return $objFiles;
         }

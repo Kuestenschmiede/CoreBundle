@@ -1,14 +1,13 @@
 <?php
 
-
 namespace con4gis\CoreBundle\Classes\DCA;
-
 
 class DCAConfig
 {
     protected $global;
 
-    public function __construct(string $dcaName) {
+    public function __construct(string $dcaName)
+    {
         $GLOBALS[DCA::TL_DCA][$dcaName][DCA::CONFIG] = [];
         $this->global = &$GLOBALS[DCA::TL_DCA][$dcaName][DCA::CONFIG];
 
@@ -18,28 +17,34 @@ class DCAConfig
         $this->sqlKeys('id', 'primary');
     }
 
-    public function label(string $label) {
+    public function label(string $label)
+    {
         $this->global['label'] = $label;
     }
 
-    public function dataContainer(string $dataContainer) {
+    public function dataContainer(string $dataContainer)
+    {
         $this->global['dataContainer'] = $dataContainer;
     }
 
-    public function enableVersioning(bool $enableVersioning) {
+    public function enableVersioning(bool $enableVersioning)
+    {
         $this->global['enableVersioning'] = $enableVersioning;
     }
 
-    public function onloadCallback(string $class, string $method) {
+    public function onloadCallback(string $class, string $method)
+    {
         $this->global['onload_callback'] = [[$class, $method]];
+
         return $this;
     }
 
-    public function sqlKeys(string $field, string $value) {
+    public function sqlKeys(string $field, string $value)
+    {
         $this->global['sql'] = [
             'keys' => [
-                $field => $value
-            ]
+                $field => $value,
+            ],
         ];
     }
 }
