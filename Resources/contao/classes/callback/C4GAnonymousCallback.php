@@ -13,7 +13,6 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes\callback;
 
-
 class C4GAnonymousCallback extends C4GCallback
 {
     protected $function;      //Function to be called.
@@ -22,21 +21,23 @@ class C4GAnonymousCallback extends C4GCallback
      * C4GAnonymousCallback constructor.
      * @param \Closure $function
      */
-    public function __construct(\Closure $function) {
+    public function __construct(\Closure $function)
+    {
         $this->function = $function;
     }
 
     /**
      * @return mixed
      */
-    public function call() {
+    public function call()
+    {
         $parameters = func_get_args();
         $numParameters = func_num_args();
         $function = $this->function;
         if ($numParameters === 0) {
             return $function();
-        } else {
-            return call_user_func_array($function, $parameters);
         }
+
+        return call_user_func_array($function, $parameters);
     }
 }

@@ -40,7 +40,8 @@ class HttpResultHelper
         self::EndRequest('HTTP/1.1 500 Internal Server Error');
     }
 
-    protected static function EndRequest($strHeader) {
+    protected static function EndRequest($strHeader)
+    {
         header($strHeader);
         die;
     }

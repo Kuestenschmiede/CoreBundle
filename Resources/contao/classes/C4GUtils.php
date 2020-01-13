@@ -27,27 +27,28 @@ class C4GUtils
      * Secure user generated content
      * @param $str
      */
-    public static function secure_ugc ($str)
+    public static function secure_ugc($str)
     {
         // kritische Kontrollzeichen rausfiltern
-        $search = array( chr(0), chr(1), chr(2), chr(3), chr(4), chr(5), chr(6), chr(7), chr(8),
-            chr(11), chr(12), chr(14), chr(15), chr(16), chr(17), chr(18), chr(19) );
-        $result = str_replace( $search, ' ', $str );
+        $search = [chr(0), chr(1), chr(2), chr(3), chr(4), chr(5), chr(6), chr(7), chr(8),
+            chr(11), chr(12), chr(14), chr(15), chr(16), chr(17), chr(18), chr(19), ];
+        $result = str_replace($search, ' ', $str);
 
         // Unerwünschte Unicode Sonderzeichen z.B. zur Umkehrung des Textflusses entfernen
-        $regex  = '/(?:%E(?:2|3)%8(?:0|1)%(?:A|8|9)\w)/i';
-        $result = urldecode(preg_replace($regex,' ',urlencode($result)));
+        $regex = '/(?:%E(?:2|3)%8(?:0|1)%(?:A|8|9)\w)/i';
+        $result = urldecode(preg_replace($regex, ' ', urlencode($result)));
 
         // Eingangs-Html formatieren und überflüssige Leerzeichen entfernen
         return trim(htmlspecialchars($result));
     }
 
-    public static function cleanHtml($html, $img=false, $allowedTags = []) {
+    public static function cleanHtml($html, $img = false, $allowedTags = [])
+    {
         $javascript = '/<script[^>]*?javascript{1}[^>]*?>.*?<\/script>/si';
         $noscript = '';
         $html = preg_replace($javascript, $noscript, $html);
 
-        $unsafe=array(
+        $unsafe = [
             '/<iframe(.*?)<\/iframe>/is',
             '/<title(.*?)<\/title>/is',
             '/<pre(.*?)<\/pre>/is',
@@ -65,20 +66,19 @@ class C4GUtils
             '/<head(.*?)>/is',
             '/<\/head>/is',
             '/<html(.*?)>/is',
-            '/<\/html>/is');
+            '/<\/html>/is', ];
 
         $unsafe = array_diff($unsafe, $allowedTags);
         // Remove graphic too if the user wants
-        if ($img==true)
-        {
-            $unsafe[]='/<img(.*?)>/is';
+        if ($img == true) {
+            $unsafe[] = '/<img(.*?)>/is';
         }
 
         // Remove these tags and all parameters within them
-        $html=preg_replace($unsafe, "", $html);
+        $html = preg_replace($unsafe, '', $html);
 
         // Remove html events
-        $html = preg_replace("#<([^><]+?)([^a-z_\-]on\w*|xmlns)(\s*=\s*[^><]*)([><]*)#i", "<\\1\\4", $html);
+        $html = preg_replace("#<([^><]+?)([^a-z_\-]on\w*|xmlns)(\s*=\s*[^><]*)([><]*)#i", '<\\1\\4', $html);
 
         return $html;
     }
@@ -87,36 +87,38 @@ class C4GUtils
      * Flatten a multi dimensional array
      * @param array $a
      */
-    public static function array_flatten ($a)
+    public static function array_flatten($a)
     {
-        $ab = array();
-        if(!is_array($a))
+        $ab = [];
+        if (!is_array($a)) {
             return $ab;
-        foreach($a as $value){
-            if(is_array($value)){
-                $ab = array_merge($ab,self::array_flatten($value));
-            }else{
-                array_push($ab,$value);
+        }
+        foreach ($a as $value) {
+            if (is_array($value)) {
+                $ab = array_merge($ab, self::array_flatten($value));
+            } else {
+                array_push($ab, $value);
             }
         }
+
         return $ab;
     }
 
     /**
      * @param array $params
      */
-    public static function addParametersToURL ( $url, $params )
+    public static function addParametersToURL($url, $params)
     {
-        list( $urlpart, $qspart ) = array_pad( explode( '?', $url, 2 ), 2, '' );
+        list($urlpart, $qspart) = array_pad(explode('?', $url, 2), 2, '');
         if (!$urlpart) {
             $urlpart = $url;
         }
-        parse_str( $qspart, $qsvars );
-        foreach ($params AS $key=>$value)
-        {
+        parse_str($qspart, $qsvars);
+        foreach ($params as $key => $value) {
             $qsvars[$key] = $value;
         }
-        $newqs = http_build_query( $qsvars );
+        $newqs = http_build_query($qsvars);
+
         return $urlpart . '?' . $newqs;
     }
 
@@ -124,19 +126,19 @@ class C4GUtils
      * adds default options for dialogs to an array
      * @param array $options
      */
-    public static function addDefaultDialogOptions ( $options )
+    public static function addDefaultDialogOptions($options)
     {
         $options['show'] = 'fold';
         $options['hide'] = 'fold';
-        if (!isset( $options['width'] )) {
+        if (!isset($options['width'])) {
             $options['width'] = 'auto';
         }
-        if (!isset( $options['height'] )) {
+        if (!isset($options['height'])) {
             $options['height'] = 'auto';
         }
+
         return $options;
     }
-
 
     /**
      * validates a postal-number
@@ -144,9 +146,10 @@ class C4GUtils
      * @param string $postal
      * @return number
      */
-    public static function postalIsValid ($postal)
+    public static function postalIsValid($postal)
     {
         $postal = trim($postal);
+
         return is_numeric($postal);
     }
     /**
@@ -155,10 +158,11 @@ class C4GUtils
      * @param string $mail
      * @return number
      */
-    public static function emailIsValid ( $mail )
+    public static function emailIsValid($mail)
     {
-        $mail = trim( $mail );
-        return preg_match( '/([^@]+@{1}[^@\.]+\.{1}[A-Za-z0-9]+)/', $mail );
+        $mail = trim($mail);
+
+        return preg_match('/([^@]+@{1}[^@\.]+\.{1}[A-Za-z0-9]+)/', $mail);
     }
 
     /**
@@ -166,7 +170,7 @@ class C4GUtils
      * @param array $mailData
      * @return bool
      */
-    public static function sendMail ($mailData)
+    public static function sendMail($mailData)
     {
         try {
             // preparemail
@@ -176,25 +180,27 @@ class C4GUtils
             $eMail->from = $mailData['from'];
             if ($mailData['from']) {
                 $eMail->from = $mailData['from'];
-            } elseif ($GLOBALS['TL_CONFIG']['useSMTP'] and filter_var( $GLOBALS['TL_CONFIG']['smtpUser'] )) {
+            } elseif ($GLOBALS['TL_CONFIG']['useSMTP'] and filter_var($GLOBALS['TL_CONFIG']['smtpUser'])) {
                 $eMail->from = $GLOBALS['TL_CONFIG']['smtpUser'];
             } else {
                 $eMail->from = $GLOBALS['TL_CONFIG']['adminEmail'];
             }
 
             $eMail->subject = $mailData['subject'];
-            if(isset($mailData['text'])){
+            if (isset($mailData['text'])) {
                 $eMail->text = $mailData['text'];
             }
-            if(isset($mailData['html'])){
+            if (isset($mailData['html'])) {
                 $eMail->html = $mailData['html'];
             }
             $eMail->sendTo($mailData['to']);
             unset($eMail);
-        } catch ( Swift_RfcComplianceException $e ) {
+        } catch (Swift_RfcComplianceException $e) {
             C4gLogModel::addLogEntry('core', $e->getMessage());
+
             return false;
         }
+
         return true;
     }
 
@@ -203,44 +209,42 @@ class C4GUtils
         // check if fields are filled
         //
         // reciever
-        if (empty( $mailData['to'] )) {
-            return array
-            (
-                'usermessage' => $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_ADDRESS']
-            );
+        if (empty($mailData['to'])) {
+            return [
+                'usermessage' => $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_ADDRESS'],
+            ];
         }
         // subject
-        if (empty( $mailData['subject'] )) {
-            return array
-            (
-                'usermessage' => $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_SUBJECT']
-            );
+        if (empty($mailData['subject'])) {
+            return [
+                'usermessage' => $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_SUBJECT'],
+            ];
         }
         // message-text
-        if (empty( $mailData['text'] )) {
-            return array
-            (
-                'usermessage' => $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_MESSAGE']
-            );
+        if (empty($mailData['text'])) {
+            return [
+                'usermessage' => $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_MESSAGE'],
+            ];
         }
 
-        return array();
+        return [];
     } // end of function "sendMail"
 
-    public static function startsWith ( $haystack, $needle )
+    public static function startsWith($haystack, $needle)
     {
         $length = strlen($needle);
+
         return (substr($haystack, 0, $length) === $needle);
     }
 
-    public static function endsWith ( $haystack, $needle )
+    public static function endsWith($haystack, $needle)
     {
         $length = strlen($needle);
         if ($length == 0) {
             return true;
         }
 
-        return (substr( $haystack, -$length ) === $needle);
+        return (substr($haystack, -$length) === $needle);
     }
 
     /**
@@ -249,9 +253,9 @@ class C4GUtils
      * @param array (of strings)  $rawDataSet
      * @return string         [compressed data]
      */
-    public static function compressDataSetForSearch ( $rawDataSet, $stripStopwords=true )
+    public static function compressDataSetForSearch($rawDataSet, $stripStopwords = true)
     {
-        $dSearch = array(
+        $dSearch = [
             '#ß#',
             '#Ä|ä#',
             '#Ö|ö#',
@@ -263,9 +267,9 @@ class C4GUtils
             '#Í|í|Ì|ì|Î|î#',
             '#([/.,+-]*\s)#',
             '#([^A-Za-z])#',
-            '# +#'
-        );
-        $dReplace = array(
+            '# +#',
+        ];
+        $dReplace = [
             'ss',
             'ae',
             'oe',
@@ -277,31 +281,31 @@ class C4GUtils
             'i',
             ' ',
             ' ',
-            ' '
-        );
+            ' ',
+        ];
 
-        $dataSet = trim( stripslashes( strip_tags( $rawDataSet ) ) );
-        $dataSet = preg_replace( $dSearch, $dReplace, $dataSet );
-        $dataSet = trim( strtolower( $dataSet ) );
+        $dataSet = trim(stripslashes(strip_tags($rawDataSet)));
+        $dataSet = preg_replace($dSearch, $dReplace, $dataSet);
+        $dataSet = trim(strtolower($dataSet));
 
-        unset( $dSearch );
-        unset( $dReplace );
+        unset($dSearch , $dReplace);
 
         if ($stripStopwords) {
-            $dSearch = array(
+            $dSearch = [
                 '#(\s[A-Za-z]{1,2})\s#',
-                '# ' . implode( ' | ', $GLOBALS['TL_LANG']['C4G_FORUM']['STOPWORDS'] ) . ' #',
-                '# +#'
-            );
-            $dReplace = array(
+                '# ' . implode(' | ', $GLOBALS['TL_LANG']['C4G_FORUM']['STOPWORDS']) . ' #',
+                '# +#',
+            ];
+            $dReplace = [
                 ' ',
                 ' ',
-                ' '
-            );
+                ' ',
+            ];
 
-            $dataSet = ' ' . str_replace( ' ', '  ', $dataSet ) . ' ';
-            $dataSet = trim( preg_replace( $dSearch, $dReplace, $dataSet ) );
+            $dataSet = ' ' . str_replace(' ', '  ', $dataSet) . ' ';
+            $dataSet = trim(preg_replace($dSearch, $dReplace, $dataSet));
         }
+
         return $dataSet;
     }
 
@@ -309,25 +313,27 @@ class C4GUtils
      * @param $parsed_url
      * @return string
      */
-    public static function unparse_url($parsed_url) {
-        $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-        $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-        $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-        $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
-        $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
-        $pass     = ($user || $pass) ? "$pass@" : '';
-        $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
-        $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+    public static function unparse_url($parsed_url)
+    {
+        $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+        $host = $parsed_url['host'] ?? '';
+        $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+        $user = $parsed_url['user'] ?? '';
+        $pass = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+        $pass = ($user || $pass) ? "$pass@" : '';
+        $path = $parsed_url['path'] ?? '';
+        $query = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
         $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+
         return "$scheme$user$pass$host$port$path$query$fragment";
     }
-
 
     /**
      * @param $string
      * @return bool|string
      */
-    public static function removeLastSlashes($string) {
+    public static function removeLastSlashes($string)
+    {
         if ($string) {
             if ((substr($string, -1, 1) == '/') || (substr($string, -1, 1) == '\\')) {
                 return substr($string, 0, -1);
@@ -346,17 +352,17 @@ class C4GUtils
         // check if the symfony authentication model is used
         if (class_exists($name)) {
             return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
-        } else {
-//            return (\Contao\FrontendUser::getInstance() !== null);
-            return FE_USER_LOGGED_IN;
         }
+//            return (\Contao\FrontendUser::getInstance() !== null);
+        return FE_USER_LOGGED_IN;
     }
 
     /**
      * @return bool
      * @deprecated
      */
-    public static function checkFrontendUserLogin() {
+    public static function checkFrontendUserLogin()
+    {
         return self::isFrontendUserLoggedIn();
     }
 
@@ -369,19 +375,20 @@ class C4GUtils
         // check if the symfony authentication model is used
         if (class_exists($name)) {
             return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
-        } else {
-            return (\Contao\BackendUser::getInstance() !== null);
         }
+
+        return (\Contao\BackendUser::getInstance() !== null);
     }
 
     /**
      * @return bool
      * @deprecated
      */
-    public static function checkBackendUserLogin() {
+    public static function checkBackendUserLogin()
+    {
         return self::isBackendUserLoggedIn();
     }
-    
+
     public static function sortBackendModules($arrModules)
     {
         System::loadLanguageFile('modules');
@@ -392,7 +399,7 @@ class C4GUtils
         $arrSettingsModule = array_splice($arrModules, array_search('c4g_settings', $arrKeys), 1)['c4g_settings'];
         array_splice($arrKeys, array_search('c4g_settings', $arrKeys), 1);
         $langArray = $GLOBALS['TL_LANG']['MOD'];
-        usort($arrKeys, function($a, $b) use ($langArray) {
+        usort($arrKeys, function ($a, $b) use ($langArray) {
             // access offset 0 because the lang ref is a two element array
             return strnatcmp($langArray[$a][0], $langArray[$b][0]);
         });
@@ -403,9 +410,9 @@ class C4GUtils
             // check because of previous splice
             $arrResult[$value] = $arrModules[$value];
         }
+
         return $arrResult;
     }
-
 
     /**
      * returns communication key
@@ -413,11 +420,10 @@ class C4GUtils
      * @param $serviceId
      * @return bool
      */
-    public static function getKey($settings, $service, $params="", $getKeyOnly = true)
+    public static function getKey($settings, $service, $params = '', $getKeyOnly = true)
     {
         if ($settings && $settings->con4gisIoUrl && $settings->con4gisIoKey) {
-
-            $hour = date("YmdH",time());
+            $hour = date('YmdH', time());
 //            $key = \Session::getInstance()->get('ciokey_'.$service . '_'.$params);
 //            if ($key) {
 //                $ciokey = explode('_', $key);
@@ -426,12 +432,12 @@ class C4GUtils
 //                }
 //            }
 
-            $keySearchUrl = rtrim($settings->con4gisIoUrl, "/") . "/";
-            $keySearchUrl = $keySearchUrl . "getKey.php";
+            $keySearchUrl = rtrim($settings->con4gisIoUrl, '/') . '/';
+            $keySearchUrl = $keySearchUrl . 'getKey.php';
             if ($params && ($params[0] !== '&')) {
-                $params = "&".$params;
+                $params = '&' . $params;
             }
-            $keySearchUrl .= "?key=" . $settings->con4gisIoKey ."&service=".$service.$params;
+            $keySearchUrl .= '?key=' . $settings->con4gisIoKey . '&service=' . $service . $params;
 
             $REQUEST = new \Request();
             if ($_SERVER['HTTP_REFERER']) {
@@ -445,21 +451,23 @@ class C4GUtils
             if ($REQUEST->response) {
                 try {
                     $response = \GuzzleHttp\json_decode($REQUEST->response);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     C4gLogModel::addLogEntry('core', $e->getMessage());
+
                     return false;
                 }
 
                 if ($response && $response->key && (strlen($response->key) == 64)) {
-                    \Session::getInstance()->set('ciokey_'.$service . '_' . $params, $hour.'_'.$response->key);
+                    \Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
                     if ($getKeyOnly) {
                         return $response->key;
-                    } else {
-                        return $response;
                     }
+
+                    return $response;
                 }
             }
         }
+
         return false;
     }
 }

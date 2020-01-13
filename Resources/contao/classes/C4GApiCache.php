@@ -14,11 +14,9 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
-use Contao\System;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Contao\FrontendUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 
 class C4GApiCache
 {
@@ -32,10 +30,12 @@ class C4GApiCache
      */
     protected static $instance = null;
 
-    public static function getInstance(ContainerInterface $container) {
+    public static function getInstance(ContainerInterface $container)
+    {
         if (!static::$instance) {
             static::$instance = new self($container);
         }
+
         return static::$instance;
     }
 
@@ -51,7 +51,8 @@ class C4GApiCache
         );
     }
 
-    public function clearCache() {
+    public function clearCache()
+    {
         $this->cacheInstance->clear();
     }
 
@@ -63,7 +64,7 @@ class C4GApiCache
             $arrFragments['userId'] = FrontendUser::getInstance()->id;
         }
 
-        $strCacheKey =  $strApiEndpoint . "#" . serialize($arrFragments);
+        $strCacheKey = $strApiEndpoint . '#' . serialize($arrFragments);
         $strChecksum = md5($strCacheKey);
 
         return $strChecksum;
@@ -85,6 +86,7 @@ class C4GApiCache
         if ($this->hasCacheData($strChecksum)) {
             return $this->cacheInstance->getItem($strChecksum)->get();
         }
+
         return false;
     }
 
@@ -92,6 +94,7 @@ class C4GApiCache
     {
         $cacheData = $this->cacheInstance->getItem($strChecksum);
         $cacheData->set($strContent);
+
         return $this->cacheInstance->save($cacheData);
     }
 
@@ -100,6 +103,4 @@ class C4GApiCache
         $strChecksum = $this->getCacheKey($strApiEndpoint, $arrFragments);
         $this->saveCacheData($strChecksum, $strContent);
     }
-
-
 }

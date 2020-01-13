@@ -23,14 +23,14 @@ class C4GMigration extends \BackendModule
     protected $strTemplate = 'be_c4g_migration';
     protected $module = '';
     protected $action = '';
-    protected $output = array();
-    protected $buttons = array();
+    protected $output = [];
+    protected $buttons = [];
 
     /**
      * [__construct description]
      * @param [type] $mod [description]
      */
-    public function __construct( $mod )
+    public function __construct($mod)
     {
         parent::__construct();
         // import database
@@ -38,7 +38,6 @@ class C4GMigration extends \BackendModule
 
         // set targeted module
         $this->module = $mod;
-
     }
 
     /**
@@ -53,39 +52,39 @@ class C4GMigration extends \BackendModule
             $this->action = 'init';
         }
 
-        switch( $this->action )
-        {
+        switch ($this->action) {
             case 'exec':
                 $this->migrate();
+
                 break;
             case 'back':
-                \Controller::redirect( \Environment::get('script') . '?do=c4g_core' );
+                \Controller::redirect(\Environment::get('script') . '?do=c4g_core');
             case 'dbupdate':
-                \Controller::redirect( \Environment::get('script') . '?do=repository_manager&update=database' );
+                \Controller::redirect(\Environment::get('script') . '?do=repository_manager&update=database');
             case 'uninstall':
-                \Controller::redirect( \Environment::get('script') . '?do=repository_manager&uninstall=cfs_' . $this->module );
+                \Controller::redirect(\Environment::get('script') . '?do=repository_manager&uninstall=cfs_' . $this->module);
             case 'init':
             default:
                 $this->output[] = sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['INTRO'], $this->module);
                 $this->output[] = '<span class="c4g_error">' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['INTROWARN'], $this->module) . '</span>';
                 if ($this->checkMod()) {
-                    $this->buttons[] = array(
-                        action  => 'exec',
-                        label   => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['MIGRATE']
-                    );
-                    $this->buttons[] = array(
-                        action  => 'back',
-                        label   => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CANCEL']
-                    );
+                    $this->buttons[] = [
+                        action => 'exec',
+                        label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['MIGRATE'],
+                    ];
+                    $this->buttons[] = [
+                        action => 'back',
+                        label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CANCEL'],
+                    ];
                 } else {
-                    $this->buttons[] = array(
-                        action  => 'back',
-                        label   => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK']
-                    );
+                    $this->buttons[] = [
+                        action => 'back',
+                        label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK'],
+                    ];
                 }
+
                 break;
         }
-
 
         return parent::generate();
     }
@@ -106,13 +105,13 @@ class C4GMigration extends \BackendModule
         // $this->Template->c4gModules->con4gis_maps->installed = $GLOBALS[];
     }
 
-
     protected function checkMod()
     {
         if (!$GLOBALS['con4gis'][$this->module]['installed']) {
             $this->output[] = '<span class="c4g_errorblock">' .
-                                sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['NOMODULEERROR'], 'con4gis_'.$this->module ) .
+                                sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['NOMODULEERROR'], 'con4gis_' . $this->module) .
                                 '</span>';
+
             return false;
         }
 
@@ -120,7 +119,7 @@ class C4GMigration extends \BackendModule
         return true;
     }
 
-    protected function updateType( $table )
+    protected function updateType($table)
     {
         $type = 'cfs_' . $this->module;
         if ($this->module == 'forum') {
@@ -131,7 +130,7 @@ class C4GMigration extends \BackendModule
 
         $output = '<strong>' . $table . '</strong> (type):<br>&nbsp;' . $type . ' <span style="color:#999;">-&gt;</span> ' . $newType . ': ';
 
-        if ($this->Database->prepare( "UPDATE $table SET type = ? WHERE type = ?" )->execute( $newType, $type )) {
+        if ($this->Database->prepare("UPDATE $table SET type = ? WHERE type = ?")->execute($newType, $type)) {
             $output .= '<span class="c4g_success">' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['SUCCESS'] . '</span>';
         } else {
             $output .= '<span class="c4g_error">' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['FAIL'] . '</span>';
@@ -152,20 +151,20 @@ class C4GMigration extends \BackendModule
 
         // fetch all related tables
         foreach ($this->Database->listTables() as $table) {
-            if (C4GUtils::startsWith($table, 'tl_cfs_'.$mod)) {
+            if (C4GUtils::startsWith($table, 'tl_cfs_' . $mod)) {
                 // calculate the new name
                 $newTable = str_replace('_cfs_', '_c4g_', $table);
                 $output = '<strong>' . $table . ' &nbsp;<span style="color:#bbb">-&gt;</span>&nbsp; ' . $newTable . ':</strong><br> &nbsp; ';
                 // copy the data and generate an appropriate output
                 try {
                     // recreate new table (since "DISABLE KEYS" didn't work)
-                    $this->Database->prepare( "DROP TABLE $newTable" )->execute();
-                    $this->Database->prepare( "CREATE TABLE $newTable LIKE $table" )->execute();
-                    if ($this->Database->prepare( "INSERT INTO $newTable SELECT * FROM $table" )->execute()) {
+                    $this->Database->prepare("DROP TABLE $newTable")->execute();
+                    $this->Database->prepare("CREATE TABLE $newTable LIKE $table")->execute();
+                    if ($this->Database->prepare("INSERT INTO $newTable SELECT * FROM $table")->execute()) {
                         $output .= ' <span class="c4g_success">' .
-                                    sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['TRANSFEREDROW'],
-                                        $this->Database->prepare( "SELECT COUNT(*) AS count FROM $newTable" )->execute()->first()->count,
-                                        $this->Database->prepare( "SELECT COUNT(*) AS count FROM $table" )->execute()->first()->count
+                                    sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['TRANSFEREDROW'],
+                                        $this->Database->prepare("SELECT COUNT(*) AS count FROM $newTable")->execute()->first()->count,
+                                        $this->Database->prepare("SELECT COUNT(*) AS count FROM $table")->execute()->first()->count
                                     ) .
                                     ' </span>';
 
@@ -179,13 +178,12 @@ class C4GMigration extends \BackendModule
                     $output .= ' <span class="c4g_error">' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['FAIL'] . '<span>';
                 }
                 $this->output[] = $output;
-
             } elseif ($table == 'tl_module' || $table == 'tl_content' || ($mod == 'map' && $table == 'tl_calendar_events')) {
                 $successCountF = 0;
                 $errorCountF = 0;
                 $output = '<strong>' . $table . ':</strong>';
 
-                foreach ($this->Database->getFieldNames( $table ) as $field) {
+                foreach ($this->Database->getFieldNames($table) as $field) {
                     if ($table == 'tl_calendar_events') {
                         $identifier = 'cfs_';
                     } else {
@@ -195,8 +193,9 @@ class C4GMigration extends \BackendModule
                         // calculate the new name
                         $newField = str_replace('cfs_', 'c4g_', $field);
                         $output .= '<br> &nbsp; <em>' . $field . ' &nbsp;->&nbsp; ' . $newField . ':</em>';
+
                         try {
-                            $output .= $this->Database->prepare( "UPDATE $table SET $newField = $field" )->execute()?
+                            $output .= $this->Database->prepare("UPDATE $table SET $newField = $field")->execute()?
                                     ' <span class="c4g_success">' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['SUCCESS'] . '</span>' :
                                     ' <span class="c4g_error">' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['FAIL'] . '</span>';
                             $successCountF++;
@@ -207,7 +206,7 @@ class C4GMigration extends \BackendModule
                     }
                 }
                 if ($errorCountF <= 0) {
-                    $msg = '<br><span class="c4g_success">' . sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['TRANSFEREDCOL'], $successCountF ) . '</span>';
+                    $msg = '<br><span class="c4g_success">' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['TRANSFEREDCOL'], $successCountF) . '</span>';
                     $successCount++;
                 } else {
                     $msg = '<br><span class="c4g_error">' . $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['FAIL'] . '</span>';
@@ -222,39 +221,38 @@ class C4GMigration extends \BackendModule
 
             //re-add "editorfield"
             if ($mod == 'map') {
-                $this->Database->prepare( "ALTER TABLE `tl_c4g_map_profiles` ADD `editor` char(1) NOT NULL default ''" )->execute();
+                $this->Database->prepare("ALTER TABLE `tl_c4g_map_profiles` ADD `editor` char(1) NOT NULL default ''")->execute();
             }
 
             if ($this->updateType('tl_module') && $this->updateType('tl_content')) {
                 $this->output[] = '<br><span class="c4g_successblock">' .
-                                sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['SUCCESSMSG_2'], $this->module ) .
+                                sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['SUCCESSMSG_2'], $this->module) .
                                 '</span>';
                 $this->output[] = '<br><span class="c4g_warningblock">' .
-                                sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['SUCCESSMSG_3'], $this->module ) .
+                                sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['SUCCESSMSG_3'], $this->module) .
                                 '</span>';
-                $this->buttons[] = array(
-                    action  => 'dbupdate',
-                    label   => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['DBUPDATE'], $this->module)
-                );
-                $this->buttons[] = array(
-                    action  => 'uninstall',
-                    label   => sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['UNINSTALL'], $this->module)
-                );
+                $this->buttons[] = [
+                    action => 'dbupdate',
+                    label => sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['DBUPDATE'], $this->module),
+                ];
+                $this->buttons[] = [
+                    action => 'uninstall',
+                    label => sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['UNINSTALL'], $this->module),
+                ];
             } else {
                 $this->output[] = '<br><span class="c4g_errorblock">' .
                                 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['FAILMSG_2'] .
                                 '</span>';
             }
-
         } else {
             $this->output[] = '<br><span class="c4g_errorblock">' .
-                                sprintf( $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['FAILMSG_1'], $errorCount, $errorCount+$successCount ) .
+                                sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['FAILMSG_1'], $errorCount, $errorCount + $successCount) .
                                 '</span>';
         }
 
-        $this->buttons[] = array(
-                    action  => 'back',
-                    label   => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK']
-                );
+        $this->buttons[] = [
+                    action => 'back',
+                    label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK'],
+                ];
     }
 }

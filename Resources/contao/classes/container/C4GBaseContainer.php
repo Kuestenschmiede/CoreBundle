@@ -13,11 +13,10 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes\container;
 
-
 abstract class C4GBaseContainer implements \Iterator, \Countable
 {
-    protected $elements = array();
-    protected $keys = array();
+    protected $elements = [];
+    protected $keys = [];
     protected $current = 0;
 
     /**
@@ -76,52 +75,59 @@ abstract class C4GBaseContainer implements \Iterator, \Countable
         $this->current = 0;
     }
 
-    protected final function add($element, $key = null) {
+    final protected function add($element, $key = null)
+    {
         $this->elements[] = $element;
         if ($key === null || (!is_string($key) && !is_int($key))) {
             $key = count($this->elements) - 1;
         }
         $this->keys[] = $key;
+
         return $key;
     }
 
-    protected final function delete($key) {
+    final protected function delete($key)
+    {
         $index = array_search($key, $this->keys);
         if ($index !== false) {
             $this->keys = array_splice($this->keys, $index);
             $this->elements = array_splice($this->elements, $index);
+
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-    public function getByKey($key) {
+    public function getByKey($key)
+    {
         $index = array_search($key, $this->keys);
         if ($index !== false) {
             return $this->elements[$index];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
-    public function containsKey($key) {
+    public function containsKey($key)
+    {
         return array_search($key, $this->keys) === false ? false : true;
     }
 
-    public function clear() {
-        $this->elements = array();
-        $this->keys = array();
+    public function clear()
+    {
+        $this->elements = [];
+        $this->keys = [];
         $this->current = 0;
     }
 
-    public function isEmpty() {
+    public function isEmpty()
+    {
         return empty($this->elements);
     }
 
-    public function count() {
+    public function count()
+    {
         return count($this->keys);
     }
-
-
 }

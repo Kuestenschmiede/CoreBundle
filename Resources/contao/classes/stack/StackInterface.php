@@ -18,8 +18,6 @@ namespace con4gis\CoreBundle\Resources\contao\classes\stack;
  */
 interface StackInterface
 {
-
-
     /**
      * add an item to the top of the stack
      * @param array $item
@@ -27,20 +25,17 @@ interface StackInterface
      */
     public function push(array $item);
 
-
     /**
      * remove the last item added to the top of the stack
      * @return mixed
      */
     public function pop();
 
-
     /**
      * look at the item on the top of the stack without removing it
      * @return mixed
      */
     public function top();
-
 
     /**
      * return whether the stack contains no more items

@@ -13,12 +13,11 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes\callback;
 
-
 abstract class C4GCallback
 {
     /**
      * Call the function you want to call, depending on its type. Don't forget to return its result.
      * @return mixed
      */
-    public abstract function call();
+    abstract public function call();
 }

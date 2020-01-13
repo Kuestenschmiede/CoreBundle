@@ -62,6 +62,4 @@ class C4GNotification
             }
         }
     }
-
-
 }

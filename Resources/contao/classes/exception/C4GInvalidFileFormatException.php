@@ -13,8 +13,6 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes\exception;
 
-
 class C4GInvalidFileFormatException extends \Exception
 {
-
 }

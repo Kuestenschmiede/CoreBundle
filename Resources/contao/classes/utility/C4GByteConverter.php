@@ -31,6 +31,7 @@ class C4GByteConverter
     public function setBytes(int $bytes): C4GByteConverter
     {
         $this->bytes = $bytes;
+
         return $this;
     }
 
@@ -49,6 +50,7 @@ class C4GByteConverter
     public function setKiloBytes(int $kiloBytes): C4GByteConverter
     {
         $this->bytes = ($kiloBytes * self::RATE);
+
         return $this;
     }
 
@@ -66,7 +68,8 @@ class C4GByteConverter
      */
     public function setMegaBytes(int $megaBytes): C4GByteConverter
     {
-        $this->bytes = ($megaBytes  * (self::RATE ** 2));
+        $this->bytes = ($megaBytes * (self::RATE ** 2));
+
         return $this;
     }
 
@@ -84,7 +87,8 @@ class C4GByteConverter
      */
     public function setGigaBytes(int $gigaBytes): C4GByteConverter
     {
-        $this->bytes = ($gigaBytes  * (self::RATE ** 3));
+        $this->bytes = ($gigaBytes * (self::RATE ** 3));
+
         return $this;
     }
 
@@ -102,7 +106,8 @@ class C4GByteConverter
      */
     public function setTeraBytes(int $teraBytes): C4GByteConverter
     {
-        $this->bytes = ($teraBytes  * (self::RATE ** 4));
+        $this->bytes = ($teraBytes * (self::RATE ** 4));
+
         return $this;
     }
 }

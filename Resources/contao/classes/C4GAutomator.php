@@ -14,16 +14,13 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes;
 
-use con4gis\CoreBundle\Resources\contao\classes\C4GApiCache;
 use Contao\System;
 
 /**
  * Provide methods to run automated jobs.
- *
  */
 class C4GAutomator extends \System
 {
-
     /**
      * Make the constuctor public
      */
@@ -38,9 +35,7 @@ class C4GAutomator extends \System
      */
     public static function purgeApiCache()
     {
-
         C4GApiCache::getInstance(System::getContainer())->clearCache();
         // Add a log entry
     }
-
 }

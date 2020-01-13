@@ -13,10 +13,10 @@
 
 namespace con4gis\CoreBundle\Resources\contao\classes\container;
 
-
 class C4GContainer extends C4GBaseContainer
 {
-    public function addElement($element, $key = null) {
+    public function addElement($element, $key = null)
+    {
         if (is_array($element)) {
             throw new \Exception('C4GContainer instances may not take arrays or objects other than C4GContainer instances as elements.');
         } elseif (is_object($element)) {
@@ -26,10 +26,12 @@ class C4GContainer extends C4GBaseContainer
                 throw new \Exception('C4GContainer instances may not take themselves as elements.');
             }
         }
+
         return $this->add($element, $key);
     }
 
-    public function deleteElement($key) {
+    public function deleteElement($key)
+    {
         return $this->delete($key);
     }
 
@@ -38,7 +40,8 @@ class C4GContainer extends C4GBaseContainer
      * @param array $array
      * @throws \Exception
      */
-    public function addElementsFromArray(array $array) {
+    public function addElementsFromArray(array $array)
+    {
         foreach ($array as $key => $value) {
             $this->addElement($value);
         }
@@ -50,7 +53,8 @@ class C4GContainer extends C4GBaseContainer
      * @param array $array
      * @throws \Exception
      */
-    public function addContainersFromArray(array $array) {
+    public function addContainersFromArray(array $array)
+    {
         foreach ($array as $value) {
             $container = new C4GContainer();
             foreach ($value as $k => $v) {
@@ -60,7 +64,8 @@ class C4GContainer extends C4GBaseContainer
         }
     }
 
-    public function hasSameContentAs(C4GContainer $container) {
+    public function hasSameContentAs(C4GContainer $container)
+    {
         foreach ($container as $key => $value) {
             if ($this->containsKey($key) === false) {
                 return false;
@@ -80,6 +85,7 @@ class C4GContainer extends C4GBaseContainer
                 return false;
             }
         }
+
         return true;
     }
 }

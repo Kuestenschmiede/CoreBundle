@@ -18,15 +18,12 @@ namespace con4gis\CoreBundle\Resources\contao\classes\stack;
  */
 class StackDatabase implements StackInterface
 {
-
-
     /**
      * Name der Tabelle, in der der Stack gespeichert wird.
      * (Wird in der Kindklasse gesetzt!)
      * @var string
      */
     protected $table = '';
-
 
     /**
      * Gibt die Datenbanklasse zurück.
@@ -37,7 +34,6 @@ class StackDatabase implements StackInterface
         return \Contao\Database::getInstance();
     }
 
-
     /**
      * @return string
      */
@@ -45,7 +41,6 @@ class StackDatabase implements StackInterface
     {
         return $this->table;
     }
-
 
     /**
      * Führt eine Datanbankabfrage aus.
@@ -55,9 +50,9 @@ class StackDatabase implements StackInterface
     public function execute($query)
     {
         $db = $this->getDb();
+
         return $db->execute($query);
     }
-
 
     /**
      * Prüft, ob ein Feld existiert.
@@ -68,9 +63,9 @@ class StackDatabase implements StackInterface
     public function fieldExists($field)
     {
         $db = $this->getDb();
+
         return $db->fieldExists($field, $this->table);
     }
-
 
     /**
      * Fügt dem Stack ein Element hinzu.
@@ -79,14 +74,13 @@ class StackDatabase implements StackInterface
     public function push(array $item)
     {
         if (count($item)) {
-            $data   = serialize($item);
-            $query  = 'INSERT INTO `' . $this->table . '` SET ';
+            $data = serialize($item);
+            $query = 'INSERT INTO `' . $this->table . '` SET ';
             $query .= '`data` = \'' . $data . '\', ';
             $query .= ' `tstamp` = ' . time();
             $this->execute($query);
         }
     }
-
 
     /**
      * Entfernt ein Element vom Stack.
@@ -97,14 +91,14 @@ class StackDatabase implements StackInterface
         $data = $this->top();
 
         if (is_array($data) && count($data)) {
-            $query = 'DELETE FROM `' . $this->table . '` WHERE `id` = ' . $data["id"];
+            $query = 'DELETE FROM `' . $this->table . '` WHERE `id` = ' . $data['id'];
             $this->execute($query);
+
             return $data;
         }
 
-        return array();
+        return [];
     }
-
 
     /**
      * Gibt das oberste Element vom Stack zurück.
@@ -112,16 +106,15 @@ class StackDatabase implements StackInterface
      */
     public function top()
     {
-        $query  = 'SELECT * FROM `' . $this->table . '` ORDER BY id ASC LIMIT 1';
+        $query = 'SELECT * FROM `' . $this->table . '` ORDER BY id ASC LIMIT 1';
         $result = $this->execute($query);
 
         if ($result->numRows) {
             return $result->fetchAssoc();
         }
 
-        return array();
+        return [];
     }
-
 
     /**
      * Prüft, ob der Stack leer ist.
@@ -129,10 +122,9 @@ class StackDatabase implements StackInterface
      */
     public function isEmpty()
     {
-        $query  = 'SELECT * FROM `' . $this->table . '` ORDER BY id ASC LIMIT 1';
+        $query = 'SELECT * FROM `' . $this->table . '` ORDER BY id ASC LIMIT 1';
         $result = $this->execute($query);
 
         return ($result->numRows) ? false : true;
-
     }
 }

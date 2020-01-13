@@ -33,7 +33,8 @@ class ResourceLoader
      * @param string $location
      * @param string $key
      */
-    public static function loadJavaScriptResource($jsFile, $location = self::JAVASCRIPT, $key = '') {
+    public static function loadJavaScriptResource($jsFile, $location = self::JAVASCRIPT, $key = '')
+    {
         switch ($location) {
             case self::JAVASCRIPT:
                 if ($key === '') {
@@ -41,6 +42,7 @@ class ResourceLoader
                 } else {
                     $GLOBALS[self::JAVASCRIPT][$key] = $jsFile;
                 }
+
                 break;
             case self::HEAD:
                 if ($key === '') {
@@ -48,6 +50,7 @@ class ResourceLoader
                 } else {
                     $GLOBALS[self::HEAD][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
                 }
+
                 break;
             case self::BODY:
                 if ($key === '') {
@@ -55,6 +58,7 @@ class ResourceLoader
                 } else {
                     $GLOBALS[self::BODY][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
                 }
+
                 break;
             default:
                 break;
@@ -65,7 +69,8 @@ class ResourceLoader
      * @param $jsFile
      * @param string $key
      */
-    public static function loadJavaScriptResourceModule($jsFile, $key = '') {
+    public static function loadJavaScriptResourceModule($jsFile, $key = '')
+    {
         if ($key === '') {
             $GLOBALS[self::BODY][] = '<script src="' . $jsFile . '" type="module"></script>' . "\n";
         } else {
@@ -78,7 +83,8 @@ class ResourceLoader
      * @param string $location
      * @param string $key
      */
-    public static function loadJavaScriptResourceTag($code, $location = self::HEAD, $key = '') {
+    public static function loadJavaScriptResourceTag($code, $location = self::HEAD, $key = '')
+    {
         switch ($location) {
             case self::HEAD:
                 if ($key === '') {
@@ -86,6 +92,7 @@ class ResourceLoader
                 } else {
                     $GLOBALS[self::HEAD][$key] = "<script>$code</script>\n";
                 }
+
                 break;
             case self::BODY:
                 if ($key === '') {
@@ -93,6 +100,7 @@ class ResourceLoader
                 } else {
                     $GLOBALS[self::BODY][$key] = "<script>$code</script>\n";
                 }
+
                 break;
             default:
                 break;
@@ -103,7 +111,8 @@ class ResourceLoader
      * @param $cssFile
      * @param string $key
      */
-    public static function loadCssResource($cssFile, $key = '') {
+    public static function loadCssResource($cssFile, $key = '')
+    {
         if ($key === '') {
             $GLOBALS[self::CSS][] = $cssFile;
         } else {
@@ -117,17 +126,18 @@ class ResourceLoader
      *  loaded.
      * @param $cssFile
      */
-    public static function loadCssResourceDeferred($cssFile) {
+    public static function loadCssResourceDeferred($cssFile)
+    {
         self::loadJavaScriptResourceTag(
-            "window.addEventListener('load', function() {".
-                "var link = document.createElement('link');".
-                "link.rel = 'stylesheet';".
-                "link.href = '$cssFile';".
-                "link.type = 'text/css';".
+            "window.addEventListener('load', function() {" .
+                "var link = document.createElement('link');" .
+                "link.rel = 'stylesheet';" .
+                "link.href = '$cssFile';" .
+                "link.type = 'text/css';" .
                 "var defer = document.getElementsByTagName('link')[0];" .
                 "if  (typeof defer !== 'undefined') { defer.parentNode.insertBefore(link, defer); }" .
-                "else { document.head.appendChild(link); }".
-            "});"
+                'else { document.head.appendChild(link); }' .
+            '});'
         );
     }
 
@@ -136,14 +146,16 @@ class ResourceLoader
      * @param $key
      * @return bool
      */
-    public static function isResourceLoaded($location, $key) {
+    public static function isResourceLoaded($location, $key)
+    {
         return isset($GLOBALS[$location][$key]);
     }
 
     /**
      * @param $theme
      */
-    public static function loadJqueryUiTheme($theme) {
+    public static function loadJqueryUiTheme($theme)
+    {
         self::loadCssResourceDeferred("bundles/con4giscore/vendor/jQuery/ui-themes/themes/$theme/jquery-ui.css");
 //        self::loadCssResource("bundles/con4giscore/vendor/jQuery/ui-themes/themes/$theme/jquery-ui.css", self::JQ_UI);
     }
@@ -151,7 +163,8 @@ class ResourceLoader
     /**
      * @return bool
      */
-    public static function isJqueryUiThemeLoaded() {
+    public static function isJqueryUiThemeLoaded()
+    {
         return self::isResourceLoaded(self::CSS, self::JQ_UI);
     }
 
@@ -163,17 +176,15 @@ class ResourceLoader
      */
     public static function loadResourcesForModule($module)
     {
-
         global $objPage;
 
-        $neededResources = array();
+        $neededResources = [];
 
         switch ($module) {
             case 'maps':
                 // Maps 3
                 //
                 $neededResources['clipboard'] = true;
-
 
                 // check if jQuery needs to be loaded
                 $jQueryLoaded = false;
@@ -182,23 +193,22 @@ class ResourceLoader
                     foreach ($scripts as $strScriptUrl) {
                         if (preg_match('/assets\/jquery\/core\/\d+\.\d+\.\d+\/jquery\.min\.js/i', $strScriptUrl)) {
                             $jQueryLoaded = true;
+
                             break;
                         }
                     }
                 }
 
-                if ($objPage->hasJQuery)
-                {
+                if ($objPage->hasJQuery) {
                     $jQueryLoaded = true;
                 }
 
-                if ($GLOBALS['CON4GIS']['JQUERY-LOADED'])
-                {
+                if ($GLOBALS['CON4GIS']['JQUERY-LOADED']) {
                     $jQueryLoaded = true;
                 }
 
                 $neededResources['jquery'] = !$jQueryLoaded;
-                
+
                 // Load magnific-popup.js for projects
                 $neededResources['magnific-popup'] = $GLOBALS['con4gis']['projects']['installed'];
 
@@ -220,26 +230,25 @@ class ResourceLoader
      * Loads the requested resources
      * @deprecated
      */
-    public static function loadResources($resources=array())
+    public static function loadResources($resources = [])
     {
         if (!is_array($resources) || empty($resources)) {
             $allByDefault = true;
-            $resources = array();
+            $resources = [];
         } else {
             $allByDefault = false;
         }
 
-        $resources = array_merge(array
-        (
+        $resources = array_merge([
             'jquery' => $allByDefault,
             'magnific-popup' => $allByDefault,
             'clipboard' => $allByDefault,
             'jspdf' => $allByDefault,
-        ),
+        ],
         $resources);
 
         global $objPage;
-        
+
         if ($resources['jquery']) {
             // load jQuery
 
@@ -249,11 +258,9 @@ class ResourceLoader
                 $objPage->hasJQuery = $objLayout->addJQuery;
             }
 
-            if ($objPage->hasJQuery)
-            {
+            if ($objPage->hasJQuery) {
                 // jQuery is already loaded by Contao, don't load again!
-            }
-            else {
+            } else {
                 self::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js', true);
             }
         }
@@ -262,7 +269,6 @@ class ResourceLoader
             // load magnific-popup
             self::loadJavaScriptRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js', true);
             self::loadCssRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css');
-
         }
         if ($resources['clipboard']) {
             // load clipboard
@@ -282,7 +288,8 @@ class ResourceLoader
      * @param $cssFile
      * @deprecated
      */
-    public static function loadCssRessource($key, $cssFile) {
+    public static function loadCssRessource($key, $cssFile)
+    {
         self::loadCssResource($cssFile, $key);
     }
 
@@ -293,7 +300,8 @@ class ResourceLoader
      * @param bool $es6Module
      * @deprecated
      */
-    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false) {
+    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false)
+    {
         if ($inHeader) {
             self::loadJavaScriptResource($jsFile, self::HEAD, $key);
         } else {
@@ -303,7 +311,6 @@ class ResourceLoader
                 self::loadJavaScriptResource($jsFile, self::BODY, $key);
             }
         }
-
     }
 
     /**
