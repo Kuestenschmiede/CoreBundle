@@ -340,7 +340,7 @@ class tl_c4g_bricks extends Contao\Backend
             'map-content' => [
                 'repo' => 'MapContentBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['mapContent'],
-                'icon' => $iconPath.'maps_c4g.svg'
+                'icon' => $iconPath.'map-content_c4g.svg'
             ],
             'routing' => [
                 'repo' => 'RoutingBundle',
