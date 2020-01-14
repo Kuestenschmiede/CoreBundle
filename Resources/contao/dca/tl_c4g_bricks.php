@@ -555,7 +555,7 @@ class tl_c4g_bricks extends Contao\Backend
         $rt = Input::get('rt');
         $result = Database::getInstance()->execute("SELECT id FROM tl_c4g_settings LIMIT 1")->fetchAssoc();
         $href = '/contao?do=c4g_settings&id="' . $result['id'].'"&rt='.$rt.'&key=openSettings';
-        return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+        return $this->User->hasAccess('c4g_settings', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
     }
 
     /**
@@ -615,7 +615,7 @@ class tl_c4g_bricks extends Contao\Backend
     {
         $rt = Input::get('rt');
         $href = "/contao?do=c4g_io_data&rt=$rt&key=importData";
-        return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+        return $this->User->hasAccess('c4g_io_data', 'modules') ?  '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
     }
 
     /**
@@ -631,7 +631,7 @@ class tl_c4g_bricks extends Contao\Backend
     {
         $rt = Input::get('rt');
         $href = "/contao?do=c4g_log&rt=$rt&key=serverLogs";
-        return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+        return $this->User->hasAccess('c4g_log', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
     }
 
     /**
@@ -696,18 +696,6 @@ class tl_c4g_bricks extends Contao\Backend
             if ($row['installedVersion'] && $row['withSettings'] && ($row['brickkey'] != 'core')) {
                 $do = 'c4g_'.$row['brickkey'].'_configuration';
                 $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey'].'_configuration'][0];
-
-//                switch ($row['brickkey']) {
-//                    case "routing":
-//                        $icon = 'bundles/con4gisrouting/images/be-icons/routingconfig.svg';
-//                        break;
-//                    case "pwa":
-//                        //$icon = 'bundles/con4gispwa/images/be-icons/pwa_config.svg';
-//                        break;
-//                    case "editor":
-//                        $icon = 'bundles/con4giseditor/images/be-icons/editor_config.svg';
-//                        break;
-//                }
             } else if ($row['installedVersion']) {
                 switch ($row['brickkey']) {
                     case "maps":
@@ -759,11 +747,11 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "forum":
                         $do = 'c4g_forum';
-                        //$icon = 'bundles/con4gisforum/images/be-icons/forum_structure.svg';
+                        $icon = 'bundles/con4gisforum/images/be-icons/forumstructure.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_forum'][0];
                         break;
                     default:
-                        return;// Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+                        return;
                 }
             } else {
                 return;
@@ -807,7 +795,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "forum":
                         $do = 'c4g_forum_thread';
-                        $icon = 'bundles/con4gisforum/images/be-icons/forum_structure.svg';
+                        $icon = 'bundles/con4gisforum/images/be-icons/forumthreads.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_forum_thread'][0];
                         break;
                     default:
@@ -853,7 +841,7 @@ class tl_c4g_bricks extends Contao\Backend
                 switch ($row['brickkey']) {
                     case "maps":
                         $do = 'c4g_map_profiles';
-                        $icon = 'bundles/con4gismaps/images/be-icons/mapprofile.svg';
+                        $icon = 'bundles/con4giscore/images/be-icons/global_settings_16.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_profiles'][0];
                         break;
                     case "map-content":
@@ -934,32 +922,15 @@ class tl_c4g_bricks extends Contao\Backend
             } else {
                 return;
             }
-        } /*else if (strpos($href, 'eighthButton') > 0) {
-            if ($row['installedVersion']) {
-                switch ($row['brickkey']) {
-                    case "maps":
-
-                    default:
-                        return;
-                }
-            } else {
-                return;
-            }
-        }*/ else {
+        } else {
             return;
         }
 
         $attributes = 'style="margin-right:3px"';
         $ref = Input::get('ref');
-        //$href = '/contao/main.php?do='.$do.'&amp;ref='.$ref.'&amp;popup=1&amp;nb=1&amp';
         $href = '/contao/main.php?do='.$do.'&amp;ref='.$ref;
-        //ToDo check permissions
 
-        //as popup
-        //return ' <a href="'.$href.'" title="' . StringUtil::specialchars($title) . '" class="con4gis_link" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a>';
-
-        //or not as popup
-        return  '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label).'</a>';
+        return $this->User->hasAccess($do, 'modules') ? '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label).'</a>' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 
     }
 

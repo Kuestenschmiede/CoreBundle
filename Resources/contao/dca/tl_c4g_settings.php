@@ -69,9 +69,9 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default' => '{layout_legend:hide},c4g_uitheme_css_select,c4g_appearance_themeroller_css;'.
+		'default' => '{con4gisIoLegend:hide},con4gisIoUrl,con4gisIoKey;'.
                      '{upload_legend:hide},uploadAllowedImageTypes,uploadAllowedImageWidth,uploadAllowedImageHeight,uploadPathImages,uploadAllowedDocumentTypes,uploadPathDocuments,uploadAllowedGenericTypes,uploadPathGeneric,uploadMaxFileSize;'.
-                     '{con4gisIoLegend:hide},con4gisIoUrl,con4gisIoKey;'
+                     '{layout_legend:hide},c4g_uitheme_css_select,c4g_appearance_themeroller_css;'
 	),
 
 	// Fields
