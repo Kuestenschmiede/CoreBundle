@@ -70,5 +70,5 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Fahrtkostenrechner (erfordert con4gis.io)';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Willkommen in der con4gis Schaltzentrale. Hier könnt Ihr Eure Bausteine verwalten und sehen was con4gis noch zu bieten hat.'.
-    ' Eine Besonderheit ist der neue Grunddaten Button an einigen Bausteinen: darüber könnt Ihr, wenn Ihr einen con4gis.io Zugang habt auch Demodaten einspielen.';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Willkommen in der con4gis Schaltzentrale. Hier kann man die Bausteine nutzen und sehen was con4gis noch zu bieten hat.'.
+    ' Eine Besonderheit ist der neue Datenimport: darüber kann man, mit Hilfe eines con4gis.io Zugangs, auf einfache Art und Weise Demo- und Grunddaten einspielen.';

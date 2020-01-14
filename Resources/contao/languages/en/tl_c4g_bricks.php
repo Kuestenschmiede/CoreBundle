@@ -70,5 +70,5 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Travel cost calculator (requires con4gis.io)';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Welcome to the con4gis control center. Here you can manage your con4gis and see what else con4gis has to offer.'.
-    ' A special feature is the new basic data button on some bricks: if you have con4gis.io access, you can use it to import demo data.';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Welcome to the con4gis control center. Here you can use the bricks and see what else con4gis has to offer.'.
+    ' A special feature is the new data import: with the help of a con4gis.io access you can easily import demo and basic data.';
