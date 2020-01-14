@@ -25,6 +25,7 @@ $GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Resources\contao\classes
 if(TL_MODE == "BE") {
     $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/css/con4gis.css';
 }
+
 $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
 
 /**

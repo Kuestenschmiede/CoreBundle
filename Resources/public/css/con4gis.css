@@ -24,6 +24,10 @@ li .c4g_log, li .c4g_settings, li .c4g_io_data {
   display: none !important;
 }
 
+li .active .c4g_log, li .active .c4g_settings, li .active .c4g_io_data {
+  display: block !important;
+}
+
 .col_brickname img {
   width: 75px;
 }
