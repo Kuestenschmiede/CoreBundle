@@ -43,6 +43,9 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['showDocs'] = "Anzeigen in den con4gis Docs
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['showPackagist'] = "Anzeigen auf Packagist";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['showGitHub'] = "Anzeigen auf GitHub";
 
+/** LABELS */
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['lastLoading'] = 'con4gis Versionen vom ';
+
 /** OPERATIONS **/
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['new'] = array("Einstellung hinzufügen","");
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['edit'] = array("Einstellung bearbeiten","");

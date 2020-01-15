@@ -277,11 +277,6 @@ class tl_c4g_bricks extends Contao\Backend
     /**
      * @var array
      */
-    private $installedPackages = [];
-
-    /**
-     * @var array
-     */
     private $versions = [];
 
 	/**
@@ -456,7 +451,7 @@ class tl_c4g_bricks extends Contao\Backend
         $bundles = $this->bundles;
 
         if ($renewData || !$dc || !$bricks || $getPackages) {
-            $this->installedPackages = $this->getContainer()->getParameter('kernel.packages');
+            $installedPackages = $this->getContainer()->getParameter('kernel.packages');
             $this->versions = $this->getLatestVersions();
         }
 
@@ -465,8 +460,8 @@ class tl_c4g_bricks extends Contao\Backend
 
             //get official packages
             foreach ($bundles as $bundle => $values) {
-                if ($this->installedPackages['con4gis/'.$bundle]) {
-                    $installedVersion = $this->installedPackages['con4gis/'.$bundle];
+                if ($installedPackages['con4gis/'.$bundle]) {
+                    $installedVersion = $installedPackages['con4gis/'.$bundle];
                     $latestVersion = $this->versions['con4gis/'.$bundle];
 
                     $iv = (strpos($installedVersion,'v') == 0) ? substr($installedVersion, 1) : 0;
@@ -494,7 +489,7 @@ class tl_c4g_bricks extends Contao\Backend
             }
 
             //get develop packages
-            foreach ($this->installedPackages as $vendorBundle=>$version) {
+            foreach ($installedPackages as $vendorBundle=>$version) {
                 if ((substr($vendorBundle,0,7) == 'con4gis') && (!$this->versions[$vendorBundle])) {
                     $bundle = substr($vendorBundle,8);
 
@@ -692,9 +687,9 @@ class tl_c4g_bricks extends Contao\Backend
         $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks LIMIT 1")->fetchAllAssoc();
         $date = '';
         if ($bricks && $bricks[0] && ($bricks[0]['tstamp'] > 0)) {
-            $date = ' ('.Date::parse(Config::get('datimFormat'), $bricks[0]['tstamp']).')';
+            $date = Date::parse(Config::get('dateFormat'), $bricks[0]['tstamp']);
         }
-        $label = 'con4gis '.$GLOBALS['con4gis']['version'].$date;
+        $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['lastLoading'].$date;
         return '<div class="con4gis_version" style="text-align: left;color: #0f3b5c;">'.$label.'</div>';
     }
 

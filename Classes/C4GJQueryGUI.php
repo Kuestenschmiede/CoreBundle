@@ -119,18 +119,18 @@ class C4GJQueryGUI
             ResourceLoader::loadCssResourceDeferred('bundles/con4giscore/vendor/jQuery/plugins/jScrollPane/css/jquery.jscrollpane.css');
         }
 
-        if ($usePopups || ($GLOBALS['con4gis']['projects']['installed'])) {
+        if ($usePopups || C4GVersionProvider::isInstalled('con4gis/projects') {
             ResourceLoader::loadCssResourceDeferred('bundles/con4giscore/vendor/magnific-popup/magnific-popup.css');
             ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js', $location = ResourceLoader::HEAD, $key = 'magnific-popup');
         }
 
         //TODO: add own switch for maps
-        if ($GLOBALS['con4gis']['projects']['installed']) {
+        if (C4GVersionProvider::isInstalled('con4gis/projects')) {
             ResourceLoader::loadCssResourceDeferred('bundles/con4giscore/vendor/jQuery/plugins/lighbox2/css/lightbox.min.css');
             ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jQuery/plugins/lighbox2/js/lightbox.min.js', $location = ResourceLoader::HEAD, $key = 'c4g_jq_lighbox2');
         }
 
-        if ($useMaps && $GLOBALS['con4gis']['maps']['installed']) {
+        if ($useMaps && C4GVersionProvider::isInstalled('con4gis/maps')) {
             // TODO: recieve and use profileId
             \con4gis\MapsBundle\Resources\contao\classes\ResourceLoader::loadResources();
             \con4gis\MapsBundle\Resources\contao\classes\ResourceLoader::loadTheme();
@@ -146,7 +146,7 @@ class C4GJQueryGUI
 //                ResourceLoader::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js|static', true);
 //            }
             // Load magnific-popup.js for projects
-            if ($GLOBALS['con4gis']['projects']['installed']) {
+            if (C4GVersionProvider::isInstalled('con4gis/projects')) {
                 ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js', $location = ResourceLoader::JAVASCRIPT, $key = 'magnific-popup');
                 $GLOBALS['TL_CSS']['magnific-popup'] = 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css';
             }

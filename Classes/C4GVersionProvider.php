@@ -13,6 +13,7 @@
 namespace con4gis\CoreBundle\Classes;
 
 use Contao\Request;
+use Contao\System;
 
 /**
  * Class C4GVersionProvider
@@ -22,6 +23,17 @@ use Contao\Request;
 class C4GVersionProvider
 {
     const REQUEST_URL = 'https://repo.packagist.org/p/[vendor]/[package].json';
+
+    /**
+     * @param string $package
+     * @return bool
+     */
+    public static function isInstalled(string $package)
+    {
+        $installedPackages = System::getContainer()->getParameter('kernel.packages');
+
+        return ($package && ($installedPackages[$package]));
+    }
 
     /**
      * @param string $package   The package in vendor/package structure.

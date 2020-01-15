@@ -107,7 +107,7 @@ class C4GMigration extends \BackendModule
 
     protected function checkMod()
     {
-        if (!$GLOBALS['con4gis'][$this->module]['installed']) {
+        if (!C4GVersionProvider::isInstalled('con4gis/' . $this->module)) {
             $this->output[] = '<span class="c4g_errorblock">' .
                                 sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['NOMODULEERROR'], 'con4gis_' . $this->module) .
                                 '</span>';

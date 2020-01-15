@@ -63,7 +63,7 @@ class con4gisInsertTags extends \System
             if ($arrSplit && (($arrSplit[0] == 'con4gis')) && isset($arrSplit[1])) {
                 $fieldName = $arrSplit[1];
                 switch ($fieldName) {
-                    case 'version': return $GLOBALS['con4gis']['version'];
+                    case 'version': return $packages['con4gis/maps'];
                     case 'core':
                         if ($packages['con4gis/core']) {
                             return $this->checkVersionTag($packages['con4gis/core']);

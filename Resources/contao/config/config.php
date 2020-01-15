@@ -14,8 +14,6 @@
 
 use \con4gis\CoreBundle\Classes\Hooks\con4gisInsertTags;
 
-$GLOBALS['con4gis']['version'] = "7.0-snapshot";
-
 // API-Registration
 $GLOBALS['TL_API'] = array();
 $GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Classes\C4GFileUpload';
