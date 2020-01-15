@@ -15,7 +15,7 @@ ini_set("display_errors","1");
         require_once($initialize);
 
         // User not logged in...
-//        if (!$user = \con4gis\CoreBundle\Resources\contao\classes\C4GUtils::isFrontendUserLoggedIn()) {
+//        if (!$user = \con4gis\CoreBundle\Classes\C4GUtils::isFrontendUserLoggedIn()) {
 //            header('HTTP/1.0 403 Forbidden');
 //            echo "Forbidden";
 //            die();

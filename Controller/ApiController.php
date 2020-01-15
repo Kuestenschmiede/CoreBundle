@@ -13,7 +13,7 @@
 
 namespace con4gis\CoreBundle\Controller;
 
-use con4gis\CoreBundle\Resources\contao\classes\C4GApiCache;
+use con4gis\CoreBundle\Classes\C4GApiCache;
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\System;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
