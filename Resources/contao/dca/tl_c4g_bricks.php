@@ -9,6 +9,8 @@
  */
 
 use con4gis\CoreBundle\Classes\C4GVersionProvider;
+use Contao\Config;
+use Contao\Date;
 use Contao\Image;
 use Contao\StringUtil;
 
@@ -440,14 +442,25 @@ class tl_c4g_bricks extends Contao\Backend
 	{
         $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks LIMIT 1")->fetchAllAssoc();
 
+        if ($bricks) {
+            $tstamp = new DateTime($bricks['tstamp']);
+            $now = date('Y-m-d');
+
+            $format = 'Y-m-d H:i:s';
+            $d1 = date_create($now);
+            $d2 = date_create($tstamp->format('Y-m-d'));
+            $diff = date_diff($d1,$d2);
+            $renewData = $diff->days > 14 ? true : false; //autom. renew after two weeks
+        }
+
         $bundles = $this->bundles;
 
-        if (!$dc || !$bricks || $getPackages) {
+        if ($renewData || !$dc || !$bricks || $getPackages) {
             $this->installedPackages = $this->getContainer()->getParameter('kernel.packages');
             $this->versions = $this->getLatestVersions();
         }
 
-        if (!$dc || !$bricks) {
+        if ($renewData || !$dc || !$bricks) {
             $this->Database->prepare("DELETE FROM tl_c4g_bricks")->execute();
 
             //get official packages
@@ -466,7 +479,7 @@ class tl_c4g_bricks extends Contao\Backend
                     $latestVersion    = $this->versions['con4gis/'.$bundle];
                 }
 
-                $set['tstamp'] = date();
+                $set['tstamp'] = time();
                 $set['brickkey'] = $bundle;
                 $set['brickname'] = $values['icon'] ? Image::getHtml($values['icon']) : $bundle;
                 $set['repository'] = $values['repo'];
@@ -491,7 +504,7 @@ class tl_c4g_bricks extends Contao\Backend
 
                     $installedVersion = $version;
 
-                    $set['tstamp'] = date();
+                    $set['tstamp'] = time();
                     $set['brickkey'] = $bundle;
                     $set['brickname'] = $bundle;
                     $set['repository'] = '-';
@@ -676,8 +689,13 @@ class tl_c4g_bricks extends Contao\Backend
     public function con4gisVersion($href, $label, $title, $class, $attributes)
     {
         //$icon = 'bundles/con4giscore/images/be-icons/con4gis-logo.svg';
-        $label = 'con4gis '.$GLOBALS['con4gis']['version'];
-        return '<div class="con4gis_version" style="text-align: left;color: #0f3b5c;">'.$label/*Image::getHtml($icon, $label)*/.'</div>';
+        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks LIMIT 1")->fetchAllAssoc();
+        $date = '';
+        if ($bricks && $bricks[0] && ($bricks[0]['tstamp'] > 0)) {
+            $date = ' ('.Date::parse(Config::get('datimFormat'), $bricks[0]['tstamp']).')';
+        }
+        $label = 'con4gis '.$GLOBALS['con4gis']['version'].$date;
+        return '<div class="con4gis_version" style="text-align: left;color: #0f3b5c;">'.$label.'</div>';
     }
 
     /**
