@@ -13,11 +13,11 @@
 
 namespace con4gis\CoreBundle\Controller;
 
-use con4gis\CoreBundle\Resources\contao\classes\exception\C4GFileSizeException;
-use con4gis\CoreBundle\Resources\contao\classes\exception\C4GGenericException;
-use con4gis\CoreBundle\Resources\contao\classes\exception\C4GImageDimensionsException;
-use con4gis\CoreBundle\Resources\contao\classes\exception\C4GInvalidFileFormatException;
-use con4gis\CoreBundle\Resources\contao\classes\utility\C4GByteConverter;
+use con4gis\CoreBundle\Classes\Exception\C4GFileSizeException;
+use con4gis\CoreBundle\Classes\Exception\C4GGenericException;
+use con4gis\CoreBundle\Classes\Exception\C4GImageDimensionsException;
+use con4gis\CoreBundle\Classes\Exception\C4GInvalidFileFormatException;
+use con4gis\CoreBundle\Classes\Utility\C4GByteConverter;
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

@@ -64,10 +64,10 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
     'Alle hier aufgeführten Einstellungsmöglichkeiten können von verschiedenen con4gis Bausteinen verwendet werden. Eventuell vorhandene Zusatzeinstellungen in den Frontendmodulen können diese ggf. überschreiben.';
 
 /** LEGENDS **/
-$GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "Grundeinstellungen (Layout)";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI Einstellungen";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Uploadeinstellungen";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Sonstige Einstellungen";
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = "con4gis.io";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = "con4gis.io Kartendienste";
 
 /** Field References */
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['base']      = 'base';

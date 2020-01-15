@@ -13,8 +13,8 @@
 
 namespace con4gis\CoreBundle\Controller;
 
-use con4gis\CoreBundle\Resources\contao\classes\C4GApiCache;
-use con4gis\CoreBundle\Resources\contao\classes\C4GUtils;
+use con4gis\CoreBundle\Classes\C4GApiCache;
+use con4gis\CoreBundle\Classes\C4GUtils;
 use Contao\Database;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

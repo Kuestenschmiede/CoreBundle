@@ -12,19 +12,20 @@
  * @link       https://www.con4gis.org
  */
 
-use \con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags;
+use \con4gis\CoreBundle\Classes\Hooks\con4gisInsertTags;
 
 $GLOBALS['con4gis']['version'] = "7.0-snapshot";
 
 // API-Registration
 $GLOBALS['TL_API'] = array();
 $GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Classes\C4GFileUpload';
-$GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Resources\contao\classes\C4GImageUpload';
-$GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Resources\contao\classes\C4GDeliverFileApi';
+$GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Classes\C4GImageUpload';
+$GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Classes\C4GDeliverFileApi';
 
 if(TL_MODE == "BE") {
     $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/css/con4gis.css';
 }
+
 $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
 
 /**
@@ -67,7 +68,7 @@ $GLOBALS['TL_MODELS']['tl_c4g_settings'] = 'con4gis\CoreBundle\Resources\contao\
  */
 $GLOBALS['TL_PURGE']['folders']['con4gis'] = array
 (
-    'callback' => array('con4gis\CoreBundle\Resources\contao\classes\C4GAutomator', 'purgeApiCache'),
+    'callback' => array('con4gis\CoreBundle\Classes\C4GAutomator', 'purgeApiCache'),
     'affected' => array('var/cache/prod/con4gis')
 );
 
@@ -91,4 +92,4 @@ if (!$GLOBALS['CON4GIS']['USE_CACHE'])
 /**
  * replace con4gis insertTags
  */
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\con4gis\CoreBundle\Classes\Contao\Hooks\con4gisInsertTags', 'replaceTag');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\con4gis\CoreBundle\Classes\Hooks\con4gisInsertTags', 'replaceTag');
