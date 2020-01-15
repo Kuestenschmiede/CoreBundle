@@ -121,6 +121,32 @@ class ResourceLoader
     }
 
     /**
+     * @param $styles
+     * @param string $location
+     * @param string $key
+     */
+    public static function loadCssResourceTag($styles, $location = self::HEAD, $key = '') {
+        switch ($location) {
+            case self::HEAD:
+                if ($key === '') {
+                    $GLOBALS[self::HEAD][] = "<style type=\"text/css\">$styles</style>";
+                } else {
+                    $GLOBALS[self::HEAD][$key] = "<style type=\"text/css\">$styles</style>";
+                }
+                break;
+            case self::BODY:
+                if ($key === '') {
+                    $GLOBALS[self::BODY][] = "<style type=\"text/css\">$styles</style>";
+                } else {
+                    $GLOBALS[self::BODY][$key] = "<style type=\"text/css\">$styles</style>";
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
      * There is no HTML solution to load CSS deferred. This will actually add a JS block that will load the css when
      *  the page is loaded. Be careful with this because it can make the page look terrible before the CSS is actually
      *  loaded.
