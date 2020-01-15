@@ -12,7 +12,7 @@
  */
 
 /** FIELDS **/
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['brickkey'] = ['con4gis brick', ''];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['brickkey'] = ['Brick', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['brickname'] = ['Brick', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['repository'] = ['Repository', ''];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['description'] = ['Description', ''];

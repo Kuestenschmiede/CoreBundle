@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 		(
 			'mode'                    => 1,
 			'fields'                  => ['brickname'],
-			'panelLayout'             => 'search',
+			'panelLayout'             => 'filter',
             'headerFields'            => ['brickname','description','installedVersion','latestVersion'],
             'filter'                  => ['showBundle' => ["showBundle = ?", "1"]]
 		),
@@ -202,14 +202,15 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>false, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'long'),
-            'sql'                     => "varchar(128) NOT NULL default ''"
+            'sql'                     => "varchar(128) NOT NULL default ''",
+            'filter'                  => true
 		),
         'brickname' => array
         (
             'inputType'               => 'text',
             'eval'                    => array('mandatory'=>false, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>254, 'tl_class'=>'long'),
             'sql'                     => "varchar(254) NOT NULL default ''",
-            'search'                  => true
+            'search'                  => true,
         ),
         'repository' => array
         (
@@ -253,7 +254,6 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
         (
             'inputType'               => 'checkbox',
             'default'                 => '0',
-            'filter'                  => true,
             'sql'                     => "char(1) NOT NULL default '0'"
         )
 	)
