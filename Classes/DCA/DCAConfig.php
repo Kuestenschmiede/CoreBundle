@@ -39,6 +39,13 @@ class DCAConfig
         return $this;
     }
 
+    public function onsubmitCallback(string $class, string $method)
+    {
+        $this->global['onsubmit_callback'] = [[$class, $method]];
+
+        return $this;
+    }
+
     public function sqlKeys(string $field, string $value)
     {
         $this->global['sql'] = [

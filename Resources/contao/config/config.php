@@ -62,15 +62,6 @@ $GLOBALS['TL_MODELS']['tl_c4g_activationkey'] = 'con4gis\CoreBundle\Resources\co
 $GLOBALS['TL_MODELS']['tl_c4g_settings'] = 'con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel';
 
 /**
- * Purge jobs
- */
-$GLOBALS['TL_PURGE']['folders']['con4gis'] = array
-(
-    'callback' => array('con4gis\CoreBundle\Classes\C4GAutomator', 'purgeApiCache'),
-    'affected' => array('var/cache/prod/con4gis')
-);
-
-/**
  * Con4Gis Caching
  *
  * caching is not auto-enabled. To register a service to be cached, insert it in the GLOBALS-Array
