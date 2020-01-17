@@ -153,13 +153,13 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=seventhButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
-            )/*,
+            ),
             'eighthButton' => array
             (
                 'href'                => 'key=eighthButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
-            )*/,
+            ),
             'showDocs' => array
             (
                 'href'                => 'key=showDocs',
@@ -706,237 +706,45 @@ class tl_c4g_bricks extends Contao\Backend
         $rt = Input::get('rt');
         $key = $row['brickkey'];
 
-        //ToDo set configuration params in bundles
-        if (strpos($href, 'firstButton') > 0) {
-            if ($row['installedVersion'] && $row['withSettings'] && ($row['brickkey'] != 'core')) {
-                $do = 'c4g_'.$row['brickkey'].'_configuration';
-                $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey'].'_configuration'][1];
-            } else if ($row['installedVersion']) {
-                switch ($row['brickkey']) {
-                    case "maps":
-                        $do = 'c4g_map_baselayers';
-                        $icon = 'bundles/con4gismaps/images/be-icons/baselayers.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_baselayers'][1];
-                        break;
-                    case "map-content":
-                        $do = 'c4g_mapcontent_custom_field';
-                        //$icon = 'bundles/con4gismapcontent/images/be-icons/customfields.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_custom_field'][1];
-                        break;
-                    case "tracking":
-                        $do = 'c4g_'.$row['brickkey'];
-                        //$icon = 'bundles/con4gistracking/images/be-icons/trackingconfig.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][1];
-                        break;
-                    case "import":
-                        $do = 'c4g_'.$row['brickkey'];
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][1];
-                        break;
-                    case "export":
-                        $do = 'c4g_'.$row['brickkey'];
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][1];
-                        break;
-                    case "queue":
-                        $do = 'c4g_'.$row['brickkey'];
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_'.$row['brickkey']][1];
-                        $icon = 'bundles/con4gisqueue/images/be-icons/import_queue_2.svg';
-                        break;
-//                    case "pwa":
-//                        $do = 'c4g_pwa_configuration';
-//                        $icon = 'bundles/con4gismaps/images/be-icons/baselayers.png';
-//                        break;
-                    case "io-travel-costs":
-                        $do = 'c4g_travel_costs_tariffs';
-                        $icon = 'bundles/con4gisiotravelcosts/images/be-icons/travelcosts_tariff.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_travel_costs_tariffs'][1];
-                        break;
-                    case "visualization":
-                        $do = 'c4g_visualization_chart_element';
-                        $icon = 'bundles/con4gisvisualization/images/be-icons/charts.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_visualization_chart_element'][1];
-                        break;
-                    case "firefighter":
-                        $do = 'c4g_firefighter_operation_types';
-                        $icon = 'bundles/con4gisfirefighter/images/be-icons/operationtypes.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_operation_types'][1];
-                        break;
-                    case "forum":
-                        $do = 'c4g_forum';
-                        $icon = 'bundles/con4gisforum/images/be-icons/forumstructure.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_forum'][1];
-                        break;
-                    default:
-                        return;
-                }
-            } else {
-                return;
+        $brickArr = [];
+        foreach ($GLOBALS['BE_MOD']['con4gis'] as $key=>$module) {
+            if ($module['brick']) {
+                $brickArr[$module['brick']][] = ['do' => $key, 'icon' => $module['icon'], 'title' => $GLOBALS['TL_LANG']['MOD'][$key][1]];
             }
-        } else if (strpos($href, 'secondButton') > 0) {
-            if ($row['installedVersion']) {
-                switch ($row['brickkey']) {
-                    case "maps":
-                        $do = 'c4g_map_locstyles';
-                        $icon = 'bundles/con4gismaps/images/be-icons/locationstyles.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_locstyles'][1];
-                        break;
-                    case "map-content":
-                        $do = 'c4g_mapcontent_element';
-                        $icon = 'bundles/con4gismapcontent/images/be-icons/mapelements.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_element'][1];
-                        break;
-                    case "editor":
-                        $do = 'c4g_editor_element_category';
-                        $icon = 'bundles/con4giseditor/images/be-icons/editor_category.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_editor_element_category'][1];
-                        break;
-                    case "pwa":
-                        $do = 'c4g_webpush_configuration';
-                        $icon = 'bundles/con4gispwa/images/be-icons/webpush_config.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_webpush_configuration'][1];
-                        break;
-                    case "io-travel-costs":
-                        $do = 'c4g_travel_costs_settings';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_travel_costs_settings'][1];
-                        break;
-                    case "visualization":
-                        $do = 'c4g_visualization_chart';
-                        $icon = 'bundles/con4gisvisualization/images/be-icons/grafic.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_visualization_chart'][1];
-                        break;
-                    case "firefighter":
-                        $do = 'c4g_firefighter_operation_categories';
-                        $icon = 'bundles/con4gisfirefighter/images/be-icons/operationcategories.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_operation_categories'][1];
-                        break;
-                    /*case "forum":
-                        $do = 'c4g_forum_thread';
-                        $icon = 'bundles/con4gisforum/images/be-icons/forumthreads.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_forum_thread'][1];
-                        break;*/
-                    default:
-                        return;
-                }
-            }
-        }  else if (strpos($href, 'thirdButton') > 0) {
-                if ($row['installedVersion']) {
-                    switch ($row['brickkey']) {
-                        case "maps":
-                            $do = 'c4g_map_themes';
-                            $icon = 'bundles/con4gismaps/images/be-icons/maplayout.svg';
-                            $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_themes'][1];
-                            break;
-                        case "map-content":
-                            $do = 'c4g_mapcontent_type';
-                            $icon = 'bundles/con4gismapcontent/images/be-icons/mapcategory.svg';
-                            $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_type'][1];
-                            break;
-                        case "editor":
-                            $do = 'c4g_editor_element_type';
-                            $icon = 'bundles/con4giseditor/images/be-icons/editor_type.svg';
-                            $title = $GLOBALS['TL_LANG']['MOD']['c4g_editor_element_type'][1];
-                            break;
-                        case "pwa":
-                            $do = 'c4g_push_notification';
-                            $icon = 'bundles/con4gispwa/images/be-icons/push_example.svg';
-                            $title = $GLOBALS['TL_LANG']['MOD']['c4g_push_notification'][1];
-                            break;
-                        case "firefighter":
-                            $do = 'c4g_firefighter_vehicle_types';
-                            $icon = 'bundles/con4gisfirefighter/images/be-icons/vehicletypes.svg';
-                            $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_vehicle_types'][1];
-                            break;
-                        default:
-                            return;
-                    }
-                } else {
-                    return;
-                }
-        }  else if (strpos($href, 'fourthButton') > 0) {
-            if ($row['installedVersion']) {
-                switch ($row['brickkey']) {
-                    case "maps":
-                        $do = 'c4g_map_profiles';
-                        $icon = 'bundles/con4giscore/images/be-icons/global_settings_16.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_profiles'][1];
-                        break;
-                    case "map-content":
-                        $do = 'c4g_mapcontent_directory';
-                        $icon = 'bundles/con4gismapcontent/images/be-icons/mapfolder.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_mapcontent_directory'][1];
-                        break;
-                    case "pwa":
-                        $do = 'c4g_push_subscription_type';
-                        $icon = 'bundles/con4gispwa/images/be-icons/push_types.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_push_subscription_type'][1];
-                        break;
-                    case "firefighter":
-                        $do = 'c4g_firefighter_vehicles';
-                        $icon = 'bundles/con4gisfirefighter/images/be-icons/vehicles.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_vehicles'][1];
-                        break;
-                    default:
-                        return;
-                }
-            } else {
-                return;
-            }
-        }  else if (strpos($href, 'fifthButton') > 0) {
-            if ($row['installedVersion']) {
-                switch ($row['brickkey']) {
-                    case "maps":
-                        $do = 'c4g_maps';
-                        $icon = 'bundles/con4gismaps/images/be-icons/mapstructure.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_maps'][1];
-                        break;
-                    case "firefighter":
-                        $do = 'c4g_firefighter_unit_types';
-                        $icon = 'bundles/con4gisfirefighter/images/be-icons/unittypes.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_unit_types'][1];
-                        break;
-                    default:
-                        return;
-                }
-            } else {
-                return;
-            }
-        }  else if (strpos($href, 'sixthButton') > 0) {
-            if ($row['installedVersion']) {
-                switch ($row['brickkey']) {
-                    case "maps":
-                        $do = 'c4g_map_tables';
-                        $icon = 'bundles/con4gismaps/images/be-icons/sourcetables.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_tables'][1];
-                        break;
-                    case "firefighter":
-                        $do = 'c4g_firefighter_units';
-                        $icon = 'bundles/con4gisfirefighter/images/be-icons/units.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_units'][1];
-                        break;
-                    default:
-                        return;
-                }
-            } else {
-                return;
-            }
-        } else if (strpos($href, 'seventhButton') > 0) {
-            if ($row['installedVersion']) {
-                switch ($row['brickkey']) {
-                    case "maps":
-                        $do = 'c4g_map_filters';
-                        $icon = 'bundles/con4gismaps/images/be-icons/mapfilter.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_map_filters'][1];
-                        break;
-                    case "firefighter":
-                        $do = 'c4g_firefighter_operations';
-                        $icon = 'bundles/con4gisfirefighter/images/be-icons/operations.svg';
-                        $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_operations'][1];
-                        break;
-                    default:
-                        return;
-                }
-            } else {
-                return;
-            }
+        }
+
+        if ((strpos($href, 'firstButton') > 0) && ($brickArr[$row['brickkey']][0])) {
+            $do = $brickArr[$row['brickkey']][0]['do'];
+            $icon = $brickArr[$row['brickkey']][0]['icon'];
+            $title = $brickArr[$row['brickkey']][0]['title'];
+        } else if ((strpos($href, 'secondButton') > 0) && ($brickArr[$row['brickkey']][1])) {
+            $do = $brickArr[$row['brickkey']][1]['do'];
+            $icon = $brickArr[$row['brickkey']][1]['icon'];
+            $title = $brickArr[$row['brickkey']][1]['title'];
+        } else if ((strpos($href, 'thirdButton') > 0) && ($brickArr[$row['brickkey']][2])) {
+            $do = $brickArr[$row['brickkey']][2]['do'];
+            $icon = $brickArr[$row['brickkey']][2]['icon'];
+            $title = $brickArr[$row['brickkey']][2]['title'];
+        } else if ((strpos($href, 'fourthButton') > 0) && ($brickArr[$row['brickkey']][3])) {
+            $do = $brickArr[$row['brickkey']][3]['do'];
+            $icon = $brickArr[$row['brickkey']][3]['icon'];
+            $title = $brickArr[$row['brickkey']][3]['title'];
+        } else if ((strpos($href, 'fifthButton') > 0) && ($brickArr[$row['brickkey']][4])) {
+            $do = $brickArr[$row['brickkey']][4]['do'];
+            $icon = $brickArr[$row['brickkey']][4]['icon'];
+            $title = $brickArr[$row['brickkey']][4]['title'];
+        } else if ((strpos($href, 'sixthButton') > 0) && ($brickArr[$row['brickkey']][5])) {
+            $do = $brickArr[$row['brickkey']][5]['do'];
+            $icon = $brickArr[$row['brickkey']][5]['icon'];
+            $title = $brickArr[$row['brickkey']][5]['title'];
+        } else if ((strpos($href, 'seventhButton') > 0) && ($brickArr[$row['brickkey']][6])) {
+            $do = $brickArr[$row['brickkey']][6]['do'];
+            $icon = $brickArr[$row['brickkey']][6]['icon'];
+            $title = $brickArr[$row['brickkey']][6]['title'];
+        } else if ((strpos($href, 'eighthButton') > 0) && ($brickArr[$row['brickkey']][7])) {
+            $do = $brickArr[$row['brickkey']][7]['do'];
+            $icon = $brickArr[$row['brickkey']][7]['icon'];
+            $title = $brickArr[$row['brickkey']][7]['title'];
         } else {
             return;
         }
