@@ -125,7 +125,8 @@ class ResourceLoader
      * @param string $location
      * @param string $key
      */
-    public static function loadCssResourceTag($styles, $location = self::HEAD, $key = '') {
+    public static function loadCssResourceTag($styles, $location = self::HEAD, $key = '')
+    {
         switch ($location) {
             case self::HEAD:
                 if ($key === '') {
@@ -133,6 +134,7 @@ class ResourceLoader
                 } else {
                     $GLOBALS[self::HEAD][$key] = "<style type=\"text/css\">$styles</style>";
                 }
+
                 break;
             case self::BODY:
                 if ($key === '') {
@@ -140,6 +142,7 @@ class ResourceLoader
                 } else {
                     $GLOBALS[self::BODY][$key] = "<style type=\"text/css\">$styles</style>";
                 }
+
                 break;
             default:
                 break;
@@ -291,11 +294,13 @@ class ResourceLoader
             }
         }
         self::loadJavaScriptRessource('ajax-request', 'bundles/con4giscore/js/C4GAjaxRequest.js', true);
+
         if ($resources['magnific-popup']) {
             // load magnific-popup
             self::loadJavaScriptRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js', true);
             self::loadCssRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css');
         }
+
         if ($resources['clipboard']) {
             // load clipboard
             self::loadJavaScriptRessource('clipboard', 'bundles/con4giscore/vendor/clipboard.min.js', true);

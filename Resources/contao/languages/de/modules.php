@@ -23,4 +23,4 @@ $GLOBALS['TL_LANG']['MOD']['c4g_log'] = array('Log', 'Internes Log für con4gis.
 /**
  * Content elements
  */
-$GLOBALS['TL_LANG']['CTE']['c4g_activationpage'] = array('Aktivierungsseite (con4gis)', 'Modul zur Einbindung einer Aktivierungsseite.');
+$GLOBALS['TL_LANG']['CTE']['c4g_activationpage'] = array('Aktivierungsseite (con4gis/core)', 'Modul zur Einbindung einer Aktivierungsseite.');
