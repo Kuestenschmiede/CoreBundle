@@ -33,12 +33,48 @@ import Swal from 'sweetalert2';
 export class AlertHandler {
 
   showErrorDialog(title, content, cssClass) {
-    Swal.fire(title, content, "error");
+    Swal.fire({
+      title: title,
+      text: content,
+      type: "error",
+      customClass: cssClass ? cssClass : ''
+    });
   }
 
   showInfoDialog(title, content, cssClass) {
-    Swal.fire(title, content, "info");
+    Swal.fire({
+      title: title,
+      text: content,
+      type: "info",
+      customClass: cssClass ? cssClass : ''
+    });;
   }
+
+  showInfoActionDialog(title, content, confirmCallback, cssClass) {
+    Swal.fire({
+      title: title,
+      text: content,
+      type: "info",
+      customClass: cssClass ? cssClass : ''
+    }).then (
+        function () {
+          confirmCallback();
+        }
+    );
+  }
+
+  showInfoActionDialog2(title, content, confirmCallback, cssClass) {
+    Swal.fire({
+      title: title,
+      text: content,
+      type: "info",
+      showLoaderOnConfirm: true,
+      customClass: cssClass ? cssClass : '',
+      preConfirm: (data) => {
+        confirmCallback();
+      }});
+  }
+
 
   showConfirmDialog(title, text, confirmCallback, cancelCallback, confirmText, cancelText, cssClass) {
     Swal.fire({
@@ -55,6 +91,46 @@ export class AlertHandler {
         confirmCallback();
       } else {
         cancelCallback();
+      }
+    });
+  }
+
+  showPreConfirmDialog(title, text, preConfirmCallback, confirmText, cancelText, cssClass, showLoading) {
+    Swal.fire({
+      title: title,
+      text: text,
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: confirmText ? confirmText : "Confirm",
+      cancelButtonText: cancelText ? cancelText : "Cancel",
+      showLoaderOnConfirm: showLoading ? showLoading : true,
+      preConfirm: function () {
+        return new Promise (function (data) {
+          preConfirmCallback();
+        })
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+      dangerMode: true,
+      customClass: cssClass ? cssClass : ''
+    });
+  }
+
+  showLoadingDialog(title, text, preConfirmCallback, cssClass) {
+    Swal.fire({
+      title: title,
+      text: text,
+      showCancelButton: false,
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showLoaderOnConfirm: true,
+      onBeforeOpen: () => {
+        Swal.clickConfirm();
+      },
+      customClass: cssClass ? cssClass : '',
+      preConfirm: () => {
+        return new Promise (function (data) {
+          preConfirmCallback();
+        })
       }
     });
   }
