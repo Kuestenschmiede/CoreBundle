@@ -11,8 +11,11 @@
  * @link      https://www.kuestenschmiede.de
  */
 
+use con4gis\CoreBundle\Classes\C4GVersionProvider;
+use Contao\Image;
+use Contao\StringUtil;
 /**
- * Table tl_c4g_log
+ * Table tl_c4g_io_data
  */
 $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
 (
@@ -29,29 +32,37 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             )
         ),
         'closed' => true,
+        'onload_callback'			=> array
+        (
+            array('tl_c4g_io_data', 'checkData'),
+        ),
+        'onsubmit_callback'			=> array
+        (
+            array('tl_c4g_io_data', 'saveData'),
+        )
     ),
     'list' => array
     (
         'sorting' => array
         (
             'mode'                    => 2,
-            'fields'                  => array('id'),
-            'panelLayout'             => 'filter;sort,search,limit',
-            'headerFields'            => array('tstamp', 'caption', 'bundles', 'description'),
+            'fields'                  => array('caption'),
+            'panelLayout'             => 'search',
+            'headerFields'            => array('caption', 'bundles', 'description', 'importVersion', 'availableVersion'),
         ),
         'label' => array
         (
-            'fields'                  => array('tstamp', 'caption', 'bundles', 'description'),
+            'fields'                  => array('caption', 'bundles', 'description', 'importVersion', 'availableVersion'),
             'showColumns'             => true,
         ),
         'global_operations' => array
         (
-            'all' => [
-                'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
-                'href'                => 'act=select',
-                'class'               => 'header_edit_all',
-                'attributes'          => 'onclick="Backend.getScrollOffset();" accesskey="e"'
-            ],
+//            'all' => [
+//                'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
+//                'href'                => 'act=select',
+//                'class'               => 'header_edit_all',
+//                'attributes'          => 'onclick="Backend.getScrollOffset();" accesskey="e"'
+//            ],
             'back' => [
                 'href'                => 'key=back',
                 'class'               => 'header_back',
@@ -62,18 +73,34 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         ),
         'operations' => array
         (
+//            'show' => array
+//            (
+//                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['show'],
+//                'href'                => 'act=show',
+//                'icon'                => 'show.gif'
+//            ),
+            'import' => array
+            (
+                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['importData'],
+                'href'                => 'key=importBaseData',
+                'class'               => 'reload_version',
+//                'button_callback'     => ['tl_c4g_io_data', 'loadButtons'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/importData.svg'
+            ),
+            'update' => array
+            (
+                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['updateData'],
+                'href'                => 'key=updateBaseData',
+//                'button_callback'     => ['tl_c4g_io_data', 'loadButtons'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/update_version.svg'
+            ),
             'delete' => array
             (
-                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_log']['delete'],
-                'href'                => 'act=delete',
-                'icon'                => 'delete.svg',
-                'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
-            ),
-            'show' => array
-            (
-                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_log']['show'],
-                'href'                => 'act=show',
-                'icon'                => 'show.gif'
+                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['delete'],
+                'href'                => 'key=deleteImport',
+//                'button_callback'     => ['tl_c4g_io_data', 'loadButtons'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/delete.svg',
+//                'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
             )
         )
     ),
@@ -94,7 +121,7 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
     'palettes' => array
     (
         '__selector__'                => array(''),
-        'default'                     => ''
+        'default'                     => 'caption,description,con4gisImport'
     ),
 
     'subpalettes' => array
@@ -108,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         'id' => array
         (
             'sql'                     => "int(10) unsigned NOT NULL auto_increment",
-            //'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_log']['id'],
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['id'],
             'sorting'                 => true,
             'search'                  => true,
         ),
@@ -116,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         (
             'flag'                    => 6,
             'sql'                     => "int(10) NULL default 0",
-            //'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_log']['tstamp'],
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['tstamp'],
             'default'                 => 0,
             'sorting'                 => true,
             'search'                  => true,
@@ -125,9 +152,10 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         'caption' => array
         (
             'sql'                     => "varchar(255) NOT NULL",
-            //'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_log']['bundles'],
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['caption'],
             'inputType'               => 'text',
             'default'                 => '',
+            'inputType'               => 'text',
             'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
@@ -136,26 +164,266 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         'bundles' => array
         (
             'sql'                     => "text NOT NULL",
-            //'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_log']['caption'],
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['bundles'],
             'inputType'               => 'text',
             'default'                 => '',
-            'eval'                    => array('mandatory' => true),
+//            'eval'                    => array('mandatory' => true),
+            'sorting'                 => true,
+            'search'                  => true,
+        ),
+        'importVersion' => array
+        (
+            'sql'                     => "text NOT NULL",
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['importVersion'],
+            'inputType'               => 'text',
+            'default'                 => '',
+//            'eval'                    => array('mandatory' => true),
+            'sorting'                 => true,
+            'search'                  => true,
+        ),
+        'availableVersion' => array
+        (
+            'sql'                     => "text NOT NULL",
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['availableVersion'],
+            'inputType'               => 'text',
+            'default'                 => '',
+//            'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
         ),
         'description' => array
         (
             'sql'                     => "text NOT NULL",
-            //'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_log']['caption'],
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['description'],
             'inputType'               => 'text',
             'default'                 => '',
             'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
         ),
+        'con4gisImport' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisImport'],
+            'filter'                  => false,
+            'inputType'               => 'select',
+//            'eval'                    => array('mandatory' => true),
+            'options_callback'        => ['tl_c4g_io_data', 'getCon4gisImportTemplates'],
+            'sql'                     => "int NOT NULL default 0"
+        )
     ),
 );
-class tl_c4g_io_data extends \Backend
+
+/**
+ * Class tl_c4g_io_data
+ */
+class tl_c4g_io_data extends Contao\Backend
 {
+
+    /**
+     * loadBaseData
+     */
+    public function loadBaseData()
+    {
+        // Check current action
+        $responses = $this->getCon4gisImportData("getBasedata.php", "allData");
+        $localData = $this->Database->prepare("SELECT * FROM tl_c4g_io_data")->execute();
+        $localData = $localData->fetchAllAssoc();
+
+        //Update data from con4gis.io
+        foreach ($localData as $data) {
+            $available = false;
+            foreach ($responses as $response) {
+                if ($response->id == $data['id']) {
+                    $this->Database->prepare("UPDATE tl_c4g_io_data SET caption=?, description=?, bundles=?, availableVersion=? WHERE id=?")->execute($response->caption, $response->description, $response->bundles, $response->version, $data['id']);
+                    $available = true;
+                }
+            }
+            //Delete Import if it's not available anymore
+            if (!$available) {
+                if ($data['importVersion'] != "") {
+                    $this->Database->prepare("UPDATE tl_c4g_io_data SET availableVersion=? WHERE id=?")->execute("", $data['id']);
+                } else {
+                    $this->Database->prepare("DELETE FROM tl_c4g_io_data WHERE id=?")->execute($data['id']);
+                }
+            }
+        }
+
+        //Check for new data
+        foreach ($responses as $response) {
+            $count = 0;
+            $arrayLength = count($localData) - 1;
+            foreach ($localData as $data) {
+                if ($data['id'] == $response->id) {
+                    break;
+                }
+                if ($data['id'] != $response->id && $count == $arrayLength) {
+                    $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->version);
+                }
+                $count++;
+            }
+        }
+
+//        $this->Database->prepare("DELETE FROM tl_c4g_io_data")->execute();
+//
+//        foreach ($responses as $response) {
+//            $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->version);
+//        }
+    }
+
+    /**
+     * importBaseData
+     */
+    public function importBaseData()
+    {
+        $data = $_REQUEST;
+
+        $con4gisImportId = $data['id'];
+
+        $importData = $this->getCon4gisImportData("getBasedata.php", "specificData", $con4gisImportId);
+        $importURL = $importData[0]->url;
+
+        if(strpos($importURL,".sql")!==false) {
+            $file = file_get_contents($importURL, true);
+//            echo $file;
+            $sqlStatements = explode(";\n", $file);
+            $counter = 0;
+            foreach ($sqlStatements as $sqlStatement) {
+                if ($sqlStatement == "") {
+                    break;
+                }
+                $this->Database->execute($sqlStatement);
+            }
+        }
+
+        $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute($importData[0]->version, $data['id']);
+
+    }
+
+    /**
+     * updateBaseData
+     */
+    public function updateBaseData()
+    {
+        // Check current action
+
+    }
+
+    /**
+     * deleteBaseData
+     */
+    public function deleteBaseData()
+    {
+        // Check current action
+
+    }
+
+    /**
+     * saveData
+     */
+    public function saveData(DataContainer $dc)
+    {
+        $con4gisImport = $this->Input->post('con4gisImport');
+
+        $responses = $this->getCon4gisImportData("getBasedata.php", "specificData", $con4gisImport);
+
+        foreach ($responses as $response) {
+            $objUpdate = $this->Database->prepare("UPDATE tl_c4g_io_data SET bundles=? WHERE id=?")->execute($response->bundles, $dc->id);
+        }
+
+    }
+
+    /**
+     * checkData
+     */
+    public function checkData()
+    {
+        // Check current action
+        $key = Contao\Input::get('key');
+        if ($key) {
+            switch ($key) {
+                case 'importBaseData':
+                    $this->importBaseData();
+                    break;
+                case 'updateBaseData':
+                    $this->updateBaseData();
+                    break;
+                case 'importData':
+                    $this->loadBaseData();
+                    break;
+                case 'deleteData':
+                    $this->deleteBaseData();
+                    break;
+            }
+        }
+        
+        
+    }
+
+    /**
+     * loadButtons
+     * @param $href
+     * @return string
+     */
+    public function loadButtons($href)
+    {
+        // Check current action
+        $key = Contao\Input::get('key');
+        $id = Contao\Input::get('id');
+        $rt = Contao\Input::get('rt');
+        $ref = Contao\Input::get('ref');
+        $do = Contao\Input::get('do');
+
+        $icon = 'bundles/con4giscore/images/be-icons/delete.svg';
+
+//        $href = '/contao?do='.$do.'&amp;id='.$id.'&amp;rt='.$rt.'&amp;ref='.$ref;
+
+        $attributes = 'style="margin-right:3px"';
+        $imgAttributes = 'style="width: 18px; height: 18px"';
+
+        return '<a href="' . $this->addToUrl($href[0]) . '" title="' . StringUtil::specialchars("Test") . '"'.$attributes.'>'.Image::getHtml($icon, "Label", $imgAttributes).'</a>';
+    }
+
+    /**
+     * getCon4gisImportTemplates
+     */
+    public function getCon4gisImportTemplates()
+    {
+
+        $responses = $this->getCon4gisImportData("getBasedata.php", "allData");
+        $arrReturn = [];
+        foreach ($responses as $response) {
+            $arrReturn[$response->id] = \InsertTags::replaceInsertTags($response->caption);
+        }
+        return $arrReturn;
+    }
+
+    /**
+     * getCon4gisImportData
+     */
+    public function getCon4gisImportData($importData, $mode, $data = false)
+    {
+        $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
+        if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
+            $basedataUrl = rtrim($objSettings->con4gisIoUrl, "/") . "/" . $importData;
+            $basedataUrl .= "?key=" . $objSettings->con4gisIoKey;
+            $basedataUrl .= "&mode=" . $mode;
+            if (isset($data)) {
+                $basedataUrl .= "&data=" . str_replace(' ', '%20', $data);
+            }
+            $REQUEST = new \Request();
+            if ($_SERVER['HTTP_REFERER']) {
+                $REQUEST->setHeader('Referer', $_SERVER['HTTP_REFERER']);
+            }
+            if ($_SERVER['HTTP_USER_AGENT']) {
+                $REQUEST->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
+            }
+            $REQUEST->send($basedataUrl);
+            if ($REQUEST->response) {
+                return $responses = \GuzzleHttp\json_decode($REQUEST->response);
+            } else {
+                return $responses = [];
+            }
+        }
+    }
 
 }
