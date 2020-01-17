@@ -36,7 +36,8 @@ $GLOBALS['TL_DCA']['tl_c4g_activationkey'] = array
 		(
 			'mode'                    => 2,
 			'fields'                  => array('tstamp DESC', 'id DESC'),
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'filter;sort,search,limit',
+            'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
 		),
 		'label' => array
 		(

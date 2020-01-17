@@ -42,7 +42,8 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 			'fields'                  => ['brickname'],
 			'panelLayout'             => 'filter',
             'headerFields'            => ['brickname','description','installedVersion','latestVersion'],
-            'filter'                  => ['showBundle' => ["showBundle = ?", "1"]]
+            'filter'                  => ['showBundle' => ["showBundle = ?", "1"]],
+            'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
 		),
 		'label' => array
 		(

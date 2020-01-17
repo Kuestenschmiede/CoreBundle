@@ -11,6 +11,6 @@ class ShowOperation extends DCAOperation
         parent::__construct($dca, 'show');
         $this->label($dca->getName(), 'show');
         $this->href('act=show');
-        $this->icon('show.gif');
+        $this->icon('show.svg');
     }
 }

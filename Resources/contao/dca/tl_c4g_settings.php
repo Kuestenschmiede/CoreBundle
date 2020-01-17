@@ -44,6 +44,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'mode'              => 2,
             'fields'            => array('test'),
             'panelLayout'       => 'limit',
+            'icon'              => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
         ),
 
         'label' => array
