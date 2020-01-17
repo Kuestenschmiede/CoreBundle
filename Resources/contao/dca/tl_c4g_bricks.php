@@ -808,11 +808,11 @@ class tl_c4g_bricks extends Contao\Backend
                         $icon = 'bundles/con4gisfirefighter/images/be-icons/operationcategories.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_operation_categories'][1];
                         break;
-                    case "forum":
+                    /*case "forum":
                         $do = 'c4g_forum_thread';
                         $icon = 'bundles/con4gisforum/images/be-icons/forumthreads.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_forum_thread'][1];
-                        break;
+                        break;*/
                     default:
                         return;
                 }
@@ -928,7 +928,7 @@ class tl_c4g_bricks extends Contao\Backend
                         break;
                     case "firefighter":
                         $do = 'c4g_firefighter_operations';
-                        $icon = 'bundles/con4gifirefighter/images/be-icons/operations.svg';
+                        $icon = 'bundles/con4gisfirefighter/images/be-icons/operations.svg';
                         $title = $GLOBALS['TL_LANG']['MOD']['c4g_firefighter_operations'][1];
                         break;
                     default:
