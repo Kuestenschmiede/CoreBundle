@@ -42,6 +42,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['seventhButton'] = "Open settings";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['showDocs'] = "Displays in the con4gis Docs";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['showPackagist'] = "Display on Packagist";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['showGitHub'] = "Display on GitHub";
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['favorite'] = "Favorites are displayed directly in the Contao navigation.";
 
 /** LABELS */
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['lastLoading'] = 'con4gis versions from ';

@@ -16,7 +16,7 @@
   background-color: #2C3E50;
 }*/
 
-#tl_navigation .tl_level_1_group .group-con4gis {
+#tl_navigation .group-con4gis {
   background: url("../images/be-icons/con4gis.svg") 3px 2px no-repeat;
 }
 
@@ -24,7 +24,11 @@ li .c4g_log, li .c4g_settings, li .c4g_io_data {
   display: none !important;
 }
 
-li .active .c4g_log, li .active .c4g_settings, li .active .c4g_io_data {
+li .c4g_invisible_brick {
+  display: none !important;
+}
+
+li .c4g_visible_brick {
   display: block !important;
 }
 

@@ -82,3 +82,6 @@ if (!$GLOBALS['CON4GIS']['USE_CACHE'])
  * replace con4gis insertTags
  */
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\con4gis\CoreBundle\Classes\Hooks\con4gisInsertTags', 'replaceTag');
+
+/** USE getUserNavigation Hook */
+$GLOBALS['TL_HOOKS']['getUserNavigation'][] = array('con4gis\CoreBundle\Classes\Hooks\con4gisNavigation','activateNavigation');

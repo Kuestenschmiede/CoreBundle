@@ -9,6 +9,7 @@
  */
 
 use con4gis\CoreBundle\Classes\C4GVersionProvider;
+use con4gis\CoreBundle\Classes\Helper\ArrayHelper;
 use Contao\Config;
 use Contao\Date;
 use Contao\Image;
@@ -179,13 +180,19 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'icon'                => 'bundles/con4giscore/images/be-icons/github_16.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'showGitHub']
             ),
+            'favorite' => array
+            (
+                'href'                => 'key=switchFavorite',
+                'icon'                => 'bundles/con4giscore/images/be-icons/star.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'switchFavorite']
+            ),
 		)
 	),
 
 	// Palettes
 	'palettes' => array
 	(
-		'default' => '{brick_legend},brickname,description,installedVersion,latestVersion,withSettings;'
+		'default' => '{brick_legend},brickname,description,installedVersion,latestVersion,withSettings,favorite;'
 	),
 
 	// Fields
@@ -252,6 +259,12 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
         )
         ,
         'showBundle' => array
+        (
+            'inputType'               => 'checkbox',
+            'default'                 => '0',
+            'sql'                     => "char(1) NOT NULL default '0'"
+        ),
+        'favorite' => array
         (
             'inputType'               => 'checkbox',
             'default'                 => '0',
@@ -524,7 +537,13 @@ class tl_c4g_bricks extends Contao\Backend
         // Check current action
         $key = Contao\Input::get('key');
         if ($key) {
-            switch ($key) {
+            $switchKey = $key;
+            $pos = strpos($key,'_');
+            if ($pos) {
+                $switchKey = substr($key, 0, $pos);
+                $keyValue  = substr($key, $pos+1);
+            }
+            switch ($switchKey) {
                 case 'switchAll':
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter'] = [];
                     $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'][0];
@@ -543,6 +562,15 @@ class tl_c4g_bricks extends Contao\Backend
                     break;
                 case 'reloadVersions':
                     $this->loadBricks(false);
+                    break;
+                case 'switchFavorite':
+                    if ($keyValue) {
+                        $result = Database::getInstance()->prepare("SELECT favorite FROM tl_c4g_bricks WHERE brickkey=? LIMIT 1")->execute($keyValue)->fetchAssoc();
+                        if ($result) {
+                            $favorite = $result['favorite'] == '1' ? '0' : '1';
+                            Database::getInstance()->prepare("UPDATE tl_c4g_bricks SET favorite=? WHERE brickkey=?")->execute($favorite,$keyValue);
+                        }
+                    }
                     break;
             }
         } else {
@@ -801,5 +829,31 @@ class tl_c4g_bricks extends Contao\Backend
     public function showGitHub($row, $href, $label, $title, $icon) {
         $imgAttributes = 'style="width: 18px; height: 18px"';
         return '<a href="https://github.com/Kuestenschmiede/'.$row['repository'].'" title="'.specialchars($title).'" target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
+    }
+
+    /**
+     * @param $row
+     * @param $href
+     * @param $label
+     * @param $title
+     * @param $icon
+     * @return string
+     */
+    public function switchFavorite($row, $href, $label, $title, $icon) {
+        $rt = Input::get('rt');
+        $do = Input::get('do');
+
+        $attributes = 'style="margin-right:3px"';
+        $imgAttributes = 'style="width: 18px; height: 18px"';
+
+        $result = Database::getInstance()->prepare("SELECT favorite FROM tl_c4g_bricks WHERE brickkey=? LIMIT 1")->execute($row['brickkey'])->fetchAssoc();
+        if ($result) {
+            if ($result['favorite'] == '1') {
+                $icon = 'bundles/con4giscore/images/be-icons/star_light.svg';
+            }
+        }
+
+        $href = "/contao?do=$do&key=switchFavorite_".$row['brickkey'];
+        return '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>'.Image::getHtml($icon, $label, $imgAttributes).'</a> ';
     }
 }
