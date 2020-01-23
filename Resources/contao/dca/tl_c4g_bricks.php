@@ -543,6 +543,7 @@ class tl_c4g_bricks extends Contao\Backend
                 $switchKey = substr($key, 0, $pos);
                 $keyValue  = substr($key, $pos+1);
             }
+            $deleteKey = true;
             switch ($switchKey) {
                 case 'switchAll':
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter'] = [];
@@ -551,6 +552,7 @@ class tl_c4g_bricks extends Contao\Backend
 
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['label'] = $label;
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['icon'] = $icon;
+                    $deleteKey = false;
                     break;
                 case 'switchInstalled':
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter']['showBundle'] = ["showBundle = ?", "1"];
@@ -559,11 +561,10 @@ class tl_c4g_bricks extends Contao\Backend
 
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['label'] = $label;
                     $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['global_operations']['switchInstalled']['icon'] = $icon;
+                    $deleteKey = false;
                     break;
                 case 'reloadVersions':
                     $this->loadBricks(false);
-                    //delete key per redirect
-                    \Contao\Controller::redirect(\Controller::redirect(str_replace('&key='.$key, '', \Environment::get('request'))));
                     break;
                 case 'switchFavorite':
                     if ($keyValue) {
@@ -573,10 +574,14 @@ class tl_c4g_bricks extends Contao\Backend
                             Database::getInstance()->prepare("UPDATE tl_c4g_bricks SET favorite=? WHERE brickkey=?")->execute($favorite,$keyValue);
                         }
                     }
-                    //delete key per redirect
-                    \Contao\Controller::redirect(\Controller::redirect(str_replace('&key='.$key, '', \Environment::get('request'))));
                     break;
             }
+
+            if ($deleteKey) {
+                //delete key per redirect
+                \Contao\Controller::redirect(\Controller::redirect(str_replace('&key='.$key, '', \Environment::get('request'))));
+            }
+
         } else {
             $this->loadBricks($dc, false);
         }
@@ -849,6 +854,18 @@ class tl_c4g_bricks extends Contao\Backend
 
         $attributes = 'style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
+
+        $showButton = false;
+        foreach ($GLOBALS['BE_MOD']['con4gis'] as $key=>$module) {
+            if ($module['brick'] == $row['brickkey']) {
+                $showButton = true;
+                break;
+            }
+        }
+
+        if (!$showButton) {
+            return '';
+        }
 
         $result = Database::getInstance()->prepare("SELECT favorite FROM tl_c4g_bricks WHERE brickkey=? LIMIT 1")->execute($row['brickkey'])->fetchAssoc();
         if ($result) {
