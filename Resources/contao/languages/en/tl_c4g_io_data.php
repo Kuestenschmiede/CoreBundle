@@ -28,3 +28,8 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateData'] = array("Update data","");
  * Buttons
  */
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['new'] = array('New import', 'Create new import');
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteImportDialog'] = 'Do you really want to delete the import?';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['updateImportDialog'] = 'During an update, all customised settings will be overwritten. Do you really want to continue?';
+
+/** INFOTEXT */
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Here you can import and update new basic and demo data if you have access to con4gis.io.';

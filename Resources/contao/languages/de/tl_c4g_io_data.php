@@ -28,7 +28,8 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateData'] = array("Daten aktualisieren
  * Buttons
  */
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['new'] = array('Neuer Import', 'Einen neuen Import erstellen');
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteImportDialog'] = 'Möchtest du den Import wirklich löschen?';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['updateImportDialog'] = 'Bei einem Update werden sämtliche benutzerdefinierten Einstellungen überschrieben. Möchtest du wirklich fortfahren?';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Willkommen in der con4gis Schaltzentrale. Hier könnt Ihr Eure Bausteine verwalten und sehen was con4gis noch zu bieten hat.'.
-    ' Eine Besonderheit ist der neue Grunddaten Button an einigen Bausteinen: darüber könnt Ihr, wenn Ihr einen con4gis.io Zugang habt auch Demodaten einspielen.';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Hier könnt Ihr neue Grund- und Demodaten importieren und aktualisieren, wenn Ihr einen con4gis.io Zugang habt.';
