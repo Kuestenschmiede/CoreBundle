@@ -41,7 +41,6 @@ class con4gisNavigation extends \System
         }
     }
 
-
     public function activateNavigation($arrModules, $blnShowAll)
     {
         if (!\Database::getInstance()->tableExists('tl_c4g_bricks')) {
@@ -57,10 +56,10 @@ class con4gisNavigation extends \System
                 $brickkey = $brick['brickkey'];
                 $favorite = $brick['favorite'];
 
-                foreach ($arrModules['con4gis']['modules'] as $name=>$module) {
+                foreach ($arrModules['con4gis']['modules'] as $name => $module) {
                     if ($module['brick'] && $module['brick'] == $brickkey) {
                         $additionalClass = $arrModules['con4gis']['modules'][$name]['class'];
-                        $arrModules['con4gis']['modules'][$name]['class'] = $favorite == '1' ? $additionalClass.' c4g_visible_brick' : $additionalClass.' c4g_invisible_brick';
+                        $arrModules['con4gis']['modules'][$name]['class'] = $favorite == '1' ? $additionalClass . ' c4g_visible_brick' : $additionalClass . ' c4g_invisible_brick';
                     }
                 }
             }
@@ -68,5 +67,4 @@ class con4gisNavigation extends \System
 
         return $arrModules;
     }
-
 }

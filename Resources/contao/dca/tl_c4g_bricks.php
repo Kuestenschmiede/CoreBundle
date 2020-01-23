@@ -562,6 +562,8 @@ class tl_c4g_bricks extends Contao\Backend
                     break;
                 case 'reloadVersions':
                     $this->loadBricks(false);
+                    //delete key per redirect
+                    \Contao\Controller::redirect(\Controller::redirect(str_replace('&key='.$key, '', \Environment::get('request'))));
                     break;
                 case 'switchFavorite':
                     if ($keyValue) {
@@ -571,6 +573,8 @@ class tl_c4g_bricks extends Contao\Backend
                             Database::getInstance()->prepare("UPDATE tl_c4g_bricks SET favorite=? WHERE brickkey=?")->execute($favorite,$keyValue);
                         }
                     }
+                    //delete key per redirect
+                    \Contao\Controller::redirect(\Controller::redirect(str_replace('&key='.$key, '', \Environment::get('request'))));
                     break;
             }
         } else {
