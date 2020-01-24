@@ -10,6 +10,7 @@
 
 use con4gis\CoreBundle\Classes\C4GVersionProvider;
 use con4gis\CoreBundle\Classes\Helper\ArrayHelper;
+use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Config;
 use Contao\Date;
 use Contao\Image;
@@ -449,17 +450,12 @@ class tl_c4g_bricks extends Contao\Backend
 	 */
 	private function loadBricks($dc, $getPackages = true)
 	{
-        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks LIMIT 1")->fetchAllAssoc();
-
-        if ($bricks) {
-            $tstamp = new DateTime($bricks['tstamp']);
-            $now = date('Y-m-d');
-
-            $format = 'Y-m-d H:i:s';
-            $d1 = date_create($now);
-            $d2 = date_create($tstamp->format('Y-m-d'));
-            $diff = date_diff($d1,$d2);
-            $renewData = $diff->days > 14 ? true : false; //autom. renew after two weeks
+        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks")->fetchAllAssoc();
+        if ($bricks && $bricks[0]) {
+            $tstamp = $bricks[0]['tstamp'];
+            $tstamp = intval($tstamp);
+            $before_seven_days = time() - (7 * 24 * 60 * 60);
+            $renewData = $tstamp < $before_seven_days ? true : false; //autom. renew after one week
         }
 
         $bundles = $this->bundles;
@@ -470,6 +466,14 @@ class tl_c4g_bricks extends Contao\Backend
         }
 
         if ($renewData || !$dc || !$bricks) {
+
+            $favorites = [];
+            if ($bricks) {
+                foreach ($bricks as $brick) {
+                    $favorites[$brick['brickkey']] = $brick['favorite'];
+                }
+            }
+
             $this->Database->prepare("DELETE FROM tl_c4g_bricks")->execute();
 
             //get official packages
@@ -498,6 +502,7 @@ class tl_c4g_bricks extends Contao\Backend
                 $set['withSettings'] = intval($this->checkSettings($bundle));
                 $set['icon'] = $values['icon'];
                 $set['showBundle'] = $installedVersion != '' ? "1" : "0";
+                $set['favorite'] = $favorites[$bundle] ? $favorites[$bundle] : '0';
 
                 $this->Database->prepare("INSERT INTO tl_c4g_bricks %s")->set($set)->execute();
             }
@@ -522,6 +527,7 @@ class tl_c4g_bricks extends Contao\Backend
                     $set['latestVersion']    = '-';
                     $set['withSettings'] = intval($this->checkSettings($bundle));
                     $set['showBundle'] = "1";
+                    $set['favorite'] = $favorites[$bundle] ? $favorites[$bundle] : '0';
 
                     $this->Database->prepare("INSERT INTO tl_c4g_bricks %s")->set($set)->execute();
                 }
