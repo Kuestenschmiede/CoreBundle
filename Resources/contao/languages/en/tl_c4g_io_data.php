@@ -15,6 +15,7 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['id'] = array("ID","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['tstamp'] = array("Timestamp","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['caption'] = array("Name of import","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['bundles'] = array("Affected bundles","");
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['bundlesVersion'] = array("Bundle versions","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['description'] = array("Description","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisImport'] = array("Import template","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['importVersion'] = array("Imported version","");
@@ -30,6 +31,8 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateData'] = array("Update data","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['new'] = array('New import', 'Create new import');
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteImportDialog'] = 'Do you really want to delete the import?';
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateImportDialog'] = 'During an update, all customised settings will be overwritten. Do you really want to continue?';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisIoImportData'] = 'Overview of all imports';
 
 /** INFOTEXT */
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Here you can import and update new basic and demo data if you have access to con4gis.io.';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotextNoKey'] = 'You have no con4gis.io access. But you need one to be able to see imports. You can create this under con4gis.io.';
