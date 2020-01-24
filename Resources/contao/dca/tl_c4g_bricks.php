@@ -310,6 +310,11 @@ class tl_c4g_bricks extends Contao\Backend
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['core'],
                 'icon' => $iconPath.'core_c4g.svg'
             ],
+            'data' => [
+                'repo' => 'DataBundle',
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['data'],
+                'icon' => $iconPath.'data_c4g.svg'
+            ],
             'documents' => [
                 'repo' => 'DocumentsBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'],
@@ -349,11 +354,6 @@ class tl_c4g_bricks extends Contao\Backend
                 'repo' => 'MapsBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
                 'icon' => $iconPath.'maps_c4g.svg'
-            ],
-            'map-content' => [
-                'repo' => 'MapContentBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['mapContent'],
-                'icon' => $iconPath.'map-content_c4g.svg'
             ],
             'routing' => [
                 'repo' => 'RoutingBundle',
