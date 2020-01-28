@@ -12,6 +12,10 @@
  */
 
 /** FIELDS **/
+$GLOBALS['TL_LANG']['tl_c4g_settings']['showBundleNames'] = [
+    'Zeige Bausteinname in der Navigation',
+    'Bei Aktivierung werden zusätzlich zu den Modulnamen, die Bundlenamen (Bausteine) in der Contao Navigation angezeigt, dass ist hilfrich wenn mehrere Bausteine im Dashboard aktiviert wurden.'
+];
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'] = array(
     'jQuery UI ThemeRoller CSS Theme',
     'Wählen Sie hier eines der Standard UI-Themes aus. Sollten Sie im nächsten Schritt eine eigene Datei auswählen, wird die geladen.'
@@ -64,6 +68,7 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
     'Alle hier aufgeführten Einstellungsmöglichkeiten können von verschiedenen con4gis Bausteinen verwendet werden. Eventuell vorhandene Zusatzeinstellungen in den Frontendmodulen können diese ggf. überschreiben.';
 
 /** LEGENDS **/
+$GLOBALS['TL_LANG']['tl_c4g_settings']['global_legend'] = "Globale Einstellungen";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI Einstellungen";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Uploadeinstellungen";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Sonstige Einstellungen";

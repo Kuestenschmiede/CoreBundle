@@ -12,6 +12,10 @@
  */
 
 /** FIELDS **/
+$GLOBALS['TL_LANG']['tl_c4g_settings']['showBundleNames'] = [
+    'Show brick name in navigation',
+    'When activated, in addition to the module names, the bundle names are displayed in the Contao navigation, which is helpful if several modules are activated in the dashboard.'
+];
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'] = [
     'jQuery UI ThemeRoller CSS theme',
     'Select a standart UI-Theme.'
@@ -64,6 +68,7 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
     'This settings will used by several con4gis bricks.';
 
 /** LEGENDS **/
+$GLOBALS['TL_LANG']['tl_c4g_settings']['global_legend'] = "Global settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Upload settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Miscellaneous settings";

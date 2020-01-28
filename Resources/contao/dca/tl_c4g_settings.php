@@ -70,7 +70,8 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default' => '{con4gisIoLegend:hide},con4gisIoUrl,con4gisIoKey;'.
+		'default' => '{global_legend:hide},showBundleNames;'.
+                     '{con4gisIoLegend:hide},con4gisIoUrl,con4gisIoKey;'.
                      '{upload_legend:hide},uploadAllowedImageTypes,uploadAllowedImageWidth,uploadAllowedImageHeight,uploadPathImages,uploadAllowedDocumentTypes,uploadPathDocuments,uploadAllowedGenericTypes,uploadPathGeneric,uploadMaxFileSize;'.
                      '{layout_legend:hide},c4g_uitheme_css_select,c4g_appearance_themeroller_css;'
 	),
@@ -194,7 +195,16 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'inputType'               => 'text',
             'eval'                    => ['maxlength' => 32],
             'sql'                     => "varchar(32) default ''"
-        ]
+        ],
+        'showBundleNames' =>
+            [
+                'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['showBundleNames'],
+                'exclude'                 => true,
+                'default'                 => false,
+                'inputType'               => 'checkbox',
+                'eval'                    => ['tl_class'=>'clr'],
+                'sql'                     => "char(1) NOT NULL default '0'"
+            ],
         
     )
 );

@@ -14,6 +14,7 @@
 
 namespace con4gis\CoreBundle\Classes\Hooks;
 
+use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Contao\System;
 
 /**
@@ -52,6 +53,11 @@ class con4gisNavigation extends \System
             ->execute()->fetchAllAssoc();
 
         if ($result) {
+            $settings = C4gSettingsModel::findAll();
+            if ($settings && $settings[0]) {
+                $showBundleNames = $settings[0]->showBundleNames;
+            }
+
             foreach ($result as $brick) {
                 $brickkey = $brick['brickkey'];
                 $favorite = $brick['favorite'];
@@ -59,6 +65,11 @@ class con4gisNavigation extends \System
                 foreach ($arrModules['con4gis']['modules'] as $name => $module) {
                     if ($module['brick'] && $module['brick'] == $brickkey) {
                         $additionalClass = $arrModules['con4gis']['modules'][$name]['class'];
+                        if ($showBundleNames) {
+                            $arrModules['con4gis']['modules'][$name]['label'] = '('.$brickkey.') '.$GLOBALS['TL_LANG']['MOD'][$name][0];
+                        } else {
+                            $arrModules['con4gis']['modules'][$name]['label'] = '> '.$GLOBALS['TL_LANG']['MOD'][$name][0];
+                        }
                         $arrModules['con4gis']['modules'][$name]['class'] = $favorite == '1' ? $additionalClass . ' c4g_visible_brick' : $additionalClass . ' c4g_invisible_brick';
                     }
                 }
