@@ -584,7 +584,7 @@ class tl_c4g_bricks extends Contao\Backend
 
             if ($deleteKey) {
                 //delete key per redirect
-                \Contao\Controller::redirect(\Controller::redirect(str_replace('&key='.$key, '', \Environment::get('request'))));
+                \Contao\Controller::redirect(str_replace('&key='.$key, '', \Environment::get('request')));
             }
 
         } else {
