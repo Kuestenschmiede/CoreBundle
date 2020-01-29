@@ -15,6 +15,7 @@ use con4gis\CoreBundle\Classes\C4GVersionProvider;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
+use Symfony\Component\Yaml\Parser;
 /**
  * Table tl_c4g_io_data
  */
@@ -400,8 +401,19 @@ class tl_c4g_io_data extends Contao\Backend
     public function updateBaseData()
     {
         // Check current action
-        $this->deleteBaseData();
-        $this->importBaseData();
+//        $this->deleteBaseData();
+//        $this->importBaseData();
+        $response = $this->getLocalIoData();
+//        $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
+//        if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
+//            $basedataUrl = rtrim($objSettings->con4gisIoUrl, "/") . "/" . "getBasedata.php";
+//            $basedataUrl .= "?key=" . $objSettings->con4gisIoKey;
+//            $basedataUrl .= "&mode=ioData";
+//
+//            $downlaodFile = file_get_contents($basedataUrl);
+//            $save = file_put_contents("/home/mdv/Develop/environments/con4gis7/data.gz", $downlaodFile);
+//        }
+        $test = "test";
     }
 
     /**
@@ -535,6 +547,59 @@ class tl_c4g_io_data extends Contao\Backend
                 return $responses = [];
             }
         }
+    }
+
+    public function getLocalIoData()
+    {
+        $arrBasedataFolders = [
+            'maps' => './../vendor/con4gis/maps/Resources/con4gis',
+            'visualisation' => './../vendor/con4gis/visualisation/Resources/con4gis',
+            'core' => './../vendor/con4gis/core/Resources/con4gis'
+        ];
+
+        $dir = getcwd();
+        $basedataFiles = [];
+
+        foreach ($arrBasedataFolders as $arrBasedataFolder => $value ) {
+            $basedataFiles[$arrBasedataFolder] = array_slice(scandir($value), 2);
+            foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
+                $basedataFiles[$arrBasedataFolder][$basedataFile] = $value.'/'.$file;
+            }
+        }
+
+        $newYamlConfigArray = [];
+        $count = 0;
+        foreach ($basedataFiles as $basedataFile) {
+            foreach ($basedataFile as $importFile) {
+                $zip = zip_open($importFile);
+
+                if ($zip) {
+                    while ($zip_entry = zip_read($zip)) {
+                        if (zip_entry_name($zip_entry) == "io-data.yml") {
+                            if (zip_entry_open($zip, $zip_entry)) {
+                                // Read open directory entry
+                                $contents = zip_entry_read($zip_entry);
+                                zip_entry_close($zip_entry);
+                                $yaml = new Parser();
+                                $newYamlConfigArray[$count] = $yaml->parse($contents);
+                                $count++;
+                                break;
+                            }
+                        }
+                    }
+                    zip_close($zip);
+                }
+            }
+        }
+
+        $response = [];
+        foreach ($newYamlConfigArray as $yamlConfig => $value) {
+            $response[$yamlConfig] = $value['import'];
+            $test = "test";
+        }
+        $test = "test";
+
+        return $response;
     }
 
     /**
