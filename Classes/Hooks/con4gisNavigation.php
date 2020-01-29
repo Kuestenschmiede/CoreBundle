@@ -68,7 +68,7 @@ class con4gisNavigation extends \System
                         if ($showBundleNames) {
                             $arrModules['con4gis']['modules'][$name]['label'] = '('.$brickkey.') '.$GLOBALS['TL_LANG']['MOD'][$name][0];
                         } else {
-                            $arrModules['con4gis']['modules'][$name]['label'] = '> '.$GLOBALS['TL_LANG']['MOD'][$name][0];
+                            $arrModules['con4gis']['modules'][$name]['label'] = '॰ '.$GLOBALS['TL_LANG']['MOD'][$name][0];
                         }
                         $arrModules['con4gis']['modules'][$name]['class'] = $favorite == '1' ? $additionalClass . ' c4g_visible_brick' : $additionalClass . ' c4g_invisible_brick';
                     }
