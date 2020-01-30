@@ -41,4 +41,9 @@ class DCAOperation
     {
         $this->global['attributes'] = $attributes;
     }
+
+    public function buttonCallback(string $class, string $method)
+    {
+        $this->global['button_callback'] = [$class, $method];
+    }
 }
