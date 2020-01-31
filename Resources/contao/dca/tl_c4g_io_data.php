@@ -166,6 +166,14 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             'sorting'                 => true,
             'search'                  => true,
         ),
+        'importFilePath' => array
+        (
+            'sql'                     => "varchar(255) NOT NULL",
+            'default'                 => '',
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['importFilePath'],
+            'sorting'                 => true,
+            'search'                  => true,
+        ),
         'caption' => array
         (
             'sql'                     => "varchar(255) NOT NULL",
@@ -310,14 +318,28 @@ class tl_c4g_io_data extends Contao\Backend
     {
         // Check current action
         $responses = $this->getCon4gisImportData("getBasedata.php", "allData");
+        $responsesLength = count($responses);
+        $localIoData = $this->getLocalIoData();
+
+        $localResponses = [];
+        foreach ($localIoData as $yamlConfig => $value) {
+            $localResponses[$yamlConfig] = (object) $value['import'];
+        }
+
+        foreach ($localResponses as $localResponse) {
+            $responses[$responsesLength] = $localResponse;
+            $responsesLength++;
+        }
         $localData = $this->Database->prepare("SELECT * FROM tl_c4g_io_data")->execute();
         $localData = $localData->fetchAllAssoc();
 
-        if (empty($localData)) {
-            foreach ($responses as $response) {
-            $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version);
+//        foreach ($allResponses as $responses) {
+
+            if (empty($localData)) {
+                foreach ($responses as $response) {
+                    $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version);
+                }
             }
-        }
             //Update data from con4gis.io
             foreach ($localData as $data) {
                 $available = false;
@@ -351,12 +373,24 @@ class tl_c4g_io_data extends Contao\Backend
                     $count++;
                 }
             }
+//        }
+
+
 
 //        $this->Database->prepare("DELETE FROM tl_c4g_io_data")->execute();
 //
 //        foreach ($responses as $response) {
 //            $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->version);
 //        }
+    }
+
+    public function getStringBetween($string, $start, $end){
+        $string = ' ' . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) return '';
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
     }
 
     /**
@@ -367,32 +401,85 @@ class tl_c4g_io_data extends Contao\Backend
         $data = $_REQUEST;
 
         $con4gisImportId = $data['id'];
+//      lokaler Import
 
-        $importData = $this->getCon4gisImportData("getBasedata.php", "specificData", $con4gisImportId);
-        $importURL = $importData[0]->url;
-        $importUuid = $importData[0]->uuid;
+        $localImportDatas = $this->getLocalIoData();
+        $availableLocal = false;
+        foreach ($localImportDatas as $localImportData) {
+            if ($localImportData['import']['id'] == $con4gisImportId) {
+                $availableLocal = true;
+                $importData = $localImportData;
+                break;
+            }
+        }
 
-        if(strpos($importURL,".sql")!==false) {
-            $file = file_get_contents($importURL, true);
-//            echo $file;
+        if ($availableLocal) {
+            $imagePath = "./../files".$importData['images']['path'];
+            $c4gPath = "./../vendor/con4gis/".$importData['general']['bundle']."/Resources/con4gis/".$importData['general']['filename'];
+            $cache = "./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']);
+
+            $zip = new ZipArchive;
+            if ($zip->open($c4gPath) === TRUE) {
+                $zip->extractTo($cache);
+                $zip->close();
+
+                $images = array_slice(scandir($cache."/images/"), 2);
+                mkdir($imagePath, 0770, true);
+                foreach ($images as $image) {
+                    copy($cache."/images/".$image, $imagePath."/".$image);
+                }
+            }
+            $file = file_get_contents($cache."/data/".str_replace(".c4g", ".sql", $importData['general']['filename']));
             $sqlStatements = explode(";\n", $file);
-            $counter = 0;
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == "") {
                     break;
                 }
+                $insertDB = $this->getStringBetween($sqlStatement, "INSERT INTO `", "` (");
+                $beforeId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+                $this->Database->execute($sqlStatement);
+                $afterId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+
+                $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
+                foreach ($insertedIds as $insertedId) {
+                    $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($localImportData['import']['uuid'], $insertedId);
+                }
+
+                $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
+                $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($localImportData['import']['uuid'], $con4gisImportId);
+                $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($localImportData['images']['path'], $con4gisImportId);
+            }
+
+            $this->rrmdir($cache);
+
+//      lokaler Import Ende
+
+        } elseif (!$availableLocal) {
+            $importData = $this->getCon4gisImportData("getBasedata.php", "specificData", $con4gisImportId);
+            $importURL = $importData[0]->url;
+            $importUuid = $importData[0]->uuid;
+
+            if(strpos($importURL,".sql")!==false) {
+                $file = file_get_contents($importURL, true);
+//            echo $file;
+                $sqlStatements = explode(";\n", $file);
+                $counter = 0;
+                foreach ($sqlStatements as $sqlStatement) {
+                    if ($sqlStatement == "") {
+                        break;
+                    }
 
 //                $sqlStatement = str_replace(") VALUES", ", `uuid`) VALUES", $sqlStatement );
-                $sqlStatement = str_replace("0),", "$importUuid),", $sqlStatement);
-                $sqlStatement = substr_replace($sqlStatement, "$importUuid)", -2, 2);
+                    $sqlStatement = str_replace("0),", "$importUuid),", $sqlStatement);
+                    $sqlStatement = substr_replace($sqlStatement, "$importUuid)", -2, 2);
 
-                $this->Database->execute($sqlStatement);
+                    $this->Database->execute($sqlStatement);
+                }
             }
+
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute($importData[0]->version, $data['id']);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($importUuid, $data['id']);
         }
-
-        $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute($importData[0]->version, $data['id']);
-        $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($importUuid, $data['id']);
-
     }
 
     /**
@@ -401,9 +488,9 @@ class tl_c4g_io_data extends Contao\Backend
     public function updateBaseData()
     {
         // Check current action
-//        $this->deleteBaseData();
-//        $this->importBaseData();
-        $response = $this->getLocalIoData();
+        $this->deleteBaseData();
+        $this->importBaseData();
+//        $response = $this->getLocalIoData();
 //        $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
 //        if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
 //            $basedataUrl = rtrim($objSettings->con4gisIoUrl, "/") . "/" . "getBasedata.php";
@@ -413,7 +500,6 @@ class tl_c4g_io_data extends Contao\Backend
 //            $downlaodFile = file_get_contents($basedataUrl);
 //            $save = file_put_contents("/home/mdv/Develop/environments/con4gis7/data.gz", $downlaodFile);
 //        }
-        $test = "test";
     }
 
     /**
@@ -426,20 +512,49 @@ class tl_c4g_io_data extends Contao\Backend
         $con4gisDeleteId = $data['id'];
         $localData = $this->Database->prepare("SELECT * FROM tl_c4g_io_data WHERE id=?")->execute($con4gisDeleteId);
         $con4gisDeleteUuid = $localData->importUuid;
+        $con4gisDeleteBundles = $localData->bundles;
 
-        $this->Database->prepare("DELETE FROM tl_c4g_maps WHERE importId=?")->execute($con4gisDeleteUuid);
-        $this->Database->prepare("DELETE FROM tl_c4g_map_baselayers WHERE importId=?")->execute($con4gisDeleteUuid);
-        $this->Database->prepare("DELETE FROM tl_c4g_map_filters WHERE importId=?")->execute($con4gisDeleteUuid);
-        $this->Database->prepare("DELETE FROM tl_c4g_map_layer_content WHERE importId=?")->execute($con4gisDeleteUuid);
-        $this->Database->prepare("DELETE FROM tl_c4g_map_locstyles WHERE importId=?")->execute($con4gisDeleteUuid);
-        $this->Database->prepare("DELETE FROM tl_c4g_map_overlays WHERE importId=?")->execute($con4gisDeleteUuid);
-        $this->Database->prepare("DELETE FROM tl_c4g_map_profiles WHERE importId=?")->execute($con4gisDeleteUuid);
-        $this->Database->prepare("DELETE FROM tl_c4g_map_tables WHERE importId=?")->execute($con4gisDeleteUuid);
-        $this->Database->prepare("DELETE FROM tl_c4g_map_themes WHERE importId=?")->execute($con4gisDeleteUuid);
+        if ($localData->importFilePath != "") {
+            $this->rrmdir("./../files".$localData->importFilePath);
+        }
+
+        //Delete import data
+        $tables = $this->Database->listTables();
+        if (strpos($con4gisDeleteBundles, 'MapsBundle') !== false) {
+            foreach ($tables as $table) {
+                if (strpos($table, 'map') !== false) {
+                    $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+                }
+            }
+        }
+        if (strpos($con4gisDeleteBundles, 'FirefighterBundle') !== false) {
+            foreach ($tables as $table) {
+                if (strpos($table, 'firefighter') !== false) {
+                    $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+                }
+            }
+        }
+        if (strpos($con4gisDeleteBundles, 'VisualizationBundle') !== false) {
+            foreach ($tables as $table) {
+                if (strpos($table, 'visualization') !== false) {
+                    $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+                }
+            }
+        }
+        if (strpos($con4gisDeleteBundles, 'DataBundle') !== false) {
+            foreach ($tables as $table) {
+                if (strpos($table, 'c4g_data') !== false) {
+                    $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+                }
+            }
+        }
 
         $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute("", $con4gisDeleteId);
+        $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute("0", $con4gisDeleteId);
+        $this->Database->prepare("UPDATE tl_c4g_io_data SET importfilePath=? WHERE id=?")->execute("", $con4gisDeleteId);
 
-        $this->loadBaseData();
+//        $this->loadBaseData();
+
     }
 
     /**
@@ -553,8 +668,10 @@ class tl_c4g_io_data extends Contao\Backend
     {
         $arrBasedataFolders = [
             'maps' => './../vendor/con4gis/maps/Resources/con4gis',
-            'visualisation' => './../vendor/con4gis/visualisation/Resources/con4gis',
-            'core' => './../vendor/con4gis/core/Resources/con4gis'
+            'visualization' => './../vendor/con4gis/visualization/Resources/con4gis',
+            'core' => './../vendor/con4gis/core/Resources/con4gis',
+            'data' => './../vendor/con4gis/data/Resources/con4gis',
+            'firefighter' => './../vendor/con4gis/firefighter/Resources/con4gis'
         ];
 
         $dir = getcwd();
@@ -592,14 +709,28 @@ class tl_c4g_io_data extends Contao\Backend
             }
         }
 
-        $response = [];
-        foreach ($newYamlConfigArray as $yamlConfig => $value) {
-            $response[$yamlConfig] = $value['import'];
-            $test = "test";
-        }
-        $test = "test";
+//        $response = [];
+//        foreach ($newYamlConfigArray as $yamlConfig => $value) {
+//            $response[$yamlConfig] = (object) $value['import'];
+//        }
+//
+//        return $response;
+        return $newYamlConfigArray;
+    }
 
-        return $response;
+    public function rrmdir($dir) {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir. DIRECTORY_SEPARATOR .$object) && !is_link($dir."/".$object))
+                        rmdir($dir. DIRECTORY_SEPARATOR .$object);
+                    else
+                        unlink($dir. DIRECTORY_SEPARATOR .$object);
+                }
+            }
+            rmdir($dir);
+        }
     }
 
     /**
