@@ -13,7 +13,7 @@
 
 /** FIELDS **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['showBundleNames'] = [
-    'Zeige Bausteinname in der Navigation',
+    'Zeige Bausteinnamen in der Navigation',
     'Bei Aktivierung werden zusätzlich zu den Modulnamen, die Bundlenamen (Bausteine) in der Contao Navigation angezeigt, dass ist hilfrich wenn mehrere Bausteine im Dashboard aktiviert wurden.'
 ];
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'] = array(

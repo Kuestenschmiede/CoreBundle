@@ -51,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             'fields'                  => array('caption'),
             'panelLayout'             => 'search',
             'headerFields'            => array('caption', 'bundles', 'bundlesVersion', 'description', 'importVersion', 'availableVersion'),
-            'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
+            'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
         ),
         'label' => array
         (
@@ -77,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             (
                 'href'                => 'key=con4gisIoOverview',
                 'button_callback'     => ['tl_c4g_io_data', 'con4gisIO'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
+                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisIoImportData'],
             ),
         ),
