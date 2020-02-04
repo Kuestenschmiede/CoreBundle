@@ -24,7 +24,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['showBundle'] = ['Bundle anzeigen', ''];
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['brick_legend'] = "Bausteininformationen";
 
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'] = ["Globale Einstellungen", "Einstellungen die für mehrere Bausteine gelten."];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'] = ["Einstellungen", "Einstellungen die für mehrere Bausteine gelten."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'] = ["Installierte Bausteine", "Über diesen Button können Sie zwischen nur installierten und allen Bausteinen wechseln."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'] = ["Alle Bausteine", "Über diesen Button können Sie zwischen nur installierten und allen Bausteinen wechseln."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'] = ["Versionen aktualisieren","Die Versionen werden vom Packagist neu geladen."];

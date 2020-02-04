@@ -24,7 +24,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['showBundle'] = ['Show bundle', ''];
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['brick_legend'] = "Brick informations";
 
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'] = ["Global settings", "Settings that apply to several bricks."];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'] = ["Settings", "Settings that apply to several bricks."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'] = ["Installed bricks", "Use this button to switch between only installed and all bricks."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'] = ["All bricks", "Über Use this button to switch between only installed and all bricks."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'] = ["Reload versions","The versions are reloaded by the Packagist."];
