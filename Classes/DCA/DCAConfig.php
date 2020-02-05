@@ -46,6 +46,13 @@ class DCAConfig
         return $this;
     }
 
+    public function markAsCopy(string $field)
+    {
+        $this->global['markAsCopy'] = $field;
+
+        return $this;
+    }
+
     public function sqlKeys(string $field, string $value)
     {
         $this->global['sql'] = [
