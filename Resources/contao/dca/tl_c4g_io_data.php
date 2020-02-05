@@ -12,9 +12,11 @@
  */
 
 use con4gis\CoreBundle\Classes\C4GVersionProvider;
+use Contao\Folder;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
+use Contao\System;
 use Symfony\Component\Yaml\Parser;
 /**
  * Table tl_c4g_io_data
@@ -192,7 +194,6 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['bundles'],
             'inputType'               => 'text',
             'default'                 => '',
-//            'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
         ),
@@ -202,7 +203,6 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['bundlesVersion'],
             'inputType'               => 'text',
             'default'                 => '',
-//            'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
         ),
@@ -212,7 +212,6 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['importVersion'],
             'inputType'               => 'text',
             'default'                 => '',
-//            'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
         ),
@@ -222,7 +221,6 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['availableVersion'],
             'inputType'               => 'text',
             'default'                 => '',
-//            'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
         ),
@@ -241,7 +239,6 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisImport'],
             'filter'                  => false,
             'inputType'               => 'select',
-//            'eval'                    => array('mandatory' => true),
             'options_callback'        => ['tl_c4g_io_data', 'getCon4gisImportTemplates'],
             'sql'                     => "int NOT NULL default 0"
         )
@@ -294,7 +291,7 @@ class tl_c4g_io_data extends Contao\Backend
             switch ($href) {
                 case 'key=importBaseData':
                     if ($importVersion == "" && $isInstalled == true) {
-                        return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$title.'"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
+                        return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$title.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_io_data']['importDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
                     }
                     break;
                 case 'key=updateBaseData':
@@ -373,15 +370,7 @@ class tl_c4g_io_data extends Contao\Backend
                     $count++;
                 }
             }
-//        }
 
-
-
-//        $this->Database->prepare("DELETE FROM tl_c4g_io_data")->execute();
-//
-//        foreach ($responses as $response) {
-//            $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->version);
-//        }
     }
 
     public function getStringBetween($string, $start, $end){
@@ -428,6 +417,7 @@ class tl_c4g_io_data extends Contao\Backend
                 foreach ($images as $image) {
                     copy($cache."/images/".$image, $imagePath."/".$image);
                 }
+                $this->makeFolderAvailableForPublic($imagePath);
             }
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".sql", $importData['general']['filename']));
             $sqlStatements = explode(";\n", $file);
@@ -450,35 +440,80 @@ class tl_c4g_io_data extends Contao\Backend
                 $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($localImportData['images']['path'], $con4gisImportId);
             }
 
-            $this->rrmdir($cache);
+            $this->recursiveRemoveDirectory($cache);
+
 
 //      lokaler Import Ende
 
         } elseif (!$availableLocal) {
-            $importData = $this->getCon4gisImportData("getBasedata.php", "specificData", $con4gisImportId);
-            $importURL = $importData[0]->url;
-            $importUuid = $importData[0]->uuid;
 
-            if(strpos($importURL,".sql")!==false) {
-                $file = file_get_contents($importURL, true);
-//            echo $file;
-                $sqlStatements = explode(";\n", $file);
-                $counter = 0;
-                foreach ($sqlStatements as $sqlStatement) {
-                    if ($sqlStatement == "") {
-                        break;
+            $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
+            $basedataUrl = rtrim($objSettings->con4gisIoUrl, "/") . "/" . "getBasedata.php";
+            $basedataUrl .= "?key=" . $objSettings->con4gisIoKey;
+            $basedataUrl .= "&mode=" . "ioData";
+            $basedataUrl .= "&data=" . $con4gisImportId;
+            $downloadPath = "./../var/cache/prod/con4gis/io-data/";
+            $filename = 'io-data-proxy.c4g';
+            mkdir($downloadPath, 0770, true);
+            file_put_contents($downloadPath.$filename, file_get_contents($basedataUrl));
+
+            $zip = zip_open($downloadPath.$filename);
+
+            if ($zip) {
+                while ($zip_entry = zip_read($zip)) {
+                    if (zip_entry_name($zip_entry) == "io-data.yml") {
+                        if (zip_entry_open($zip, $zip_entry)) {
+                            // Read open directory entry
+                            $contents = zip_entry_read($zip_entry);
+                            zip_entry_close($zip_entry);
+                            $yaml = new Parser();
+                            $importData = $yaml->parse($contents);
+                            break;
+                        }
                     }
-
-//                $sqlStatement = str_replace(") VALUES", ", `uuid`) VALUES", $sqlStatement );
-                    $sqlStatement = str_replace("0),", "$importUuid),", $sqlStatement);
-                    $sqlStatement = substr_replace($sqlStatement, "$importUuid)", -2, 2);
-
-                    $this->Database->execute($sqlStatement);
                 }
+                zip_close($zip);
             }
 
-            $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute($importData[0]->version, $data['id']);
-            $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($importUuid, $data['id']);
+            $imagePath = "./../files".$importData['images']['path'];
+            $c4gPath = "./../vendor/con4gis/".$importData['general']['bundle']."/Resources/con4gis/".$importData['general']['filename'];
+            $cache = "./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']);
+
+            $zip = new ZipArchive;
+            if ($zip->open($downloadPath.$filename) === TRUE) {
+                $zip->extractTo($cache);
+                $zip->close();
+
+                $images = array_slice(scandir($cache."/images/"), 2);
+                mkdir($imagePath, 0770, true);
+                foreach ($images as $image) {
+                    copy($cache."/images/".$image, $imagePath."/".$image);
+                }
+                $this->makeFolderAvailableForPublic($imagePath);
+            }
+            $file = file_get_contents($cache."/data/".str_replace(".c4g", ".sql", $importData['general']['filename']));
+            $sqlStatements = explode(";\n", $file);
+            foreach ($sqlStatements as $sqlStatement) {
+                if ($sqlStatement == "") {
+                    break;
+                }
+                $insertDB = $this->getStringBetween($sqlStatement, "INSERT INTO `", "` (");
+                $beforeId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+                $this->Database->execute($sqlStatement);
+                $afterId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+
+                $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
+                foreach ($insertedIds as $insertedId) {
+                    $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($importData['import']['uuid'], $insertedId);
+                }
+
+                $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
+                $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($importData['import']['uuid'], $con4gisImportId);
+                $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($importData['images']['path'], $con4gisImportId);
+            }
+
+            $this->recursiveRemoveDirectory("./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']));
+            unlink("./../var/cache/prod/con4gis/io-data/".$filename);
         }
     }
 
@@ -490,16 +525,6 @@ class tl_c4g_io_data extends Contao\Backend
         // Check current action
         $this->deleteBaseData();
         $this->importBaseData();
-//        $response = $this->getLocalIoData();
-//        $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
-//        if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
-//            $basedataUrl = rtrim($objSettings->con4gisIoUrl, "/") . "/" . "getBasedata.php";
-//            $basedataUrl .= "?key=" . $objSettings->con4gisIoKey;
-//            $basedataUrl .= "&mode=ioData";
-//
-//            $downlaodFile = file_get_contents($basedataUrl);
-//            $save = file_put_contents("/home/mdv/Develop/environments/con4gis7/data.gz", $downlaodFile);
-//        }
     }
 
     /**
@@ -515,7 +540,9 @@ class tl_c4g_io_data extends Contao\Backend
         $con4gisDeleteBundles = $localData->bundles;
 
         if ($localData->importFilePath != "") {
-            $this->rrmdir("./../files".$localData->importFilePath);
+            $this->recursiveRemoveDirectory("./../files".$localData->importFilePath);
+            $this->import('Contao\Automator', 'Automator');
+            $this->Automator->generateSymlinks();
         }
 
         //Delete import data
@@ -709,28 +736,20 @@ class tl_c4g_io_data extends Contao\Backend
             }
         }
 
-//        $response = [];
-//        foreach ($newYamlConfigArray as $yamlConfig => $value) {
-//            $response[$yamlConfig] = (object) $value['import'];
-//        }
-//
-//        return $response;
         return $newYamlConfigArray;
     }
 
-    public function rrmdir($dir) {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (is_dir($dir. DIRECTORY_SEPARATOR .$object) && !is_link($dir."/".$object))
-                        rmdir($dir. DIRECTORY_SEPARATOR .$object);
-                    else
-                        unlink($dir. DIRECTORY_SEPARATOR .$object);
-                }
+    public function recursiveRemoveDirectory($directory)
+    {
+        foreach(glob("{$directory}/*") as $file)
+        {
+            if(is_dir($file)) {
+                $this->recursiveRemoveDirectory($file);
+            } else if(!is_link($file)) {
+                unlink($file);
             }
-            rmdir($dir);
         }
+        rmdir($directory);
     }
 
     /**
@@ -745,6 +764,13 @@ class tl_c4g_io_data extends Contao\Backend
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
         return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a><br>';
+    }
+
+    public function makeFolderAvailableForPublic($href)
+    {
+        $handle = fopen($href."/.public", "w");
+        $this->import('Contao\Automator', 'Automator');
+        $this->Automator->generateSymlinks();
     }
 
 }

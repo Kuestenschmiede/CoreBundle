@@ -29,6 +29,7 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateData'] = array("Update data","");
  * Buttons
  */
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['new'] = array('New import', 'Create new import');
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['importDialog'] = 'Do you really want to import the data now?';
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteImportDialog'] = 'Do you really want to delete the import?';
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateImportDialog'] = 'During an update, all customised settings will be overwritten. Do you really want to continue?';
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisIoImportData'] = 'Overview of all imports';
