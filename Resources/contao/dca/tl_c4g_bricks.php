@@ -21,15 +21,15 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
-		'notCopyable'                 => true,
-		'notCreatable'                => true,
-		'enableVersioning'            => false,
+		'dataContainer'    => 'Table',
+		'notCopyable'      => true,
+		'notCreatable'     => true,
+		'enableVersioning' => false,
 		'sql' => array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
 			)
 		),
 		'onload_callback' => [['tl_c4g_bricks', 'checkButtons']],
@@ -41,7 +41,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 		'sorting' => array
 		(
 			'mode'                    => 1,
-			'fields'                  => ['brickname'],
+            'fields'                  => ['brickname'],
 			'panelLayout'             => 'filter',
             'headerFields'            => ['brickname','description','installedVersion','latestVersion'],
             'filter'                  => ['showBundle' => ["showBundle = ?", "1"]],
@@ -203,13 +203,13 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
         [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
         ],
+        'pid' =>
+        [
+            'sql'                     => "int(10) unsigned NOT NULL default '0'",
+        ],
         'tstamp' =>
         [
             'sql' => "int(10) unsigned NOT NULL default '0'"
-        ],
-        'userId' =>
-        [
-            'sql' => "int(10) unsigned",
         ],
 		'brickkey' =>
         [
@@ -305,8 +305,9 @@ class tl_c4g_bricks extends Contao\Backend
 		parent::__construct();
         $this->versionProvider = new C4GVersionProvider();
 		$this->import('BackendUser', 'User');
+        //$this->User->authenticate();
 
-		$iconPath = 'bundles/con4giscore/images/be-icons/';
+        $iconPath = 'bundles/con4giscore/images/be-icons/';
 
         $this->bundles = [
             'core' => [
@@ -454,7 +455,7 @@ class tl_c4g_bricks extends Contao\Backend
 	private function loadBricks($dc, $getPackages = true)
 	{
 	    $userid = $this->User->id;
-        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE userid=$userid")->fetchAllAssoc();
+        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE pid=$userid")->fetchAllAssoc();
         if ($bricks && $bricks[0]) {
             $tstamp = intval($bricks[0]['tstamp']);
             $before_seven_days = time() - (7 * 24 * 60 * 60);
@@ -477,7 +478,7 @@ class tl_c4g_bricks extends Contao\Backend
                 }
             }
 
-            $this->Database->prepare("DELETE FROM tl_c4g_bricks WHERE userid=?")->execute($this->User->id);
+            $this->Database->prepare("DELETE FROM tl_c4g_bricks WHERE pid=?")->execute($this->User->id);
 
             //get official packages
             foreach ($bundles as $bundle => $values) {
@@ -496,7 +497,7 @@ class tl_c4g_bricks extends Contao\Backend
                 }
 
                 $set['tstamp'] = time();
-                $set['userid'] = $this->User->id;
+                $set['pid'] = $this->User->id;
                 $set['brickkey'] = $bundle;
                 $set['brickname'] = $values['icon'] ? Image::getHtml($values['icon']) : $bundle;
                 $set['repository'] = $values['repo'];
@@ -523,7 +524,7 @@ class tl_c4g_bricks extends Contao\Backend
                     $installedVersion = $version;
 
                     $set['tstamp'] = time();
-                    $set['userid'] = $this->User->id;
+                    $set['pid'] = $this->User->id;
                     $set['brickkey'] = $bundle;
                     $set['brickname'] = $bundle;
                     $set['repository'] = '-';
@@ -538,15 +539,21 @@ class tl_c4g_bricks extends Contao\Backend
                 }
             }
         }
+
+        return $bricks;
     }
+
 
     /**
      * checkButtons
      */
     public function checkButtons(Contao\DataContainer $dc)
     {
+        $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter'][] = array('pid = ?', $this->User->id);
+
         // Check current action
         $key = Contao\Input::get('key');
+        $bricks = [];
         if ($key) {
             $switchKey = $key;
             $pos = strpos($key,'_');
@@ -575,14 +582,14 @@ class tl_c4g_bricks extends Contao\Backend
                     $deleteKey = false;
                     break;
                 case 'reloadVersions':
-                    $this->loadBricks(false);
+                    $bricks = $this->loadBricks(false);
                     break;
                 case 'switchFavorite':
                     if ($keyValue) {
-                        $result = Database::getInstance()->prepare("SELECT favorite FROM tl_c4g_bricks WHERE brickkey=? AND userid=? LIMIT 1")->execute($keyValue, $this->User->id)->fetchAssoc();
+                        $result = Database::getInstance()->prepare("SELECT favorite FROM tl_c4g_bricks WHERE brickkey=? AND pid=? LIMIT 1")->execute($keyValue, $this->User->id)->fetchAssoc();
                         if ($result) {
                             $favorite = $result['favorite'] == '1' ? '0' : '1';
-                            Database::getInstance()->prepare("UPDATE tl_c4g_bricks SET favorite=? WHERE brickkey=? AND userid=?")->execute($favorite,$keyValue, $this->User->id);
+                            Database::getInstance()->prepare("UPDATE tl_c4g_bricks SET favorite=? WHERE brickkey=? AND pid=?")->execute($favorite,$keyValue, $this->User->id);
                         }
                     }
                     break;
@@ -594,7 +601,7 @@ class tl_c4g_bricks extends Contao\Backend
             }
 
         } else {
-            $this->loadBricks($dc, false);
+            $bricks = $this->loadBricks($dc, false);
         }
 
         \Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext']);
@@ -734,7 +741,7 @@ class tl_c4g_bricks extends Contao\Backend
     {
         //$icon = 'bundles/con4giscore/images/be-icons/con4gis-logo.svg';
         $userid = $this->User->id;
-        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE userid=$userid LIMIT 1")->fetchAllAssoc();
+        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE pid=$userid LIMIT 1")->fetchAllAssoc();
         $date = '';
         if ($bricks && $bricks[0] && ($bricks[0]['tstamp'] > 0)) {
             $date = Date::parse(Config::get('dateFormat'), $bricks[0]['tstamp']);
@@ -879,7 +886,7 @@ class tl_c4g_bricks extends Contao\Backend
             return '';
         }
 
-        $result = Database::getInstance()->prepare("SELECT favorite FROM tl_c4g_bricks WHERE brickkey=? AND userid=? LIMIT 1")->execute($row['brickkey'], $this->User->id)->fetchAssoc();
+        $result = Database::getInstance()->prepare("SELECT favorite FROM tl_c4g_bricks WHERE brickkey=? AND pid=? LIMIT 1")->execute($row['brickkey'], $this->User->id)->fetchAssoc();
         if ($result) {
             if ($result['favorite'] == '1') {
                 $icon = 'bundles/con4giscore/images/be-icons/star_light.svg';

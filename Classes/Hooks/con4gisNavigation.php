@@ -35,6 +35,8 @@ class con4gisNavigation extends \System
      */
     public function __construct($dispatcher = null)
     {
+        $this->import('BackendUser', 'User');
+
         if ($dispatcher !== null) {
             $this->dispatcher = $dispatcher;
         } else {
@@ -49,8 +51,8 @@ class con4gisNavigation extends \System
         }
 
         $result = \Database::getInstance()
-            ->prepare('SELECT brickkey, favorite FROM tl_c4g_bricks')
-            ->execute()->fetchAllAssoc();
+            ->prepare('SELECT brickkey, favorite FROM tl_c4g_bricks WHERE pid=?')
+            ->execute($this->User->id)->fetchAllAssoc();
 
         if ($result) {
             $settings = C4gSettingsModel::findAll();
