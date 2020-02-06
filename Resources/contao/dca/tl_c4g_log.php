@@ -35,7 +35,7 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
         'sorting' => array
         (
             'mode'                    => 2,
-            'fields'                  => array('id'),
+            'fields'                  => array('id DESC'),
             'panelLayout'             => 'filter;sort,search,limit',
             'headerFields'            => array('tstamp', 'bundle', 'message', 'id'),
             'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
