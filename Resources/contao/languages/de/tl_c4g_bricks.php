@@ -45,7 +45,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['showGitHub'] = "Anzeigen auf GitHub";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['favorite'] = "Favoriten werden direkt in der Contao Navigation dargestellt.";
 
 /** LABELS */
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['lastLoading'] = 'con4gis Versionen vom ';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['lastLoading'] = 'zuletzt aktualisiert am ';
 
 /** OPERATIONS **/
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['new'] = array("Einstellung hinzufügen","");

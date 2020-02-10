@@ -604,7 +604,8 @@ class tl_c4g_bricks extends Contao\Backend
             $bricks = $this->loadBricks($dc, false);
         }
 
-        \Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext']);
+        //ToDo
+        //\Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext']);
     }
 
     /**
