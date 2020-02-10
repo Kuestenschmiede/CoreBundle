@@ -11,7 +11,7 @@
  * @link       https://www.con4gis.org
  */
 
-namespace con4gis\CoreBundle\Resources\Callback;
+namespace con4gis\CoreBundle\Classes\Callback;
 
 class C4GAnonymousCallback extends C4GCallback
 {
