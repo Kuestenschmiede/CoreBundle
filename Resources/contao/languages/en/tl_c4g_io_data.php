@@ -35,5 +35,5 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateImportDialog'] = 'During an update,
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisIoImportData'] = 'Overview of all imports';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Here you can import and update new basic and demo data if you have access to con4gis.io.';
-$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotextNoKey'] = 'You have no con4gis.io access. But you need one to be able to see imports. You can create this under con4gis.io.';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Here you can import and update new basic and demo data. If you have a <a href="https://con4gis.io"><b>con4gis.io</b></a> access, you can import even more data.';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotextNoKey'] = 'You have no con4gis.io access. But you need one to be able to see imports. You can create this under <a href="https://con4gis.io"><b>con4gis.io</b></a>.';

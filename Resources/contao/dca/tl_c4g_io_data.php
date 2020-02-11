@@ -419,22 +419,30 @@ class tl_c4g_io_data extends Contao\Backend
                 }
                 $this->makeFolderAvailableForPublic($imagePath);
             }
-            $file = file_get_contents($cache."/data/".str_replace(".c4g", ".sql", $importData['general']['filename']));
-            $sqlStatements = explode(";\n", $file);
+
+//            $file = file_get_contents($cache."/data/".str_replace(".c4g", ".sql", $importData['general']['filename']));
+//            $sqlStatements = explode(";\n", $file);
+
+            $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
+
+            $sqlStatements = $this->getSqlFromJson($file);
+            
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == "") {
                     break;
                 }
+
                 $insertDB = $this->getStringBetween($sqlStatement, "INSERT INTO `", "` (");
                 $beforeId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
                 $this->Database->execute($sqlStatement);
                 $afterId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
 
-                $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
-                foreach ($insertedIds as $insertedId) {
-                    $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($localImportData['import']['uuid'], $insertedId);
+                if ($insertDB != "tl_files") {
+                    $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
+                    foreach ($insertedIds as $insertedId) {
+                        $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($localImportData['import']['uuid'], $insertedId);
+                    }
                 }
-
                 $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
                 $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($localImportData['import']['uuid'], $con4gisImportId);
                 $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($localImportData['images']['path'], $con4gisImportId);
@@ -476,7 +484,7 @@ class tl_c4g_io_data extends Contao\Backend
             }
 
             $imagePath = "./../files".$importData['images']['path'];
-            $c4gPath = "./../vendor/con4gis/".$importData['general']['bundle']."/Resources/con4gis/".$importData['general']['filename'];
+//            $c4gPath = "./../vendor/con4gis/".$importData['general']['bundle']."/Resources/con4gis/".$importData['general']['filename'];
             $cache = "./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']);
 
             $zip = new ZipArchive;
@@ -502,9 +510,11 @@ class tl_c4g_io_data extends Contao\Backend
                 $this->Database->execute($sqlStatement);
                 $afterId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
 
-                $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
-                foreach ($insertedIds as $insertedId) {
-                    $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($importData['import']['uuid'], $insertedId);
+                if ($insertDB != "tl_files") {
+                    $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
+                    foreach ($insertedIds as $insertedId) {
+                        $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($importData['import']['uuid'], $insertedId);
+                    }
                 }
 
                 $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
@@ -515,6 +525,8 @@ class tl_c4g_io_data extends Contao\Backend
             $this->recursiveRemoveDirectory("./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']));
             unlink("./../var/cache/prod/con4gis/io-data/".$filename);
         }
+        //Sync filesystem
+        Dbafs::syncFiles();
     }
 
     /**
@@ -533,16 +545,24 @@ class tl_c4g_io_data extends Contao\Backend
     public function deleteBaseData()
     {
         $data = $_REQUEST;
-
         $con4gisDeleteId = $data['id'];
         $localData = $this->Database->prepare("SELECT * FROM tl_c4g_io_data WHERE id=?")->execute($con4gisDeleteId);
         $con4gisDeleteUuid = $localData->importUuid;
         $con4gisDeleteBundles = $localData->bundles;
+        $con4gisDeletePath = $localData->importFilePath;
+        $con4gisDeleteDirectory = "./../files".$con4gisDeletePath;
 
-        if ($localData->importFilePath != "") {
-            $this->recursiveRemoveDirectory("./../files".$localData->importFilePath);
-            $this->import('Contao\Automator', 'Automator');
-            $this->Automator->generateSymlinks();
+        $scan = scandir($con4gisDeleteDirectory);
+
+        if ($con4gisDeletePath != "") {
+            if (is_dir($con4gisDeleteDirectory)) {
+                unlink($con4gisDeleteDirectory."/.public");
+                $this->recursiveRemoveDirectory($con4gisDeleteDirectory."/");
+                $this->import('Contao\Automator', 'Automator');
+                $this->Automator->generateSymlinks();
+                //Sync filesystem
+                Dbafs::syncFiles();
+            }
         }
 
         //Delete import data
@@ -771,6 +791,33 @@ class tl_c4g_io_data extends Contao\Backend
         $handle = fopen($href."/.public", "w");
         $this->import('Contao\Automator', 'Automator');
         $this->Automator->generateSymlinks();
+    }
+
+    public function getSqlFromJson($file)
+    {
+        $jsonFile = array_slice(json_decode($file), 2);
+        $sqlStatements = [];
+        foreach ($jsonFile as $dbImport) {
+            $importDB = $dbImport->name;
+            $dbFields = $this->Database->getFieldNames($importDB);
+            foreach ($dbImport->data as $importDataset) {
+                $sqlStatement = "";
+                foreach ($importDataset as $importDbField => $importDbValue) {
+                    if (in_array($importDbField, $dbFields)) {
+//                            echo $importDbField." is in database ". $importDB ."<br>";
+                        if ($sqlStatement == "") {
+                            $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');';
+                        } else {
+                            $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
+                            $sqlStatement = str_replace(");", ", '$importDbValue');", $sqlStatement);
+                        }
+                    }
+                }
+                $sqlStatements[] = $sqlStatement;
+            }
+        }
+
+        return $sqlStatements;
     }
 
 }
