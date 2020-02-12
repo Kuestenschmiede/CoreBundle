@@ -420,13 +420,10 @@ class tl_c4g_io_data extends Contao\Backend
                 $this->makeFolderAvailableForPublic($imagePath);
             }
 
-//            $file = file_get_contents($cache."/data/".str_replace(".c4g", ".sql", $importData['general']['filename']));
-//            $sqlStatements = explode(";\n", $file);
-
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
 
             $sqlStatements = $this->getSqlFromJson($file);
-            
+
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == "") {
                     break;
@@ -499,8 +496,10 @@ class tl_c4g_io_data extends Contao\Backend
                 }
                 $this->makeFolderAvailableForPublic($imagePath);
             }
-            $file = file_get_contents($cache."/data/".str_replace(".c4g", ".sql", $importData['general']['filename']));
-            $sqlStatements = explode(";\n", $file);
+            $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
+            $sqlStatements = $this->getSqlFromJson($file);
+
+
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == "") {
                     break;
@@ -795,12 +794,11 @@ class tl_c4g_io_data extends Contao\Backend
 
     public function getSqlFromJson($file)
     {
-        $jsonFile = array_slice(json_decode($file), 2);
+        $jsonFile = json_decode($file);
         $sqlStatements = [];
-        foreach ($jsonFile as $dbImport) {
-            $importDB = $dbImport->name;
+        foreach ($jsonFile as $importDB => $importDatasets) {
             $dbFields = $this->Database->getFieldNames($importDB);
-            foreach ($dbImport->data as $importDataset) {
+            foreach ($importDatasets as $importDataset) {
                 $sqlStatement = "";
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if (in_array($importDbField, $dbFields)) {
