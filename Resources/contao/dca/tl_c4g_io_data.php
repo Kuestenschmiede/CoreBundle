@@ -254,6 +254,15 @@ class tl_c4g_io_data extends Contao\Backend
 {
 
     /**
+     * Import the back end user object
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->import('BackendUser', 'User');
+    }
+
+    /**
      * loadButtons
      * @param array $arrRow the current row
      * @param string $href the url of the embedded link of the button
@@ -266,6 +275,7 @@ class tl_c4g_io_data extends Contao\Backend
     public function loadButtons($arrRow, $href, $label, $title, $icon, $attributes)
     {
         $id = $arrRow['id'];
+        //$userid = $this->User->id;
         $importVersion = $arrRow['importVersion'];
         $availableVersion = $arrRow['availableVersion'];
         $bundles = explode(",", $arrRow['bundles']);
@@ -276,11 +286,13 @@ class tl_c4g_io_data extends Contao\Backend
         $bundles = str_replace(" ", "", $bundles);
         $bundlesVersion = str_replace(" ", "", $bundlesVersion);
 
-        foreach ($bundles as $bundle => $value) {
-            $bundleName = $localData = $this->Database->prepare("SELECT brickkey FROM tl_c4g_bricks WHERE repository=?")->execute($value)->fetchAllAssoc();
-            $version = $installedPackages['con4gis/'.$bundleName[0]['brickkey']];
+        foreach ($bundles as $key => $value) {
+            $pos = strpos($value, 'Bundle');
+            $bundleName = strtolower(substr($value,0,$pos));
+            $version = $installedPackages['con4gis/'.$bundleName];
 
-            if ($version == $bundlesVersion[$bundle]) {
+            //ToDo dev versions compare
+            if (($version == $bundlesVersion[$key]) || strpos($version, 'dev')) {
                 $isInstalled = true;
             } else {
                 $isInstalled = false;
