@@ -18,6 +18,8 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Yaml\Parser;
+use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
+
 /**
  * Table tl_c4g_io_data
  */
@@ -351,7 +353,11 @@ class tl_c4g_io_data extends Contao\Backend
                     if ($data['importVersion'] != "") {
                         $this->Database->prepare("UPDATE tl_c4g_io_data SET availableVersion=? WHERE id=?")->execute("", $data['id']);
                     } else {
-                        $this->Database->prepare("DELETE FROM tl_c4g_io_data WHERE id=?")->execute($data['id']);
+                        if ($data['id'] != 0 OR $data['id'] != "") {
+                            $this->Database->prepare("DELETE FROM tl_c4g_io_data WHERE id=?")->execute($data['id']);
+                        } else {
+                            C4gLogModel::addLogEntry("core", "Error deleting unavailable import: wrong id set!");
+                        }
                     }
                 }
             }
@@ -550,56 +556,60 @@ class tl_c4g_io_data extends Contao\Backend
         $con4gisDeleteBundles = $localData->bundles;
         $con4gisDeletePath = $localData->importFilePath;
         $con4gisDeleteDirectory = "./../files".$con4gisDeletePath;
+        $con4gisDeleteUuidLength = strlen($con4gisDeleteUuid);
 
-        $scan = scandir($con4gisDeleteDirectory);
-
-        if ($con4gisDeletePath != "") {
-            if (is_dir($con4gisDeleteDirectory)) {
-                unlink($con4gisDeleteDirectory."/.public");
-                $this->recursiveRemoveDirectory($con4gisDeleteDirectory."/");
-                $this->import('Contao\Automator', 'Automator');
-                $this->Automator->generateSymlinks();
-                //Sync filesystem
-                Dbafs::syncFiles();
-            }
-        }
-
-        //Delete import data
-        $tables = $this->Database->listTables();
-        if (strpos($con4gisDeleteBundles, 'MapsBundle') !== false) {
-            foreach ($tables as $table) {
-                if (strpos($table, 'map') !== false) {
-                    $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+        if ($con4gisDeleteUuid != 0 && $con4gisDeleteUuid != "" && $con4gisDeleteUuidLength >= 6) {
+            if ($con4gisDeletePath != "") {
+                if (is_dir($con4gisDeleteDirectory)) {
+                    unlink($con4gisDeleteDirectory."/.public");
+                    $this->recursiveRemoveDirectory($con4gisDeleteDirectory."/");
+                    $this->import('Contao\Automator', 'Automator');
+                    $this->Automator->generateSymlinks();
+                    //Sync filesystem
+                    Dbafs::syncFiles();
                 }
             }
-        }
-        if (strpos($con4gisDeleteBundles, 'FirefighterBundle') !== false) {
-            foreach ($tables as $table) {
-                if (strpos($table, 'firefighter') !== false) {
-                    $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
-                }
-            }
-        }
-        if (strpos($con4gisDeleteBundles, 'VisualizationBundle') !== false) {
-            foreach ($tables as $table) {
-                if (strpos($table, 'visualization') !== false) {
-                    $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
-                }
-            }
-        }
-        if (strpos($con4gisDeleteBundles, 'DataBundle') !== false) {
-            foreach ($tables as $table) {
-                if (strpos($table, 'c4g_data') !== false) {
-                    $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
-                }
-            }
-        }
 
-        $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute("", $con4gisDeleteId);
-        $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute("0", $con4gisDeleteId);
-        $this->Database->prepare("UPDATE tl_c4g_io_data SET importfilePath=? WHERE id=?")->execute("", $con4gisDeleteId);
+            //Delete import data
+            $tables = $this->Database->listTables();
+            if (strpos($con4gisDeleteBundles, 'MapsBundle') !== false) {
+                foreach ($tables as $table) {
+                    if (strpos($table, 'map') !== false) {
+                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+                    }
+                }
+            }
+            if (strpos($con4gisDeleteBundles, 'FirefighterBundle') !== false) {
+                foreach ($tables as $table) {
+                    if (strpos($table, 'firefighter') !== false) {
+                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+                    }
+                }
+            }
+            if (strpos($con4gisDeleteBundles, 'VisualizationBundle') !== false) {
+                foreach ($tables as $table) {
+                    if (strpos($table, 'visualization') !== false) {
+                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+                    }
+                }
+            }
+            if (strpos($con4gisDeleteBundles, 'DataBundle') !== false) {
+                foreach ($tables as $table) {
+                    if (strpos($table, 'c4g_data') !== false) {
+                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+                    }
+                }
+            }
 
-//        $this->loadBaseData();
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute("", $con4gisDeleteId);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute("0", $con4gisDeleteId);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importfilePath=? WHERE id=?")->execute("", $con4gisDeleteId);
+
+            $this->loadBaseData();
+
+        } else {
+            C4gLogModel::addLogEntry("core", "Error deleting unavailable import: wrong id set!");
+        }
 
     }
 
@@ -658,7 +668,11 @@ class tl_c4g_io_data extends Contao\Backend
                     if ($data['importVersion'] != "") {
                         $this->Database->prepare("UPDATE tl_c4g_io_data SET availableVersion=? WHERE id=?")->execute("", $data['id']);
                     } else {
-                        $this->Database->prepare("DELETE FROM tl_c4g_io_data WHERE id=?")->execute($data['id']);
+                        if ($data['id'] != 0 OR $data['id'] != "") {
+                            $this->Database->prepare("DELETE FROM tl_c4g_io_data WHERE id=?")->execute($data['id']);
+                        } else {
+                            C4gLogModel::addLogEntry("core", "Error deleting unavailable import: wrong id set!");
+                        }
                     }
                 }
             }
@@ -809,6 +823,8 @@ class tl_c4g_io_data extends Contao\Backend
                             $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
                             $sqlStatement = str_replace(");", ", '$importDbValue');", $sqlStatement);
                         }
+                    } else {
+                        C4gLogModel::addLogEntry("core", "The import database field <b>".$importDbField."</b> is not in the database <b>".$importDB."</b>.");
                     }
                 }
                 $sqlStatements[] = $sqlStatement;
