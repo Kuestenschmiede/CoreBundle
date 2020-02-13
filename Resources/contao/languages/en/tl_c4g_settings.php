@@ -61,7 +61,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'] = [
     'Maximum file size for other files.'
 ];
 $GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL for con4gis.io', 'Enter the URL for the con4gis.io map services here. The URL will be displayed in your IO Account.'];
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Key for con4gis.io', 'Enter one of your keys for the con4gis.io map services here.'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Key for con4gis.io', 'Enter one of your keys for the con4gis.io map services here (<a href="https://con4gis.io" target="_blank" rel="noopener">generate free key</a>).'];
+
 
 /** INFO **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
@@ -72,7 +73,7 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['global_legend'] = "Global settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Upload settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Miscellaneous settings";
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = "con4gis.io map services";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = 'con4gis.io map services';
 
 /** Field References */
 $GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_references']['base']      = 'base';
