@@ -29,6 +29,6 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "sweetalert2": "^8.14.0"
+    "sweetalert2": "^9.7.2"
   }
 }
