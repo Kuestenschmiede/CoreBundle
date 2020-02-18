@@ -24,6 +24,8 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['availableVersion'] = array("Verfügbare V
 /** OPERATIONS **/
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['importData'] = array("Daten importieren","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateData'] = array("Daten aktualisieren","");
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['releaseData'] = array("Datenimport lösen","");
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteData'] = array("Daten löschen","");
 
 /**
  * Buttons
@@ -32,6 +34,7 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['new'] = array('Neuer Import', 'Einen neue
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['importDialog'] = 'Möchten Sie die Daten jetzt importieren?';
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteImportDialog'] = 'Möchten Sie den Import wirklich löschen?';
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['updateImportDialog'] = 'Bei einem Update werden sämtliche benutzerdefinierten Einstellungen überschrieben. Möchten Sie wirklich fortfahren?';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['releaseImportDialog'] = 'Hiermit wird der Import gelöst und kann nicht mehr aktualisiert werden. Alle Daten bleiben erhalten. Möchten Sie wirklich fortfahren?';
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisIoImportData'] = 'Übersicht aller Importe';
 
 /** INFOTEXT */

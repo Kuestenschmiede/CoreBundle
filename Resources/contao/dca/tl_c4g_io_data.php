@@ -108,9 +108,16 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
                 'button_callback'     => ['tl_c4g_io_data', 'loadButtons'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/update_version.svg'
             ),
+            'releaseImport' => array
+            (
+                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['releaseImport'],
+                'href'                => 'key=releaseBaseData',
+                'button_callback'     => ['tl_c4g_io_data', 'loadButtons'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/cut.svg'
+            ),
             'delete' => array
             (
-                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['delete'],
+                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteData'],
                 'href'                => 'key=deleteImport',
                 'button_callback'     => ['tl_c4g_io_data', 'loadButtons'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/delete.svg',
@@ -185,6 +192,7 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
             'inputType'               => 'text',
             'default'                 => '',
             'inputType'               => 'text',
+            'label_callback'          => ['tl_c4g_io_data', 'getCaption'],
             'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
@@ -313,6 +321,11 @@ class tl_c4g_io_data extends Contao\Backend
                         return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$title.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_io_data']['updateImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
                     }
                     break;
+                case 'key=releaseBaseData':
+                    if ($importVersion != "" && $isInstalled == true) {
+                        return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$title.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_io_data']['releaseImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
+                    }
+                    break;
                 case 'key=deleteImport':
                     if ($importVersion != "") {
                         return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$title.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
@@ -348,7 +361,7 @@ class tl_c4g_io_data extends Contao\Backend
 
             if (empty($localData)) {
                 foreach ($responses as $response) {
-                    $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version);
+                    $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?")->execute($response->id, self::replaceInsertTags($response->caption), $response->description, $response->bundles, $response->bundlesVersion, $response->version);
                 }
             }
             //Update data from con4gis.io
@@ -356,7 +369,7 @@ class tl_c4g_io_data extends Contao\Backend
                 $available = false;
                 foreach ($responses as $response) {
                     if ($response->id == $data['id']) {
-                        $this->Database->prepare("UPDATE tl_c4g_io_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=? WHERE id=?")->execute($response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $data['id']);
+                        $this->Database->prepare("UPDATE tl_c4g_io_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=? WHERE id=?")->execute(self::replaceInsertTags($response->caption, false), $response->description, $response->bundles, $response->bundlesVersion, $response->version, $data['id']);
                         $available = true;
                     }
                 }
@@ -440,24 +453,14 @@ class tl_c4g_io_data extends Contao\Backend
 
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
 
-            $sqlStatements = $this->getSqlFromJson($file);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
 
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == "") {
                     break;
                 }
 
-                $insertDB = $this->getStringBetween($sqlStatement, "INSERT INTO `", "` (");
-                $beforeId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
                 $this->Database->execute($sqlStatement);
-                $afterId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
-
-                if ($insertDB != "tl_files") {
-                    $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
-                    foreach ($insertedIds as $insertedId) {
-                        $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($localImportData['import']['uuid'], $insertedId);
-                    }
-                }
                 $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
                 $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($localImportData['import']['uuid'], $con4gisImportId);
                 $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($localImportData['images']['path'], $con4gisImportId);
@@ -515,7 +518,7 @@ class tl_c4g_io_data extends Contao\Backend
                 $this->makeFolderAvailableForPublic($imagePath);
             }
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
-            $sqlStatements = $this->getSqlFromJson($file);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
 
 
             foreach ($sqlStatements as $sqlStatement) {
@@ -554,6 +557,60 @@ class tl_c4g_io_data extends Contao\Backend
         // Check current action
         $this->deleteBaseData();
         $this->importBaseData();
+    }
+
+    /**
+     * releaseBaseData
+     */
+    public function releaseBaseData()
+    {
+        // Check current action
+        $data = $_REQUEST;
+        $con4gisDeleteId = $data['id'];
+        $localData = $this->Database->prepare("SELECT * FROM tl_c4g_io_data WHERE id=?")->execute($con4gisDeleteId);
+        $con4gisReleaseUuid = $localData->importUuid;
+        $con4gisReleaseBundles = $localData->bundles;
+
+        if ($con4gisReleaseUuid != 0 && $con4gisReleaseUuid != "" && $con4gisReleaseUuid >= 6) {
+            //Release import data
+            $tables = $this->Database->listTables();
+            if (strpos($con4gisReleaseBundles, 'MapsBundle') !== false) {
+                foreach ($tables as $table) {
+                    if (strpos($table, 'map') !== false) {
+                        $this->Database->prepare("UPDATE $table SET importId=? WHERE importId=?")->execute("0", $con4gisReleaseUuid);
+                    }
+                }
+            }
+            if (strpos($con4gisReleaseBundles, 'FirefighterBundle') !== false) {
+                foreach ($tables as $table) {
+                    if (strpos($table, 'firefighter') !== false) {
+                        $this->Database->prepare("UPDATE $table SET importId=? WHERE importId=?")->execute("0", $con4gisReleaseUuid);
+                    }
+                }
+            }
+            if (strpos($con4gisReleaseBundles, 'VisualizationBundle') !== false) {
+                foreach ($tables as $table) {
+                    if (strpos($table, 'visualization') !== false) {
+                        $this->Database->prepare("UPDATE $table SET importId=? WHERE importId=?")->execute("0", $con4gisReleaseUuid);
+                    }
+                }
+            }
+            if (strpos($con4gisReleaseBundles, 'DataBundle') !== false) {
+                foreach ($tables as $table) {
+                    if (strpos($table, 'c4g_data') !== false) {
+                        $this->Database->prepare("UPDATE $table SET importId=? WHERE importId=?")->execute("0", $con4gisReleaseUuid);
+                    }
+                }
+            }
+
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute("", $con4gisDeleteId);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute("0", $con4gisDeleteId);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importfilePath=? WHERE id=?")->execute("", $con4gisDeleteId);
+
+            $this->loadBaseData();
+        } else {
+            C4gLogModel::addLogEntry("core", "Error releasing unavailable import: wrong id set!");
+        }
     }
 
     /**
@@ -663,6 +720,9 @@ class tl_c4g_io_data extends Contao\Backend
                         break;
                     case 'importData':
                         $this->loadBaseData();
+                        break;
+                    case 'releaseBaseData':
+                        $this->releaseBaseData();
                         break;
                 }
             }
@@ -818,17 +878,93 @@ class tl_c4g_io_data extends Contao\Backend
         $this->Automator->generateSymlinks();
     }
 
-    public function getSqlFromJson($file)
+    public function getSqlFromJson($file, $uuid)
     {
-        $jsonFile = json_decode($file);
+        $jsonFile = (array) json_decode($file);
+        $jsonSize = sizeof($jsonFile);
         $sqlStatements = [];
+        $relations = array_slice($jsonFile, -1, 1);
+        $relationTables = [];
+        $dbRelation = [];
+
+        foreach ($relations['relations'] as $key => $value) {
+            $firstTable = explode(".", $key);
+
+                if (!in_array($firstTable[0], $relationTables)) {
+                    $relationTables[] = $firstTable[0];
+                }
+
+                $dbRelation[$firstTable[0]][] = $firstTable[1];
+
+
+        }
+
+        //Check for previous released import
+        $firstImportTable = array_key_first($jsonFile);
+        $newId = $uuid;
+        $importUuidCheck = "%".$uuid."%";
+        $firstTlFilesUuid = substr($jsonFile['tl_files'][0]->uuid, 2);
+        $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($importUuidCheck)->fetchAllAssoc();
+        $tlFilesTableQuery = $this->Database->prepare("SELECT uuid FROM tl_files WHERE uuid LIKE ?")->execute("%".$firstTlFilesUuid."%")->fetchAllAssoc();
+
+        while ($firstTableQuery) {
+            $newId = rand(100001, 999999);
+            $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($newId)->fetchAllAssoc();
+        }
+
         foreach ($jsonFile as $importDB => $importDatasets) {
+            if ($importDB == "relations") {
+                break;
+            }
+
             $dbFields = $this->Database->getFieldNames($importDB);
             foreach ($importDatasets as $importDataset) {
                 $sqlStatement = "";
                 foreach ($importDataset as $importDbField => $importDbValue) {
+                    if ($importDbField == "id") {
+                       $importDbValue = $this->prepend($newId, $importDbValue);
+                    } elseif ($importDbField == "importId") {
+                        $importDbValue = $uuid;
+                    } elseif (in_array($importDB, $relationTables)) {
+                        if (in_array($importDbField, $dbRelation[$importDB])) {
+                            if ($importDbValue != "0") {
+
+                                if (substr($importDbValue, 0, 2) == "0x") {
+                                    $unserial = hex2bin(substr($importDbValue, 2));
+
+                                    if (strpos($unserial, "{")) {
+                                        $unserial = unserialize($unserial);
+                                        foreach ($unserial as $key => $value) {
+                                            $unserial[$key] = $this->prepend($newId, $value);
+                                        }
+                                        $newImportDbValue = serialize($unserial);
+                                        $newImportDbValue = bin2hex($newImportDbValue);
+                                        $newImportDbValue = $this->prepend("0x", $newImportDbValue);
+                                        $importDbValue = $newImportDbValue;
+                                    } else {
+                                        $newImportDbValue = $this->prepend($newId, $unserial);
+                                        $newImportDbValue = bin2hex($newImportDbValue);
+                                        $newImportDbValue = $this->prepend("0x", $newImportDbValue);
+                                        $importDbValue = $newImportDbValue;
+                                    }
+                                } elseif (strpos($importDbValue, "{")) {
+                                    $unserial = hex2bin(substr($importDbValue, 2));
+                                    $unserial = unserialize($unserial);
+                                    foreach ($unserial as $key => $value) {
+                                        $unserial[$key] = $this->prepend($newId, $value);
+                                    }
+                                    $newImportDbValue = serialize($unserial);
+                                    $newImportDbValue = bin2hex($newImportDbValue);
+                                    $newImportDbValue = $this->prepend("0x", $newImportDbValue);
+                                        $importDbValue = $newImportDbValue;
+                                } elseif (is_numeric($importDbValue)) {
+                                    $newImportDbValue = $this->prepend($newId, $importDbValue);
+                                    $importDbValue = $newImportDbValue;
+                                }
+                            }
+                        }
+                    }
                     if (in_array($importDbField, $dbFields)) {
-//                            echo $importDbField." is in database ". $importDB ."<br>";
                         if ($sqlStatement == "") {
                             $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');';
                         } else {
@@ -839,11 +975,25 @@ class tl_c4g_io_data extends Contao\Backend
                         C4gLogModel::addLogEntry("core", "The import database field <b>".$importDbField."</b> is not in the database <b>".$importDB."</b>.");
                     }
                 }
-                $sqlStatements[] = $sqlStatement;
+                if ($importDB == "tl_files" && $tlFilesTableQuery) {
+                    C4gLogModel::addLogEntry("core", "Files already imported. tl_files will not be imported");
+                } else {
+                    $sqlStatements[] = $sqlStatement;
+                }
             }
         }
 
         return $sqlStatements;
+    }
+
+    function prepend($string, $chunk)
+    {
+        if(!empty($chunk) && isset($chunk)) {
+            return $string.$chunk;
+        }
+        else {
+            return $string;
+        }
     }
 
 }
