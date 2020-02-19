@@ -398,8 +398,7 @@ class tl_c4g_bricks extends Contao\Backend
         ];
 	}
 
-    private function getLatestVersions()
-    {
+    private function getLatestVersions() {
         $bundles = $this->bundles;
         $packages = [];
         foreach ($bundles as $bundle => $values) {
@@ -411,6 +410,17 @@ class tl_c4g_bricks extends Contao\Backend
             $versions[$package] = $this->versionProvider->getLatestVersion($package);
         }
         return $versions;
+    }
+
+    private function getInstalledPackages() {
+        $packages = $this->getContainer()->getParameter('kernel.packages');
+        $installed = [];
+        foreach ($packages as $key => $value) {
+            if (strpos($key, 'con4gis') !== false) {
+                $installed[$key] = $value;
+            }
+        }
+        return $installed;
     }
 
     private function checkSettings($bundle) {
@@ -464,9 +474,11 @@ class tl_c4g_bricks extends Contao\Backend
         }
 
         $bundles = $this->bundles;
+        $installedPackages = $this->getInstalledPackages();
+        $wrongCount = count($bricks) !== count($installedPackages);
+        $renewData = $renewData ? $renewData : $wrongCount;
 
         if ($renewData || !$dc || !$bricks || $getPackages) {
-            $installedPackages = $this->getContainer()->getParameter('kernel.packages');
             $this->versions = $this->getLatestVersions();
         }
 
