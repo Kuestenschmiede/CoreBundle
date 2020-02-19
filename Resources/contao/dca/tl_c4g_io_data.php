@@ -299,6 +299,12 @@ class tl_c4g_io_data extends Contao\Backend
             $bundleName = strtolower(substr($value,0,$pos));
             $version = $installedPackages['con4gis/'.$bundleName];
 
+            if (substr_count($version, ".") == 2) {
+                $temp = explode('.', $version);
+                unset($temp[count($temp) - 1]);
+                $version = implode('.', $temp);
+            }
+
             //ToDo dev versions compare
             if (($version == $bundlesVersion[$key]) || strpos($version, 'dev')) {
                 $isInstalled = true;
@@ -449,6 +455,7 @@ class tl_c4g_io_data extends Contao\Backend
                     copy($cache."/images/".$image, $imagePath."/".$image);
                 }
                 $this->makeFolderAvailableForPublic($imagePath);
+                $this->makeFolderAvailableForPublic("./../files/con4gisIO");
             }
 
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
@@ -516,6 +523,7 @@ class tl_c4g_io_data extends Contao\Backend
                     copy($cache."/images/".$image, $imagePath."/".$image);
                 }
                 $this->makeFolderAvailableForPublic($imagePath);
+                $this->makeFolderAvailableForPublic("./../files/con4gisIO");
             }
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
@@ -624,18 +632,22 @@ class tl_c4g_io_data extends Contao\Backend
         $con4gisDeleteUuid = $localData->importUuid;
         $con4gisDeleteBundles = $localData->bundles;
         $con4gisDeletePath = $localData->importFilePath;
-        $con4gisDeleteDirectory = "./../files".$con4gisDeletePath;
+        $con4gisDeleteDirectory = "./../files".$con4gisDeletePath."/";
         $con4gisDeleteUuidLength = strlen($con4gisDeleteUuid);
 
         if ($con4gisDeleteUuid != 0 && $con4gisDeleteUuid != "" && $con4gisDeleteUuidLength >= 6) {
             if ($con4gisDeletePath != "") {
                 if (is_dir($con4gisDeleteDirectory)) {
                     unlink($con4gisDeleteDirectory."/.public");
-                    $this->recursiveRemoveDirectory($con4gisDeleteDirectory."/");
-                    $this->import('Contao\Automator', 'Automator');
-                    $this->Automator->generateSymlinks();
-                    //Sync filesystem
-                    Dbafs::syncFiles();
+                    if (strpos($con4gisDeleteDirectory, "/files/con4gisIO/")) {
+                        $this->recursiveRemoveDirectory($con4gisDeleteDirectory."/");
+                        $this->import('Contao\Automator', 'Automator');
+                        $this->Automator->generateSymlinks();
+                        //Sync filesystem
+                        Dbafs::syncFiles();
+                    } else {
+                        C4gLogModel::addLogEntry("core", "Could not delete import directory: Wrong path!");
+                    }
                 }
             }
 
@@ -903,9 +915,14 @@ class tl_c4g_io_data extends Contao\Backend
         $firstImportTable = array_key_first($jsonFile);
         $newId = $uuid;
         $importUuidCheck = "%".$uuid."%";
-        $firstTlFilesUuid = substr($jsonFile['tl_files'][0]->uuid, 2);
+
+        if (substr($jsonFile['tl_files'][0]->uuid, 0, 2) == "0x") {
+            $firstTlFilesUuid = substr($jsonFile['tl_files'][0]->uuid, 2);
+        } else {
+            $firstTlFilesUuid = $jsonFile['tl_files'][0]->uuid;
+        }
         $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($importUuidCheck)->fetchAllAssoc();
-        $tlFilesTableQuery = $this->Database->prepare("SELECT uuid FROM tl_files WHERE uuid LIKE ?")->execute("%".$firstTlFilesUuid."%")->fetchAllAssoc();
+        $tlFilesTableQuery = $this->Database->prepare("SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?")->execute("%".$firstTlFilesUuid."%")->fetchAllAssoc();
 
         while ($firstTableQuery) {
             $newId = rand(100001, 999999);
@@ -929,7 +946,7 @@ class tl_c4g_io_data extends Contao\Backend
                         if (in_array($importDbField, $dbRelation[$importDB])) {
                             if ($importDbValue != "0") {
 
-                                if (substr($importDbValue, 0, 2) == "0x") {
+                                if (substr($importDbValue, 0, 2) == "0x" && $importDB != "tl_files") {
                                     $unserial = hex2bin(substr($importDbValue, 2));
 
                                     if (strpos($unserial, "{")) {
@@ -967,6 +984,9 @@ class tl_c4g_io_data extends Contao\Backend
                     if (in_array($importDbField, $dbFields)) {
                         if ($sqlStatement == "") {
                             $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');';
+                        } elseif (substr($importDbValue, 0, 2) == "0x") {
+                            $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
+                            $sqlStatement = str_replace(");", ", $importDbValue);", $sqlStatement);
                         } else {
                             $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
                             $sqlStatement = str_replace(");", ", '$importDbValue');", $sqlStatement);
