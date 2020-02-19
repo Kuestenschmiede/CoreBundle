@@ -455,7 +455,8 @@ class tl_c4g_bricks extends Contao\Backend
 	private function loadBricks($dc, $getPackages = true)
 	{
 	    $userid = $this->User->id;
-        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE pid=$userid")->fetchAllAssoc();
+	    $showBundle = '1';
+        $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE pid=$userid AND showBundle=$showBundle")->fetchAllAssoc();
         if ($bricks && $bricks[0]) {
             $tstamp = intval($bricks[0]['tstamp']);
             $before_seven_days = time() - (7 * 24 * 60 * 60);
@@ -606,6 +607,7 @@ class tl_c4g_bricks extends Contao\Backend
             }
 
         } else {
+            $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter']['showBundle'] = ["showBundle = ?", "1"];
             $bricks = $this->loadBricks($dc, false);
         }
 
