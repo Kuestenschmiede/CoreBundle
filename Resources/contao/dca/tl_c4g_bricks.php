@@ -205,7 +205,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
         ],
         'pid' =>
         [
-            'sql'                     => "int(10) unsigned NOT NULL default '0'",
+            'sql' => "int(10) unsigned NOT NULL default '0'",
         ],
         'tstamp' =>
         [
@@ -496,6 +496,10 @@ class tl_c4g_bricks extends Contao\Backend
                     $latestVersion    = $this->versions['con4gis/'.$bundle];
                 }
 
+//                if ($installedVersion == '9999999-dev') {
+//                   $installedVersion = 'dev';
+//                }
+
                 $set['tstamp'] = time();
                 $set['pid'] = $this->User->id;
                 $set['brickkey'] = $bundle;
@@ -549,7 +553,8 @@ class tl_c4g_bricks extends Contao\Backend
      */
     public function checkButtons(Contao\DataContainer $dc)
     {
-        $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter'][] = array('pid = ?', $this->User->id);
+        $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter'] = [];
+        $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter']['pid'] = array('pid = ?', $this->User->id);
 
         // Check current action
         $key = Contao\Input::get('key');
@@ -562,9 +567,9 @@ class tl_c4g_bricks extends Contao\Backend
                 $keyValue  = substr($key, $pos+1);
             }
             $deleteKey = true;
+
             switch ($switchKey) {
                 case 'switchAll':
-                    $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter'] = [];
                     $label = $GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalled'][0];
                     $icon  = 'bundles/con4giscore/images/be-icons/invisible.svg';
 
