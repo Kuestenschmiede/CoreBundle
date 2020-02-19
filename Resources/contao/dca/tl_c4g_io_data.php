@@ -299,6 +299,7 @@ class tl_c4g_io_data extends Contao\Backend
             $bundleName = strtolower(substr($value,0,$pos));
             $version = $installedPackages['con4gis/'.$bundleName];
 
+            //Remove Bugfix release Number
             if (substr_count($version, ".") == 2) {
                 $temp = explode('.', $version);
                 unset($temp[count($temp) - 1]);
@@ -714,11 +715,8 @@ class tl_c4g_io_data extends Contao\Backend
      */
     public function checkData()
     {
-        $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
         $key = Contao\Input::get('key');
 
-        if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
-            // Check current action
             if ($key) {
                 switch ($key) {
                     case 'importBaseData':
@@ -740,28 +738,6 @@ class tl_c4g_io_data extends Contao\Backend
             }
 
             \Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext']);
-        } else {
-
-            if ($key == "deleteImport") {
-                $this->deleteBaseData();
-            } else {
-                $localData = $this->Database->prepare("SELECT * FROM tl_c4g_io_data")->execute();
-                $localData = $localData->fetchAllAssoc();
-
-                foreach ($localData as $data) {
-                    if ($data['importVersion'] != "") {
-                        $this->Database->prepare("UPDATE tl_c4g_io_data SET availableVersion=? WHERE id=?")->execute("", $data['id']);
-                    } else {
-                        if ($data['id'] != 0 OR $data['id'] != "") {
-                            $this->Database->prepare("DELETE FROM tl_c4g_io_data WHERE id=?")->execute($data['id']);
-                        } else {
-                            C4gLogModel::addLogEntry("core", "Error deleting unavailable import: wrong id set!");
-                        }
-                    }
-                }
-            }
-            \Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_io_data']['infotextNoKey']);
-        }
         
     }
 
