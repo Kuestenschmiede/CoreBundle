@@ -14,6 +14,8 @@
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['id'] = array("ID","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['tstamp'] = array("Zeitstempel","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['caption'] = array("Name des Imports","");
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['type'] = array("Typ","");
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['source'] = array("Quelle","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['bundles'] = array("Betroffene Bundles","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['bundlesVersion'] = array("Bundle Versionen","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['description'] = array("Beschreibung","");
