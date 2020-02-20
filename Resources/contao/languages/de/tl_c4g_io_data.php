@@ -38,5 +38,5 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['releaseImportDialog'] = 'Hiermit wird der
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisIoImportData'] = 'Übersicht aller Importe';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Hier könnt Sie neue Grund- und Demodaten importieren und aktualisieren. Wenn Sie einen <a href="https://con4gis.io"><b>con4gis.io</b></a> Zugang haben, stehen Ihnen noch weitere Import zur Verfügung.';
-$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotextNoKey'] = 'Sie haben keinen con4gis.io Zugang hinterlegt. Damit Ihnen allerdings Importe angezeigt werden benötigen Sie einen. Diesen können Sie unter <a href="https://con4gis.io"><b>con4gis.io</b></a> erstellen.';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Hier können Sie Grund- und Demodaten importieren bzw. aktualisieren. Wenn Sie einen <a href="https://con4gis.io"><b>con4gis.io</b></a> Zugang haben, stehen Ihnen über die Server weitere Importe zur Verfügung.';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotextNoKey'] = 'Sie haben keinen con4gis.io Zugang hinterlegt. Damit Ihnen weitere Importe angezeigt werden benötigen Sie einen. Diesen können Sie unter <a href="https://con4gis.io"><b>con4gis.io</b></a> erstellen.';
