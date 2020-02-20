@@ -485,10 +485,10 @@ class tl_c4g_io_data extends Contao\Backend
                 }
 
                 $this->Database->execute($sqlStatement);
-                $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
-                $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($localImportData['import']['uuid'], $con4gisImportId);
-                $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($localImportData['images']['path'], $con4gisImportId);
             }
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($localImportData['import']['uuid'], $con4gisImportId);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($localImportData['images']['path'], $con4gisImportId);
 
             $this->recursiveRemoveDirectory($cache);
 
@@ -550,22 +550,21 @@ class tl_c4g_io_data extends Contao\Backend
                 if ($sqlStatement == "") {
                     break;
                 }
-                $insertDB = $this->getStringBetween($sqlStatement, "INSERT INTO `", "` (");
-                $beforeId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+//                $insertDB = $this->getStringBetween($sqlStatement, "INSERT INTO `", "` (");
+//                $beforeId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
                 $this->Database->execute($sqlStatement);
-                $afterId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
-
-                if ($insertDB != "tl_files") {
-                    $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
-                    foreach ($insertedIds as $insertedId) {
-                        $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($importData['import']['uuid'], $insertedId);
-                    }
-                }
-
-                $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
-                $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($importData['import']['uuid'], $con4gisImportId);
-                $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($importData['images']['path'], $con4gisImportId);
+//                $afterId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+//
+//                if ($insertDB != "tl_files") {
+//                    $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
+//                    foreach ($insertedIds as $insertedId) {
+//                        $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($importData['import']['uuid'], $insertedId);
+//                    }
+//                }
             }
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($importData['import']['uuid'], $con4gisImportId);
+            $this->Database->prepare("UPDATE tl_c4g_io_data SET importFilePath=? WHERE id=?")->execute($importData['images']['path'], $con4gisImportId);
 
             $this->recursiveRemoveDirectory("./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']));
             unlink("./../var/cache/prod/con4gis/io-data/".$filename);
@@ -974,8 +973,10 @@ class tl_c4g_io_data extends Contao\Backend
                         }
                     }
                     if (in_array($importDbField, $dbFields)) {
-                        if ($sqlStatement == "") {
+                        if ($sqlStatement == "" && substr($importDbValue, 0, 2) == "0x") {
                             $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');';
+                        } elseif ($sqlStatement == "" && substr($importDbValue, 0, 2) != "0x") {
+                            $sqlStatement = "INSERT INTO `".$importDB."` (".$importDbField.") VALUES ('".$importDbValue."');";
                         } elseif (substr($importDbValue, 0, 2) == "0x") {
                             $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
                             $sqlStatement = str_replace(");", ", $importDbValue);", $sqlStatement);
