@@ -671,32 +671,27 @@ class tl_c4g_io_data extends Contao\Backend
             //Delete import data
             $tables = $this->Database->listTables();
             if (strpos($con4gisDeleteBundles, 'MapsBundle') !== false) {
-                foreach ($tables as $table) {
-                    if (strpos($table, 'map') !== false) {
-                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
-                    }
-                }
-            }
-            if (strpos($con4gisDeleteBundles, 'FirefighterBundle') !== false) {
-                foreach ($tables as $table) {
-                    if (strpos($table, 'firefighter') !== false) {
-                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
-                    }
-                }
-            }
-            if (strpos($con4gisDeleteBundles, 'VisualizationBundle') !== false) {
-                foreach ($tables as $table) {
-                    if (strpos($table, 'visualization') !== false) {
-                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
-                    }
-                }
-            }
-            if (strpos($con4gisDeleteBundles, 'DataBundle') !== false) {
-                foreach ($tables as $table) {
-                    if (strpos($table, 'c4g_data') !== false) {
-                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
-                    }
-                }
+                $this->deleteSqlImport($tables, "c4g_map", $con4gisDeleteUuid);
+            } else if (strpos($con4gisDeleteBundles, 'FirefighterBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_firefighter", $con4gisDeleteUuid);
+            } elseif (strpos($con4gisDeleteBundles, 'VisualizationBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_visualization", $con4gisDeleteUuid);
+            } elseif (strpos($con4gisDeleteBundles, 'DataBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_data", $con4gisDeleteUuid);
+            } elseif (strpos($con4gisDeleteBundles, 'EditorBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_editor", $con4gisDeleteUuid);
+            } elseif (strpos($con4gisDeleteBundles, 'ForumBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_forum", $con4gisDeleteUuid);
+            } elseif (strpos($con4gisDeleteBundles, 'IOTravelCostsBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_travel_costs", $con4gisDeleteUuid);
+            } elseif (strpos($con4gisDeleteBundles, 'ProjectsBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_projects", $con4gisDeleteUuid);
+            } elseif (strpos($con4gisDeleteBundles, 'RoutingBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_routing", $con4gisDeleteUuid);
+            } elseif (strpos($con4gisDeleteBundles, 'TrackingBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_tracking", $con4gisDeleteUuid);
+            } elseif ($this->strposa($con4gisDeleteBundles, 'PwaBundle') !== false) {
+                $this->deleteSqlImport($tables, "c4g_tracking", $con4gisDeleteUuid);
             }
 
             $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=? WHERE id=?")->execute("", $con4gisDeleteId);
@@ -709,6 +704,26 @@ class tl_c4g_io_data extends Contao\Backend
             C4gLogModel::addLogEntry("core", "Error deleting unavailable import: wrong id set!");
         }
 
+    }
+
+    function deleteSqlImport($tables, $bundle, $con4gisDeleteUuid) {
+        foreach ($tables as $table) {
+            if (is_array($bundle)) {
+                
+            } elseif (strpos($table, $bundle) !== false) {
+                $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
+            }
+        }
+    }
+
+    function strposa($haystack, $needles=array(), $offset=0) {
+        $chr = array();
+        foreach($needles as $needle) {
+            $res = strpos($haystack, $needle, $offset);
+            if ($res !== false) $chr[$needle] = $res;
+        }
+        if(empty($chr)) return false;
+        return min($chr);
     }
 
     /**
