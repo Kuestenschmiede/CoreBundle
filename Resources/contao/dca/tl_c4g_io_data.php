@@ -484,7 +484,12 @@ class tl_c4g_io_data extends Contao\Backend
                     break;
                 }
 
-                $this->Database->execute($sqlStatement);
+                try {
+                    $this->Database->query($sqlStatement);
+
+                } catch (Exception $e) {
+                    C4gLogModel::addLogEntry("core", "Error while executing SQL-Import: ".$e->getMessage());
+                }
             }
             $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
             $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($localImportData['import']['uuid'], $con4gisImportId);
@@ -550,17 +555,13 @@ class tl_c4g_io_data extends Contao\Backend
                 if ($sqlStatement == "") {
                     break;
                 }
-//                $insertDB = $this->getStringBetween($sqlStatement, "INSERT INTO `", "` (");
-//                $beforeId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
-                $this->Database->execute($sqlStatement);
-//                $afterId = $this->Database->prepare("SELECT id FROM $insertDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
-//
-//                if ($insertDB != "tl_files") {
-//                    $insertedIds = array_slice(range($beforeId['id'], $afterId['id']), 1);
-//                    foreach ($insertedIds as $insertedId) {
-//                        $this->Database->prepare("UPDATE $insertDB SET importId=? WHERE id=?")->execute($importData['import']['uuid'], $insertedId);
-//                    }
-//                }
+
+                try {
+                    $this->Database->query($sqlStatement);
+
+                } catch (Exception $e) {
+                    C4gLogModel::addLogEntry("core", "Error while executing SQL-Import: ".$e->getMessage());
+                }
             }
             $this->Database->prepare("UPDATE tl_c4g_io_data SET importVersion=?WHERE id=?")->execute($importData['import']['version'], $con4gisImportId);
             $this->Database->prepare("UPDATE tl_c4g_io_data SET importUuid=? WHERE id=?")->execute($importData['import']['uuid'], $con4gisImportId);
@@ -928,6 +929,10 @@ class tl_c4g_io_data extends Contao\Backend
             $dbFields = $this->Database->getFieldNames($importDB);
             foreach ($importDatasets as $importDataset) {
                 $sqlStatement = "";
+                $importDataset = (array) $importDataset;
+                if (!array_key_exists("importId", $importDataset)) {
+                    $importDataset['importId'] = $uuid;
+                }
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if ($importDbField == "id") {
                        $importDbValue = $this->prepend($newId, $importDbValue);
@@ -991,7 +996,9 @@ class tl_c4g_io_data extends Contao\Backend
                 if ($importDB == "tl_files" && $tlFilesTableQuery) {
                     C4gLogModel::addLogEntry("core", "Files already imported. tl_files will not be imported");
                 } else {
-                    $sqlStatements[] = $sqlStatement;
+//                    if ($importDB != "tl_c4g_maps") {
+                        $sqlStatements[] = $sqlStatement;
+//                    }
                 }
             }
         }
