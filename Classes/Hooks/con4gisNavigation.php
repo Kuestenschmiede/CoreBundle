@@ -68,7 +68,7 @@ class con4gisNavigation extends \System
                     if ($module['brick'] && $module['brick'] == $brickkey) {
                         $additionalClass = $arrModules['con4gis']['modules'][$name]['class'];
                         if ($showBundleNames) {
-                            $arrModules['con4gis']['modules'][$name]['label'] = '(' . $brickkey . ') ' . $GLOBALS['TL_LANG']['MOD'][$name][0];
+                            $arrModules['con4gis']['modules'][$name]['label'] = '[' . $brickkey . '] ' . $GLOBALS['TL_LANG']['MOD'][$name][0];
                         } else {
                             $arrModules['con4gis']['modules'][$name]['label'] = '॰ ' . $GLOBALS['TL_LANG']['MOD'][$name][0];
                         }
