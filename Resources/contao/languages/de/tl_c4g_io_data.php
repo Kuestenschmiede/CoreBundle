@@ -16,8 +16,8 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['tstamp'] = array("Zeitstempel","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['caption'] = array("Name des Imports","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['type'] = array("Typ","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['source'] = array("Quelle","");
-$GLOBALS['TL_LANG']['tl_c4g_io_data']['bundles'] = array("Betroffene Bundles","");
-$GLOBALS['TL_LANG']['tl_c4g_io_data']['bundlesVersion'] = array("Bundle Versionen","");
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['bundles'] = array("Betroffene Bausteine","");
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['bundlesVersion'] = array("Baustein Versionen","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['description'] = array("Beschreibung","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisImport'] = array("Importtemplate","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['importVersion'] = array("Importierte Version","");
@@ -40,5 +40,5 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['releaseImportDialog'] = 'Hiermit wird der
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['con4gisIoImportData'] = 'Übersicht aller Importe';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Hier können Sie Grund- und Demodaten importieren bzw. aktualisieren. Wenn Sie einen <a href="https://con4gis.io"><b>con4gis.io</b></a> Zugang haben, stehen Ihnen über die Server weitere Importe zur Verfügung.';
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['infotext'] = 'Hier können Sie Grund- und Demodaten importieren bzw. aktualisieren. Einige Bausteine liefern Demodaten mit. Wenn Sie einen <a href="https://con4gis.io"><b>con4gis.io</b></a> Zugang haben, stehen Ihnen über die Server weitere Grund- und Demodaten-Importe zur Verfügung.';
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['infotextNoKey'] = 'Sie haben keinen con4gis.io Zugang hinterlegt. Damit Ihnen weitere Importe angezeigt werden benötigen Sie einen. Diesen können Sie unter <a href="https://con4gis.io"><b>con4gis.io</b></a> erstellen.';

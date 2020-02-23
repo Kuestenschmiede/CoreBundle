@@ -64,12 +64,6 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         ),
         'global_operations' => array
         (
-//            'all' => [
-//                'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
-//                'href'                => 'act=select',
-//                'class'               => 'header_edit_all',
-//                'attributes'          => 'onclick="Backend.getScrollOffset();" accesskey="e"'
-//            ],
             'back' => [
                 'href'                => 'key=back',
                 'class'               => 'header_back',
@@ -87,12 +81,6 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         ),
         'operations' => array
         (
-//            'show' => array
-//            (
-//                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['show'],
-//                'href'                => 'act=show',
-//                'icon'                => 'show.svg'
-//            ),
             'import' => array
             (
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['importData'],
@@ -380,50 +368,48 @@ class tl_c4g_io_data extends Contao\Backend
         $localData = $this->Database->prepare("SELECT * FROM tl_c4g_io_data")->execute();
         $localData = $localData->fetchAllAssoc();
 
-//        foreach ($allResponses as $responses) {
-
-            if (empty($localData)) {
-                foreach ($responses as $response) {
-                    $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?")->execute($response->id, self::replaceInsertTags($response->caption), $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source);
-                }
-            }
-            //Update data from con4gis.io
-            foreach ($localData as $data) {
-                $available = false;
-                foreach ($responses as $response) {
-                    if ($response->id == $data['id']) {
-                        $this->Database->prepare("UPDATE tl_c4g_io_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=? WHERE id=?")->execute(self::replaceInsertTags($response->caption, false), $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $data['id']);
-                        $available = true;
-                    }
-                }
-                //Delete Import if it's not available anymore
-                if (!$available) {
-                    if ($data['importVersion'] != "") {
-                        $this->Database->prepare("UPDATE tl_c4g_io_data SET availableVersion=? WHERE id=?")->execute("", $data['id']);
-                    } else {
-                        if ($data['id'] != 0 OR $data['id'] != "") {
-                            $this->Database->prepare("DELETE FROM tl_c4g_io_data WHERE id=?")->execute($data['id']);
-                        } else {
-                            C4gLogModel::addLogEntry("core", "Error deleting unavailable import: wrong id set!");
-                        }
-                    }
-                }
-            }
-
-            //Check for new data
+       if (empty($localData)) {
             foreach ($responses as $response) {
-                $count = 0;
-                $arrayLength = count($localData) - 1;
-                foreach ($localData as $data) {
-                    if ($data['id'] == $response->id) {
-                        break;
-                    }
-                    if ($data['id'] != $response->id && $count == $arrayLength) {
-                        $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->version);
-                    }
-                    $count++;
+                $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?")->execute($response->id, self::replaceInsertTags($response->caption), $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source);
+            }
+        }
+        //Update data from con4gis.io
+        foreach ($localData as $data) {
+            $available = false;
+            foreach ($responses as $response) {
+                if ($response->id == $data['id']) {
+                    $this->Database->prepare("UPDATE tl_c4g_io_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=? WHERE id=?")->execute(self::replaceInsertTags($response->caption, false), $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $data['id']);
+                    $available = true;
                 }
             }
+            //Delete Import if it's not available anymore
+            if (!$available) {
+                if ($data['importVersion'] != "") {
+                    $this->Database->prepare("UPDATE tl_c4g_io_data SET availableVersion=? WHERE id=?")->execute("", $data['id']);
+                } else {
+                    if ($data['id'] != 0 OR $data['id'] != "") {
+                        $this->Database->prepare("DELETE FROM tl_c4g_io_data WHERE id=?")->execute($data['id']);
+                    } else {
+                        C4gLogModel::addLogEntry("core", "Error deleting unavailable import: wrong id set!");
+                    }
+                }
+            }
+        }
+
+        //Check for new data
+        foreach ($responses as $response) {
+            $count = 0;
+            $arrayLength = count($localData) - 1;
+            foreach ($localData as $data) {
+                if ($data['id'] == $response->id) {
+                    break;
+                }
+                if ($data['id'] != $response->id && $count == $arrayLength) {
+                    $this->Database->prepare("INSERT INTO tl_c4g_io_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, $response->caption, $response->description, $response->bundles, $response->version);
+                }
+                $count++;
+            }
+        }
 
     }
 
