@@ -88,6 +88,29 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         (
             'sql' => "int(10) unsigned NOT NULL default '0'"
         ),
+        'showBundleNames' =>
+        [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['showBundleNames'],
+            'exclude'                 => true,
+            'default'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class'=>'clr'],
+            'sql'                     => "char(1) NOT NULL default '1'"
+        ],
+        'con4gisIoUrl' =>[
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'],
+            'exclude'                 => true,
+            'inputType'               => 'text',
+            'eval'                    => ['maxlength' => 100],
+            'sql'                     => "varchar(100) default ''"
+        ],
+        'con4gisIoKey' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'],
+            'exclude'                 => true,
+            'inputType'               => 'text',
+            'eval'                    => ['maxlength' => 32],
+            'sql'                     => "varchar(32) default ''"
+        ],
         'c4g_uitheme_css_select' => array
         (
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'],
@@ -181,31 +204,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'default'   => '2048000',
             'eval'      => array('mandatory' => false, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
             'sql'       => "varchar(255) NOT NULL default '2048000'"
-        ),
-        'con4gisIoUrl' =>[
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'],
-            'exclude'                 => true,
-            'inputType'               => 'text',
-            'eval'                    => ['maxlength' => 100],
-            'sql'                     => "varchar(100) default ''"
-        ],
-        'con4gisIoKey' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'],
-            'exclude'                 => true,
-            'inputType'               => 'text',
-            'eval'                    => ['maxlength' => 32],
-            'sql'                     => "varchar(32) default ''"
-        ],
-        'showBundleNames' =>
-            [
-                'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['showBundleNames'],
-                'exclude'                 => true,
-                'default'                 => false,
-                'inputType'               => 'checkbox',
-                'eval'                    => ['tl_class'=>'clr'],
-                'sql'                     => "char(1) NOT NULL default '0'"
-            ],
-        
+        )
     )
 );
 
