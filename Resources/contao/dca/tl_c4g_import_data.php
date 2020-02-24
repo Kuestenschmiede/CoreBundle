@@ -298,6 +298,7 @@ class tl_c4g_import_data extends Contao\Backend
         //$userid = $this->User->id;
         $importVersion = $arrRow['importVersion'];
         $availableVersion = $arrRow['availableVersion'];
+        $source = $arrRow['source'];
         $bundles = explode(",", $arrRow['bundles']);
         $bundlesVersion = explode(",", $arrRow['bundlesVersion']);
         $isInstalled = false;
@@ -306,27 +307,32 @@ class tl_c4g_import_data extends Contao\Backend
         $bundles = str_replace(" ", "", $bundles);
         $bundlesVersion = str_replace(" ", "", $bundlesVersion);
 
-        foreach ($bundles as $key => $value) {
+        if ($source == "io") {
+            foreach ($bundles as $key => $value) {
 //            $pos = strpos($value, 'Bundle');
 //            $bundleName = strtolower(substr($value,0,$pos));
-            $version = $installedPackages['con4gis/'.$value];
+                $version = $installedPackages['con4gis/'.$value];
 
-            //Remove Bugfix release Number
-            if (substr_count($version, ".") == 2) {
-                $temp = explode('.', $version);
-                unset($temp[count($temp) - 1]);
-                $version = implode('.', $temp);
+                //Remove Bugfix release Number
+                if (substr_count($version, ".") == 2) {
+                    $temp = explode('.', $version);
+                    unset($temp[count($temp) - 1]);
+                    $version = implode('.', $temp);
+                }
+
+                //ToDo dev versions compare
+                if (($version == $bundlesVersion[$key]) || strpos($version, 'dev')) {
+                    $isInstalled = true;
+                } else {
+                    $isInstalled = false;
+                    break;
+                }
+
             }
-
-            //ToDo dev versions compare
-            if (($version == $bundlesVersion[$key]) || strpos($version, 'dev')) {
-                $isInstalled = true;
-            } else {
-                $isInstalled = false;
-                break;
-            }
-
+        } else {
+            $isInstalled = true;
         }
+
 
         if ($href) {
             switch ($href) {
@@ -963,7 +969,7 @@ class tl_c4g_import_data extends Contao\Backend
      */
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
-        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a><br>';
+        return '<a href="https://con4gis.io/blaupausen"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a><br>';
     }
 
     public function makeFolderAvailableForPublic($href)
