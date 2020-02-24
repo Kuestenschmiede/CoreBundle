@@ -188,7 +188,11 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         (
             'sql'                     => "varchar(255) NOT NULL",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['type'],
-            'inputType'               => 'text',
+            'inputType'               => 'select',
+            'options'                 => array(
+                'demo'                  => $GLOBALS['TL_LANG']['tl_c4g_io_data']['type_demo'],
+                'basedata'              => $GLOBALS['TL_LANG']['tl_c4g_io_data']['type_basedata']
+            ),
             'default'                 => '',
             'sorting'                 => true,
             'search'                  => true,
@@ -197,7 +201,11 @@ $GLOBALS['TL_DCA']['tl_c4g_io_data'] = array
         (
             'sql'                     => "varchar(255) NOT NULL",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_io_data']['source'],
-            'inputType'               => 'text',
+            'inputType'               => 'select',
+            'options'                 => array(
+                'locale'                => $GLOBALS['TL_LANG']['tl_c4g_io_data']['source_locale'],
+                'io'                    => $GLOBALS['TL_LANG']['tl_c4g_io_data']['source_io']
+            ),
             'default'                 => '',
             'sorting'                 => true,
             'search'                  => true,
@@ -299,9 +307,9 @@ class tl_c4g_io_data extends Contao\Backend
         $bundlesVersion = str_replace(" ", "", $bundlesVersion);
 
         foreach ($bundles as $key => $value) {
-            $pos = strpos($value, 'Bundle');
-            $bundleName = strtolower(substr($value,0,$pos));
-            $version = $installedPackages['con4gis/'.$bundleName];
+//            $pos = strpos($value, 'Bundle');
+//            $bundleName = strtolower(substr($value,0,$pos));
+            $version = $installedPackages['con4gis/'.$value];
 
             //Remove Bugfix release Number
             if (substr_count($version, ".") == 2) {
@@ -458,7 +466,7 @@ class tl_c4g_io_data extends Contao\Backend
                     copy($cache."/images/".$image, $imagePath."/".$image);
                 }
                 $this->makeFolderAvailableForPublic($imagePath);
-                $this->makeFolderAvailableForPublic("./../files/con4gisIO");
+                $this->makeFolderAvailableForPublic("./../files/con4gis_import_data");
             }
 
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
@@ -531,7 +539,7 @@ class tl_c4g_io_data extends Contao\Backend
                     copy($cache."/images/".$image, $imagePath."/".$image);
                 }
                 $this->makeFolderAvailableForPublic($imagePath);
-                $this->makeFolderAvailableForPublic("./../files/con4gisIO");
+                $this->makeFolderAvailableForPublic("./../files/con4gis_import_data");
             }
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
@@ -642,8 +650,14 @@ class tl_c4g_io_data extends Contao\Backend
             if ($con4gisDeletePath != "") {
                 if (is_dir($con4gisDeleteDirectory)) {
                     unlink($con4gisDeleteDirectory."/.public");
-                    if (strpos($con4gisDeleteDirectory, "/files/con4gisIO/")) {
+                    if (strpos($con4gisDeleteDirectory, "/files/con4gis_import_data/")) {
                         $this->recursiveRemoveDirectory($con4gisDeleteDirectory."/");
+                        $con4gisImportFolderScan = array_diff(scandir("./../files/con4gis_import_data"), array(".", ".."));
+                        if (count($con4gisImportFolderScan) == 1) {
+                            if (in_array(".public", $con4gisImportFolderScan)) {
+                                $this->recursiveRemoveDirectory("./../con4gis_import_data");
+                            }
+                        }
                         $this->import('Contao\Automator', 'Automator');
                         $this->Automator->generateSymlinks();
                         //Sync filesystem
@@ -656,27 +670,47 @@ class tl_c4g_io_data extends Contao\Backend
 
             //Delete import data
             $tables = $this->Database->listTables();
-            if (strpos($con4gisDeleteBundles, 'MapsBundle') !== false) {
+            if (strpos($con4gisDeleteBundles, 'maps') !== false) {
                 $this->deleteSqlImport($tables, "c4g_map", $con4gisDeleteUuid);
-            } else if (strpos($con4gisDeleteBundles, 'FirefighterBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'firefighter') !== false) {
                 $this->deleteSqlImport($tables, "c4g_firefighter", $con4gisDeleteUuid);
-            } elseif (strpos($con4gisDeleteBundles, 'VisualizationBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'visualization') !== false) {
                 $this->deleteSqlImport($tables, "c4g_visualization", $con4gisDeleteUuid);
-            } elseif (strpos($con4gisDeleteBundles, 'DataBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'data') !== false) {
                 $this->deleteSqlImport($tables, "c4g_data", $con4gisDeleteUuid);
-            } elseif (strpos($con4gisDeleteBundles, 'EditorBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'editor') !== false) {
                 $this->deleteSqlImport($tables, "c4g_editor", $con4gisDeleteUuid);
-            } elseif (strpos($con4gisDeleteBundles, 'ForumBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'forum') !== false) {
                 $this->deleteSqlImport($tables, "c4g_forum", $con4gisDeleteUuid);
-            } elseif (strpos($con4gisDeleteBundles, 'IOTravelCostsBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'io-travel-costs') !== false) {
                 $this->deleteSqlImport($tables, "c4g_travel_costs", $con4gisDeleteUuid);
-            } elseif (strpos($con4gisDeleteBundles, 'ProjectsBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'projects') !== false) {
                 $this->deleteSqlImport($tables, "c4g_projects", $con4gisDeleteUuid);
-            } elseif (strpos($con4gisDeleteBundles, 'RoutingBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'routing') !== false) {
                 $this->deleteSqlImport($tables, "c4g_routing", $con4gisDeleteUuid);
-            } elseif (strpos($con4gisDeleteBundles, 'TrackingBundle') !== false) {
+            }
+
+            if (strpos($con4gisDeleteBundles, 'tracking') !== false) {
                 $this->deleteSqlImport($tables, "c4g_tracking", $con4gisDeleteUuid);
-            } elseif ($this->strposa($con4gisDeleteBundles, 'PwaBundle') !== false) {
+            }
+
+            if ($this->strposa($con4gisDeleteBundles, 'pwa') !== false) {
                 $this->deleteSqlImport($tables, "c4g_tracking", $con4gisDeleteUuid);
             }
 
@@ -695,7 +729,7 @@ class tl_c4g_io_data extends Contao\Backend
     function deleteSqlImport($tables, $bundle, $con4gisDeleteUuid) {
         foreach ($tables as $table) {
             if (is_array($bundle)) {
-                
+
             } elseif (strpos($table, $bundle) !== false) {
                 $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
             }

@@ -30,6 +30,14 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['releaseData'] = array("Release data","");
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteData'] = array("Delete data","");
 
 /**
+ * Reference
+ */
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['type_demo'] = "Demo data";
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['type_basedata'] = "Base data";
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['source_io'] = "con4gis.io";
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['source_locale'] = "Locale";
+
+/**
  * Buttons
  */
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['new'] = array('New import', 'Create new import');

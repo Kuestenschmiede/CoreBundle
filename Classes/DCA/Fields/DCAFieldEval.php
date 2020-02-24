@@ -196,4 +196,11 @@ class DCAFieldEval
 
         return $this;
     }
+
+    public function doNotCopy(bool $doNotCopy = true)
+    {
+        $this->global['doNotCopy'] = $doNotCopy;
+
+        return $this;
+    }
 }

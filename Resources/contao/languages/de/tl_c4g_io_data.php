@@ -30,6 +30,14 @@ $GLOBALS['TL_LANG']['tl_c4g_io_data']['releaseData'] = array("Datenimport lösen
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['deleteData'] = array("Daten löschen","");
 
 /**
+ * Reference
+ */
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['type_demo'] = "Demodaten";
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['type_basedata'] = "Grunddaten";
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['source_io'] = "con4gis.io";
+$GLOBALS['TL_LANG']['tl_c4g_io_data']['source_locale'] = "Lokal";
+
+/**
  * Buttons
  */
 $GLOBALS['TL_LANG']['tl_c4g_io_data']['new'] = array('Neuer Import', 'Einen neuen Import erstellen');
