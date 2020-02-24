@@ -34,7 +34,7 @@ array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE
     'con4gis' => [
         'c4g_bricks'   => ['tables' => ['tl_c4g_bricks']],
         'c4g_settings' => ['tables' => ['tl_c4g_settings']],
-        'c4g_io_data'  => ['tables' => ['tl_c4g_io_data']],
+        'c4g_io_data'  => ['tables' => ['tl_c4g_import_data']],
         'c4g_log'      => ['tables' => ['tl_c4g_log']]
     ]
 ));
