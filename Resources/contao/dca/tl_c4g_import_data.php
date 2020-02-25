@@ -471,8 +471,15 @@ class tl_c4g_import_data extends Contao\Backend
                 foreach ($images as $image) {
                     copy($cache."/images/".$image, $imagePath."/".$image);
                 }
-                $this->makeFolderAvailableForPublic($imagePath);
-                $this->makeFolderAvailableForPublic("./../files/con4gis_import_data");
+                $objFolder = new Contao\Folder("files/con4gis_import_data");
+                if (!$objFolder->isUnprotected()) {
+                    $objFolder->unprotect();
+                }
+                $objFolder = new Contao\Folder("files".$importData['images']['path']);
+                $objFolder->unprotect();
+
+//                $this->makeFolderAvailableForPublic($imagePath);
+//                $this->makeFolderAvailableForPublic("./../files/con4gis_import_data");
             }
 
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
@@ -495,7 +502,10 @@ class tl_c4g_import_data extends Contao\Backend
             $this->Database->prepare("UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?")->execute($localImportData['import']['uuid'], $con4gisImportId);
             $this->Database->prepare("UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?")->execute($localImportData['images']['path'], $con4gisImportId);
 
-            $this->recursiveRemoveDirectory($cache);
+            $objFolder = new Contao\Folder("var/cache/prod/con4gis/io-data/");
+            $objFolder->purge();
+            $objFolder->delete();
+//            $this->recursiveRemoveDirectory($cache);
 
 
 //      lokaler Import Ende
@@ -544,8 +554,14 @@ class tl_c4g_import_data extends Contao\Backend
                 foreach ($images as $image) {
                     copy($cache."/images/".$image, $imagePath."/".$image);
                 }
-                $this->makeFolderAvailableForPublic($imagePath);
-                $this->makeFolderAvailableForPublic("./../files/con4gis_import_data");
+                $objFolder = new Contao\Folder("files/con4gis_import_data");
+                if (!$objFolder->isUnprotected()) {
+                    $objFolder->unprotect();
+                }
+                $objFolder = new Contao\Folder("files".$importData['images']['path']);
+                $objFolder->unprotect();
+//                $this->makeFolderAvailableForPublic($imagePath);
+//                $this->makeFolderAvailableForPublic("./../files/con4gis_import_data");
             }
             $file = file_get_contents($cache."/data/".str_replace(".c4g", ".json", $importData['general']['filename']));
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
@@ -567,10 +583,16 @@ class tl_c4g_import_data extends Contao\Backend
             $this->Database->prepare("UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?")->execute($importData['import']['uuid'], $con4gisImportId);
             $this->Database->prepare("UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?")->execute($importData['images']['path'], $con4gisImportId);
 
-            $this->recursiveRemoveDirectory("./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']));
-            unlink("./../var/cache/prod/con4gis/io-data/".$filename);
+            $objFolder = new Contao\Folder("var/cache/prod/con4gis/io-data/");
+            $objFolder->purge();
+            $objFolder->delete();
+//            $this->recursiveRemoveDirectory("./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']));
+//            unlink("./../var/cache/prod/con4gis/io-data/".$filename);
         }
-        //Sync filesystem
+        //Generate Symlinks and sync filesystem
+        $this->import('Contao\Automator', 'Automator');
+        $this->Automator->generateSymlinks();
+
         Dbafs::syncFiles();
     }
 
@@ -713,11 +735,16 @@ class tl_c4g_import_data extends Contao\Backend
                 if (is_dir($con4gisDeleteDirectory)) {
                     unlink($con4gisDeleteDirectory."/.public");
                     if (strpos($con4gisDeleteDirectory, "/files/con4gis_import_data/")) {
-                        $this->recursiveRemoveDirectory($con4gisDeleteDirectory."/");
+                        $objFolder = new Contao\Folder("files".$con4gisDeletePath);
+                        if (!$objFolder->isEmpty()) {
+                            $objFolder->purge();
+                        }
+                        $objFolder->delete();
                         $con4gisImportFolderScan = array_diff(scandir("./../files/con4gis_import_data"), array(".", ".."));
                         if (count($con4gisImportFolderScan) == 1) {
                             if (in_array(".public", $con4gisImportFolderScan)) {
                                 $objFolder = new Contao\Folder("files/con4gis_import_data");
+                                $objFolder->unprotect();
                                 $objFolder->delete();
                             }
                         }
