@@ -442,13 +442,20 @@ class tl_c4g_bricks extends Contao\Backend
             $ivArr = explode('.',$iv);
             $lvArr = explode('.',$lv);
 
-            if ($lvArr[0] > $ivArr[0]) {
+            $imajor = $ivArr[0] && is_int($ivArr[0]) ? intval($ivArr[0]) : false;
+            $lmajor = $lvArr[0] && is_int($ivArr[0]) ? intval($lvArr[0]) : false;
+            $iminor = $ivArr[1] && is_int($ivArr[1]) ? intval($ivArr[1]) : false;
+            $lminor = $lvArr[1] && is_int($ivArr[1]) ? intval($lvArr[1]) : false;
+            $ibugfix = $ivArr[2] && is_int($ivArr[2]) ? intval($ivArr[2]) : false;
+            $ibugfix = $lvArr[2] && is_int($ivArr[2]) ? intval($lvArr[2]) : false;
+
+            if (($lmajor && $imajor) && ($lmajor > $imajor)) {
                 return true;
-            } else if ($lvArr[0] == $ivArr[0]) {
-                if ($lvArr[1] > $ivArr[1]) {
+            } else if (($lmajor && $imajor) && ($lmajor == $imajor)) {
+                if (($lminor && $iminor) && ($lminor > $iminor)) {
                     return true;
-                } else if ($lvArr[1] == $lvArr[1]) {
-                    if ($lvArr[2] > $ivArr[2]) {
+                } else if (($lminor && $iminor) && ($lminor == $iminor)) {
+                    if (($lbugfix && $ibugfix) && ($lbugfix > $ibugfix)) {
                         return true;
                     }
                 }
@@ -499,8 +506,8 @@ class tl_c4g_bricks extends Contao\Backend
                     $installedVersion = $installedPackages['con4gis/'.$bundle];
                     $latestVersion = $this->versions['con4gis/'.$bundle];
 
-                    $iv = (strpos($installedVersion,'v') == 0) ? substr($installedVersion, 1) : 0;
-                    $lv = (strpos($latestVersion,'v') == 0) ? substr($latestVersion, 1) : 0;
+                    $iv = (strpos($installedVersion,'v') == 0) ? substr($installedVersion, 1) : $installedVersion;
+                    $lv = (strpos($latestVersion,'v') == 0) ? substr($latestVersion, 1) : $latestVersion;
                     if ($this->compareVersions($iv, $lv)) {
                         $latestVersion = '<b>'.$latestVersion.'</b>';
                     }
