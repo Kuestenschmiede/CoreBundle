@@ -717,7 +717,8 @@ class tl_c4g_import_data extends Contao\Backend
                         $con4gisImportFolderScan = array_diff(scandir("./../files/con4gis_import_data"), array(".", ".."));
                         if (count($con4gisImportFolderScan) == 1) {
                             if (in_array(".public", $con4gisImportFolderScan)) {
-                                $this->recursiveRemoveDirectory("./../con4gis_import_data");
+                                $objFolder = new Contao\Folder("files/con4gis_import_data");
+                                $objFolder->delete();
                             }
                         }
                         $this->import('Contao\Automator', 'Automator');
