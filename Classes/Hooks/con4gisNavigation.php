@@ -79,10 +79,10 @@ class con4gisNavigation extends \System
         } else {
             //Initial invisible
             foreach ($arrModules['con4gis']['modules'] as $name => $module) {
-               if ($name != 'c4g_bricks') {
-                   $additionalClass = $arrModules['con4gis']['modules'][$name]['class'];
-                   $arrModules['con4gis']['modules'][$name]['class'] = $additionalClass . ' c4g_invisible_brick';
-               }
+                if ($name != 'c4g_bricks') {
+                    $additionalClass = $arrModules['con4gis']['modules'][$name]['class'];
+                    $arrModules['con4gis']['modules'][$name]['class'] = $additionalClass . ' c4g_invisible_brick';
+                }
             }
         }
 
