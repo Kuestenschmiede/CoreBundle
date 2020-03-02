@@ -65,9 +65,10 @@ class con4gisInsertTags extends \System
                 switch ($fieldName) {
                     case 'version': return $packages['con4gis/maps'];
                     default:
-                        if ($packages['con4gis/'.$fieldName]) {
-                            return $this->checkVersionTag($packages['con4gis/'.$fieldName]);
+                        if ($packages['con4gis/' . $fieldName]) {
+                            return $this->checkVersionTag($packages['con4gis/' . $fieldName]);
                         }
+
                         return 'not installed';
                 }
             }

@@ -44,6 +44,11 @@ class con4gisNavigation extends \System
         }
     }
 
+    /**
+     * @param $arrModules
+     * @param $blnShowAll
+     * @return mixed
+     */
     public function activateNavigation($arrModules, $blnShowAll)
     {
         if (!\Database::getInstance()->tableExists('tl_c4g_bricks')) {
@@ -84,6 +89,11 @@ class con4gisNavigation extends \System
                     $arrModules['con4gis']['modules'][$name]['class'] = $additionalClass . ' c4g_invisible_brick';
                 }
             }
+        }
+
+        //fallback to remove empty staging nav
+        if ($arrModules['con4gis_stage'] && $arrModules['con4gis_stage']['modules'] && count($arrModules['con4gis_stage']['modules']) == 0) {
+            unset($arrModules['con4gis_stage']);
         }
 
         return $arrModules;
