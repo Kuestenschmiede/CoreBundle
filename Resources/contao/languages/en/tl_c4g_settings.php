@@ -70,8 +70,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
 
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['global_legend'] = "Global settings";
-$GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI settings";
-$GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Upload settings";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI settings (forum/groups/projects)";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Upload settings (forum/projects)";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Miscellaneous settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = 'con4gis.io map services';
 

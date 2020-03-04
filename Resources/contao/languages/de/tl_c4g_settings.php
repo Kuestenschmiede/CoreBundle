@@ -69,8 +69,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
 
 /** LEGENDS **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['global_legend'] = "Globale Einstellungen";
-$GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI Einstellungen";
-$GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Uploadeinstellungen";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI Einstellungen (forum/groups/projects)";
+$GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Uploadeinstellungen (forum/projects)";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Sonstige Einstellungen";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = 'con4gis.io Kartendienste';
 
