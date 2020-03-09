@@ -81,7 +81,8 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=globalSettings',
                 'class'               => 'header_global_settings',
                 'button_callback'     => ['tl_c4g_bricks', 'globalSettings'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/global_settings_16.svg'
+                'icon'                => 'bundles/con4giscore/images/be-icons/global_settings_16.svg',
+                'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'][0]
             ),
             'switchInstalled' => array
             (
@@ -96,21 +97,24 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=reloadVersions',
                 'class'               => 'header_reload_versions',
                 'button_callback'     => ['tl_c4g_bricks', 'reloadVersions'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/update_version.svg'
+                'icon'                => 'bundles/con4giscore/images/be-icons/update_version.svg',
+                'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'][0]
             ),
             'importData' => array
             (
                 'href'                => 'key=importData',
                 'class'               => 'header_import_data',
                 'button_callback'     => ['tl_c4g_bricks', 'importData'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/importData.svg'
+                'icon'                => 'bundles/con4giscore/images/be-icons/importData.svg',
+                'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['importData'][0]
             ),
             'serverLogs' => array
             (
                 'href'                => 'key=serverLogs',
                 'class'               => 'header_server_logs',
                 'button_callback'     => ['tl_c4g_bricks', 'serverLogs'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/serverlog.svg'
+                'icon'                => 'bundles/con4giscore/images/be-icons/serverlog.svg',
+                'label'               => $GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'][0]
             )
 		),
 		'operations' => array
