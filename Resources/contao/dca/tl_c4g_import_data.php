@@ -472,9 +472,9 @@ class tl_c4g_import_data extends Contao\Backend
                     copy($cache."/images/".$image, $imagePath."/".$image);
                 }
                 $objFolder = new Contao\Folder("files/con4gis_import_data");
-                if (!$objFolder->isUnprotected()) {
-                    $objFolder->unprotect();
-                }
+                //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
+                $objFolder->unprotect();
+                //}
                 $objFolder = new Contao\Folder("files".$importData['images']['path']);
                 $objFolder->unprotect();
 
