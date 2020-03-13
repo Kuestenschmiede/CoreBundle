@@ -178,7 +178,6 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['caption'],
             'inputType'               => 'text',
             'default'                 => '',
-            'inputType'               => 'text',
             'eval'                    => array('mandatory' => true),
             'sorting'                 => true,
             'search'                  => true,
@@ -384,7 +383,9 @@ class tl_c4g_import_data extends Contao\Backend
 
        if (empty($localData)) {
             foreach ($responses as $response) {
-                $this->Database->prepare("INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?")->execute($response->id, self::replaceInsertTags($response->caption), self::replaceInsertTags($response->description), $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source);
+                if ($this->checkImportResponse($response)) {
+                    $this->Database->prepare("INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?")->execute($response->id, self::replaceInsertTags($response->caption), self::replaceInsertTags($response->description), $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source);
+                }
             }
         }
         //Update data from con4gis.io
@@ -392,7 +393,15 @@ class tl_c4g_import_data extends Contao\Backend
             $available = false;
             foreach ($responses as $response) {
                 if ($response->id == $data['id']) {
-                    $this->Database->prepare("UPDATE tl_c4g_import_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=? WHERE id=?")->execute(self::replaceInsertTags($response->caption, false), self::replaceInsertTags($response->description), $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $data['id']);
+                    if ($this->checkImportResponse($response)) {
+                        $this->Database->prepare("UPDATE tl_c4g_import_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=? WHERE id=?")->execute(self::replaceInsertTags($response->caption, false), self::replaceInsertTags($response->description), $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $data['id']);
+                    } else if ($data['importVersion'] == "") {
+                        if ($data['id'] != 0 OR $data['id'] != "") {
+                            $this->Database->prepare("DELETE FROM tl_c4g_import_data WHERE id=?")->execute($data['id']);
+                        }
+                    } else if ($data['importVersion'] != "") {
+                        $this->Database->prepare("UPDATE tl_c4g_import_data SET availableVersion=? WHERE id=?")->execute("", $data['id']);
+                    }
                     $available = true;
                 }
             }
@@ -419,7 +428,9 @@ class tl_c4g_import_data extends Contao\Backend
                     break;
                 }
                 if ($data['id'] != $response->id && $count == $arrayLength) {
-                    $this->Database->prepare("INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, self::replaceInsertTags($response->caption), self::replaceInsertTags($response->description), $response->bundles, $response->version);
+                    if ($this->checkImportResponse($response)) {
+                        $this->Database->prepare("INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, self::replaceInsertTags($response->caption), self::replaceInsertTags($response->description), $response->bundles, $response->version);
+                    }
                 }
                 $count++;
             }
@@ -1138,6 +1149,26 @@ class tl_c4g_import_data extends Contao\Backend
         }
         else {
             return $string;
+        }
+    }
+
+    function checkImportResponse($response) {
+
+        $response = (array) $response;
+        $keys = array("cloud_import", "id", "caption", "description", "version", "bundles", "bundlesVersion", "uuid", "source", "type");
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $response)) {
+                $checkBool = true;
+            } else {
+                $checkBool = false;
+                break;
+            }
+        }
+        if ($checkBool) {
+            return true;
+        } else {
+            C4gLogModel::addLogEntry("core", "Could not read import file or import file is not complete.");
+            return false;
         }
     }
 
