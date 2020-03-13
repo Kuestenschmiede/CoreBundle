@@ -11,7 +11,7 @@ class DatePickerField extends DCAField
         parent::__construct($name, $dca, $multiColumnField);
         $this->inputType('text')
             ->sql('int(10) unsigned NULL')
-            ->eval()->datepicker()
+            ->eval()->datepicker()->regEx('date')
                 ->class('w50 wizard');
     }
 }
