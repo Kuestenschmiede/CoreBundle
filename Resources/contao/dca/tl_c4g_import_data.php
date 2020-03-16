@@ -159,14 +159,15 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'importUuid' => array
         (
-            'sql'                     => "int(10) unsigned NOT NULL",
+            'sql'                     => "int(10) unsigned NOT NULL default '0'",
+            'default'                 => 0,
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['uuid'],
             'sorting'                 => true,
             'search'                  => true,
         ),
         'importFilePath' => array
         (
-            'sql'                     => "varchar(255) NOT NULL",
+            'sql'                     => "varchar(255) NOT NULL default ''",
             'default'                 => '',
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['importFilePath'],
             'sorting'                 => true,
@@ -211,7 +212,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'bundles' => array
         (
-            'sql'                     => "text NOT NULL",
+            'sql'                     => "varchar(255) NOT NULL",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['bundles'],
             'inputType'               => 'text',
             'default'                 => '',
@@ -229,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'importVersion' => array
         (
-            'sql'                     => "text NOT NULL",
+            'sql'                     => "varchar(255) NOT NULL default ''",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['importVersion'],
             'inputType'               => 'text',
             'default'                 => '',
@@ -238,7 +239,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'availableVersion' => array
         (
-            'sql'                     => "text NOT NULL",
+            'sql'                     => "varchar(255) NOT NULL default ''",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['availableVersion'],
             'inputType'               => 'text',
             'default'                 => '',
@@ -261,7 +262,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
             'filter'                  => false,
             'inputType'               => 'select',
             'options_callback'        => ['tl_c4g_import_data', 'getCon4gisImportTemplates'],
-            'sql'                     => "int NOT NULL default 0"
+            'sql'                     => "int NOT NULL default 0",
         )
     ),
 );
