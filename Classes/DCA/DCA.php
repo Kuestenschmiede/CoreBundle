@@ -77,4 +77,9 @@ class DCA
     {
         return static::$instances[$name];
     }
+
+    public function getField(string $fieldName) : ?DCAField
+    {
+        return $this->fields[$fieldName] ?: null;
+    }
 }
