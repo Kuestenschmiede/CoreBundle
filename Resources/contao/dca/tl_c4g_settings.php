@@ -73,7 +73,8 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
 		'default' => '{global_legend},showBundleNames;'.
                      '{con4gisIoLegend},con4gisIoUrl,con4gisIoKey;'.
                      '{upload_legend:hide},uploadAllowedImageTypes,uploadAllowedImageWidth,uploadAllowedImageHeight,uploadPathImages,uploadAllowedDocumentTypes,uploadPathDocuments,uploadAllowedGenericTypes,uploadPathGeneric,uploadMaxFileSize;'.
-                     '{layout_legend:hide},c4g_uitheme_css_select,c4g_appearance_themeroller_css;'
+                     '{layout_legend:hide},c4g_uitheme_css_select,c4g_appearance_themeroller_css;' .
+                     '{expert_legend:hide},disableJQueryLoading;'
 	),
 
 	// Fields
@@ -204,7 +205,15 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'default'   => '2048000',
             'eval'      => array('mandatory' => false, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
             'sql'       => "varchar(255) NOT NULL default '2048000'"
-        )
+        ),
+        'disableJQueryLoading' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['disableJQueryLoading'],
+            'exclude'                 => true,
+            'default'                 => false,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class'=>'clr'],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ]
     )
 );
 

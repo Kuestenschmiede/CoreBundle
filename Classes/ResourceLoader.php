@@ -14,6 +14,7 @@
 
 namespace con4gis\CoreBundle\Classes;
 
+use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Contao\LayoutModel;
 
 /**
@@ -237,6 +238,11 @@ class ResourceLoader
                 }
 
                 $neededResources['jquery'] = !$jQueryLoaded;
+                $settings = C4gSettingsModel::findSettings();
+                $dontLoadJQuery = $settings->disableJQueryLoading;
+                if ($dontLoadJQuery) {
+                    $neededResources['jquery'] = false;
+                }
 
                 // Load magnific-popup.js for projects
                 $neededResources['magnific-popup'] = C4GVersionProvider::isInstalled('con4gis/projects');
