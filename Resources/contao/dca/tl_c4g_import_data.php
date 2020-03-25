@@ -430,7 +430,7 @@ class tl_c4g_import_data extends Contao\Backend
                 }
                 if ($data['id'] != $response->id && $count == $arrayLength) {
                     if ($this->checkImportResponse($response)) {
-                        $this->Database->prepare("INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, availableVersion=?")->execute($response->id, self::replaceInsertTags($response->caption), self::replaceInsertTags($response->description), $response->bundles, $response->version);
+                    $this->Database->prepare("INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?")->execute($response->id, self::replaceInsertTags($response->caption), self::replaceInsertTags($response->description), $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source);
                     }
                 }
                 $count++;
@@ -1057,7 +1057,6 @@ class tl_c4g_import_data extends Contao\Backend
             $newId = rand(100001, 999999);
             $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($newId)->fetchAllAssoc();
         }
-
         foreach ($jsonFile as $importDB => $importDatasets) {
             if ($importDB == "relations") {
                 break;
@@ -1114,32 +1113,36 @@ class tl_c4g_import_data extends Contao\Backend
                             }
                         }
                     }
+
                     if (in_array($importDbField, $dbFields)) {
-                        if ($sqlStatement == "" && substr($importDbValue, 0, 2) == "0x") {
-                            $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');';
-                        } elseif ($sqlStatement == "" && substr($importDbValue, 0, 2) != "0x") {
-                            $sqlStatement = "INSERT INTO `".$importDB."` (".$importDbField.") VALUES ('".$importDbValue."');";
-                        } elseif (substr($importDbValue, 0, 2) == "0x") {
-                            $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
-                            $sqlStatement = str_replace(");", ", $importDbValue);", $sqlStatement);
+                        if ($importDB == 'tl_files' && $importDbField == 'id') {
+                            $sqlStatement = $sqlStatement."";
                         } else {
-                            $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
-                            $sqlStatement = str_replace(");", ", '$importDbValue');", $sqlStatement);
+                            if ($sqlStatement == "" && substr($importDbValue, 0, 2) == "0x") {
+                                $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');';
+                            } elseif ($sqlStatement == "" && substr($importDbValue, 0, 2) != "0x") {
+                                $sqlStatement = "INSERT INTO `".$importDB."` (".$importDbField.") VALUES ('".$importDbValue."');";
+                            } elseif (substr($importDbValue, 0, 2) == "0x") {
+                                $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
+                                $sqlStatement = str_replace(");", ", $importDbValue);", $sqlStatement);
+                            } else {
+                                $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
+                                $sqlStatement = str_replace(");", ", '$importDbValue');", $sqlStatement);
+                            }
                         }
                     } else {
-                        C4gLogModel::addLogEntry("core", "The import database field <b>".$importDbField."</b> is not in the database <b>".$importDB."</b>.");
+                        if ($importDB != 'tl_files' && $importDbField != 'id') {
+                            C4gLogModel::addLogEntry("core", "The import database field <b>".$importDbField."</b> is not in the database <b>".$importDB."</b>.");
+                        }
                     }
                 }
                 if ($importDB == "tl_files" && $tlFilesTableQuery) {
                     C4gLogModel::addLogEntry("core", "Files already imported. tl_files will not be imported");
                 } else {
-//                    if ($importDB != "tl_c4g_maps") {
                         $sqlStatements[] = $sqlStatement;
-//                    }
                 }
             }
         }
-
         return $sqlStatements;
     }
 
@@ -1156,7 +1159,7 @@ class tl_c4g_import_data extends Contao\Backend
     function checkImportResponse($response) {
 
         $response = (array) $response;
-        $keys = array("cloud_import", "id", "caption", "description", "version", "bundles", "bundlesVersion", "uuid", "source", "type");
+        $keys = array("cloud_import", "uuid", "id", "caption", "description", "version", "bundles", "bundlesVersion", "source", "type");
         foreach ($keys as $key) {
             if (array_key_exists($key, $response)) {
                 $checkBool = true;
