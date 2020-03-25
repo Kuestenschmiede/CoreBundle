@@ -1119,15 +1119,15 @@ class tl_c4g_import_data extends Contao\Backend
                             $sqlStatement = $sqlStatement."";
                         } else {
                             if ($sqlStatement == "" && substr($importDbValue, 0, 2) == "0x") {
-                                $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');';
+                                $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');;';
                             } elseif ($sqlStatement == "" && substr($importDbValue, 0, 2) != "0x") {
-                                $sqlStatement = "INSERT INTO `".$importDB."` (".$importDbField.") VALUES ('".$importDbValue."');";
+                                $sqlStatement = "INSERT INTO `".$importDB."` (".$importDbField.") VALUES ('".$importDbValue."');;";
                             } elseif (substr($importDbValue, 0, 2) == "0x") {
                                 $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
-                                $sqlStatement = str_replace(");", ", $importDbValue);", $sqlStatement);
+                                $sqlStatement = str_replace(");;", ", $importDbValue);;", $sqlStatement);
                             } else {
                                 $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
-                                $sqlStatement = str_replace(");", ", '$importDbValue');", $sqlStatement);
+                                $sqlStatement = str_replace(");;", ", '$importDbValue');;", $sqlStatement);
                             }
                         }
                     } else {
@@ -1139,7 +1139,8 @@ class tl_c4g_import_data extends Contao\Backend
                 if ($importDB == "tl_files" && $tlFilesTableQuery) {
                     C4gLogModel::addLogEntry("core", "Files already imported. tl_files will not be imported");
                 } else {
-                        $sqlStatements[] = $sqlStatement;
+                    $sqlStatement = str_replace(");;", ");", $sqlStatement);
+                    $sqlStatements[] = $sqlStatement;
                 }
             }
         }
