@@ -1021,6 +1021,8 @@ class tl_c4g_import_data extends Contao\Backend
 
     public function getSqlFromJson($file, $uuid)
     {
+        $importId = $uuid;
+        $uuid = substr($uuid, 0, 4);
         $jsonFile = (array) json_decode($file);
         $jsonSize = sizeof($jsonFile);
         $sqlStatements = [];
@@ -1054,7 +1056,7 @@ class tl_c4g_import_data extends Contao\Backend
         $tlFilesTableQuery = $this->Database->prepare("SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?")->execute("%".$firstTlFilesUuid."%")->fetchAllAssoc();
 
         while ($firstTableQuery) {
-            $newId = rand(100001, 999999);
+            $newId = rand(1001, 9999);
             $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($newId)->fetchAllAssoc();
         }
         foreach ($jsonFile as $importDB => $importDatasets) {
@@ -1067,13 +1069,13 @@ class tl_c4g_import_data extends Contao\Backend
                 $sqlStatement = "";
                 $importDataset = (array) $importDataset;
                 if (!array_key_exists("importId", $importDataset)) {
-                    $importDataset['importId'] = $uuid;
+                    $importDataset['importId'] = $importId;
                 }
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if ($importDbField == "id") {
                        $importDbValue = $this->prepend($newId, $importDbValue);
                     } elseif ($importDbField == "importId") {
-                        $importDbValue = $uuid;
+                        $importDbValue = $importId;
                     } elseif (in_array($importDB, $relationTables)) {
                         if (in_array($importDbField, $dbRelation[$importDB])) {
                             if ($importDbValue != "0") {
@@ -1119,14 +1121,14 @@ class tl_c4g_import_data extends Contao\Backend
                             $sqlStatement = $sqlStatement."";
                         } else {
                             if ($sqlStatement == "" && substr($importDbValue, 0, 2) == "0x") {
-                                $sqlStatement = 'INSERT INTO `'.$importDB.'` ('.$importDbField.') VALUES ('.$importDbValue.');;';
+                                $sqlStatement = 'INSERT INTO `'.$importDB.'` (`'.$importDbField.'`) VALUES ('.$importDbValue.');;';
                             } elseif ($sqlStatement == "" && substr($importDbValue, 0, 2) != "0x") {
-                                $sqlStatement = "INSERT INTO `".$importDB."` (".$importDbField.") VALUES ('".$importDbValue."');;";
+                                $sqlStatement = "INSERT INTO `".$importDB."` (`".$importDbField."`) VALUES ('".$importDbValue."');;";
                             } elseif (substr($importDbValue, 0, 2) == "0x") {
-                                $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
+                                $sqlStatement = str_replace(") VALUES", ", `$importDbField`) VALUES", $sqlStatement);
                                 $sqlStatement = str_replace(");;", ", $importDbValue);;", $sqlStatement);
                             } else {
-                                $sqlStatement = str_replace(") VALUES", ", $importDbField) VALUES", $sqlStatement);
+                                $sqlStatement = str_replace(") VALUES", ", `$importDbField`) VALUES", $sqlStatement);
                                 $sqlStatement = str_replace(");;", ", '$importDbValue');;", $sqlStatement);
                             }
                         }
