@@ -31,9 +31,12 @@ class C4gSettingsModel extends Model
 
 	public static function findSettings() {
         $collSettings = static::findAll();
-        foreach ($collSettings as $objSettings) {
-            return $objSettings;
+        if ($collSettings) {
+            foreach ($collSettings as $objSettings) {
+                return $objSettings;
+            }
         }
+       
         return null;
 	}
 }
