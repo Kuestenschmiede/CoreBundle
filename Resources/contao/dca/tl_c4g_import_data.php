@@ -321,7 +321,7 @@ class tl_c4g_import_data extends Contao\Backend
                 }
 
                 //ToDo dev versions compare
-                if (($version == $bundlesVersion[$key]) || strpos($version, 'dev')) {
+                if (($version == $bundlesVersion[$key]) || strpos($version, 'dev') !== false) {
                     $isInstalled = true;
                 } else {
                     $isInstalled = false;
