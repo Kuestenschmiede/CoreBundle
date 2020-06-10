@@ -314,10 +314,37 @@ class tl_c4g_import_data extends Contao\Backend
                 $version = $installedPackages['con4gis/'.$value];
 
                 //Remove Bugfix release Number
-                if (substr_count($version, ".") == 2) {
+                if (substr_count($version, ".") == 2 && strpos($version, 'dev') !== true) {
                     $temp = explode('.', $version);
                     unset($temp[count($temp) - 1]);
                     $version = implode('.', $temp);
+                }
+
+                //Check if Version contains x or -
+                $allMinorVersions = false;
+                if (strpos($bundlesVersion[$key], '.x') !== false) {
+                    $bundlesVersion[$key] = strtok($bundlesVersion[$key], ".x");
+                    $allMinorVersions = true;
+                }
+                if (strpos($bundlesVersion[$key], '-') !== false) {
+                    $bothVersions = explode("-", $bundlesVersion[$key]);
+                    $versionFrom = explode(".", $bothVersions[0]);
+                    $versionTo = explode(".", $bothVersions[1]);
+                    if ($versionFrom[0] == $versionTo[0]) {
+                        $versionRange = range($versionFrom[1], $versionTo[1]);
+                        foreach ($versionRange as $subVersion) {
+                            if ($versionFrom[0].'.'.$subVersion == $version) {
+                                $bundlesVersion[$key] = $version;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if ($allMinorVersions) {
+                    if (strpos($version, 'dev') !== true) {
+                        $version = strtok($version, ".");
+                    }
                 }
 
                 //ToDo dev versions compare
