@@ -314,10 +314,37 @@ class tl_c4g_import_data extends Contao\Backend
                 $version = $installedPackages['con4gis/'.$value];
 
                 //Remove Bugfix release Number
-                if (substr_count($version, ".") == 2) {
+                if (substr_count($version, ".") == 2 && strpos($version, 'dev') !== true) {
                     $temp = explode('.', $version);
                     unset($temp[count($temp) - 1]);
                     $version = implode('.', $temp);
+                }
+
+                //Check if Version contains x or -
+                $allMinorVersions = false;
+                if (strpos($bundlesVersion[$key], '.x') !== false) {
+                    $bundlesVersion[$key] = strtok($bundlesVersion[$key], ".x");
+                    $allMinorVersions = true;
+                }
+                if (strpos($bundlesVersion[$key], '-') !== false) {
+                    $bothVersions = explode("-", $bundlesVersion[$key]);
+                    $versionFrom = explode(".", $bothVersions[0]);
+                    $versionTo = explode(".", $bothVersions[1]);
+                    if ($versionFrom[0] == $versionTo[0]) {
+                        $versionRange = range($versionFrom[1], $versionTo[1]);
+                        foreach ($versionRange as $subVersion) {
+                            if ($versionFrom[0].'.'.$subVersion == $version) {
+                                $bundlesVersion[$key] = $version;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if ($allMinorVersions) {
+                    if (strpos($version, 'dev') !== true) {
+                        $version = strtok($version, ".");
+                    }
                 }
 
                 //ToDo dev versions compare
@@ -365,8 +392,13 @@ class tl_c4g_import_data extends Contao\Backend
      */
     public function loadBaseData()
     {
+        // Get installed contao and con4gis Core version
+        $installedPackages = $this->getContainer()->getParameter('kernel.packages');
+        $coreVersion = $installedPackages['con4gis/core'];
+        $contaoVersion = $installedPackages['contao/core-bundle'];
+
         // Check current action
-        $responses = $this->getCon4gisImportData("getBasedata.php", "allData");
+        $responses = $this->getCon4gisImportData("getBasedata.php", "allData", false, $coreVersion, $contaoVersion);
         $responsesLength = count($responses);
         $localIoData = $this->getLocalIoData();
 
@@ -905,7 +937,10 @@ class tl_c4g_import_data extends Contao\Backend
     public function getCon4gisImportTemplates()
     {
 
-        $responses = $this->getCon4gisImportData("getBasedata.php", "allData");
+        $installedPackages = $this->getContainer()->getParameter('kernel.packages');
+        $coreVersion = $installedPackages['con4gis/core'];
+        $contaoVersion = $installedPackages['contao/core-bundle'];
+        $responses = $this->getCon4gisImportData("getBasedata.php", "allData", false, $coreVersion, $contaoVersion);
         $arrReturn = [];
         foreach ($responses as $response) {
             $arrReturn[$response->id] = \InsertTags::replaceInsertTags($response->caption);
@@ -916,7 +951,7 @@ class tl_c4g_import_data extends Contao\Backend
     /**
      * getCon4gisImportData
      */
-    public function getCon4gisImportData($importData, $mode, $data = false)
+    public function getCon4gisImportData($importData, $mode, $data = false, $coreVersion = false, $contaoVersion = false)
     {
         $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
         if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
@@ -925,6 +960,12 @@ class tl_c4g_import_data extends Contao\Backend
             $basedataUrl .= "&mode=" . $mode;
             if (isset($data)) {
                 $basedataUrl .= "&data=" . str_replace(' ', '%20', $data);
+            }
+            if (isset($coreVersion)) {
+                $basedataUrl .= "&coreVersion=" . str_replace(' ', '%20', $coreVersion);
+            }
+            if (isset($contaoVersion)) {
+                $basedataUrl .= "&contaoVersion=" . str_replace(' ', '%20', $contaoVersion);
             }
             $REQUEST = new \Request();
             if ($_SERVER['HTTP_REFERER']) {
