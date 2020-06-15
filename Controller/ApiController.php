@@ -87,7 +87,7 @@ class ApiController extends FrontendController
 
         // this is needed for the forum, because it must not send a json response
         if (is_array($strResponse) && count($strResponse) > 1) {
-            $response = new Response($strResponse['data'], 200, array('Content-Type: Document'));
+            $response = new Response($strResponse['data'], 200);
         } else if ($strResponse) {
             $response = new JsonResponse(json_decode($strResponse));
         }
