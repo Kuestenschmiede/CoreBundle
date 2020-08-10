@@ -684,9 +684,14 @@ class C4GImportDataCallback extends Backend
                                 $sqlStatement = 'INSERT INTO `'.$importDB.'` (`'.$importDbField.'`) VALUES ('.$importDbValue.');;';
                             } elseif ($sqlStatement == "" && substr($importDbValue, 0, 2) != "0x") {
                                 $sqlStatement = "INSERT INTO `".$importDB."` (`".$importDbField."`) VALUES ('".$importDbValue."');;";
+                            } elseif ($sqlStatement == "" && $importDbValue === null) {
+                                $sqlStatement = "INSERT INTO `".$importDB."` (`".$importDbField."`) VALUES (NULL);;";
                             } elseif (substr($importDbValue, 0, 2) == "0x") {
                                 $sqlStatement = str_replace(") VALUES", ", `$importDbField`) VALUES", $sqlStatement);
                                 $sqlStatement = str_replace(");;", ", $importDbValue);;", $sqlStatement);
+                            } elseif ($importDbValue === null) {
+                                $sqlStatement = str_replace(") VALUES", ", `$importDbField`) VALUES", $sqlStatement);
+                                $sqlStatement = str_replace(");;", ", NULL);;", $sqlStatement);
                             } else {
                                 $sqlStatement = str_replace(") VALUES", ", `$importDbField`) VALUES", $sqlStatement);
                                 $sqlStatement = str_replace(");;", ", '$importDbValue');;", $sqlStatement);
