@@ -656,7 +656,7 @@ class C4GImportDataCallback extends Backend
                                     }
                                 } elseif (substr($importDbValue, 0, 2) == "a:") {
                                     $importDbValue = str_replace('\"', '"', $importDbValue);
-                                    $unserial = Contao\StringUtil::deserialize($importDbValue);
+                                    $unserial = StringUtil::deserialize($importDbValue);
                                     $unserial = $this->replaceId($unserial, $newId);
                                     $newImportDbValue = serialize($unserial);
                                     $importDbValue = $newImportDbValue;
