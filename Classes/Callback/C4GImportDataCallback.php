@@ -39,7 +39,7 @@ class C4GImportDataCallback extends Backend
         $responses = $this->getCon4gisImportData("getBasedata.php", "allData", false, $coreVersion, $contaoVersion);
         foreach ($responses as $keyResponse => $respons) {
             foreach ($respons as $innerKeyResponse => $innerResponse) {
-                $responses->$keyResponse[$innerKeyResponse] = str_replace('"', '', $innerResponse);
+                $responses[$keyResponse]->$innerKeyResponse = str_replace('"', '', $innerResponse);
             }
         }
         $responsesLength = count($responses);
@@ -232,6 +232,9 @@ class C4GImportDataCallback extends Backend
             $basedataUrl .= "&data=" . $con4gisImportId;
             $downloadPath = "./../var/cache/prod/con4gis/io-data/";
             $filename = 'io-data-proxy.c4g';
+            if ( file_exists( $downloadPath ) && is_dir( $downloadPath ) ) {
+                $this->recursiveRemoveDirectory($downloadPath);
+            }
             mkdir($downloadPath, 0770, true);
             file_put_contents($downloadPath.$filename, file_get_contents($basedataUrl));
 
@@ -508,9 +511,11 @@ class C4GImportDataCallback extends Backend
         $basedataFiles = [];
 
         foreach ($arrBasedataFolders as $arrBasedataFolder => $value ) {
-            $basedataFiles[$arrBasedataFolder] = array_slice(scandir($value), 2);
-            foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
-                $basedataFiles[$arrBasedataFolder][$basedataFile] = $value.'/'.$file;
+            if ( file_exists( $value ) && is_dir( $value ) ) {
+                $basedataFiles[$arrBasedataFolder] = array_slice(scandir($value), 2);
+                foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
+                    $basedataFiles[$arrBasedataFolder][$basedataFile] = $value.'/'.$file;
+                }
             }
         }
 
