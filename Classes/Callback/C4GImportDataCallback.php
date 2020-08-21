@@ -227,11 +227,12 @@ class C4GImportDataCallback extends Backend
             $basedataUrl .= '&data=' . $con4gisImportId;
             $downloadPath = './../var/cache/prod/con4gis/io-data/';
             $filename = 'io-data-proxy.c4g';
+            $downloadFile = $downloadPath.$filename;
             if ( file_exists( $downloadPath ) && is_dir( $downloadPath ) ) {
                 $this->recursiveRemoveDirectory($downloadPath);
             }
             mkdir($downloadPath, 0770, true);
-            file_put_contents($downloadPath . $filename, file_get_contents($basedataUrl));
+            $this->download($basedataUrl, $downloadFile);
 
             $zip = zip_open($downloadPath . $filename);
 
@@ -426,6 +427,21 @@ class C4GImportDataCallback extends Backend
         } else {
             C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
         }
+    }
+
+    public function download($remoteFile, $localFile) {
+        $fp = fopen($localFile, 'w');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $remoteFile);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER , false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION , true);
+        curl_setopt($ch, CURLOPT_AUTOREFERER , true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12');
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        $con = curl_exec($ch);
+        curl_close($ch);
+        fclose($fp);
     }
 
     public function strposa($haystack, $needles = [], $offset = 0)
