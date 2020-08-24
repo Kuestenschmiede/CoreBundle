@@ -8,6 +8,7 @@ use Contao\StringUtil;
 use Contao\DataContainer;
 use Dbafs;
 use Exception;
+use gutesio\DataModelBundle\Classes\ChildFullTextContentUpdater;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
 
@@ -168,10 +169,16 @@ class C4GImportDataCallback extends Backend
             }
         }
 
+        $gutesIoImport = false;
+
         if ($availableLocal) {
             $imagePath = './../files' . $importData['images']['path'];
             $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/Resources/con4gis/' . $importData['general']['filename'];
             $cache = './../var/cache/prod/con4gis/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
+
+            if ($importData['import']['source'] == "gutesio") {
+                $gutesIoImport = true;
+            }
 
             $zip = new ZipArchive;
             if ($zip->open($c4gPath) === true) {
@@ -213,6 +220,11 @@ class C4GImportDataCallback extends Backend
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($localImportData['import']['uuid'], $con4gisImportId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($localImportData['images']['path'], $con4gisImportId);
 
+            if ($gutesIoImport) {
+                $contentUpdate = new ChildFullTextContentUpdater();
+                $contentUpdate->update();
+            }
+
             $objFolder = new \Contao\Folder('var/cache/prod/con4gis/io-data/');
             $objFolder->purge();
             $objFolder->delete();
@@ -251,6 +263,10 @@ class C4GImportDataCallback extends Backend
                     }
                 }
                 zip_close($zip);
+            }
+
+            if ($importData['import']['source'] == "gutesio") {
+                $gutesIoImport = true;
             }
 
             $imagePath = './../files' . $importData['images']['path'];
@@ -293,6 +309,11 @@ class C4GImportDataCallback extends Backend
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=?WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
+
+            if ($gutesIoImport) {
+                $contentUpdate = new ChildFullTextContentUpdater();
+                $contentUpdate->update();
+            }
 
             $objFolder = new \Contao\Folder('var/cache/prod/con4gis/io-data/');
             $objFolder->purge();
