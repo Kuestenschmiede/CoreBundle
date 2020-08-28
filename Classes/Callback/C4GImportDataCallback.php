@@ -145,6 +145,9 @@ class C4GImportDataCallback extends Backend
      */
     public function importBaseData($importId = false)
     {
+        if ($this->importRunning()) {
+            return false;
+        }
         if ($importId) {
             $con4gisImportId = $importId;
             $gutesImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
@@ -155,6 +158,8 @@ class C4GImportDataCallback extends Backend
             $data = $_REQUEST;
             $con4gisImportId = $data['id'];
         }
+
+        $this->importRunning(true, $con4gisImportId);
 
 //      lokaler Import
 
@@ -326,6 +331,8 @@ class C4GImportDataCallback extends Backend
         $this->Automator->generateSymlinks();
 
         Dbafs::syncFiles();
+
+        $this->importRunning(false, $con4gisImportId);
     }
 
     /**
@@ -333,6 +340,10 @@ class C4GImportDataCallback extends Backend
      */
     public function updateBaseData($importId = false)
     {
+        if ($this->importRunning()) {
+            return false;
+        }
+
         if ($importId) {
             $gutesImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
             if ($gutesImportData['importVersion'] >= $gutesImportData['availableVersion']) {
@@ -384,6 +395,10 @@ class C4GImportDataCallback extends Backend
      */
     public function deleteBaseData($importId = false)
     {
+        if ($this->importRunning()) {
+            return false;
+        }
+
         if ($importId) {
             $con4gisDeleteId = $importId;
             $gutesImportData = $this->Database->prepare('SELECT type FROM tl_c4g_import_data WHERE id=?')->execute($con4gisDeleteId)->fetchAssoc();
@@ -394,6 +409,9 @@ class C4GImportDataCallback extends Backend
             $data = $_REQUEST;
             $con4gisDeleteId = $data['id'];
         }
+
+        $this->importRunning(true, $con4gisDeleteId);
+
         $localData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=?')->execute($con4gisDeleteId);
         $con4gisDeleteUuid = $localData->importUuid;
         $con4gisDeleteBundles = $localData->bundles;
@@ -448,6 +466,8 @@ class C4GImportDataCallback extends Backend
         } else {
             C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
         }
+
+        $this->importRunning(false, $con4gisDeleteId);
     }
 
     public function download($remoteFile, $localFile) {
@@ -796,5 +816,22 @@ class C4GImportDataCallback extends Backend
         }
 
         return $array;
+    }
+
+    public function importRunning($running = false, $id = 0) {
+        if ($id == 0) {
+            $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")->execute()->fetchAllAssoc();
+            if ($importRunning) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($id != 0) {
+            if ($running) {
+                $this->Database->prepare("UPDATE tl_c4g_import_data SET importRunning = '1' WHERE id=?")->execute($id);
+            } else {
+                $this->Database->prepare("UPDATE tl_c4g_import_data SET importRunning = '' WHERE id=?")->execute($id);
+            }
+        }
     }
 }

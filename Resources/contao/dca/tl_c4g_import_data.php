@@ -265,7 +265,13 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
             'inputType'               => 'select',
             'options_callback'        => ['tl_c4g_import_data', 'getCon4gisImportTemplates'],
             'sql'                     => "int NOT NULL default 0",
-        )
+        ),
+        'importRunning' => array
+        (
+            'filter'                  => false,
+            'inputType'               => 'checkbox',
+            'sql'                     => "char(1) NOT NULL default ''",
+        ),
     ),
 );
 
