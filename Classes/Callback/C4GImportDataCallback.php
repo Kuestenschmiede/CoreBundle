@@ -185,6 +185,11 @@ class C4GImportDataCallback extends Backend
                 $gutesIoImport = true;
             }
 
+            $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
+            if ($alreadyImported['importVersion'] != "") {
+                $this->deleteBaseData(false, true);
+            }
+
             $zip = new ZipArchive;
             if ($zip->open($c4gPath) === true) {
                 $zip->extractTo($cache);
@@ -248,8 +253,13 @@ class C4GImportDataCallback extends Backend
             if ( file_exists( $downloadPath ) && is_dir( $downloadPath ) ) {
                 $this->recursiveRemoveDirectory($downloadPath);
             }
+
             mkdir($downloadPath, 0770, true);
             $this->download($basedataUrl, $downloadFile);
+            $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
+            if ($alreadyImported['importVersion'] != "") {
+                $this->deleteBaseData(false, true);
+            }
 
             $zip = zip_open($downloadPath . $filename);
 
@@ -349,11 +359,21 @@ class C4GImportDataCallback extends Backend
             if ($gutesImportData['importVersion'] >= $gutesImportData['availableVersion']) {
                 return false;
             }
+        } else {
+            $data = $_REQUEST;
+            $importId = $data['id'];
         }
 
-        // Check current action
-        $this->deleteBaseData($importId);
-        $this->importBaseData($importId);
+        $gutesImportData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=? AND type=?')->execute($importId, "gutesio")->fetchAssoc();
+        if ($gutesImportData) {
+
+//            $this->deleteBaseData($importId);
+            $this->importBaseData($importId);
+        } else {
+            // Check current action
+//            $this->deleteBaseData();
+            $this->importBaseData();
+        }
     }
 
     /**
@@ -393,10 +413,12 @@ class C4GImportDataCallback extends Backend
     /**
      * deleteBaseData
      */
-    public function deleteBaseData($importId = false)
+    public function deleteBaseData($importId = false, $download = false)
     {
-        if ($this->importRunning()) {
-            return false;
+        if (!$download) {
+            if ($this->importRunning()) {
+                return false;
+            }
         }
 
         if ($importId) {
@@ -410,7 +432,9 @@ class C4GImportDataCallback extends Backend
             $con4gisDeleteId = $data['id'];
         }
 
-        $this->importRunning(true, $con4gisDeleteId);
+        if (!$download) {
+            $this->importRunning(true, $con4gisDeleteId);
+        }
 
         $localData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=?')->execute($con4gisDeleteId);
         $con4gisDeleteUuid = $localData->importUuid;
@@ -467,7 +491,9 @@ class C4GImportDataCallback extends Backend
             C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
         }
 
-        $this->importRunning(false, $con4gisDeleteId);
+        if (!$download) {
+            $this->importRunning(false, $con4gisDeleteId);
+        }
     }
 
     public function download($remoteFile, $localFile) {
