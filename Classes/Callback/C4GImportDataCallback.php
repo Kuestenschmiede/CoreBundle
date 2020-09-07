@@ -181,12 +181,12 @@ class C4GImportDataCallback extends Backend
             $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/Resources/con4gis/' . $importData['general']['filename'];
             $cache = './../var/cache/prod/con4gis/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
 
-            if ($importData['import']['source'] == "gutesio") {
+            if ($importData['import']['source'] == 'gutesio') {
                 $gutesIoImport = true;
             }
 
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
-            if ($alreadyImported['importVersion'] != "") {
+            if ($alreadyImported['importVersion'] != '') {
                 $this->deleteBaseData(false, true);
             }
 
@@ -249,15 +249,15 @@ class C4GImportDataCallback extends Backend
             $basedataUrl .= '&data=' . $con4gisImportId;
             $downloadPath = './../var/cache/prod/con4gis/io-data/';
             $filename = 'io-data-proxy.c4g';
-            $downloadFile = $downloadPath.$filename;
-            if ( file_exists( $downloadPath ) && is_dir( $downloadPath ) ) {
+            $downloadFile = $downloadPath . $filename;
+            if (file_exists($downloadPath) && is_dir($downloadPath)) {
                 $this->recursiveRemoveDirectory($downloadPath);
             }
 
             mkdir($downloadPath, 0770, true);
             $this->download($basedataUrl, $downloadFile);
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
-            if ($alreadyImported['importVersion'] != "") {
+            if ($alreadyImported['importVersion'] != '') {
                 $this->deleteBaseData(false, true);
             }
 
@@ -280,7 +280,7 @@ class C4GImportDataCallback extends Backend
                 zip_close($zip);
             }
 
-            if ($importData['import']['source'] == "gutesio") {
+            if ($importData['import']['source'] == 'gutesio') {
                 $gutesIoImport = true;
             }
 
@@ -364,7 +364,7 @@ class C4GImportDataCallback extends Backend
             $importId = $data['id'];
         }
 
-        $gutesImportData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=? AND type=?')->execute($importId, "gutesio")->fetchAssoc();
+        $gutesImportData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=? AND type=?')->execute($importId, 'gutesio')->fetchAssoc();
         if ($gutesImportData) {
 
 //            $this->deleteBaseData($importId);
@@ -496,14 +496,15 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function download($remoteFile, $localFile) {
+    public function download($remoteFile, $localFile)
+    {
         $fp = fopen($localFile, 'w');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $remoteFile);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER , false);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION , true);
-        curl_setopt($ch, CURLOPT_AUTOREFERER , true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12');
         curl_setopt($ch, CURLOPT_FILE, $fp);
         $con = curl_exec($ch);
@@ -590,11 +591,11 @@ class C4GImportDataCallback extends Backend
         $dir = getcwd();
         $basedataFiles = [];
 
-        foreach ($arrBasedataFolders as $arrBasedataFolder => $value ) {
-            if ( file_exists( $value ) && is_dir( $value ) ) {
+        foreach ($arrBasedataFolders as $arrBasedataFolder => $value) {
+            if (file_exists($value) && is_dir($value)) {
                 $basedataFiles[$arrBasedataFolder] = array_slice(scandir($value), 2);
                 foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
-                    $basedataFiles[$arrBasedataFolder][$basedataFile] = $value.'/'.$file;
+                    $basedataFiles[$arrBasedataFolder][$basedataFile] = $value . '/' . $file;
                 }
             }
         }
@@ -758,12 +759,18 @@ class C4GImportDataCallback extends Backend
                         }
                     }
 
+//                    if ($this->isUuid($importDbValue)) {
+//                        $importDbValue = "UNHEX('".$importDbValue."')";
+//                    }
+
                     if (in_array($importDbField, $dbFields)) {
                         if ($importDB == 'tl_files' && $importDbField == 'id') {
                             $sqlStatement = $sqlStatement . '';
                         } else {
                             if ($sqlStatement == '' && substr($importDbValue, 0, 2) == '0x') {
                                 $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (' . $importDbValue . ');;';
+                            } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != "hash") {
+                                $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
                             } elseif ($sqlStatement == '' && substr($importDbValue, 0, 2) != '0x') {
                                 $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES ('" . $importDbValue . "');;";
                             } elseif ($sqlStatement == '' && $importDbValue === null) {
@@ -771,6 +778,9 @@ class C4GImportDataCallback extends Backend
                             } elseif (substr($importDbValue, 0, 2) == '0x') {
                                 $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                 $sqlStatement = str_replace(');;', ", $importDbValue);;", $sqlStatement);
+                            } elseif ($this->isUuid($importDbValue) && $importDbField != "hash") {
+                                $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
+                                $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
                             } elseif ($importDbValue === null) {
                                 $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                 $sqlStatement = str_replace(');;', ', NULL);;', $sqlStatement);
@@ -797,6 +807,14 @@ class C4GImportDataCallback extends Backend
         }
 
         return $sqlStatements;
+    }
+
+    public function isUuid($uuid) {
+        if (ctype_xdigit($uuid) && strlen($uuid) == 32) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function prepend($string, $chunk)
@@ -844,14 +862,15 @@ class C4GImportDataCallback extends Backend
         return $array;
     }
 
-    public function importRunning($running = false, $id = 0) {
+    public function importRunning($running = false, $id = 0)
+    {
         if ($id == 0) {
             $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")->execute()->fetchAllAssoc();
             if ($importRunning) {
                 return true;
-            } else {
-                return false;
             }
+
+            return false;
         } elseif ($id != 0) {
             if ($running) {
                 $this->Database->prepare("UPDATE tl_c4g_import_data SET importRunning = '1' WHERE id=?")->execute($id);
