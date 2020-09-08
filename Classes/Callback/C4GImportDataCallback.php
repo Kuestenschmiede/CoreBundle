@@ -187,7 +187,11 @@ class C4GImportDataCallback extends Backend
 
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
-                $this->deleteBaseData(false, true);
+                if ($importId) {
+                    $this->deleteBaseData($importId, true);
+                } else {
+                    $this->deleteBaseData(false, true);
+                }
             }
 
             $zip = new ZipArchive;
@@ -258,7 +262,11 @@ class C4GImportDataCallback extends Backend
             $this->download($basedataUrl, $downloadFile);
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
-                $this->deleteBaseData(false, true);
+                if ($importId) {
+                    $this->deleteBaseData($importId, true);
+                } else {
+                    $this->deleteBaseData(false, true);
+                }
             }
 
             $zip = zip_open($downloadPath . $filename);
