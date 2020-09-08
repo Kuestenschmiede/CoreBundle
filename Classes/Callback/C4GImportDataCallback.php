@@ -681,6 +681,14 @@ class C4GImportDataCallback extends Backend
         $relations = array_slice($jsonFile, -1, 1);
         $relationTables = [];
         $dbRelation = [];
+        $hexValueFile = array_slice($jsonFile, -2, 1);
+        $hexValueRelation = [];
+
+        if (array_key_exists("hexValues", $hexValueFile)) {
+            foreach ($hexValueFile['hexValues'] as $hexField => $hexValues) {
+                $hexValueRelation[$hexField] = explode(",", $hexValues);
+            }
+        }
 
         foreach ($relations['relations'] as $key => $value) {
             $firstTable = explode('.', $key);
@@ -710,7 +718,7 @@ class C4GImportDataCallback extends Backend
             $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($newId)->fetchAllAssoc();
         }
         foreach ($jsonFile as $importDB => $importDatasets) {
-            if ($importDB == 'relations') {
+            if ($importDB == 'relations' OR $importDB == 'hexValues') {
                 break;
             }
 
@@ -770,6 +778,12 @@ class C4GImportDataCallback extends Backend
 //                    if ($this->isUuid($importDbValue)) {
 //                        $importDbValue = "UNHEX('".$importDbValue."')";
 //                    }
+                    $isHexValue = false;
+                    if (array_key_exists($importDB, $hexValueRelation)) {
+                        if (in_array($importDbField, $hexValueRelation[$importDB])) {
+                            $isHexValue = true;
+                        }
+                    }
 
                     if (in_array($importDbField, $dbFields)) {
                         if ($importDB == 'tl_files' && $importDbField == 'id') {
@@ -777,6 +791,8 @@ class C4GImportDataCallback extends Backend
                         } else {
                             if ($sqlStatement == '' && substr($importDbValue, 0, 2) == '0x') {
                                 $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (' . $importDbValue . ');;';
+                            } elseif ($sqlStatement == '' && $isHexValue && $importDbField != "hash") {
+                                $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
                             } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != "hash") {
                                 $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
                             } elseif ($sqlStatement == '' && substr($importDbValue, 0, 2) != '0x') {
@@ -786,6 +802,9 @@ class C4GImportDataCallback extends Backend
                             } elseif (substr($importDbValue, 0, 2) == '0x') {
                                 $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                 $sqlStatement = str_replace(');;', ", $importDbValue);;", $sqlStatement);
+                            } elseif ($isHexValue && $importDbField != "hash") {
+                                $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
+                                $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
                             } elseif ($this->isUuid($importDbValue) && $importDbField != "hash") {
                                 $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                 $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
