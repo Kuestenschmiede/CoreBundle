@@ -199,11 +199,8 @@ class C4GImportDataCallback extends Backend
                 $zip->extractTo($cache);
                 $zip->close();
 
-                $images = array_slice(scandir($cache . '/images/'), 2);
                 mkdir($imagePath, 0770, true);
-                foreach ($images as $image) {
-                    copy($cache . '/images/' . $image, $imagePath . '/' . $image);
-                }
+                $this->cpy($cache."/images", $imagePath);
                 $objFolder = new \Contao\Folder('files/con4gis_import_data');
                 //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
                 $objFolder->unprotect();
@@ -211,8 +208,6 @@ class C4GImportDataCallback extends Backend
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
 
-//                $this->makeFolderAvailableForPublic($imagePath);
-//                $this->makeFolderAvailableForPublic("./../files/con4gis_import_data");
             }
 
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
@@ -301,19 +296,15 @@ class C4GImportDataCallback extends Backend
                 $zip->extractTo($cache);
                 $zip->close();
 
-                $images = array_slice(scandir($cache . '/images/'), 2);
                 mkdir($imagePath, 0770, true);
-                foreach ($images as $image) {
-                    copy($cache . '/images/' . $image, $imagePath . '/' . $image);
-                }
+                $this->cpy($cache."/images", $imagePath);
                 $objFolder = new \Contao\Folder('files/con4gis_import_data');
-                if (!$objFolder->isUnprotected()) {
-                    $objFolder->unprotect();
-                }
+                //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
+                $objFolder->unprotect();
+                //}
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
-//                $this->makeFolderAvailableForPublic($imagePath);
-//                $this->makeFolderAvailableForPublic("./../files/con4gis_import_data");
+
             }
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
@@ -349,6 +340,12 @@ class C4GImportDataCallback extends Backend
         $this->Automator->generateSymlinks();
 
         Dbafs::syncFiles();
+
+        if (isset($importData)) {
+            $folderPath = "%".$importData['image']['path'];
+            $this->Database->prepare('UPDATE tl_files SET type="folder" WHERE path LIKE ?')->execute($folderPath);
+            Dbafs::syncFiles();
+        }
 
         $this->importRunning(false, $con4gisImportId);
     }
@@ -462,6 +459,17 @@ class C4GImportDataCallback extends Backend
                         }
                         $objFolder->delete();
                         $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
+                        $con4gisDeleteDatasetId = substr($con4gisDeleteUuid, 0, -5);
+                        foreach ($con4gisImportFolderScan as $con4gisImportFolder) {
+                            if (substr($con4gisImportFolder, 0, -5) == $con4gisDeleteDatasetId) {
+                                if (is_dir('files/con4gis_import_data/'.$con4gisImportFolder)) {
+                                    $objFolder = new \Contao\Folder('files/con4gis_import_data/'.$con4gisImportFolder);
+                                    $objFolder->unprotect();
+                                    $objFolder->delete();
+                                }
+                            }
+                        }
+                        $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
                         if (count($con4gisImportFolderScan) == 1) {
                             if (in_array('.public', $con4gisImportFolderScan)) {
                                 $objFolder = new \Contao\Folder('files/con4gis_import_data');
@@ -479,16 +487,7 @@ class C4GImportDataCallback extends Backend
                 }
             }
 
-            //Delete import data
-            $tables = $this->Database->listTables();
-
-            foreach ($tables as $table) {
-                if (strpos($table, 'tl_c4g_') !== false or strpos($table, 'tl_gutesio_') !== false) {
-                    if ($this->Database->fieldExists('importId', $table)) {
-                        $this->Database->prepare("DELETE FROM $table WHERE importId=?")->execute($con4gisDeleteUuid);
-                    }
-                }
-            }
+            $this->deleteOlderImports($con4gisDeleteUuid);
 
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute('', $con4gisDeleteId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute('0', $con4gisDeleteId);
@@ -661,13 +660,6 @@ class C4GImportDataCallback extends Backend
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
         return '<a href="https://con4gis.io/blaupausen"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' target="_blank" rel="noopener">' . $label . '</a><br>';
-    }
-
-    public function makeFolderAvailableForPublic($href)
-    {
-        $handle = fopen($href . '/.public', 'w');
-        $this->import('Contao\Automator', 'Automator');
-        $this->Automator->generateSymlinks();
     }
 
     public function getSqlFromJson($file, $uuid)
@@ -906,4 +898,48 @@ class C4GImportDataCallback extends Backend
             }
         }
     }
+
+    public function cpy($source, $dest)
+    {
+        if(is_dir($source)) {
+            $dir_handle=opendir($source);
+            while($file=readdir($dir_handle)){
+                if($file!="." && $file!=".."){
+                    if(is_dir($source."/".$file)){
+                        if(!is_dir($dest."/".$file)){
+                            mkdir($dest."/".$file);
+                        }
+                        $this->cpy($source."/".$file, $dest."/".$file);
+                    } else {
+                        copy($source."/".$file, $dest."/".$file);
+                    }
+                }
+            }
+            closedir($dir_handle);
+        } else {
+            copy($source, $dest);
+        }
+    }
+
+    public function deleteOlderImports($uuid) {
+        $importDatasetId = substr($uuid, 0, -5);
+
+        $likeOperator = $importDatasetId."_____";
+        if ($likeOperator == 0 OR $likeOperator == "0_____" OR $likeOperator == "_____") {
+            return false;
+        }
+
+        //Delete import data
+        $tables = $this->Database->listTables();
+
+        foreach ($tables as $table) {
+            if (strpos($table, 'tl_c4g_') !== false or strpos($table, 'tl_gutesio_') !== false) {
+                if ($this->Database->fieldExists('importId', $table)) {
+                    $this->Database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
+                }
+            }
+        }
+        return true;
+    }
+
 }
