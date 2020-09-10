@@ -341,12 +341,6 @@ class C4GImportDataCallback extends Backend
 
         Dbafs::syncFiles();
 
-        if (isset($importData)) {
-            $folderPath = "%".$importData['image']['path'];
-            $this->Database->prepare('UPDATE tl_files SET type="folder" WHERE path LIKE ?')->execute($folderPath);
-            Dbafs::syncFiles();
-        }
-
         $this->importRunning(false, $con4gisImportId);
     }
 
