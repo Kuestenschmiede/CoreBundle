@@ -4,6 +4,7 @@ namespace con4gis\CoreBundle\Classes\Callback;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Backend;
+use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\DataContainer;
 use Dbafs;
@@ -179,7 +180,7 @@ class C4GImportDataCallback extends Backend
         if ($availableLocal) {
             $imagePath = './../files' . $importData['images']['path'];
             $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/Resources/con4gis/' . $importData['general']['filename'];
-            $cache = './../var/cache/prod/con4gis/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
+            $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
 
             if ($importData['import']['source'] == 'gutesio') {
                 $gutesIoImport = true;
@@ -212,7 +213,7 @@ class C4GImportDataCallback extends Backend
 
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
 
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $con4gisImportId);
 
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == '') {
@@ -234,7 +235,7 @@ class C4GImportDataCallback extends Backend
                 $contentUpdate->update();
             }
 
-            $objFolder = new \Contao\Folder('var/cache/prod/con4gis/io-data/');
+            $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
             $objFolder->purge();
             $objFolder->delete();
 //            $this->recursiveRemoveDirectory($cache);
@@ -246,7 +247,7 @@ class C4GImportDataCallback extends Backend
             $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
             $basedataUrl .= '&mode=' . 'ioData';
             $basedataUrl .= '&data=' . $con4gisImportId;
-            $downloadPath = './../var/cache/prod/con4gis/io-data/';
+            $downloadPath = './../files/con4gis_import_data/io-data/';
             $filename = 'io-data-proxy.c4g';
             $downloadFile = $downloadPath . $filename;
             if (file_exists($downloadPath) && is_dir($downloadPath)) {
@@ -289,7 +290,7 @@ class C4GImportDataCallback extends Backend
 
             $imagePath = './../files' . $importData['images']['path'];
 //            $c4gPath = "./../vendor/con4gis/".$importData['general']['bundle']."/Resources/con4gis/".$importData['general']['filename'];
-            $cache = './../var/cache/prod/con4gis/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
+            $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
 
             $zip = new ZipArchive;
             if ($zip->open($downloadPath . $filename) === true) {
@@ -307,7 +308,7 @@ class C4GImportDataCallback extends Backend
 
             }
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $con4gisImportId);
 
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == '') {
@@ -329,7 +330,7 @@ class C4GImportDataCallback extends Backend
                 $contentUpdate->update();
             }
 
-            $objFolder = new \Contao\Folder('var/cache/prod/con4gis/io-data/');
+            $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
             $objFolder->purge();
             $objFolder->delete();
 //            $this->recursiveRemoveDirectory("./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']));
@@ -656,7 +657,7 @@ class C4GImportDataCallback extends Backend
         return '<a href="https://con4gis.io/blaupausen"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' target="_blank" rel="noopener">' . $label . '</a><br>';
     }
 
-    public function getSqlFromJson($file, $uuid)
+    public function getSqlFromJson($file, $uuid, $con4gisImportId)
     {
         $filesMessageCount = 0;
         $importId = $uuid;
@@ -696,12 +697,24 @@ class C4GImportDataCallback extends Backend
         } else {
             $firstTlFilesUuid = $jsonFile['tl_files'][0]->uuid;
         }
-        $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($importUuidCheck)->fetchAllAssoc();
+
+        try {
+            $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($importUuidCheck)->fetchAllAssoc();
+        } catch (Exception $e) {
+            $this->importRunning(false, $con4gisImportId);
+            C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+        }
+
         $tlFilesTableQuery = $this->Database->prepare('SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?')->execute('%' . $firstTlFilesUuid . '%')->fetchAllAssoc();
 
         while ($firstTableQuery) {
             $newId = rand(1001, 9999);
-            $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($newId)->fetchAllAssoc();
+            try {
+                $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($newId)->fetchAllAssoc();
+            } catch (Exception $e) {
+                $this->importRunning(false, $con4gisImportId);
+                C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+            }
         }
         foreach ($jsonFile as $importDB => $importDatasets) {
             if ($importDB == 'relations' OR $importDB == 'hexValues') {
