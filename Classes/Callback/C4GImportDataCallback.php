@@ -259,9 +259,17 @@ class C4GImportDataCallback extends Backend
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
                 if ($importId) {
-                    $this->deleteBaseData($importId, true);
+                    $deleted = $this->deleteBaseData($importId, true);
+                    if (!$deleted) {
+                        $this->importRunning(false, $con4gisImportId);
+                        return false;
+                    }
                 } else {
-                    $this->deleteBaseData(false, true);
+                    $deleted = $this->deleteBaseData(false, true);
+                    if (!$deleted) {
+                        $this->importRunning(false, $con4gisImportId);
+                        return false;
+                    }
                 }
             }
 
@@ -482,7 +490,10 @@ class C4GImportDataCallback extends Backend
                 }
             }
 
-            $this->deleteOlderImports($con4gisDeleteUuid);
+            $deletedOldImports = $this->deleteOlderImports($con4gisDeleteUuid);
+            if (!$deletedOldImports) {
+                return false;
+            }
 
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute('', $con4gisDeleteId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute('0', $con4gisDeleteId);
@@ -496,6 +507,8 @@ class C4GImportDataCallback extends Backend
         if (!$download) {
             $this->importRunning(false, $con4gisDeleteId);
         }
+
+        return true;
     }
 
     public function download($remoteFile, $localFile)
@@ -942,7 +955,12 @@ class C4GImportDataCallback extends Backend
         foreach ($tables as $table) {
             if (strpos($table, 'tl_c4g_') !== false or strpos($table, 'tl_gutesio_') !== false) {
                 if ($this->Database->fieldExists('importId', $table)) {
-                    $this->Database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
+                    try {
+                        $this->Database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
+                    } catch (\Exception $e) {
+                        C4gLogModel::addLogEntry("core", "Error deleting old imports. Abort import");
+                        return false;
+                    }
                 }
             }
         }
