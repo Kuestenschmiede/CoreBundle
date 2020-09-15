@@ -189,10 +189,22 @@ class C4GImportDataCallback extends Backend
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
                 if ($importId) {
-                    $this->deleteBaseData($importId, true);
+                    $deleted = $this->deleteBaseData($importId, true);
+                    if (!$deleted) {
+                        $this->importRunning(false, $con4gisImportId);
+                        return false;
+                    }
                 } else {
-                    $this->deleteBaseData(false, true);
+                    $deleted = $this->deleteBaseData(false, true);
+                    if (!$deleted) {
+                        $this->importRunning(false, $con4gisImportId);
+                        return false;
+                    }
                 }
+            } elseif (($alreadyImported['importVersion'] == '' || !$alreadyImported) && $importId) {
+                C4gLogModel::addLogEntry('core', 'Cant update automaticly. Import not found in database. Abort import.');
+                $this->importRunning(false, $con4gisImportId);
+                return false;
             }
 
             $zip = new ZipArchive;
@@ -271,6 +283,10 @@ class C4GImportDataCallback extends Backend
                         return false;
                     }
                 }
+            } elseif (($alreadyImported['importVersion'] == '' || !$alreadyImported) && $importId) {
+                C4gLogModel::addLogEntry('core', 'Cant update automaticly. Import information not found in database. Abort import.');
+                $this->importRunning(false, $con4gisImportId);
+                return false;
             }
 
             $zip = zip_open($downloadPath . $filename);
@@ -351,6 +367,7 @@ class C4GImportDataCallback extends Backend
         Dbafs::syncFiles();
 
         $this->importRunning(false, $con4gisImportId);
+
     }
 
     /**
@@ -365,15 +382,19 @@ class C4GImportDataCallback extends Backend
         if ($importId) {
             $gutesImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
             if ($gutesImportData['importVersion'] >= $gutesImportData['availableVersion']) {
+                C4gLogModel::addLogEntry('core', 'Only gutesio Imports are available for automatic import.');
                 return false;
+            } else {
+                $cronImport = true;
             }
         } else {
+            $cronImport = false;
             $data = $_REQUEST;
             $importId = $data['id'];
         }
 
         $gutesImportData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=? AND type=?')->execute($importId, 'gutesio')->fetchAssoc();
-        if ($gutesImportData) {
+        if ($gutesImportData && $cronImport) {
 
 //            $this->deleteBaseData($importId);
             $this->importBaseData($importId);
@@ -425,6 +446,7 @@ class C4GImportDataCallback extends Backend
     {
         if (!$download) {
             if ($this->importRunning()) {
+                C4gLogModel::addLogEntry('core', 'Import already running. Try again later ');
                 return false;
             }
         }
@@ -433,6 +455,7 @@ class C4GImportDataCallback extends Backend
             $con4gisDeleteId = $importId;
             $gutesImportData = $this->Database->prepare('SELECT type FROM tl_c4g_import_data WHERE id=?')->execute($con4gisDeleteId)->fetchAssoc();
             if ($gutesImportData['type'] != 'gutesio' or $gutesImportData == null) {
+                C4gLogModel::addLogEntry('core', 'Only gutesio imports are available or automatic updates.');
                 return false;
             }
         } else {
@@ -452,6 +475,25 @@ class C4GImportDataCallback extends Backend
         $con4gisDeleteUuidLength = strlen($con4gisDeleteUuid);
 
         if ($con4gisDeleteUuid != 0 && $con4gisDeleteUuid != '' && $con4gisDeleteUuidLength >= 6) {
+
+            if ($importId) {
+                $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
+                $con4gisDeleteDatasetId = substr($con4gisDeleteUuid, 0, -5);
+                $importFolderCount = 0;
+                foreach ($con4gisImportFolderScan as $con4gisImportFolder) {
+                    if (substr($con4gisImportFolder, 0, -5) == $con4gisDeleteDatasetId) {
+                        if (is_dir('files/con4gis_import_data/'.$con4gisImportFolder)) {
+                            $importFolderCount = $importFolderCount + 1;
+                        }
+                    }
+                }
+                if ($importFolderCount > 1) {
+                    C4gLogModel::addLogEntry('core', 'Older import folder in file system. Reimport everything manually. ');
+                    $this->importRunning(false, $con4gisDeleteId);
+                    return false;
+                }
+            }
+
             if ($con4gisDeletePath != '') {
                 if (is_dir($con4gisDeleteDirectory)) {
                     unlink($con4gisDeleteDirectory . '/.public');
@@ -958,7 +1000,7 @@ class C4GImportDataCallback extends Backend
                     try {
                         $this->Database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
                     } catch (\Exception $e) {
-                        C4gLogModel::addLogEntry("core", "Error deleting old imports. Abort import");
+                        C4gLogModel::addLogEntry("core", "Error deleting data from database. Abort import. ".$e);
                         return false;
                     }
                 }
