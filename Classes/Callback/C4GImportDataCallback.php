@@ -484,7 +484,11 @@ class C4GImportDataCallback extends Backend
 
             if ($importId) {
                 $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
-                $con4gisDeleteDatasetId = substr($con4gisDeleteUuid, 0, -5);
+                if (strlen($con4gisDeleteUuid) > 5) {
+                    $con4gisDeleteDatasetId = substr($con4gisDeleteUuid, 0, -5);
+                } else {
+                    $con4gisDeleteDatasetId = $con4gisDeleteUuid;
+                }
                 $importFolderCount = 0;
                 foreach ($con4gisImportFolderScan as $con4gisImportFolder) {
                     if (substr($con4gisImportFolder, 0, -5) == $con4gisDeleteDatasetId) {
@@ -510,7 +514,11 @@ class C4GImportDataCallback extends Backend
                         }
                         $objFolder->delete();
                         $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
-                        $con4gisDeleteDatasetId = substr($con4gisDeleteUuid, 0, -5);
+                        if (strlen($con4gisDeleteUuid) > 5) {
+                            $con4gisDeleteDatasetId = substr($con4gisDeleteUuid, 0, -5);
+                        } else {
+                            $con4gisDeleteDatasetId = $con4gisDeleteUuid;
+                        }
                         foreach ($con4gisImportFolderScan as $con4gisImportFolder) {
                             if (substr($con4gisImportFolder, 0, -5) == $con4gisDeleteDatasetId) {
                                 if (is_dir('files/con4gis_import_data/'.$con4gisImportFolder)) {
@@ -536,6 +544,7 @@ class C4GImportDataCallback extends Backend
                         //Sync filesystem
                         Dbafs::syncFiles();
                     } else {
+                        $this->importRunning(false, $con4gisDeleteId);
                         C4gLogModel::addLogEntry('core', 'Could not delete import directory: Wrong path!');
                     }
                 }
@@ -543,6 +552,7 @@ class C4GImportDataCallback extends Backend
 
             $deletedOldImports = $this->deleteOlderImports($con4gisDeleteUuid);
             if (!$deletedOldImports) {
+                $this->importRunning(false, $con4gisDeleteId);
                 return false;
             }
 
@@ -553,6 +563,7 @@ class C4GImportDataCallback extends Backend
             $this->loadBaseData(false);
         } else {
             C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
+            return false;
         }
 
         if (!$download) {
@@ -1051,9 +1062,14 @@ class C4GImportDataCallback extends Backend
     }
 
     public function deleteOlderImports($uuid) {
-        $importDatasetId = substr($uuid, 0, -5);
+        if (strlen($uuid) > 5) {
+            $importDatasetId = substr($uuid, 0, -5);
+            $likeOperator = $importDatasetId."_____";
+        } else {
+            $importDatasetId = $uuid;
+            $likeOperator = $uuid;
+        }
 
-        $likeOperator = $importDatasetId."_____";
         if ($likeOperator == 0 OR $likeOperator == "0_____" OR $likeOperator == "_____") {
             return false;
         }
