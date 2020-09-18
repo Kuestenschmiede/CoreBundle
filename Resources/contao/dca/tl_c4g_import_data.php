@@ -384,9 +384,18 @@ class tl_c4g_import_data extends Contao\Backend
                     }
                     break;
                 case 'key=updateBaseData':
-                    if ($importVersion != "" && $availableVersion != "" && $isInstalled == true && $availableVersion != $importVersion) {
+                    $installedPackages = $this->getContainer()->getParameter('kernel.packages');
+                    if ($importType == "gutesio" && array_key_exists("gutesio/operator", $installedPackages)) {
+                        $c4gSettings = $memberData = $this->Database->prepare("SELECT * FROM tl_c4g_settings")->execute()->fetchAssoc();
+                        if ($c4gSettings['syncDataAutomaticly'] == "" && $importVersion != "" && $availableVersion != "" && $isInstalled == true && $availableVersion != $importVersion) {
+                            return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$label.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_import_data']['updateImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
+                        }
+                    } elseif ($importVersion != "" && $availableVersion != "" && $isInstalled == true && $availableVersion != $importVersion) {
                         return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$label.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_import_data']['updateImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
                     }
+//                    if ($importVersion != "" && $availableVersion != "" && $isInstalled == true && $availableVersion != $importVersion) {
+//                        return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$label.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_import_data']['updateImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
+//                    }
                     break;
                 case 'key=releaseBaseData':
                     if ($importVersion != "" && $isInstalled == true && $importType != "gutesio") {
