@@ -5,6 +5,7 @@ namespace con4gis\CoreBundle\Classes\Callback;
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Backend;
 use Contao\FilesModel;
+use Contao\Search;
 use Contao\StringUtil;
 use Contao\DataContainer;
 use Dbafs;
@@ -165,6 +166,7 @@ class C4GImportDataCallback extends Backend
 //      lokaler Import
 
         $localImportDatas = $this->getLocalIoData();
+
         $availableLocal = false;
         foreach ($localImportDatas as $localImportData) {
             if ($localImportData['import']['id'] == $con4gisImportId) {
@@ -267,7 +269,11 @@ class C4GImportDataCallback extends Backend
             }
 
             mkdir($downloadPath, 0770, true);
-            $this->download($basedataUrl, $downloadFile);
+            $downloadSuccess = $this->download($basedataUrl, $downloadFile);
+            if (!$downloadSuccess) {
+                $this->importRunning(false, $con4gisImportId);
+                return false;
+            }
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
                 if ($importId) {
@@ -488,7 +494,7 @@ class C4GImportDataCallback extends Backend
                     }
                 }
                 if ($importFolderCount > 1) {
-                    C4gLogModel::addLogEntry('core', 'Older import folder in file system. Reimport everything manually. ');
+                    C4gLogModel::addLogEntry('core', 'Older import folder in file system. Reimport everything manually.');
                     $this->importRunning(false, $con4gisDeleteId);
                     return false;
                 }
@@ -510,6 +516,9 @@ class C4GImportDataCallback extends Backend
                                 if (is_dir('files/con4gis_import_data/'.$con4gisImportFolder)) {
                                     $objFolder = new \Contao\Folder('files/con4gis_import_data/'.$con4gisImportFolder);
                                     $objFolder->unprotect();
+                                    if (!$objFolder->isEmpty()) {
+                                        $objFolder->purge();
+                                    }
                                     $objFolder->delete();
                                 }
                             }
@@ -567,6 +576,44 @@ class C4GImportDataCallback extends Backend
         $con = curl_exec($ch);
         curl_close($ch);
         fclose($fp);
+
+        $contents = "";
+        $contentsJson = "";
+        try {
+            $zip = zip_open($localFile);
+            if ($zip) {
+                while ($zip_entry = zip_read($zip)) {
+                    if (zip_entry_name($zip_entry) == 'io-data.yml') {
+                        if (zip_entry_open($zip, $zip_entry)) {
+                            // Read open directory entry
+                            $contents = zip_entry_read($zip_entry);
+                            zip_entry_close($zip_entry);
+
+//                            break;
+                        }
+                    }
+                    if (strpos(zip_entry_name($zip_entry), '.json') !== false) {
+                        if (zip_entry_open($zip, $zip_entry)) {
+                            // Read open directory entry
+                            $contentsJson = zip_entry_read($zip_entry);
+                            zip_entry_close($zip_entry);
+
+//                                    break;
+                        }
+                    }
+                }
+                zip_close($zip);
+            }
+            if ($contents == "" || $contentsJson == "") {
+                C4gLogModel::addLogEntry("core", "Downloaded import data file (".$localFile.") not complete.");
+                return false;
+            } else {
+                return true;
+            }
+        } catch (\Exception $e) {
+            C4gLogModel::addLogEntry("core", "Error reading downloaded file: ".$e);
+            return false;
+        }
     }
 
     public function strposa($haystack, $needles = [], $offset = 0)
@@ -661,24 +708,44 @@ class C4GImportDataCallback extends Backend
         $count = 0;
         foreach ($basedataFiles as $basedataFile) {
             foreach ($basedataFile as $importFile) {
-                $zip = zip_open($importFile);
+                $contents = "";
+                $contentsJson = "";
+                try {
+                    $zip = zip_open($importFile);
 
-                if ($zip) {
-                    while ($zip_entry = zip_read($zip)) {
-                        if (zip_entry_name($zip_entry) == 'io-data.yml') {
-                            if (zip_entry_open($zip, $zip_entry)) {
-                                // Read open directory entry
-                                $contents = zip_entry_read($zip_entry);
-                                zip_entry_close($zip_entry);
-                                $yaml = new Parser();
-                                $newYamlConfigArray[$count] = $yaml->parse($contents);
-                                $count++;
+                    if ($zip) {
+                        while ($zip_entry = zip_read($zip)) {
+                            if (zip_entry_name($zip_entry) == 'io-data.yml') {
+                                if (zip_entry_open($zip, $zip_entry)) {
+                                    // Read open directory entry
+                                    $contents = zip_entry_read($zip_entry);
+                                    zip_entry_close($zip_entry);
+                                    $yaml = new Parser();
+                                    $newYamlConfigArray[$count] = $yaml->parse($contents);
+                                    $count++;
 
-                                break;
+//                                    break;
+                                }
+                            }
+                            if (strpos(zip_entry_name($zip_entry), '.json') !== false) {
+                                if (zip_entry_open($zip, $zip_entry)) {
+                                    // Read open directory entry
+                                    $contentsJson = zip_entry_read($zip_entry);
+                                    zip_entry_close($zip_entry);
+
+//                                    break;
+                                }
                             }
                         }
+                        zip_close($zip);
                     }
-                    zip_close($zip);
+                    if ($contents == "" || $contentsJson == "") {
+                        C4gLogModel::addLogEntry("core", "Import data file (".$importFile.") not complete.");
+                        $newYamlConfigArray[$count] = false;
+                    }
+                } catch (\Throwable $e) {
+                    C4gLogModel::addLogEntry("core", "Import data file not complete: ".$e);
+                    return false;
                 }
             }
         }
