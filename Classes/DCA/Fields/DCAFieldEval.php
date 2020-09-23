@@ -71,7 +71,7 @@ class DCAFieldEval
 
     public function preserveTags(bool $preserveTags = true)
     {
-        $this->global['preserve_tags'] = $preserveTags;
+        $this->global['preserveTags'] = $preserveTags;
 
         return $this;
     }
