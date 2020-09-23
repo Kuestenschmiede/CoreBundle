@@ -388,7 +388,7 @@ class C4GImportDataCallback extends Backend
         if ($importId) {
             $gutesImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
             if ($gutesImportData['importVersion'] >= $gutesImportData['availableVersion']) {
-                C4gLogModel::addLogEntry('core', 'Only gutesio Imports are available for automatic import.');
+                C4gLogModel::addLogEntry('core', 'Imported version is equal or higher than available version. Import will not be updated.');
                 return false;
             } else {
                 $cronImport = true;
