@@ -332,9 +332,15 @@ class C4GImportDataCallback extends Backend
                 $objFolder = new \Contao\Folder('files/con4gis_import_data');
                 //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
                 $objFolder->unprotect();
+                try {
+                    Dbafs::addResource('files/con4gis_import_data');
+                } catch (\Exception $e) {
+                    C4gLogModel::addLogEntry('core', 'Error synchronize new import file folder: '.$e);
+                }
                 //}
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
+                $objFolder->synchronize();
 
             }
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
@@ -369,8 +375,8 @@ class C4GImportDataCallback extends Backend
         //Generate Symlinks and sync filesystem
         $this->import('Contao\Automator', 'Automator');
         $this->Automator->generateSymlinks();
-
-        Dbafs::syncFiles();
+//
+//        Dbafs::syncFiles();
 
         $this->importRunning(false, $con4gisImportId);
 
@@ -388,7 +394,13 @@ class C4GImportDataCallback extends Backend
         if ($importId) {
             $gutesImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
             if ($gutesImportData['importVersion'] >= $gutesImportData['availableVersion']) {
-                C4gLogModel::addLogEntry('core', 'Imported version is equal or higher than available version. Import will not be updated.');
+                if ($gutesImportData['availableVersion'] == $gutesImportData['importVersion']) {
+                    C4gLogModel::addLogEntry('core', 'Imported version is the same as the available version. Import will not be updated.');
+                } elseif ($gutesImportData['importVersion'] == "" || $gutesImportData['importVersion'] == "0" || $gutesImportData['importVersion'] == 0) {
+                    C4gLogModel::addLogEntry('core', 'New import is currently creating at gutes.io. Import will not be updated.');
+                } else {
+                    C4gLogModel::addLogEntry('core', 'Imported version is equal or higher than available version. Import will not be updated.');
+                }
                 return false;
             } else {
                 $cronImport = true;
@@ -541,8 +553,8 @@ class C4GImportDataCallback extends Backend
                         }
                         $this->import('Contao\Automator', 'Automator');
                         $this->Automator->generateSymlinks();
-                        //Sync filesystem
-                        Dbafs::syncFiles();
+//                        //Sync filesystem
+//                        Dbafs::syncFiles();
                     } else {
                         $this->importRunning(false, $con4gisDeleteId);
                         C4gLogModel::addLogEntry('core', 'Could not delete import directory: Wrong path!');
