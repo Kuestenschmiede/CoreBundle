@@ -17,6 +17,7 @@ namespace con4gis\CoreBundle\Resources\contao\models;
 use Contao\Database;
 use Contao\Model;
 use \Iterator;
+use \Throwable;
 
 /**
  * Class C4gLogModel
@@ -34,7 +35,11 @@ class C4gLogModel extends Model
 	    $time = time();
 	    $db = Database::getInstance();
 	    $stmt = $db->prepare("INSERT INTO ".self::$strTable." (tstamp, bundle, message) VALUES (?, ?, ?)");
-	    $stmt->execute($time, $bundle, $message);
+	    try {
+            $stmt->execute($time, $bundle, $message);
+        } catch (Throwable $throwable) {
+
+        }
     }
 
     public static function recursivelyLogIterator(Iterator $iterator) {
