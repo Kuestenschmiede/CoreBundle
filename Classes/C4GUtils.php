@@ -488,4 +488,12 @@ class C4GUtils
             . chr(125);// "}"
         return $uuid;
     }
+
+    /**
+     * @param array $array
+     * @return string
+     */
+    public static function buildInString(array $array) {
+        return 'IN('.implode(",", array_fill(0, count($array), '?')).')';
+    }
 }
