@@ -112,22 +112,36 @@ class ArrayHelper
         $sortFields = [];
         $args = [];
 
+        if (!$fields) {
+            return $arr;
+        }
+
         foreach ($arr as $key => $row) {
-            foreach ($fields as $field => $order) {
-                $sortFields[$field][$key] = strtolower($row[$field]);
+
+            if (is_array($fields)) {
+                foreach ($fields as $field => $order) {
+                    $sortFields[$field][$key] = strtolower($row[$field]);
+                }
+            } else {
+                $sortFields[$field][$key] = strtolower($fields[$field]);
             }
         }
 
-        foreach ($fields as $field => $order) {
-            $args[] = $sortFields[$field];
+        if (is_array($fields)) {
+            foreach ($fields as $field => $order) {
+                $args[] = $sortFields[$field];
 
-            if (is_array($order)) {
-                foreach ($order as $pt) {
-                    $args[] = $pt;
+                if (is_array($order)) {
+                    foreach ($order as $pt) {
+                        $args[] = $pt;
+                    }
+                } else {
+                    $args[] = $order;
                 }
-            } else {
-                $args[] = $order;
             }
+        } else {
+            $args[] = $sortFields[$field];
+            $args[] = 'SORT_ASC';
         }
 
         $args[] = &$arr;
