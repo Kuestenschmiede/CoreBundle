@@ -35,9 +35,11 @@ class C4GImportDataCallback extends Backend
 
         // Check current action
         $responses = $this->getCon4gisImportData('getBasedata.php', 'allData', false, $coreVersion, $contaoVersion);
-        foreach ($responses as $keyResponse => $respons) {
-            foreach ($respons as $innerKeyResponse => $innerResponse) {
-                $responses[$keyResponse]->$innerKeyResponse = str_replace('"', '', $innerResponse);
+        if ($responses) {
+            foreach ($responses as $keyResponse => $respons) {
+                foreach ($respons as $innerKeyResponse => $innerResponse) {
+                    $responses[$keyResponse]->$innerKeyResponse = str_replace('"', '', $innerResponse);
+                }
             }
         }
         $responsesLength = count($responses);
@@ -696,8 +698,14 @@ class C4GImportDataCallback extends Backend
                 $REQUEST->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
             }
             $REQUEST->send($basedataUrl);
-            if ($REQUEST->response) {
-                return $responses = \GuzzleHttp\json_decode($REQUEST->response);
+            $response = $REQUEST->response;
+            if ($response) {
+                if (substr($response, 0, 2) == "[{" && substr($response, -2, 2) == "}]") {
+                    $responses = \GuzzleHttp\json_decode($response);
+                    return $responses;
+                }  else {
+                    return false;
+                }
             }
 
             return $responses = [];
