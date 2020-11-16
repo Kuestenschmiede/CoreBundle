@@ -501,7 +501,7 @@ class C4GUtils
      * @param $link
      * @return string
      */
-    public static function checkLinkHttp($link) {
+    public static function addProtocolToLink($link) {
         $testLink = trim(strtoupper($link));
         if ($testLink && (substr($testLink, 0, 4) != 'HTTP')) {
             $link = 'https://'.$link;
