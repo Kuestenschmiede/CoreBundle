@@ -496,4 +496,14 @@ class C4GUtils
     public static function buildInString(array $array) {
         return 'IN('.implode(",", array_fill(0, count($array), '?')).')';
     }
+    
+    public static function addProtocolToLink(string $link)
+    {
+        $testLink = trim(strtoupper($link));
+        if ($testLink && (substr($testLink, 0, 4) != 'HTTP')) {
+            $link = 'https://'.$link;
+        }
+        
+        return $link;
+    }
 }
