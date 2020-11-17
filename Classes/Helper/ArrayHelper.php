@@ -123,7 +123,7 @@ class ArrayHelper
                     $sortFields[$field][$key] = strtolower($row[$field]);
                 }
             } else {
-                $sortFields[$field][$key] = strtolower($fields[$field]);
+                $sortFields[$field][$key] = strtolower($fields);
             }
         }
 
@@ -140,7 +140,7 @@ class ArrayHelper
                 }
             }
         } else {
-            $args[] = $sortFields[$field];
+            $args[] = $sortFields[$fields];
             $args[] = 'SORT_ASC';
         }
 
