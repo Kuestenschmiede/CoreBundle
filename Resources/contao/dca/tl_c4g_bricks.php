@@ -167,6 +167,24 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
                 'button_callback'     => ['tl_c4g_bricks', 'loadButton']
             ),
+            'ninthButton' => array
+            (
+                'href'                => 'key=ninthButton',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
+            'tenthButton' => array
+            (
+                'href'                => 'key=tenthButtonn',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
+            'eleventhButton' => array
+            (
+                'href'                => 'key=eleventhButton',
+                'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
+                'button_callback'     => ['tl_c4g_bricks', 'loadButton']
+            ),
             'showDocs' => array
             (
                 'href'                => 'key=showDocs',
@@ -811,39 +829,19 @@ class tl_c4g_bricks extends Contao\Backend
             }
         }
 
-        if ((strpos($href, 'firstButton') > 0) && ($brickArr[$row['brickkey']][0])) {
-            $do = $brickArr[$row['brickkey']][0]['do'];
-            $icon = $brickArr[$row['brickkey']][0]['icon'];
-            $title = $brickArr[$row['brickkey']][0]['title'];
-        } else if ((strpos($href, 'secondButton') > 0) && ($brickArr[$row['brickkey']][1])) {
-            $do = $brickArr[$row['brickkey']][1]['do'];
-            $icon = $brickArr[$row['brickkey']][1]['icon'];
-            $title = $brickArr[$row['brickkey']][1]['title'];
-        } else if ((strpos($href, 'thirdButton') > 0) && ($brickArr[$row['brickkey']][2])) {
-            $do = $brickArr[$row['brickkey']][2]['do'];
-            $icon = $brickArr[$row['brickkey']][2]['icon'];
-            $title = $brickArr[$row['brickkey']][2]['title'];
-        } else if ((strpos($href, 'fourthButton') > 0) && ($brickArr[$row['brickkey']][3])) {
-            $do = $brickArr[$row['brickkey']][3]['do'];
-            $icon = $brickArr[$row['brickkey']][3]['icon'];
-            $title = $brickArr[$row['brickkey']][3]['title'];
-        } else if ((strpos($href, 'fifthButton') > 0) && ($brickArr[$row['brickkey']][4])) {
-            $do = $brickArr[$row['brickkey']][4]['do'];
-            $icon = $brickArr[$row['brickkey']][4]['icon'];
-            $title = $brickArr[$row['brickkey']][4]['title'];
-        } else if ((strpos($href, 'sixthButton') > 0) && ($brickArr[$row['brickkey']][5])) {
-            $do = $brickArr[$row['brickkey']][5]['do'];
-            $icon = $brickArr[$row['brickkey']][5]['icon'];
-            $title = $brickArr[$row['brickkey']][5]['title'];
-        } else if ((strpos($href, 'seventhButton') > 0) && ($brickArr[$row['brickkey']][6])) {
-            $do = $brickArr[$row['brickkey']][6]['do'];
-            $icon = $brickArr[$row['brickkey']][6]['icon'];
-            $title = $brickArr[$row['brickkey']][6]['title'];
-        } else if ((strpos($href, 'eighthButton') > 0) && ($brickArr[$row['brickkey']][7])) {
-            $do = $brickArr[$row['brickkey']][7]['do'];
-            $icon = $brickArr[$row['brickkey']][7]['icon'];
-            $title = $brickArr[$row['brickkey']][7]['title'];
-        } else {
+        $buttons = ['firstButton', 'secondButton', 'thirdButton', 'fourthButton', 'fifthButton', 'sixthButton', 'seventhButton', 'eighthButton', 'ninthButton', 'tenthButton', 'eleventhButton'];
+        $foundButton = false;
+        foreach ($buttons as $key=>$button) {
+            if ((strpos($href, $button) > 0) && ($brickArr[$row['brickkey']][$key])) {
+                $do = $brickArr[$row['brickkey']][$key]['do'];
+                $icon = $brickArr[$row['brickkey']][$key]['icon'];
+                $title = $brickArr[$row['brickkey']][$key]['title'];
+                $foundButton = true;
+                break;
+            }
+        }
+
+        if (!$foundButton) {
             return;
         }
 

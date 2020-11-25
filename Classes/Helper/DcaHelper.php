@@ -168,8 +168,9 @@ class DcaHelper
     {
         $rt = Input::get('rt');
         $do = Input::get('do');
+        //$id = Input::get('id');
 
-        if ($id) {
+        if ($do) {
             $href = '/contao/main.php?do=' . $do . "&rt=$rt";
         } else {
             $href = "/contao/main.php?do=c4g_bricks&rt=$rt&key=back";
