@@ -140,8 +140,8 @@ class ArrayHelper
                 }
             }
         } else {
-            $args[] = $sortFields[$fields];
-            $args[] = 'SORT_ASC';
+            $args[] = $fields;
+            $args[] = SORT_ASC;
         }
 
         $args[] = &$arr;

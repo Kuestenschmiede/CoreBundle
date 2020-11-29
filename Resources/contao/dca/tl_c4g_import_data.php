@@ -66,9 +66,8 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         'global_operations' => array
         (
             'back' => [
-                'href'                => 'key=back',
+                'href'                => 'do=c4g_bricks&table=tl_c4g_bricks',
                 'class'               => 'header_back',
-                'button_callback'     => ['\con4gis\CoreBundle\Classes\Helper\DcaHelper', 'back'],
                 'icon'                => 'back.svg',
                 'label'               => &$GLOBALS['TL_LANG']['MSC']['backBT'],
             ],
