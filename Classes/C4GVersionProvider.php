@@ -122,6 +122,8 @@ class C4GVersionProvider
             return true;
         }
 
+        //ToDo compare release candidates
+
         return false;
     }
 }
