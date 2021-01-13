@@ -51,3 +51,7 @@ $GLOBALS['TL_LANG']['tl_c4g_import_data']['con4gisIoImportData'] = 'Übersicht a
 /** INFOTEXT */
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['infotext'] = 'Hier können Sie Grund- und Demodaten importieren bzw. aktualisieren. Einige Bausteine liefern Demodaten mit. Wenn Sie einen <a href="https://con4gis.io"><b>con4gis.io</b></a> Zugang haben, stehen Ihnen über die Server weitere Grund- und Demodaten-Importe zur Verfügung.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['infotextNoKey'] = 'Sie haben keinen con4gis.io Zugang hinterlegt. Damit Ihnen weitere Importe angezeigt werden benötigen Sie einen. Diesen können Sie unter <a href="https://con4gis.io"><b>con4gis.io</b></a> erstellen.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning'] = 'Der Import läuft bereits. Es können immer nur Daten eines Import zur selben Zeit importiert werden.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport'] = 'Älterer Importordner im Dateisystem. Bitte den Import manuell neu einspielen.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports'] = 'Fehler beim Löschen alter Importe.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError'] = 'Fehler beim lösen des Imports: falsche Import Id.';

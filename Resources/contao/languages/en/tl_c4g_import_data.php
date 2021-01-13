@@ -51,3 +51,8 @@ $GLOBALS['TL_LANG']['tl_c4g_import_data']['con4gisIoImportData'] = 'Overview of 
 /** INFOTEXT */
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['infotext'] = 'Here you can import or update basic and demo data. Some modules provide demo data. If you have <a href="https://con4gis.io"><b>con4gis.io</b></a> access, further basic and demo data imports are available via the servers.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['infotextNoKey'] = 'You have no con4gis.io access. But you need one to be able to see imports. You can create this under <a href="https://con4gis.io"><b>con4gis.io</b></a>.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning'] = 'The import is already running. Only data of one import at a time can be imported.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport'] = 'Older import folder in file system. Reimport everything manually.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports'] = 'Error while deleting older imports..';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError'] = 'Error releasing unavailable import: wrong id set.';
+

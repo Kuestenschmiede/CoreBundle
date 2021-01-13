@@ -150,6 +150,8 @@ class C4GImportDataCallback extends Backend
     public function importBaseData($importId = false)
     {
         if ($this->importRunning()) {
+            \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
+            PageRedirect::redirect("/contao?do=c4g_io_data");
             return false;
         }
         if ($importId) {
@@ -196,12 +198,16 @@ class C4GImportDataCallback extends Backend
                     $deleted = $this->deleteBaseData($importId, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
+                        \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        PageRedirect::redirect("/contao?do=c4g_io_data");
                         return false;
                     }
                 } else {
                     $deleted = $this->deleteBaseData(false, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
+                        \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        PageRedirect::redirect("/contao?do=c4g_io_data");
                         return false;
                     }
                 }
@@ -274,6 +280,7 @@ class C4GImportDataCallback extends Backend
             $downloadSuccess = $this->download($basedataUrl, $downloadFile);
             if (!$downloadSuccess) {
                 $this->importRunning(false, $con4gisImportId);
+                PageRedirect::redirect("/contao?do=c4g_io_data");
                 return false;
             }
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
@@ -282,12 +289,15 @@ class C4GImportDataCallback extends Backend
                     $deleted = $this->deleteBaseData($importId, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
+                        \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         return false;
                     }
                 } else {
                     $deleted = $this->deleteBaseData(false, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
+                        \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        PageRedirect::redirect("/contao?do=c4g_io_data");
                         return false;
                     }
                 }
@@ -382,6 +392,8 @@ class C4GImportDataCallback extends Backend
 
         $this->importRunning(false, $con4gisImportId);
 
+        PageRedirect::redirect("/contao?do=c4g_io_data");
+
     }
 
     /**
@@ -390,6 +402,8 @@ class C4GImportDataCallback extends Backend
     public function updateBaseData($importId = false)
     {
         if ($this->importRunning()) {
+            \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
+            PageRedirect::redirect("/contao?do=c4g_io_data");
             return false;
         }
 
@@ -423,6 +437,9 @@ class C4GImportDataCallback extends Backend
 //            $this->deleteBaseData();
             $this->importBaseData();
         }
+
+        PageRedirect::redirect("/contao?do=c4g_io_data");
+
     }
 
     /**
@@ -456,7 +473,10 @@ class C4GImportDataCallback extends Backend
             $this->loadBaseData(false);
         } else {
             C4gLogModel::addLogEntry('core', 'Error releasing unavailable import: wrong id set!');
+            \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError']);
         }
+
+        PageRedirect::redirect("/contao?do=c4g_io_data");
     }
 
     /**
@@ -467,6 +487,8 @@ class C4GImportDataCallback extends Backend
         if (!$download) {
             if ($this->importRunning()) {
                 C4gLogModel::addLogEntry('core', 'Import already running. Try again later ');
+                \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
+                PageRedirect::redirect("/contao?do=c4g_io_data");
                 return false;
             }
         }
@@ -514,6 +536,8 @@ class C4GImportDataCallback extends Backend
                 if ($importFolderCount > 1) {
                     C4gLogModel::addLogEntry('core', 'Older import folder in file system. Reimport everything manually.');
                     $this->importRunning(false, $con4gisDeleteId);
+                    \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport']);
+                    PageRedirect::redirect("/contao?do=c4g_io_data");
                     return false;
                 }
             }
@@ -567,6 +591,8 @@ class C4GImportDataCallback extends Backend
             $deletedOldImports = $this->deleteOlderImports($con4gisDeleteUuid);
             if (!$deletedOldImports) {
                 $this->importRunning(false, $con4gisDeleteId);
+                \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                PageRedirect::redirect("/contao?do=c4g_io_data");
                 return false;
             }
 
@@ -577,6 +603,7 @@ class C4GImportDataCallback extends Backend
             $this->loadBaseData(false);
         } else {
             C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
+            PageRedirect::redirect("/contao?do=c4g_io_data");
             return false;
         }
 
@@ -584,6 +611,7 @@ class C4GImportDataCallback extends Backend
             $this->importRunning(false, $con4gisDeleteId);
         }
 
+        PageRedirect::redirect("/contao?do=c4g_io_data");
         return true;
     }
 
