@@ -5,14 +5,16 @@ namespace con4gis\CoreBundle\Classes\Callback;
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Backend;
 use Contao\FilesModel;
+use Contao\PageRedirect;
 use Contao\Search;
 use Contao\StringUtil;
 use Contao\DataContainer;
+use Contao\System;
 use Dbafs;
 use Exception;
-use gutesio\DataModelBundle\Classes\ChildFullTextContentUpdater;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
+use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
 
 class C4GImportDataCallback extends Backend
 {
@@ -165,8 +167,8 @@ class C4GImportDataCallback extends Backend
         }
         if ($importId) {
             $con4gisImportId = $importId;
-            $gutesImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
-            if ($gutesImportData['importVersion'] >= $gutesImportData['availableVersion']) {
+            $cronImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
+            if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
                 return false;
             }
         } else {
@@ -189,17 +191,12 @@ class C4GImportDataCallback extends Backend
                 break;
             }
         }
-
-        $gutesIoImport = false;
-
+        
         if ($availableLocal) {
             $imagePath = './../files' . $importData['images']['path'];
             $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/Resources/con4gis/' . $importData['general']['filename'];
             $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
-
-            if ($importData['import']['source'] == 'gutesio') {
-                $gutesIoImport = true;
-            }
+            $importType = $importData['import']['type'];
 
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
@@ -260,11 +257,6 @@ class C4GImportDataCallback extends Backend
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=?WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($localImportData['import']['uuid'], $con4gisImportId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($localImportData['images']['path'], $con4gisImportId);
-
-            if ($gutesIoImport) {
-                $contentUpdate = new ChildFullTextContentUpdater();
-                $contentUpdate->update();
-            }
 
             $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
             $objFolder->purge();
@@ -335,12 +327,9 @@ class C4GImportDataCallback extends Backend
                 zip_close($zip);
             }
 
-            if ($importData['import']['source'] == 'gutesio') {
-                $gutesIoImport = true;
-            }
+            $importType = $importData['import']['type'];
 
             $imagePath = './../files' . $importData['images']['path'];
-//            $c4gPath = "./../vendor/con4gis/".$importData['general']['bundle']."/Resources/con4gis/".$importData['general']['filename'];
             $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
 
             $zip = new ZipArchive;
@@ -382,17 +371,19 @@ class C4GImportDataCallback extends Backend
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
 
-            if ($gutesIoImport) {
-                $contentUpdate = new ChildFullTextContentUpdater();
-                $contentUpdate->update();
-            }
-
             $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
             $objFolder->purge();
             $objFolder->delete();
-//            $this->recursiveRemoveDirectory("./../var/cache/prod/con4gis/io-data/".str_replace(".c4g", "", $importData['general']['filename']));
-//            unlink("./../var/cache/prod/con4gis/io-data/".$filename);
         }
+
+        if (!isset($importType)) {
+            $importType = "notype";
+        }
+        $event = new AfterImportEvent();
+        $event->setImportType($importType);
+        $dispatcher = System::getContainer()->get('event_dispatcher');
+        $dispatcher->dispatch($event::NAME, $event);
+
         //Generate Symlinks and sync filesystem
         $this->import('Contao\Automator', 'Automator');
         $this->Automator->generateSymlinks();
@@ -417,12 +408,12 @@ class C4GImportDataCallback extends Backend
         }
 
         if ($importId) {
-            $gutesImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
-            if ($gutesImportData['importVersion'] >= $gutesImportData['availableVersion']) {
-                if ($gutesImportData['availableVersion'] == $gutesImportData['importVersion']) {
+            $cronImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
+            if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+                if ($cronImportData['availableVersion'] == $cronImportData['importVersion']) {
                     C4gLogModel::addLogEntry('core', 'Imported version is the same as the available version. Import will not be updated.');
-                } elseif ($gutesImportData['importVersion'] == "" || $gutesImportData['importVersion'] == "0" || $gutesImportData['importVersion'] == 0) {
-                    C4gLogModel::addLogEntry('core', 'New import is currently creating at gutes.io. Import will not be updated.');
+                } elseif ($cronImportData['importVersion'] == "" || $cronImportData['importVersion'] == "0" || $cronImportData['importVersion'] == 0) {
+                    C4gLogModel::addLogEntry('core', 'New import is currently unavailable. Import will not be updated.');
                 } else {
                     C4gLogModel::addLogEntry('core', 'Imported version is equal or higher than available version. Import will not be updated.');
                 }
@@ -436,14 +427,11 @@ class C4GImportDataCallback extends Backend
             $importId = $data['id'];
         }
 
-        $gutesImportData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=? AND type=?')->execute($importId, 'gutesio')->fetchAssoc();
-        if ($gutesImportData && $cronImport) {
+        $cronImportData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
+        if ($cronImportData && $cronImport) {
 
-//            $this->deleteBaseData($importId);
             $this->importBaseData($importId);
         } else {
-            // Check current action
-//            $this->deleteBaseData();
             $this->importBaseData();
         }
 
@@ -513,11 +501,6 @@ class C4GImportDataCallback extends Backend
 
         if ($importId) {
             $con4gisDeleteId = $importId;
-            $gutesImportData = $this->Database->prepare('SELECT type FROM tl_c4g_import_data WHERE id=?')->execute($con4gisDeleteId)->fetchAssoc();
-            if ($gutesImportData['type'] != 'gutesio' or $gutesImportData == null) {
-                C4gLogModel::addLogEntry('core', 'Only gutesio imports are available or automatic updates.');
-                return false;
-            }
         } else {
             $data = $_REQUEST;
             $con4gisDeleteId = $data['id'];
@@ -773,10 +756,8 @@ class C4GImportDataCallback extends Backend
             'core' => './../vendor/con4gis/core/Resources/con4gis',
             'data' => './../vendor/con4gis/data/Resources/con4gis',
             'firefighter' => './../vendor/con4gis/firefighter/Resources/con4gis',
-            'operator' => './../vendor/gutesio/operator/Resources/gutesio',
         ];
 
-        $dir = getcwd();
         $basedataFiles = [];
 
         foreach ($arrBasedataFolders as $arrBasedataFolder => $value) {
@@ -980,9 +961,6 @@ class C4GImportDataCallback extends Backend
                         }
                     }
 
-//                    if ($this->isUuid($importDbValue)) {
-//                        $importDbValue = "UNHEX('".$importDbValue."')";
-//                    }
                     $isHexValue = false;
                     if (array_key_exists($importDB, $hexValueRelation)) {
                         if (in_array($importDbField, $hexValueRelation[$importDB])) {

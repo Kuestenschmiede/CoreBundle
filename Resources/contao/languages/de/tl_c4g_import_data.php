@@ -34,7 +34,6 @@ $GLOBALS['TL_LANG']['tl_c4g_import_data']['deleteData'] = array("Daten löschen"
  */
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['type_demo'] = "Demodaten";
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['type_basedata'] = "Grunddaten";
-$GLOBALS['TL_LANG']['tl_c4g_import_data']['type_gutesio'] = "Betreiberdaten";
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['source_io'] = "con4gis.io";
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['source_locale'] = "Lokal";
 
