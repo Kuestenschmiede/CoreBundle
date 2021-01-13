@@ -271,6 +271,12 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
             'inputType'               => 'checkbox',
             'sql'                     => "char(1) NOT NULL default ''",
         ),
+        'importTables' => array(
+            'filter'                  => false,
+            'inputType'               => 'text',
+            'sql'                     => "varchar(255) NOT NULL default ''",
+            'default'                  => "",
+        )
     ),
 );
 
