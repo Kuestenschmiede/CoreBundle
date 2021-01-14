@@ -72,6 +72,11 @@ class C4GFileUpload
             ];
             $sReturn = '';
             $CKEditorFuncNum = \Input::get('CKEditorFuncNum');
+
+            if (!empty($_FILES['upload']) && empty($_FILES['uploadFile'])) {
+                $_FILES['uploadFile'] = $_FILES['upload'];
+            }
+
             if (!empty($_FILES['uploadFile']) && strlen($_FILES['uploadFile']['name']) > 1 && !empty($_FILES['uploadFile']['tmp_name'])) {
                 $aInfo = pathinfo($_FILES['uploadFile']['name']);
                 $sUploadDir = trim($sUploadDir, '/') . '/';
