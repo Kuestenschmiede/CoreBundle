@@ -19,6 +19,7 @@ class AfterImportEvent extends Event
     const NAME = 'con4gis.import.basedata.after';
 
     private $importType = "";
+    private $error = "";
 
     /**
      * @return string
@@ -34,5 +35,21 @@ class AfterImportEvent extends Event
     public function setImportType(string $importType)
     {
         $this->importType = $importType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getError(): string
+    {
+        return $this->error;
+    }
+
+    /**
+     * @param string $error
+     */
+    public function setError(string $error)
+    {
+        $this->error = $error;
     }
 }

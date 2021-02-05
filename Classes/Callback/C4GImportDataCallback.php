@@ -383,6 +383,11 @@ class C4GImportDataCallback extends Backend
         $event->setImportType($importType);
         $dispatcher = System::getContainer()->get('event_dispatcher');
         $dispatcher->dispatch($event::NAME, $event);
+        $error = $event->getError();
+
+        if ($error) {
+            \Contao\Message::addError($error);
+        }
 
         //Generate Symlinks and sync filesystem
         $this->import('Contao\Automator', 'Automator');
