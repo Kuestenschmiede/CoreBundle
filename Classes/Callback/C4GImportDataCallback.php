@@ -416,11 +416,9 @@ class C4GImportDataCallback extends Backend
         if ($importId) {
             $cronImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
             if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
-                if ($cronImportData['availableVersion'] == $cronImportData['importVersion']) {
-                    C4gLogModel::addLogEntry('core', 'Imported version is the same as the available version. Import will not be updated.');
-                } elseif ($cronImportData['importVersion'] == "" || $cronImportData['importVersion'] == "0" || $cronImportData['importVersion'] == 0) {
+                if ($cronImportData['importVersion'] == "" || $cronImportData['importVersion'] == "0" || $cronImportData['importVersion'] == 0) {
                     C4gLogModel::addLogEntry('core', 'New import is currently unavailable. Import will not be updated.');
-                } else {
+                } elseif ($cronImportData['availableVersion'] != $cronImportData['importVersion']) {
                     C4gLogModel::addLogEntry('core', 'Imported version is equal or higher than available version. Import will not be updated.');
                 }
                 return false;
