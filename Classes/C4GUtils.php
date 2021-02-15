@@ -490,6 +490,20 @@ class C4GUtils
     }
 
     /**
+     * @param $uuid
+     * @return bool
+     */
+    public static function isValidGUID($uuid) {
+        $chars = ['{','}'];
+        $uuid = $uuid ? str_replace($chars, " ", $uuid) : false;
+        $elements = $uuid ? explode('-',$uuid) : false;
+        if ($uuid && (strlen($elements[0]) === 8) && (strlen($elements[1]) === 4) && (strlen($elements[2]) === 4) && (strlen($elements[3]) === 4) && (strlen($elements[4]) === 12)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @param array $array
      * @return string
      */
