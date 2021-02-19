@@ -15,6 +15,7 @@ use Exception;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
 use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
+use con4gis\CoreBundle\Classes\Events\AdditionalImportProxyDataEvent;
 
 class C4GImportDataCallback extends Backend
 {
@@ -733,6 +734,19 @@ class C4GImportDataCallback extends Backend
             if (isset($contaoVersion)) {
                 $basedataUrl .= '&contaoVersion=' . str_replace(' ', '%20', $contaoVersion);
             }
+            
+            //Getting additional Data
+            $event = new AdditionalImportProxyDataEvent();
+            $dispatcher = System::getContainer()->get('event_dispatcher');
+            $dispatcher->dispatch($event::NAME, $event);
+            $additionalProxyData = $event->getProxyData();
+
+            if ($additionalProxyData && is_array($additionalProxyData)) {
+                foreach ($additionalProxyData as $proxyData) {
+                    $basedataUrl .= "&".$proxyData['proxyKey']."=".str_replace(' ', '%20', $proxyData['proxyData']);
+                }
+            }
+            
             $REQUEST = new \Request();
             if ($_SERVER['HTTP_REFERER']) {
                 $REQUEST->setHeader('Referer', $_SERVER['HTTP_REFERER']);
