@@ -18,7 +18,7 @@ class AdditionalImportProxyDataEvent extends Event
 {
     const NAME = 'con4gis.import.proxy.data';
 
-    private $proxyData = "";
+    private $proxyData = [];
 
     /**
      * @return array
