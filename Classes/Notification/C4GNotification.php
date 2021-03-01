@@ -23,6 +23,7 @@ use NotificationCenter\Model\Notification;
 class C4GNotification
 {
     protected $tokens;
+    protected $optionalTokens = [];
 
     public function __construct(array $notification)
     {
@@ -45,10 +46,15 @@ class C4GNotification
         }
     }
 
+    public function setOptionalToken(string $token)
+    {
+        $this->optionalTokens[] = $token;
+    }
+
     public function send(array $notificationIds)
     {
         foreach ($this->tokens as $key => $token) {
-            if ($token === '') {
+            if ($token === '' && !in_array($key, $this->optionalTokens)) {
                 throw new \Exception("C4GNotification: The token '$key' has not been defined.");
             }
         }
