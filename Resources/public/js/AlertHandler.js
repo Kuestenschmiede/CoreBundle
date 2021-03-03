@@ -94,6 +94,24 @@ export class AlertHandler {
       }
     });
   }
+  showConfirmDialogHTML(title, html, confirmCallback, cancelCallback, confirmText, cancelText, cssClass) {
+    Swal.fire({
+      title: title,
+      html: html,
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: confirmText ? confirmText : "Confirm",
+      cancelButtonText: cancelText ? cancelText : "Cancel",
+      dangerMode: true,
+      customClass: cssClass ? cssClass : ''
+    }).then((willDelete) => {
+      if (willDelete.value) {
+        confirmCallback();
+      } else {
+        cancelCallback();
+      }
+    });
+  }
 
   showPreConfirmDialog(title, text, preConfirmCallback, confirmText, cancelText, cssClass, showLoading) {
     Swal.fire({
