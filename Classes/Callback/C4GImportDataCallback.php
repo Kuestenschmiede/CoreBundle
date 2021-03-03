@@ -5,6 +5,7 @@ namespace con4gis\CoreBundle\Classes\Callback;
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Backend;
 use Contao\FilesModel;
+use Contao\Message;
 use Contao\PageRedirect;
 use Contao\Search;
 use Contao\StringUtil;
@@ -243,8 +244,7 @@ class C4GImportDataCallback extends Backend
 
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
 
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $con4gisImportId);
-
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == '') {
                     break;
@@ -356,7 +356,7 @@ class C4GImportDataCallback extends Backend
 
             }
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $con4gisImportId);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
 
             foreach ($sqlStatements as $sqlStatement) {
                 if ($sqlStatement == '') {
@@ -399,6 +399,7 @@ class C4GImportDataCallback extends Backend
 
         $this->importRunning(false, $con4gisImportId);
 
+        Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['importSuccessfull']);
         PageRedirect::redirect("/contao?do=c4g_io_data");
 
     }
@@ -487,6 +488,7 @@ class C4GImportDataCallback extends Backend
             \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError']);
         }
 
+        Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasedSuccessfull']);
         PageRedirect::redirect("/contao?do=c4g_io_data");
     }
 
@@ -625,6 +627,7 @@ class C4GImportDataCallback extends Backend
         }
 
         if (!$update) {
+            Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['deletedSuccessfull']);
             PageRedirect::redirect("/contao?do=c4g_io_data");
         } else {
             return true;
@@ -865,17 +868,18 @@ class C4GImportDataCallback extends Backend
         return '<a href="https://con4gis.io/blaupausen"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' target="_blank" rel="noopener">' . $label . '</a><br>';
     }
 
-    public function getSqlFromJson($file, $uuid, $con4gisImportId)
+//    public function getSqlFromJson($file, $uuid, $con4gisImportId)
+    public function getSqlFromJson($file, $uuid)
     {
         $filesMessageCount = 0;
         $importId = $uuid;
-        $uuid = substr($uuid, 0, 4);
         $jsonFile = (array) json_decode($file);
-        $jsonSize = sizeof($jsonFile);
         $sqlStatements = [];
         $relations = array_slice($jsonFile, -1, 1);
         $relationTables = [];
+        $relationTablesPrimary = [];
         $dbRelation = [];
+        $dbRelationPrimary = [];
         $hexValueFile = array_slice($jsonFile, -2, 1);
         $hexValueRelation = [];
 
@@ -886,6 +890,10 @@ class C4GImportDataCallback extends Backend
         }
 
         foreach ($relations['relations'] as $key => $value) {
+            //primary tables
+            if ($key == "NoRelations" && $value == "ToDisplay") {
+                break;
+            }
             $firstTable = explode('.', $key);
 
             if (!in_array($firstTable[0], $relationTables)) {
@@ -893,12 +901,22 @@ class C4GImportDataCallback extends Backend
             }
 
             $dbRelation[$firstTable[0]][] = $firstTable[1];
+
+            //foreign tables
+            $secondTable = explode('.', $value);
+
+            if (!in_array($secondTable[0], $relationTablesPrimary)) {
+                $relationTablesPrimary[] = $secondTable[0];
+            }
+            if (!in_array($secondTable[1], $dbRelationPrimary[$secondTable[0]])) {
+                $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
+            }
         }
 
-        //Check for previous released import
-        $firstImportTable = array_key_first($jsonFile);
-        $newId = $uuid;
-        $importUuidCheck = '%' . $uuid . '%';
+        //Get all changed IDs
+        $allChanges = $this->getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary);
+        $allIdChanges = $allChanges["allIdChanges"];
+        $allIdChangesNonRelations = $allChanges["allIdChangesNonRelations"];
 
         if (substr($jsonFile['tl_files'][0]->uuid, 0, 2) == '0x') {
             $firstTlFilesUuid = substr($jsonFile['tl_files'][0]->uuid, 2);
@@ -906,24 +924,8 @@ class C4GImportDataCallback extends Backend
             $firstTlFilesUuid = $jsonFile['tl_files'][0]->uuid;
         }
 
-        try {
-            $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($importUuidCheck)->fetchAllAssoc();
-        } catch (Exception $e) {
-            $this->importRunning(false, $con4gisImportId);
-            C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
-        }
-
         $tlFilesTableQuery = $this->Database->prepare('SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?')->execute('%' . $firstTlFilesUuid . '%')->fetchAllAssoc();
 
-        while ($firstTableQuery) {
-            $newId = rand(1001, 9999);
-            try {
-                $firstTableQuery = $this->Database->prepare("SELECT id FROM $firstImportTable WHERE id LIKE ?")->execute($newId)->fetchAllAssoc();
-            } catch (Exception $e) {
-                $this->importRunning(false, $con4gisImportId);
-                C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
-            }
-        }
         foreach ($jsonFile as $importDB => $importDatasets) {
             if ($importDB == 'relations' OR $importDB == 'hexValues') {
                 break;
@@ -936,9 +938,14 @@ class C4GImportDataCallback extends Backend
                 if (!array_key_exists('importId', $importDataset)) {
                     $importDataset['importId'] = $importId;
                 }
+                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) ? $importDB : false;
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if ($importDbField == 'id') {
-                        $importDbValue = $this->prepend($newId, $importDbValue);
+                        if ($primaryImportRelationTable) {
+                            $importDbValue = $allIdChanges[$importDB][$importDbField][$importDbValue];
+                        } else {
+                            $importDbValue = $allIdChangesNonRelations[$importDB][$importDbField][$importDbValue];
+                        }
                     } elseif ($importDbField == 'importId') {
                         $importDbValue = $importId;
                     } elseif (in_array($importDB, $relationTables)) {
@@ -949,13 +956,13 @@ class C4GImportDataCallback extends Backend
 
                                     if (strpos($unserial, '{')) {
                                         $unserial = unserialize($unserial);
-                                        $unserial = $this->replaceId($unserial, $newId);
+                                        $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                         $newImportDbValue = serialize($unserial);
                                         $newImportDbValue = bin2hex($newImportDbValue);
                                         $newImportDbValue = $this->prepend('0x', $newImportDbValue);
                                         $importDbValue = $newImportDbValue;
                                     } else {
-                                        $newImportDbValue = $this->prepend($newId, $unserial);
+                                        $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                         $newImportDbValue = bin2hex($newImportDbValue);
                                         $newImportDbValue = $this->prepend('0x', $newImportDbValue);
                                         $importDbValue = $newImportDbValue;
@@ -963,19 +970,19 @@ class C4GImportDataCallback extends Backend
                                 } elseif (substr($importDbValue, 0, 2) == 'a:') {
                                     $importDbValue = str_replace('\"', '"', $importDbValue);
                                     $unserial = StringUtil::deserialize($importDbValue);
-                                    $unserial = $this->replaceId($unserial, $newId);
+                                    $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                     $newImportDbValue = serialize($unserial);
                                     $importDbValue = $newImportDbValue;
                                 } elseif (strpos($importDbValue, '{')) {
                                     $unserial = hex2bin(substr($importDbValue, 2));
                                     $unserial = unserialize($unserial);
-                                    $unserial = $this->replaceId($unserial, $newId);
+                                    $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                     $newImportDbValue = serialize($unserial);
                                     $newImportDbValue = bin2hex($newImportDbValue);
                                     $newImportDbValue = $this->prepend('0x', $newImportDbValue);
                                     $importDbValue = $newImportDbValue;
                                 } elseif (is_numeric($importDbValue)) {
-                                    $newImportDbValue = $this->prepend($newId, $importDbValue);
+                                    $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations);
                                     $importDbValue = $newImportDbValue;
                                 }
                             }
@@ -1040,6 +1047,86 @@ class C4GImportDataCallback extends Backend
         return $sqlStatements;
     }
 
+    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary) {
+        $allIdChanges = [];
+        $allIdChangesNonRelations = [];
+        foreach ($jsonFile as $importDB => $importDatasets) {
+            if ($importDB == 'relations' OR $importDB == 'hexValues') {
+                break;
+            }
+
+            $firstPrimaryChange = true;
+            foreach ($importDatasets as $importDataset) {
+                $importDataset = (array)$importDataset;
+                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) ? $importDB : false;
+                foreach ($importDataset as $importDbField => $importDbValue) {
+                    if ($importDbField == 'id') {
+                        if ($primaryImportRelationTable) {
+                            if (in_array($importDbField, $dbRelationPrimary[$importDB]) && is_numeric($importDbValue)) {
+                                if ($firstPrimaryChange) {
+                                    $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+                                    if ($highestId && $highestId != 0 && $highestId != "" && $highestId != null) {
+                                        $highestId = (Int)$highestId[$importDbField];
+                                        $nextId = $highestId + 1;
+                                    } else if (!$highestId) {
+                                        $nextId = 1;
+                                    }
+                                    $firstPrimaryChange = false;
+                                } else {
+                                    $nextId = end($allIdChanges[$importDB][$importDbField]) + 1;
+                                }
+                                $allIdChanges[$importDB][$importDbField][$importDbValue] = isset($nextId) ? $nextId : "nextId";
+                                unset($nextId);
+                            }
+                        } else {
+                            if (is_numeric($importDbValue)) {
+                                if ($firstPrimaryChange) {
+                                    $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+                                    if ($highestId && $highestId != 0 && $highestId != "" && $highestId != null) {
+                                        $highestId = (Int)$highestId[$importDbField];
+                                        $nextId = $highestId + 1;
+                                    } else if (!$highestId) {
+                                        $nextId = 1;
+                                    }
+                                    $firstPrimaryChange = false;
+                                } else {
+                                    $nextId = end($allIdChangesNonRelations[$importDB][$importDbField]) + 1;
+                                }
+                                $allIdChangesNonRelations[$importDB][$importDbField][$importDbValue] = isset($nextId) ? $nextId : "nextId";
+                                unset($nextId);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        return ["allIdChanges" => $allIdChanges, "allIdChangesNonRelations" => $allIdChangesNonRelations];
+    }
+
+    private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations) {
+        if (is_object($relations["relations"])) {
+            $relations = (Array) $relations["relations"];
+        }
+        $primaryRelation = $relations[$importDB.".".$importDbField];
+        $primaryRelation = explode(".", $primaryRelation);
+        if (!is_array($importDbValue)) {
+            $newValue = $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$importDbValue];
+            return (String) $newValue;
+        } else {
+            foreach ($importDbValue as $key => $value) {
+                if (is_array($value)) {
+                    $newValue[$key] = $this->changeDbValue($importDB, $importDbField, $value, $allIdChanges, $relations);
+                } else if (is_numeric($value) && $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value]) {
+                    $newValue[$key] = (String) $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value];
+                } else {
+                    $newValue[$key] = (String) $importDbValue[$key];
+                }
+            }
+            return isset($newValue) ? $newValue : $importDbValue;
+        }
+    }
+
     public function isUuid($uuid) {
         if (ctype_xdigit($uuid) && strlen($uuid) == 32) {
             return true;
@@ -1066,7 +1153,6 @@ class C4GImportDataCallback extends Backend
                 $checkBool = true;
             } else {
                 $checkBool = false;
-
                 break;
             }
         }
@@ -1076,21 +1162,6 @@ class C4GImportDataCallback extends Backend
         C4gLogModel::addLogEntry('core', 'Could not read import file or import file is not complete.');
 
         return false;
-    }
-
-    public function replaceId($array, $newId)
-    {
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $array[$key] = $this->replaceId($value, $newId);
-            }
-
-            if (is_numeric($value)) {
-                $array[$key] = $this->prepend($newId, $value);
-            }
-        }
-
-        return $array;
     }
 
     public function importRunning($running = false, $id = 0)
