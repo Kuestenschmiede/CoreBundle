@@ -18,25 +18,11 @@ class BeforeImportButtonLoadEvent extends Event
 {
     const NAME = 'con4gis.import.button.load';
 
-    private $additionalVendorInformation = [];
     private $updateCompatible = true;
     private $releaseCompatible = true;
-
-    /**
-     * @return array
-     */
-    public function getAdditionalVendorInformation(): array
-    {
-        return $this->additionalVendorInformation;
-    }
-
-    /**
-     * @param array $additionalVendorInformation
-     */
-    public function setAdditionalVendorInformation(array $additionalVendorInformation)
-    {
-        $this->additionalVendorInformation = $additionalVendorInformation;
-    }
+    private $importCompatible = true;
+    private $vendor = "con4gis";
+    private $importData = [];
 
     /**
      * @return bool
@@ -68,5 +54,53 @@ class BeforeImportButtonLoadEvent extends Event
     public function setReleaseCompatible(bool $releaseCompatible)
     {
         $this->releaseCompatible = $releaseCompatible;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getImportCompatible(): bool
+    {
+        return $this->importCompatible;
+    }
+
+    /**
+     * @param bool $importCompatible
+     */
+    public function setImportCompatible(bool $importCompatible)
+    {
+        $this->importCompatible = $importCompatible;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVendor(): string
+    {
+        return $this->vendor;
+    }
+
+    /**
+     * @param string $vendor
+     */
+    public function setVendor(string $vendor)
+    {
+        $this->vendor = $vendor;
+    }
+
+    /**
+     * @return array
+     */
+    public function getImportData(): array
+    {
+        return $this->importData;
+    }
+
+    /**
+     * @param array $importData
+     */
+    public function setImportData(array $importData)
+    {
+        $this->importData = $importData;
     }
 }

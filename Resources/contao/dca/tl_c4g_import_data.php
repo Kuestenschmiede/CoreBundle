@@ -309,17 +309,11 @@ class tl_c4g_import_data extends Contao\Backend
         $event = new BeforeImportButtonLoadEvent();
         $dispatcher = System::getContainer()->get('event_dispatcher');
         $dispatcher->dispatch($event::NAME, $event);
-        $additionalVendorInformation = $event->getAdditionalVendorInformation();
-
-        if (is_array($additionalVendorInformation) && !empty($additionalVendorInformation)) {
-            $vendor = $additionalVendorInformation['vendor'];
-            $updateCompatible = $additionalVendorInformation['updateCompatible'];
-            $releaseCompatible = $additionalVendorInformation['releaseCompatible'];
-        } else {
-            $vendor = "";
-            $updateCompatible = "";
-            $releaseCompatible = "";
-        }
+        $event->setImportData($arrRow);
+        $importCompatible = $event->getImportCompatible();
+        $updateCompatible = $event->getUpdateCompatible();
+        $releaseCompatible = $event->getReleaseCompatible();
+        $vendor = $event->getVendor();
 
         $id = $arrRow['id'];
         //$userid = $this->User->id;
@@ -336,7 +330,7 @@ class tl_c4g_import_data extends Contao\Backend
         $bundles = str_replace(" ", "", $bundles);
         $bundlesVersion = str_replace(" ", "", $bundlesVersion);
 
-        if ($source == "io") {
+        if ($source != "locale") {
             foreach ($bundles as $key => $value) {
 //            $pos = strpos($value, 'Bundle');
 //            $bundleName = strtolower(substr($value,0,$pos));
@@ -397,7 +391,7 @@ class tl_c4g_import_data extends Contao\Backend
         if ($href) {
             switch ($href) {
                 case 'key=importBaseData':
-                    if ($importVersion == "" && $isInstalled) {
+                    if ($importVersion == "" && $isInstalled && ((!$isCon4gisBundle && $importCompatible) || $isCon4gisBundle )) {
                         return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$label.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_import_data']['importDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
                     }
                     break;
