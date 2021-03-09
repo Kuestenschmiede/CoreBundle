@@ -10,6 +10,7 @@
  * @copyright  Küstenschmiede GmbH Software & Design
  * @link       https://www.con4gis.org
  */
+
 namespace con4gis\CoreBundle\Classes\Helper;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;

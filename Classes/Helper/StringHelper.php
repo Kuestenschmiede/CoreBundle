@@ -40,11 +40,11 @@ class StringHelper
      * @param $str
      * @return bool
      */
-    public static function isBinary($str) {
-
-        $umlauts = explode(",", "Ŕ,Á,Â,Ă,Ä,Ĺ,Ç,Č,É,Ę,Ë,Ě,Í,Î,Ď,Ň,Ó,Ô,Ő,Ö,Ř,Ů,Ú,Ű,Ü,Ý,ŕ,á,â,ă,ä,ĺ,ç,č,é,ę,ë,ě,í,î,ď,đ,ň,ó,ô,ő,ö,ř,ů,ú,ű,ü,ý,˙,Ń,ń,ß");
-        foreach($umlauts as $umlaut){
-            if (false !== (strpos($str, $umlaut))){
+    public static function isBinary($str)
+    {
+        $umlauts = explode(',', 'Ŕ,Á,Â,Ă,Ä,Ĺ,Ç,Č,É,Ę,Ë,Ě,Í,Î,Ď,Ň,Ó,Ô,Ő,Ö,Ř,Ů,Ú,Ű,Ü,Ý,ŕ,á,â,ă,ä,ĺ,ç,č,é,ę,ë,ě,í,î,ď,đ,ň,ó,ô,ő,ö,ř,ů,ú,ű,ü,ý,˙,Ń,ń,ß');
+        foreach ($umlauts as $umlaut) {
+            if (false !== (strpos($str, $umlaut))) {
                 return false;
             }
         }
@@ -59,16 +59,18 @@ class StringHelper
      * @param $length
      * @return false|string
      */
-    public static function truncate($text, $length) {
+    public static function truncate($text, $length)
+    {
         $text = strip_tags($text);
-        $length = abs((int)$length);
-        $firstFullstop = strpos($text, ".");
-        if ($firstFullstop && $firstFullstop <= ($length-1)) {
+        $length = abs((int) $length);
+        $firstFullstop = strpos($text, '.');
+        if ($firstFullstop && $firstFullstop <= ($length - 1)) {
             return substr($text, 0, $firstFullstop);
         }
-        if(strlen($text) > $length) {
+        if (strlen($text) > $length) {
             $text = preg_replace("/^(.{1,$length})(\s.*|$)/s", '\\1...', $text);
         }
+
         return(trim($text));
     }
 }

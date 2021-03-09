@@ -132,7 +132,7 @@ class DcaHelper
      * @param \DataContainer $dc
      * @return string
      */
-    public function getPickerLink(\DataContainer $dc)
+    public function getPickerLink(\Contao\DataContainer $dc)
     {
         if (!$GLOBALS['TL_JAVASCRIPT']['c4g-maps-backend']) {
             $GLOBALS['TL_JAVASCRIPT']['c4g-maps-backend'] = 'bundles/con4gismaps/js/c4g-maps-backend.js';

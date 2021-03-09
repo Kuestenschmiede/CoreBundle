@@ -14,8 +14,8 @@
 
 namespace con4gis\CoreBundle\Classes;
 
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Contao\FrontendUser;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class C4GApiCache
@@ -58,7 +58,7 @@ class C4GApiCache
 
     public function getCacheKey($strApiEndpoint, $arrFragments)
     {
-        $frontendIndex = new \FrontendIndex();
+        $frontendIndex = new \Contao\FrontendIndex();
 
         if (FE_USER_LOGGED_IN) {
             $arrFragments['userId'] = FrontendUser::getInstance()->id;

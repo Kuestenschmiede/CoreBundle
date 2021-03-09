@@ -21,7 +21,7 @@ class BeforeImportButtonLoadEvent extends Event
     private $updateCompatible = true;
     private $releaseCompatible = true;
     private $importCompatible = true;
-    private $vendor = "con4gis";
+    private $vendor = 'con4gis';
     private $importData = [];
 
     /**

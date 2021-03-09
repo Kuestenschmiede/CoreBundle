@@ -18,7 +18,7 @@ namespace con4gis\CoreBundle\Classes;
  * Class C4GMigration
  * @package c4g
  */
-class C4GMigration extends \BackendModule
+class C4GMigration extends \Contao\BackendModule
 {
     protected $strTemplate = 'be_c4g_migration';
     protected $module = '';

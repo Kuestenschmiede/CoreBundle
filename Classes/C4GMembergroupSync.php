@@ -21,7 +21,7 @@ use con4gis\GroupsBundle\Resources\models\MemberGroupModel;
  * Class C4GMembergroupSync
  * @package c4g
  */
-class C4GMembergroupSync extends \BackendModule
+class C4GMembergroupSync extends \Contao\BackendModule
 {
     protected $strTemplate = 'be_c4g_membergroupsync';
     protected $action = '';

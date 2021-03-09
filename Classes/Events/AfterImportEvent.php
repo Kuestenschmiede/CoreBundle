@@ -18,8 +18,8 @@ class AfterImportEvent extends Event
 {
     const NAME = 'con4gis.import.basedata.after';
 
-    private $importType = "";
-    private $error = "";
+    private $importType = '';
+    private $error = '';
 
     /**
      * @return string

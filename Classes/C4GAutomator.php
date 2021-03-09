@@ -19,7 +19,7 @@ use Contao\System;
 /**
  * Provide methods to run automated jobs.
  */
-class C4GAutomator extends \System
+class C4GAutomator extends \Contao\System
 {
     /**
      * Make the constuctor public

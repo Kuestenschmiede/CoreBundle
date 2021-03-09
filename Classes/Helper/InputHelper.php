@@ -57,7 +57,7 @@ class InputHelper
         $serviceName = 'security.csrf.token_manager',
         $tokenName = 'contao.csrf_token_name'
     ) {
-        $c = \System::getContainer();
+        $c = \Contao\System::getContainer();
         $param = $c->getParameter($tokenName);
 
         return $c->get($serviceName)->getToken($param)->getValue();

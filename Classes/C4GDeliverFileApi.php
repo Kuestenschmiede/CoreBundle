@@ -19,13 +19,13 @@ class C4GDeliverFileApi
         define('TL_MODE', 'FE');
 
         // grab SERVER and GET-vars
-        $sFilePath = \Input::get('file');
-        $sUniqFileName = \Input::get('u');
-        $sFileHash = \Input::get('c');
-        $sServerName = \Environment::get('serverName');
-        $sRequestUri = \Environment::get('requestUri');
-        $sHttps = \Environment::get('https');
-        $path = \Environment::get('path');
+        $sFilePath = \Contao\Input::get('file');
+        $sUniqFileName = \Contao\Input::get('u');
+        $sFileHash = \Contao\Input::get('c');
+        $sServerName = \Contao\Environment::get('serverName');
+        $sRequestUri = \Contao\Environment::get('requestUri');
+        $sHttps = \Contao\Environment::get('https');
+        $path = \Contao\Environment::get('path');
 
         $aInfo = pathinfo($sFilePath);
         $sFilePath = str_replace($aInfo['basename'], '', $sFilePath) . $sUniqFileName;

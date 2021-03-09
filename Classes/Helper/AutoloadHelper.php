@@ -1,8 +1,16 @@
 <?php
-/**
- * @package     esitlib
- * @version     1.0.0
+/*
+ * This file is part of con4gis,
+ * the gis-kit for Contao CMS.
+ *
+ * @package    con4gis
+ * @version    7
+ * @author     con4gis contributors (see "authors.txt")
+ * @license    LGPL-3.0-or-later
+ * @copyright  Küstenschmiede GmbH Software & Design
+ * @link       https://www.con4gis.org
  */
+
 namespace con4gis\CoreBundle\Classes\Helper;
 
 /**
@@ -37,7 +45,7 @@ class AutoloadHelper
         foreach ($objFiles as $varFile) {
             $strFile = (is_array($varFile)) ? array_shift($varFile) : $varFile;
             $objFile = pathinfo($strFile);
-            \TemplateLoader::addFile($objFile['filename'], str_replace(TL_ROOT . '/', '', $objFile['dirname']));
+            \Contao\TemplateLoader::addFile($objFile['filename'], str_replace(TL_ROOT . '/', '', $objFile['dirname']));
         }
     }
 

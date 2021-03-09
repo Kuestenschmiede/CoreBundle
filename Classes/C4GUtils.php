@@ -174,7 +174,7 @@ class C4GUtils
     {
         try {
             // preparemail
-            $eMail = new \Email();
+            $eMail = new \Contao\Email();
             $eMail->charset = $mailData['charset'] ?: 'UTF-8';
 
             $eMail->from = $mailData['from'];
@@ -351,7 +351,7 @@ class C4GUtils
         $name = "Contao\CoreBundle\Security\Authentication\Token\TokenChecker";
         // check if the symfony authentication model is used
         if (class_exists($name)) {
-            return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+            return \Contao\System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
         }
 //            return (\Contao\FrontendUser::getInstance() !== null);
         return FE_USER_LOGGED_IN;
@@ -374,7 +374,7 @@ class C4GUtils
         $name = "Contao\CoreBundle\Security\Authentication\Token\TokenChecker";
         // check if the symfony authentication model is used
         if (class_exists($name)) {
-            return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+            return \Contao\System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
         }
 
         return (\Contao\BackendUser::getInstance() !== null);
@@ -458,7 +458,7 @@ class C4GUtils
                 }
 
                 if ($response && $response->key && (strlen($response->key) == 64)) {
-                    \Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
+                    \Contao\Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
                     if ($getKeyOnly) {
                         return $response->key;
                     }
@@ -493,13 +493,15 @@ class C4GUtils
      * @param $uuid
      * @return bool
      */
-    public static function isValidGUID($uuid) {
+    public static function isValidGUID($uuid)
+    {
         $chars = ['{','}'];
-        $uuid = $uuid ? str_replace($chars, " ", $uuid) : false;
-        $elements = $uuid ? explode('-',$uuid) : false;
+        $uuid = $uuid ? str_replace($chars, ' ', $uuid) : false;
+        $elements = $uuid ? explode('-', $uuid) : false;
         if ($uuid && (strlen($elements[0]) === 8) && (strlen($elements[1]) === 4) && (strlen($elements[2]) === 4) && (strlen($elements[3]) === 4) && (strlen($elements[4]) === 12)) {
             return true;
         }
+
         return false;
     }
 
@@ -507,19 +509,22 @@ class C4GUtils
      * @param array $array
      * @return string
      */
-    public static function buildInString(array $array) {
-        return 'IN('.implode(",", array_fill(0, count($array), '?')).')';
+    public static function buildInString(array $array)
+    {
+        return 'IN(' . implode(',', array_fill(0, count($array), '?')) . ')';
     }
 
     /**
      * @param $link
      * @return string
      */
-    public static function addProtocolToLink($link) {
+    public static function addProtocolToLink($link)
+    {
         $testLink = trim(strtoupper($link));
         if ($testLink && (substr($testLink, 0, 4) != 'HTTP')) {
-            $link = 'https://'.$link;
+            $link = 'https://' . $link;
         }
+
         return $link;
     }
 }

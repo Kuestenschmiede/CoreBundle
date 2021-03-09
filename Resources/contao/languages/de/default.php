@@ -113,10 +113,5 @@ $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_ADDRESS']             = 'Bitte
 $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_SUBJECT']             = 'Bitte vergeben Sie einen E-Mail-Betreff.';
 $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['NO_EMAIL_MESSAGE']             = 'Bitte verfassen Sie einen E-Mail-Text.';
 
-// messages for exceptions by code
-// $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['exception_xxx'] = "";
-
-// $GLOBALS['TL_LANG']['tl_maintenance_jobs']['con4gis'] = array('con4gis Cache leeren', 'Löscht die temporären con4gis API-Dateien.');
-
 $GLOBALS['TL_LANG']['tl_maintenance_jobs']['con4gis_log'] = ['con4gis Server Log löschen', 'Löscht den con4gis Server Log.'];
 
