@@ -308,11 +308,12 @@ class tl_c4g_import_data extends Contao\Backend
 
         $event = new BeforeImportButtonLoadEvent();
         $dispatcher = System::getContainer()->get('event_dispatcher');
-        $dispatcher->dispatch($event::NAME, $event);
         $event->setImportData($arrRow);
+        $dispatcher->dispatch($event::NAME, $event);
         $importCompatible = $event->getImportCompatible();
         $updateCompatible = $event->getUpdateCompatible();
         $releaseCompatible = $event->getReleaseCompatible();
+        $compatibleImportType = $event->getImportType();
         $vendor = $event->getVendor();
 
         $id = $arrRow['id'];
@@ -325,7 +326,7 @@ class tl_c4g_import_data extends Contao\Backend
         $bundlesVersion = explode(",", $arrRow['bundlesVersion']);
         $isInstalled = false;
         $installedPackages = $this->getContainer()->getParameter('kernel.packages');
-        $isCon4gisBundle = true;
+        $importAllowed = true;
 
         $bundles = str_replace(" ", "", $bundles);
         $bundlesVersion = str_replace(" ", "", $bundlesVersion);
@@ -336,7 +337,11 @@ class tl_c4g_import_data extends Contao\Backend
 //            $bundleName = strtolower(substr($value,0,$pos));
                 $version = $installedPackages['con4gis/'.$value];
                 if (!$version) {
-                    $isCon4gisBundle = false;
+                    if (!empty($compatibleImportType)) {
+                        if (in_array($importType, $compatibleImportType)) {
+                            $importAllowed = false;
+                        }
+                    }
                     $version = $installedPackages[$vendor.'/'.$value];
                 }
 
@@ -391,19 +396,19 @@ class tl_c4g_import_data extends Contao\Backend
         if ($href) {
             switch ($href) {
                 case 'key=importBaseData':
-                    if ($importVersion == "" && $isInstalled && ((!$isCon4gisBundle && $importCompatible) || $isCon4gisBundle )) {
+                    if ($importVersion == "" && $isInstalled && ((!$importAllowed && $importCompatible) || $importAllowed )) {
                         return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$label.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_import_data']['importDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
                     }
                     break;
                 case 'key=updateBaseData':
-                    if ($importVersion != "" && $availableVersion != "" && $isInstalled && $availableVersion != $importVersion && !$isCon4gisBundle && $updateCompatible) {
+                    if ($importVersion != "" && $availableVersion != "" && $isInstalled && $availableVersion != $importVersion && !$importAllowed && $updateCompatible) {
                         return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$label.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_import_data']['updateImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
-                    } elseif ($importVersion != "" && $availableVersion != "" && $isInstalled && $availableVersion != $importVersion && $isCon4gisBundle) {
+                    } elseif ($importVersion != "" && $availableVersion != "" && $isInstalled && $availableVersion != $importVersion && $importAllowed) {
                         return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$label.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_import_data']['updateImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
                     }
                     break;
                 case 'key=releaseBaseData':
-                    if ($importVersion != "" && $isInstalled && ((!$isCon4gisBundle && $releaseCompatible) || $isCon4gisBundle )) {
+                    if ($importVersion != "" && $isInstalled && ((!$importAllowed && $releaseCompatible) || $importAllowed )) {
                         return '<a href="'.$this->addToUrl($href).'&id='.$id.'" title="'.$label.'" onclick="return confirm(\''.$GLOBALS['TL_LANG']['tl_c4g_import_data']['releaseImportDialog'].'\')"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ';
                     }
                     break;

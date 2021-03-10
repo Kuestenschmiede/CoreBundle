@@ -795,12 +795,13 @@ class C4GImportDataCallback extends Backend
 
     public function getLocalIoData()
     {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $arrBasedataFolders = [
-            'maps' => './../vendor/con4gis/maps/Resources/con4gis',
-            'visualization' => './../vendor/con4gis/visualization/Resources/con4gis',
-            'core' => './../vendor/con4gis/core/Resources/con4gis',
-            'data' => './../vendor/con4gis/data/Resources/con4gis',
-            'firefighter' => './../vendor/con4gis/firefighter/Resources/con4gis',
+            'maps' => $rootDir.'/vendor/con4gis/maps/Resources/con4gis',
+            'visualization' => $rootDir.'/vendor/con4gis/visualization/Resources/con4gis',
+            'core' => $rootDir.'/vendor/con4gis/core/Resources/con4gis',
+            'data' => $rootDir.'/vendor/con4gis/data/Resources/con4gis',
+            'firefighter' => $rootDir.'/vendor/con4gis/firefighter/Resources/con4gis',
         ];
 
         $basedataFiles = [];

@@ -22,6 +22,7 @@ class BeforeImportButtonLoadEvent extends Event
     private $releaseCompatible = true;
     private $importCompatible = true;
     private $vendor = 'con4gis';
+    private $importType = [];
     private $importData = [];
 
     /**
@@ -102,5 +103,21 @@ class BeforeImportButtonLoadEvent extends Event
     public function setImportData(array $importData)
     {
         $this->importData = $importData;
+    }
+
+    /**
+     * @return array
+     */
+    public function getImportType(): array
+    {
+        return $this->importType;
+    }
+
+    /**
+     * @param array $importType
+     */
+    public function setImportType(array $importType)
+    {
+        $this->importType = $importType;
     }
 }
