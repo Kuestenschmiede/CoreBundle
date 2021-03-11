@@ -48,7 +48,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.1.x-dev"
+            "dev-main": "4.1.x-dev"
         },
         "contao-manager-plugin": "con4gis\\CoreBundle\\ContaoManager\\Plugin"
     }
