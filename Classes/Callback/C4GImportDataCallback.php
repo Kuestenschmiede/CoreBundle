@@ -26,6 +26,7 @@ use Symfony\Component\Yaml\Parser;
 use ZipArchive;
 use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
 use con4gis\CoreBundle\Classes\Events\AdditionalImportProxyDataEvent;
+use DirectoryIterator;
 
 class C4GImportDataCallback extends Backend
 {
@@ -253,7 +254,7 @@ class C4GImportDataCallback extends Backend
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
-
+            $this->chmod_r($imagePath, 0775);
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
 
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
@@ -371,6 +372,7 @@ class C4GImportDataCallback extends Backend
                 $objFolder->unprotect();
                 $objFolder->synchronize();
             }
+            $this->chmod_r($imagePath, 0775);
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
 
@@ -1232,6 +1234,16 @@ class C4GImportDataCallback extends Backend
             closedir($dir_handle);
         } else {
             copy($source, $dest);
+        }
+    }
+
+    function chmod_r($path, $mode) {
+        $dir = new DirectoryIterator($path);
+        foreach ($dir as $item) {
+            chmod($item->getPathname(), $mode);
+            if ($item->isDir() && !$item->isDot()) {
+                $this->chmod_r($item->getPathname(), $mode);
+            }
         }
     }
 
