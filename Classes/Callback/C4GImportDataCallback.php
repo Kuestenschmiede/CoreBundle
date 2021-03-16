@@ -396,6 +396,10 @@ class C4GImportDataCallback extends Backend
             $objFolder->delete();
         }
 
+        //Generate Symlinks and sync filesystem
+        $this->import('Contao\Automator', 'Automator');
+        $this->Automator->generateSymlinks();
+
         if (!isset($importType)) {
             $importType = 'notype';
         }
@@ -408,10 +412,6 @@ class C4GImportDataCallback extends Backend
         if ($error) {
             \Contao\Message::addError($error);
         }
-
-        //Generate Symlinks and sync filesystem
-        $this->import('Contao\Automator', 'Automator');
-        $this->Automator->generateSymlinks();
 //
 //        Dbafs::syncFiles();
 
