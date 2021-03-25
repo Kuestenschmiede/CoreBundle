@@ -254,7 +254,7 @@ class C4GImportDataCallback extends Backend
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
-            $this->chmod_r($imagePath, 0775);
+            $this->chmod_r($imagePath, 0775, 0664);
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
 
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid']);
@@ -410,10 +410,8 @@ class C4GImportDataCallback extends Backend
         $error = $event->getError();
 
         if ($error) {
-            \Contao\Message::addError($error);
+            Message::addError($error);
         }
-//
-//        Dbafs::syncFiles();
 
         $this->importRunning(false, $con4gisImportId);
 
@@ -1237,12 +1235,18 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    function chmod_r($path, $mode) {
+    function chmod_r($path, $modeDirectory = false, $modeFile = false) {
         $dir = new DirectoryIterator($path);
-        foreach ($dir as $item) {
-            chmod($item->getPathname(), $mode);
-            if ($item->isDir() && !$item->isDot()) {
-                $this->chmod_r($item->getPathname(), $mode);
+        if ($modeDirectory || $modeFile) {
+            foreach ($dir as $item) {
+                if ($item->isDir() && $modeDirectory) {
+                    chmod($item->getPathname(), $modeDirectory);
+                    if ($item->isDir() && !$item->isDot()) {
+                        $this->chmod_r($item->getPathname(), $modeDirectory, $modeFile);
+                    }
+                } else if (!$item->isDir() && $modeFile) {
+                    chmod($item->getPathname(), $modeFile);
+                }
             }
         }
     }
