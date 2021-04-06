@@ -1235,7 +1235,8 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    function chmod_r($path, $modeDirectory = false, $modeFile = false) {
+    public function chmod_r($path, $modeDirectory = false, $modeFile = false)
+    {
         $dir = new DirectoryIterator($path);
         if ($modeDirectory || $modeFile) {
             foreach ($dir as $item) {
@@ -1244,7 +1245,7 @@ class C4GImportDataCallback extends Backend
                     if ($item->isDir() && !$item->isDot()) {
                         $this->chmod_r($item->getPathname(), $modeDirectory, $modeFile);
                     }
-                } else if (!$item->isDir() && $modeFile) {
+                } elseif (!$item->isDir() && $modeFile) {
                     chmod($item->getPathname(), $modeFile);
                 }
             }
