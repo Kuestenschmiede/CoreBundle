@@ -520,4 +520,35 @@ class C4GUtils
 
         return $link;
     }
+
+    /**
+     * @param string $haystack
+     * @param string $needle
+     * @param bool $caseSensitive
+     * @return bool
+     */
+    public static function stringContains(string $haystack, string $needle, bool $caseSensitive = false): bool
+    {
+        if ($caseSensitive) {
+            return strpos($haystack, $needle) !== false;
+        } else {
+            return stripos($haystack, $needle) !== false;
+        }
+    }
+
+    /**
+     * @param string $haystack
+     * @param array $needles
+     * @param bool $caseSensitive
+     * @return bool
+     */
+    public static function stringContainsAny(string $haystack, array $needles, bool $caseSensitive = false): bool
+    {
+        foreach ($needles as $needle) {
+            if (static::stringContains($haystack, $needle, $caseSensitive)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
