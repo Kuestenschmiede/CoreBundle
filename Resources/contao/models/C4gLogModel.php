@@ -43,11 +43,11 @@ class C4gLogModel extends Model
     }
 
     public static function recursivelyLogIterator(Iterator $iterator) {
-        return static::recursivelyLog($iterator);
+        static::recursivelyLog($iterator);
     }
 
     public static function recursivelyLogArray(array $array) {
-        return static::recursivelyLog($array);
+        static::recursivelyLog($array);
     }
 
     private static function recursivelyLog($param) {
