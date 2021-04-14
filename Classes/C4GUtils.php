@@ -531,9 +531,9 @@ class C4GUtils
     {
         if ($caseSensitive) {
             return strpos($haystack, $needle) !== false;
-        } else {
-            return stripos($haystack, $needle) !== false;
         }
+
+        return stripos($haystack, $needle) !== false;
     }
 
     /**
@@ -549,6 +549,7 @@ class C4GUtils
                 return true;
             }
         }
+
         return false;
     }
 }
