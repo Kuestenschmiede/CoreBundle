@@ -25,6 +25,9 @@
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
     "de_datetime-asc": function ( a, b ) {
         var x, y;
+
+        //ToDo Remove html like <span> from a, b
+
         if (jQuery.trim(a) !== '') {
             var deDatea = jQuery.trim(a).split(' ');
             var deTimea = deDatea[1].split(':');
