@@ -93,10 +93,10 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         [
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['showBundleNames'],
             'exclude'                 => true,
-            'default'                 => true,
+            'default'                 => false,
             'inputType'               => 'checkbox',
             'eval'                    => ['tl_class'=>'clr'],
-            'sql'                     => "char(1) NOT NULL default '1'"
+            'sql'                     => "char(1) NOT NULL default '0'"
         ],
         'con4gisIoUrl' =>[
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'],
