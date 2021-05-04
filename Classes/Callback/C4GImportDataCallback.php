@@ -73,6 +73,9 @@ class C4GImportDataCallback extends Backend
 
         if (empty($localData)) {
             foreach ($responses as $response) {
+                if (isset($response->datatype) && $response->datatype == "diff") {
+                    continue;
+                }
                 if (!$response->tables) {
                     $response->tables = '';
                 }
@@ -92,6 +95,9 @@ class C4GImportDataCallback extends Backend
         foreach ($localData as $data) {
             $available = false;
             foreach ($responses as $response) {
+                if (isset($response->datatype) && $response->datatype == "diff") {
+                    continue;
+                }
                 if (!$response->tables) {
                     $response->tables = '';
                 }
@@ -131,6 +137,9 @@ class C4GImportDataCallback extends Backend
 
         //Check for new data
         foreach ($responses as $response) {
+            if (isset($response->datatype) && $response->datatype == "diff") {
+                continue;
+            }
             if (!$response->tables) {
                 $response->tables = '';
             }
@@ -192,8 +201,11 @@ class C4GImportDataCallback extends Backend
         $this->importRunning(true, $con4gisImportId);
 
 //      lokaler Import
-
-        $localImportDatas = $this->getLocalIoData();
+        if ($importId) {
+            $localImportDatas = $this->getLocalIoData(true);
+        } else {
+            $localImportDatas = $this->getLocalIoData();
+        }
 
         $availableLocal = false;
         foreach ($localImportDatas as $localImportData) {
@@ -210,10 +222,20 @@ class C4GImportDataCallback extends Backend
             $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/Resources/con4gis/' . $importData['general']['filename'];
             $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
             $importType = $importData['import']['type'];
+            if (isset($importData['import']['datatype'])) {
+                $importDataType = $importData['import']['datatype'];
+            } else {
+                $importDataType = "full";
+            }
+
+            //for testing
+            $this->importRunning(false, $con4gisImportId);
+            PageRedirect::redirect('/contao?do=c4g_io_data');
+            return false;
 
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
-                if ($importId) {
+                if ($importId && $importDataType == "full") {
                     $deleted = $this->deleteBaseData($importId, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
@@ -223,7 +245,7 @@ class C4GImportDataCallback extends Backend
 
                         return false;
                     }
-                } else {
+                } else if ($importDataType == "full") {
                     $deleted = $this->deleteBaseData(false, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
@@ -285,6 +307,12 @@ class C4GImportDataCallback extends Backend
             $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
             $basedataUrl .= '&mode=' . 'ioData';
             $basedataUrl .= '&data=' . $con4gisImportId;
+            if ($importId) {
+                $basedataUrl .= '&datatype=diff';
+            } else {
+                $basedataUrl .= '&datatype=full';
+            }
+
             $downloadPath = './../files/con4gis_import_data/io-data/';
             $filename = 'io-data-proxy.c4g';
             $downloadFile = $downloadPath . $filename;
@@ -300,6 +328,12 @@ class C4GImportDataCallback extends Backend
 
                 return false;
             }
+
+            //for testing
+            $this->importRunning(false, $con4gisImportId);
+            PageRedirect::redirect('/contao?do=c4g_io_data');
+            return false;
+
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
                 if ($importId) {
@@ -669,6 +703,7 @@ class C4GImportDataCallback extends Backend
         $contents = '';
         $contentsJson = '';
 
+
         try {
             $zip = zip_open($localFile);
             if ($zip) {
@@ -695,7 +730,17 @@ class C4GImportDataCallback extends Backend
                 zip_close($zip);
             }
             if ($contents == '' || $contentsJson == '') {
-                C4gLogModel::addLogEntry('core', 'Downloaded import data file (' . $localFile . ') not complete.');
+                try {
+                    $errorContent = file_get_contents($localFile);
+                    if ($errorContent == "no_file") {
+                        C4gLogModel::addLogEntry('core', "Didn't found file on Proxy-Server. Please try again later or contact support@con4gis.io");
+                    } else {
+                        C4gLogModel::addLogEntry('core', 'Downloaded import data file (' . $localFile . ') not complete.');
+                    }
+                } catch (\Throwable $e) {
+                    C4gLogModel::addLogEntry('core', 'Error with downloaded import data file (' . $localFile . '). Error: '.$e);
+                    return false;
+                }
 
                 return false;
             }
@@ -793,7 +838,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function getLocalIoData()
+    public function getLocalIoData($importId = false)
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $arrBasedataFolders = [
@@ -810,7 +855,28 @@ class C4GImportDataCallback extends Backend
             if (file_exists($value) && is_dir($value)) {
                 $basedataFiles[$arrBasedataFolder] = array_slice(scandir($value), 2);
                 foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
+                    if (!$importId && str_ends_with($file, "-diff.c4g")) {
+                    unset($basedataFiles[$arrBasedataFolder][$basedataFile]);
+                    continue;
+                    }
                     $basedataFiles[$arrBasedataFolder][$basedataFile] = $value . '/' . $file;
+                }
+            }
+        }
+
+        //Check if Diffs are available
+        if ($importId) {
+            foreach ($arrBasedataFolders as $arrBasedataFolder => $value) {
+                if (file_exists($value) && is_dir($value)) {
+                    foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
+                        if (str_ends_with($file, "-diff.c4g")) {
+                            $importName = strstr($file, "-diff.c4g", true);
+                            $fullimport = array_search($importName.".c4g", $basedataFiles[$arrBasedataFolder]);
+                            if ($fullimport) {
+                                unset($basedataFiles[$arrBasedataFolder][$fullimport]);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -862,7 +928,6 @@ class C4GImportDataCallback extends Backend
                 }
             }
         }
-
         return $newYamlConfigArray;
     }
 
