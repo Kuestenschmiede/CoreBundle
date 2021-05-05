@@ -1,4 +1,13 @@
 <?php
+/*
+ * This file is part of con4gis, the gis-kit for Contao CMS.
+ * @package con4gis
+ * @version 8
+ * @author con4gis contributors (see "authors.txt")
+ * @license LGPL-3.0-or-later
+ * @copyright (c) 2010-2021, by Küstenschmiede GmbH Software & Design
+ * @link https://www.con4gis.org
+ */
 
 /*
  * This file is part of Contao.
@@ -362,6 +371,11 @@ class tl_c4g_bricks extends Contao\Backend
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'],
                 'icon' => $iconPath.'firefighter_c4g.svg'
             ],
+            'framework' => [
+                'repo' => 'FrameworksBundle',
+                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'],
+                'icon' => $iconPath.'framework_c4g.svg'
+            ],
             'forum' => [
                 'repo' => 'ForumBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
@@ -386,11 +400,6 @@ class tl_c4g_bricks extends Contao\Backend
                 'repo' => 'MapsBundle',
                 'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
                 'icon' => $iconPath.'maps_c4g.svg'
-            ],
-            'routing' => [
-                'repo' => 'RoutingBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['routing'],
-                'icon' => $iconPath.'routing_c4g.svg'
             ],
             'projects' => [
                 'repo' => 'ProjectsBundle',
@@ -475,11 +484,11 @@ class tl_c4g_bricks extends Contao\Backend
             $lvArr = explode('.',$lv);
 
             $imajor = $ivArr[0] && is_int($ivArr[0]) ? intval($ivArr[0]) : false;
-            $lmajor = $lvArr[0] && is_int($ivArr[0]) ? intval($lvArr[0]) : false;
+            $lmajor = $lvArr[0] && is_int($lvArr[0]) ? intval($lvArr[0]) : false;
             $iminor = $ivArr[1] && is_int($ivArr[1]) ? intval($ivArr[1]) : false;
-            $lminor = $lvArr[1] && is_int($ivArr[1]) ? intval($lvArr[1]) : false;
+            $lminor = $lvArr[1] && is_int($lvArr[1]) ? intval($lvArr[1]) : false;
             $ibugfix = $ivArr[2] && is_int($ivArr[2]) ? intval($ivArr[2]) : false;
-            $ibugfix = $lvArr[2] && is_int($ivArr[2]) ? intval($lvArr[2]) : false;
+            $lbugfix = $lvArr[2] && is_int($lvArr[2]) ? intval($lvArr[2]) : false;
 
             if (($lmajor && $imajor) && ($lmajor > $imajor)) {
                 return true;

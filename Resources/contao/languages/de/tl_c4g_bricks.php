@@ -1,14 +1,12 @@
 <?php
 /*
- * This file is part of con4gis,
- * the gis-kit for Contao CMS.
- *
- * @package    con4gis
- * @version    7
- * @author     con4gis contributors (see "authors.txt")
- * @license    LGPL-3.0-or-later
- * @copyright  Küstenschmiede GmbH Software & Design
- * @link       https://www.con4gis.org
+ * This file is part of con4gis, the gis-kit for Contao CMS.
+ * @package con4gis
+ * @version 8
+ * @author con4gis contributors (see "authors.txt")
+ * @license LGPL-3.0-or-later
+ * @copyright (c) 2010-2021, by Küstenschmiede GmbH Software & Design
+ * @link https://www.con4gis.org
  */
 
 /** FIELDS **/
@@ -61,12 +59,12 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'] = 'Front- und Backend Kartenedito
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['export'] = 'CSV Exporter';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'] = 'Einsatzverwaltung (Feuerwehr)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'] = 'Diskussionsforum, FAQ- oder Ticketsystem';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'] = 'React Framework für Frontendmodule (NEU)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['groups'] = 'Frontend Mitgliederverwaltung';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['import'] = 'CSV Importer';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'] = 'LDAP Schnittstelle (Front- und Backend)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'] = 'Der Kartenbaustein';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['data'] = 'Karten- und Listendaten pflegen';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['routing'] = 'Routing und Umkreissuche';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'] = 'Framework für Frontendmodule';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'] = 'Progressive Web App';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Stapelverarbeitung von Prozessen (Warteschlange)';

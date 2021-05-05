@@ -1,3 +1,13 @@
+/*
+ * This file is part of con4gis, the gis-kit for Contao CMS.
+ * @package con4gis
+ * @version 8
+ * @author con4gis contributors (see "authors.txt")
+ * @license LGPL-3.0-or-later
+ * @copyright (c) 2010-2021, by Küstenschmiede GmbH Software & Design
+ * @link https://www.con4gis.org
+ */
+
 /** @preserve
  * jsPDF - PDF Document creation from JavaScript
  * Version 1.1.239-git Built on 2015-08-26T20:20

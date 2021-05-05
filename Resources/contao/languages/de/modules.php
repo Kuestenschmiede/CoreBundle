@@ -1,20 +1,18 @@
 <?php
 /*
- * This file is part of con4gis,
- * the gis-kit for Contao CMS.
- *
- * @package    con4gis
- * @version    7
- * @author     con4gis contributors (see "authors.txt")
- * @license    LGPL-3.0-or-later
- * @copyright  Küstenschmiede GmbH Software & Design
- * @link       https://www.con4gis.org
+ * This file is part of con4gis, the gis-kit for Contao CMS.
+ * @package con4gis
+ * @version 8
+ * @author con4gis contributors (see "authors.txt")
+ * @license LGPL-3.0-or-later
+ * @copyright (c) 2010-2021, by Küstenschmiede GmbH Software & Design
+ * @link https://www.con4gis.org
  */
 
 /**
  * Back end modules
  */
-$GLOBALS['TL_LANG']['MOD']['con4gis'] = array('con4gis 7', 'Geoinformationssysteme mit Contao.');
+$GLOBALS['TL_LANG']['MOD']['con4gis'] = array('con4gis 8', 'Geoinformationssysteme mit Contao.');
 $GLOBALS['TL_LANG']['MOD']['con4gis_stage'] = array('con4gis Prototypen', 'Nicht freigegebene Bausteine.');
 $GLOBALS['TL_LANG']['MOD']['c4g_bricks'] = array('Dashboard', 'Direkteinstieg in alle Bausteine.');
 $GLOBALS['TL_LANG']['MOD']['c4g_settings'] = array('Einstellungen', 'Einstellungen für alle Bausteine.');
