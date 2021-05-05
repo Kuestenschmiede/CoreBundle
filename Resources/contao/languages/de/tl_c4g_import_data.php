@@ -55,5 +55,6 @@ $GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport'] = 'Älterer Importordne
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports'] = 'Fehler beim Löschen alter Importe.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError'] = 'Fehler beim lösen des Imports: falsche Import Id.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['importSuccessfull'] = 'Der Import wurde erfolgreich installiert.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['importError'] = 'Der Import konnte nicht installiert werden. Weitere Informationen im con4gis-Log';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['deletedSuccessfull'] = 'Der Import wurde erfolgreich gelöscht.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['releasedSuccessfull'] = 'Der Import wurde erfolgreich gelöst. Ein anpassen ohne Datenverlust ist jetzt möglich.';
