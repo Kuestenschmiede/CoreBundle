@@ -206,6 +206,12 @@ class ResourceLoader
     {
         global $objPage;
 
+        //workaround hasJQuery param with contao >= 4.5
+        if ($objPage->layout) {
+            $objLayout = LayoutModel::findByPk($objPage->layout);
+            $objPage->hasJQuery = $objLayout->addJQuery;
+        }
+
         $neededResources = [];
 
         switch ($module) {
@@ -294,7 +300,7 @@ class ResourceLoader
             if ($objPage->hasJQuery) {
                 // jQuery is already loaded by Contao, don't load again!
             } else {
-                ResourceLoader::loadJavaScriptResource('assets/jquery/js/jquery.min.js|async|static', self::JAVASCRIPT, 'c4g_jquery');
+                ResourceLoader::loadJavaScriptResource('assets/jquery/js/jquery.min.js', self::HEAD, 'c4g_jquery');
             }
         }
         ResourceLoader::loadJavaScriptResource('bundles/con4giscore/js/C4GAjaxRequest.js|async|static', self::JAVASCRIPT, 'ajax-request');
