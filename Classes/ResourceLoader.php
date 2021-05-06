@@ -294,24 +294,24 @@ class ResourceLoader
             if ($objPage->hasJQuery) {
                 // jQuery is already loaded by Contao, don't load again!
             } else {
-                self::loadJavaScriptRessource('c4g_jquery', 'assets/jquery/js/jquery.min.js', true);
+                ResourceLoader::loadJavaScriptResource('assets/jquery/js/jquery.min.js|async|static', self::JAVASCRIPT, 'c4g_jquery');
             }
         }
-        self::loadJavaScriptRessource('ajax-request', 'bundles/con4giscore/js/C4GAjaxRequest.js', true);
+        ResourceLoader::loadJavaScriptResource('bundles/con4giscore/js/C4GAjaxRequest.js|async|static', self::JAVASCRIPT, 'ajax-request');
 
         if ($resources['magnific-popup']) {
             // load magnific-popup
-            self::loadJavaScriptRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js', true);
-            self::loadCssRessource('magnific-popup', 'bundles/con4giscore/vendor/magnific-popup/magnific-popup.css');
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|async|static', self::JAVASCRIPT, 'magnific-popup');
+            ResourceLoader::loadCssResource('bundles/con4giscore/vendor/magnific-popup/magnific-popup.css', 'magnific-popup');
         }
 
         if ($resources['clipboard']) {
             // load clipboard
-            self::loadJavaScriptRessource('clipboard', 'bundles/con4giscore/vendor/clipboard.min.js', true);
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|async|static', self::JAVASCRIPT, 'clipboard');
         }
         if ($resources['jspdf']) {
             // load clipboard
-            self::loadJavaScriptRessource('jspdf', 'bundles/con4giscore/vendor/jspdf/jspdf.min.js', true);
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jspdf/jspdf.min.js|async|static', self::JAVASCRIPT, 'jspdf');
             //$GLOBALS['TL_JAVASCRIPT']['jspdf.plugin.from_html'] = 'bundles/con4giscore/vendor/jspdf/plugins/from_html.js|static';
         }
 
@@ -323,10 +323,10 @@ class ResourceLoader
      * @param $cssFile
      * @deprecated
      */
-    public static function loadCssRessource($key, $cssFile)
-    {
-        self::loadCssResource($cssFile, $key);
-    }
+//    public static function loadCssRessource($key, $cssFile)
+//    {
+//        self::loadCssResource($cssFile, $key);
+//    }
 
     /**
      * @param $key
@@ -335,18 +335,18 @@ class ResourceLoader
      * @param bool $es6Module
      * @deprecated
      */
-    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false)
-    {
-        if ($inHeader) {
-            self::loadJavaScriptResource($jsFile, self::HEAD, $key);
-        } else {
-            if ($es6Module) {
-                self::loadJavaScriptResourceModule($jsFile, $key);
-            } else {
-                self::loadJavaScriptResource($jsFile, self::BODY, $key);
-            }
-        }
-    }
+//    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false)
+//    {
+//        if ($inHeader) {
+//            self::loadJavaScriptResource($jsFile, self::HEAD, $key);
+//        } else {
+//            if ($es6Module) {
+//                self::loadJavaScriptResourceModule($jsFile, $key);
+//            } else {
+//                self::loadJavaScriptResource($jsFile, self::BODY, $key);
+//            }
+//        }
+//    }
 
     /**
      * @param $key

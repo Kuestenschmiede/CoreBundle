@@ -30,7 +30,7 @@
     "compression-webpack-plugin": "^7.1.2",
     "echo-loader": "0.0.1",
     "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0"
+    "webpack-cli": "^4.7.0"
   },
   "dependencies": {
     "sweetalert2": "^10.16.7"
