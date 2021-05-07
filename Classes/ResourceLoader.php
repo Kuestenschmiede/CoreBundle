@@ -249,7 +249,7 @@ class ResourceLoader
                 }
 
                 // Load magnific-popup.js for projects
-                $neededResources['magnific-popup'] = C4GVersionProvider::isInstalled('con4gis/projects');
+                $neededResources['magnific-popup'] = false;//C4GVersionProvider::isInstalled('con4gis/projects');
 
                 //ToDo switch for pdf export
                 $neededResources['jspdf'] = false;
