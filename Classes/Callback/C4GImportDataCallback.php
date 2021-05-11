@@ -319,7 +319,19 @@ class C4GImportDataCallback extends Backend
             $basedataUrl .= '&mode=' . 'ioData';
             $basedataUrl .= '&data=' . $con4gisImportId;
             if ($importId) {
-                $basedataUrl .= '&datatype=diff';
+                $currentImport = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')
+                    ->execute($con4gisImportId)->fetchAssoc();
+                if ($currentImport) {
+                    $importVersion = $currentImport['importVersion'];
+                    $availableVersion = $currentImport['availableVersion'];
+                    if (($importVersion + 1) != $availableVersion || $importVersion == "") {
+                        $basedataUrl .= '&datatype=full';
+                    } else{
+                        $basedataUrl .= '&datatype=diff';
+                    }
+                } else {
+                    $basedataUrl .= '&datatype=diff';
+                }
             } else {
                 $basedataUrl .= '&datatype=full';
             }
