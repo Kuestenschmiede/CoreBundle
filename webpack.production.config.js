@@ -10,11 +10,11 @@
 
 var path = require('path');
 var config = {
-  entry: './Resources/public/js/AlertHandler.js',
+  entry: './Resources/public/vendor/js/AlertHandler.js',
   mode: "production",
   output: {
     filename: 'AlertHandler.js',
-    path: path.resolve('./Resources/public/build/')
+    path: path.resolve('./Resources/public/dist/js/')
   },
   devtool: "source-map",
   module: {

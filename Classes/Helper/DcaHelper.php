@@ -166,7 +166,7 @@ class DcaHelper
     {
         $rt = Input::get('rt');
         if (!$rt) {
-            $do = "c4g_bricks";
+            $do = 'c4g_bricks';
         } else {
             $do = $rt;
         }

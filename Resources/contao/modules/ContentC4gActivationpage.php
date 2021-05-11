@@ -88,7 +88,7 @@ class ContentC4gActivationpage extends \Module
 
         // load default CSS if enabled
         if ($this->c4g_activationpage_use_default_css) {
-            $GLOBALS['TL_CSS']['c4g_activationpage'] = 'bundles/con4giscore/css/ce_c4g_activationpage.css';
+            $GLOBALS['TL_CSS']['c4g_activationpage'] = 'bundles/con4giscore/dist/css/ce_c4g_activationpage.min.css';
         }
 
         // check if a confirmation is needed

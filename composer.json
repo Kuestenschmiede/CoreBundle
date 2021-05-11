@@ -24,7 +24,8 @@
     "require": {
         "php": "^7.1",
         "contao/core-bundle": "^4.4",
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "contao-components/jquery": "^3.6"
     },
     "conflict": {
         "contao/core": "*",

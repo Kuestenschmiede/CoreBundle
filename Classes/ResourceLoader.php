@@ -305,21 +305,21 @@ class ResourceLoader
         }
         ResourceLoader::loadJavaScriptResource('bundles/con4giscore/js/C4GAjaxRequest.js|async|static', self::JAVASCRIPT, 'ajax-request');
 
-        if ($resources['magnific-popup']) {
-            // load magnific-popup
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|async|static', self::JAVASCRIPT, 'magnific-popup');
-            ResourceLoader::loadCssResource('bundles/con4giscore/vendor/magnific-popup/magnific-popup.css', 'magnific-popup');
-        }
-
-        if ($resources['clipboard']) {
-            // load clipboard
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|async|static', self::JAVASCRIPT, 'clipboard');
-        }
-        if ($resources['jspdf']) {
-            // load clipboard
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jspdf/jspdf.min.js|async|static', self::JAVASCRIPT, 'jspdf');
-            //$GLOBALS['TL_JAVASCRIPT']['jspdf.plugin.from_html'] = 'bundles/con4giscore/vendor/jspdf/plugins/from_html.js|static';
-        }
+//        if ($resources['magnific-popup']) {
+//            // load magnific-popup
+//            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|async|static', self::JAVASCRIPT, 'magnific-popup');
+//            ResourceLoader::loadCssResource('bundles/con4giscore/vendor/magnific-popup/magnific-popup.css', 'magnific-popup');
+//        }
+//
+//        if ($resources['clipboard']) {
+//            // load clipboard
+//            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|async|static', self::JAVASCRIPT, 'clipboard');
+//        }
+//        if ($resources['jspdf']) {
+//            // load clipboard
+//            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jspdf/jspdf.min.js|async|static', self::JAVASCRIPT, 'jspdf');
+//            //$GLOBALS['TL_JAVASCRIPT']['jspdf.plugin.from_html'] = 'bundles/con4giscore/vendor/jspdf/plugins/from_html.js|static';
+//        }
 
         return true;
     }

@@ -1,0 +1,23 @@
+@charset "UTF-8";
+#tl_navigation .group-con4gis {
+  background: url(../images/be-icons/con4gis.svg) 3px 2px no-repeat;
+  text-transform: lowercase!important
+}
+li .c4g_io_data,
+li .c4g_log,
+li .c4g_settings {
+  display: none!important
+}
+li .c4g_invisible_brick {
+  display: none!important
+}
+li .c4g_visible_brick {
+  display: block!important
+}
+.col_brickname img {
+  width: 75px
+}
+.header_con4gis_io,
+.header_con4gis_org {
+  vertical-align: 8px
+}

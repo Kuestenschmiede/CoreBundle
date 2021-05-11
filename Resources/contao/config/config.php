@@ -19,7 +19,7 @@ $GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Classes\C4GImageUpload';
 $GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Classes\C4GDeliverFileApi';
 
 if(TL_MODE == "BE") {
-    $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/css/con4gis.css';
+    $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/dist/css/con4gis.min.css';
 }
 
 $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
