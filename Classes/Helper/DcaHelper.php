@@ -165,14 +165,13 @@ class DcaHelper
     public function back($href, $label, $title, $class, $attributes)
     {
         $rt = Input::get('rt');
-        $do = Input::get('do');
-        //$id = Input::get('id');
-
-        if ($do) {
-            $href = '/contao/main.php?do=' . $do . "&rt=$rt";
+        if (!$rt) {
+            $do = "c4g_bricks";
         } else {
-            $href = "/contao/main.php?do=c4g_bricks&rt=$rt&key=back";
+            $do = $rt;
         }
+
+        $href = '/contao/main.php?do=' . $do/* . "&rt=$rt"*/;
 
         return '<a href="' . $href . '" class="' . $class . '" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
