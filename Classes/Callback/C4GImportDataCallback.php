@@ -477,6 +477,7 @@ class C4GImportDataCallback extends Backend
 
         $this->importRunning(false, $con4gisImportId);
 
+        C4gLogModel::addLogEntry("core", "The import data was successfully imported.");
         Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['importSuccessfull']);
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
@@ -515,7 +516,8 @@ class C4GImportDataCallback extends Backend
         if ($cronImportData && $cronImport) {
             $this->importBaseData($importId);
         } else {
-            $this->importBaseData();
+            //ToDo: with importId only for manual diff import testing
+            $this->importBaseData($importId);
         }
 
         PageRedirect::redirect('/contao?do=c4g_io_data');
@@ -564,6 +566,7 @@ class C4GImportDataCallback extends Backend
             \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError']);
         }
 
+        C4gLogModel::addLogEntry("core", "The import data was successfully released.");
         Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasedSuccessfull']);
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
@@ -706,9 +709,11 @@ class C4GImportDataCallback extends Backend
         }
 
         if (!$update) {
+            C4gLogModel::addLogEntry("core", "The import data was successfully deleted.");
             Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['deletedSuccessfull']);
             PageRedirect::redirect('/contao?do=c4g_io_data');
         } else {
+            C4gLogModel::addLogEntry("core", "The import data was successfully deleted.");
             return true;
         }
     }
@@ -772,7 +777,7 @@ class C4GImportDataCallback extends Backend
 
                 return false;
             }
-
+            C4gLogModel::addLogEntry("core", "The import data was successfully downloaded.");
             return true;
         } catch (\Exception $e) {
             C4gLogModel::addLogEntry('core', 'Error reading downloaded file: ' . $e);
@@ -1051,21 +1056,59 @@ class C4GImportDataCallback extends Backend
         }
 
         $tlFilesTableQuery = $this->Database->prepare('SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?')->execute('%' . $firstTlFilesUuid . '%')->fetchAllAssoc();
+        $availableFileEntries = [];
+        $skipFilesEntry = false;
+
+        if (isset($jsonFile['tl_files'])) {
+            foreach ($jsonFile['tl_files'] as $fileEntry) {
+//                if ($fileEntry->uuid == "") {
+//                    continue;
+//                }
+//                $tlFilesQuery = $this->Database->prepare('SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?')
+//                    ->execute('%' . $fileEntry->uuid . '%')->fetchAssoc();
+//                if ($tlFilesQuery) {
+//                    $availableFileEntries[] = $fileEntry->uuid;
+//                }
+                foreach ($jsonFile['tl_files'] as $eachFile) {
+                    $path = $eachFile->path;
+                    $path = strstr($path, "{");
+                    $path = strstr($path, "}", true)."}";
+                    if (!in_array($path, $availableFileEntries) && strlen($path) == 38) {
+                        $availableFileEntries[] = $path;
+                    }
+                }
+            }
+        }
+
+        if (!empty($availableFileEntries)) {
+            foreach ($availableFileEntries as $availableFileEntry) {
+                $this->Database->prepare('DELETE FROM tl_files WHERE path LIKE ?')
+                    ->execute('%' . $availableFileEntry . '%');
+            }
+        }
 
         foreach ($jsonFile as $importDB => $importDatasets) {
             if ($importDB == 'relations' or $importDB == 'hexValues') {
                 break;
             }
+            if ($importDB == "tl_files") {
+                $queryType = "INSERT";
+            }
 
             $dbFields = $this->Database->getFieldNames($importDB);
-            if ($queryType == "UPDATE" && in_array("uuid", $dbFields)) {
+            if ($queryType == "UPDATE" && in_array("uuid", $dbFields) ) {
                 $updateWhereQuery = " WHERE uuid=";
             } else if ($queryType == "UPDATE") {
                 continue;
             }
             foreach ($importDatasets as $importDataset) {
+                $skipFilesEntry = false;
                 $sqlStatement = '';
                 $importDataset = (array) $importDataset;
+                if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && $importDataset['uuid'] == "") {
+                    C4gLogModel::addLogEntry("core", "Don't update dataset with id".$importDataset['id']." from table ".$importDB." because of empty uuid.");
+                    continue;
+                }
                 if (!array_key_exists('importId', $importDataset)) {
                     $importDataset['importId'] = $importId;
                 }
@@ -1135,7 +1178,7 @@ class C4GImportDataCallback extends Backend
                     }
 
                     if (in_array($importDbField, $dbFields)) {
-                        if (($importDB == 'tl_files' && $importDbField == 'id') || (isset($updateWhereQueryValue) && $importDbField == 'uuid')) {
+                        if (($importDB == 'tl_files' && $importDbField == 'id') || (isset($updateWhereQueryValue) && $importDbField == 'uuid' && $importDB != "tl_files")) {
                             $sqlStatement = $sqlStatement . '';
                         } else {
                             if ($queryType == "INSERT") {
@@ -1189,13 +1232,9 @@ class C4GImportDataCallback extends Backend
                                 }
                             }
                         }
-                    } else {
-                        if ($importDB != 'tl_files' && $importDbField != 'id') {
-                            C4gLogModel::addLogEntry('core', 'The import database field <b>' . $importDbField . '</b> is not in the database <b>' . $importDB . '</b>.');
-                        }
                     }
                 }
-                if ($importDB == 'tl_files' && $tlFilesTableQuery) {
+                if ($importDB == 'tl_files' && $skipFilesEntry) {
                     if ($filesMessageCount == 0) {
                         C4gLogModel::addLogEntry('core', 'Files already imported. tl_files will not be imported');
                     }
