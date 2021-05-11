@@ -1091,23 +1091,42 @@ class C4GImportDataCallback extends Backend
             if ($importDB == 'relations' or $importDB == 'hexValues') {
                 break;
             }
-            if ($importDB == "tl_files") {
-                $queryType = "INSERT";
-            }
 
             $dbFields = $this->Database->getFieldNames($importDB);
             if ($queryType == "UPDATE" && in_array("uuid", $dbFields) ) {
-                $updateWhereQuery = " WHERE uuid=";
+                if ($importDB == "tl_files") {
+                    $updateWhereQuery = " WHERE HEX(uuid)=";
+                } else {
+                    $updateWhereQuery = " WHERE uuid=";
+                }
             } else if ($queryType == "UPDATE") {
                 continue;
             }
             foreach ($importDatasets as $importDataset) {
+                if ($importDataType == "diff") {
+                    $queryType = "UPDATE";
+                } else {
+                    $queryType = "INSERT";
+                }
                 $skipFilesEntry = false;
                 $sqlStatement = '';
                 $importDataset = (array) $importDataset;
                 if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && $importDataset['uuid'] == "") {
                     C4gLogModel::addLogEntry("core", "Don't update dataset with id".$importDataset['id']." from table ".$importDB." because of empty uuid.");
                     continue;
+                }
+                if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && $importDataset['uuid'] != "") {
+                    //check if dataset can be updated or is a completely new one
+                    if ($importDB == "tl_files") {
+                        $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE HEX(uuid)=?")
+                            ->execute($importDataset['uuid'])->fetchAssoc();
+                    } else {
+                        $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE importId != '' && importId != 0 && uuid=?")
+                            ->execute($importDataset['uuid'])->fetchAssoc();
+                    }
+                    if (!$availableQuery) {
+                        $queryType = "INSERT";
+                    }
                 }
                 if (!array_key_exists('importId', $importDataset)) {
                     $importDataset['importId'] = $importId;
