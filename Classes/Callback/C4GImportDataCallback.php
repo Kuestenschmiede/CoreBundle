@@ -15,6 +15,7 @@ namespace con4gis\CoreBundle\Classes\Callback;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Backend;
+use Contao\Folder;
 use Contao\Message;
 use Contao\PageRedirect;
 use Contao\StringUtil;
@@ -275,6 +276,9 @@ class C4GImportDataCallback extends Backend
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
 
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType);
+            if ($importDataType == "diff") {
+                $this->deleteOldDiffImages($file);
+            }
 
             if (!$sqlStatements) {
                 C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
@@ -434,6 +438,9 @@ class C4GImportDataCallback extends Backend
             $this->chmod_r($imagePath, 0775);
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
             $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType);
+            if ($importDataType == "diff") {
+                $this->deleteOldDiffImages($file);
+            }
 
             if (!$sqlStatements) {
                 C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
@@ -1002,7 +1009,42 @@ class C4GImportDataCallback extends Backend
         return '<a href="https://con4gis.io/blaupausen"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' target="_blank" rel="noopener">' . $label . '</a><br>';
     }
 
-//    public function getSqlFromJson($file, $uuid, $con4gisImportId)
+    public function deleteOldDiffImages($file) {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $jsonFile = (array) json_decode($file);
+        if (isset($jsonFile['deleted']->tl_files)) {
+            foreach ($jsonFile['deleted']->tl_files as $deleteTlFileDataset) {
+                $deleteTlFileDataset = (array) $deleteTlFileDataset;
+                $path = $deleteTlFileDataset['path'];
+                $deleteFile = strrchr($path, '/');
+                $deleteFolder = str_replace($deleteFile, '', $path);
+                unlink($rootDir."/".$path);
+                $scan = array_diff(scandir($rootDir."/".$deleteFolder), array('..', '.'));
+                if (count($scan) == 1 && in_array(".public", $scan)) {
+                    unlink($rootDir."/".$deleteFolder."/.public");
+                }
+                $this->recursiveDeleteDiffFolder($deleteFolder);
+            }
+        }
+    }
+
+    public function recursiveDeleteDiffFolder($deleteFolder) {
+        if (str_ends_with($deleteFolder, "/files")) {
+            return false;
+        }
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $folder = new Folder($deleteFolder);
+        if ($folder->isEmpty()) {
+            $this->recursiveRemoveDirectory($rootDir."/".$deleteFolder);
+        } else {
+            return false;
+        }
+        $deleteCurrentFolder = strrchr($deleteFolder, '/');
+        $deletePreFolder = str_replace($deleteCurrentFolder, '', $deleteFolder);
+        $this->recursiveDeleteDiffFolder($deletePreFolder);
+        return true;
+    }
+
     public function getSqlFromJson($file, $uuid, $importDataType)
     {
         if (!$file) {
@@ -1071,16 +1113,9 @@ class C4GImportDataCallback extends Backend
         $availableFileEntries = [];
         $skipFilesEntry = false;
 
+        //ToDo: gilt das wirklich für alle Bilder die mitgeliefert werden?
         if (isset($jsonFile['tl_files'])) {
             foreach ($jsonFile['tl_files'] as $fileEntry) {
-//                if ($fileEntry->uuid == "") {
-//                    continue;
-//                }
-//                $tlFilesQuery = $this->Database->prepare('SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?')
-//                    ->execute('%' . $fileEntry->uuid . '%')->fetchAssoc();
-//                if ($tlFilesQuery) {
-//                    $availableFileEntries[] = $fileEntry->uuid;
-//                }
                 foreach ($jsonFile['tl_files'] as $eachFile) {
                     $path = $eachFile->path;
                     $path = strstr($path, "{");
@@ -1107,9 +1142,19 @@ class C4GImportDataCallback extends Backend
                     foreach ($tableDataset as $dataset) {
                         $dataset = (array) $dataset;
                         if (isset($dataset['uuid']) && !empty($dataset['uuid'])) {
-                            $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && uuid='".$dataset['uuid']."'";
+                            if ($tableKey == "tl_files") {
+                                $path = stripslashes($dataset['path']);
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."' && HEX(uuid)='".$dataset['uuid']."'";
+                            } else {
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && uuid='".$dataset['uuid']."'";
+                            }
                         } else if (isset($dataset['id']) && !empty($dataset['id'])) {
-                            $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && id=".$dataset['id'];
+                            if ($tableKey == "tl_files") {
+                                $path = stripslashes($dataset['path']);
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."' && HEX(uuid)='".$dataset['uuid']."'";
+                            } else {
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && id=".$dataset['id'];
+                            }
                         }
                     }
                 }
