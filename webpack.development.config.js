@@ -10,25 +10,31 @@
 
 var path = require('path');
 var config = {
-  entry: './Resources/public/vendor/js/AlertHandler.js',
+  entry: {
+    'AlertHandler': './Resources/public/vendor/js/AlertHandler.js',
+    'c4g-vendor-fontawesome': './Resources/public/vendor/js/c4g-vendor-fontawesome.js'
+  },
   mode: "development",
   output: {
-    filename: 'AlertHandler.js',
-    path: path.resolve('./Resources/public/dist/js/')
+    filename: '[name].js',
+    path: path.resolve('./Resources/public/dist/js/'),
+    chunkFilename: '[name].bundle.js',
+    publicPath: "bundles/con4gisprojects/dist/js"
   },
   devtool: "inline-source-map",
+  resolve: {
+    modules: [
+      'node_modules',
+      'Resources/public/vendor/js'
+    ],
+    extensions: ['.js']
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: [{
-          loader: "echo-loader",
-        }, {
-          loader: "babel-loader",
-        }],
         include: [
           path.resolve('.'),
+          path.resolve('./Resources/public/vendor/js/')
         ],
       }
     ]
