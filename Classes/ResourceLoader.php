@@ -311,10 +311,10 @@ class ResourceLoader
 //            ResourceLoader::loadCssResource('bundles/con4giscore/vendor/magnific-popup/magnific-popup.css', 'magnific-popup');
 //        }
 //
-//        if ($resources['clipboard']) {
-//            // load clipboard
-//            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|async|static', self::JAVASCRIPT, 'clipboard');
-//        }
+        if ($resources['clipboard']) {
+            // load clipboard
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|async|static', self::JAVASCRIPT, 'clipboard');
+        }
 //        if ($resources['jspdf']) {
 //            // load clipboard
 //            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jspdf/jspdf.min.js|async|static', self::JAVASCRIPT, 'jspdf');
