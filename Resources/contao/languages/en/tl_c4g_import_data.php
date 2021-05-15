@@ -64,6 +64,7 @@ $GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning'] = 'The import is alre
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport'] = 'Older import folder in file system. Reimport everything manually.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports'] = 'Error while deleting older imports..';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError'] = 'Error releasing unavailable import: wrong id set.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['importError'] = 'The import was not installed. For more information see con4gis log';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['importSuccessfull'] = 'The import was successfully installed.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['deletedSuccessfull'] = 'The import was successfully deleted.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['releasedSuccessfull'] = 'The import was successfully release. You can now change data without losing data.';
