@@ -1101,37 +1101,6 @@ class C4GImportDataCallback extends Backend
         $allIdChanges = $allChanges['allIdChanges'];
         $allIdChangesNonRelations = $allChanges['allIdChangesNonRelations'];
 
-        if (substr($jsonFile['tl_files'][0]->uuid, 0, 2) == '0x') {
-            $firstTlFilesUuid = substr($jsonFile['tl_files'][0]->uuid, 2);
-        } else {
-            $firstTlFilesUuid = $jsonFile['tl_files'][0]->uuid;
-        }
-
-        $tlFilesTableQuery = $this->Database->prepare('SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?')->execute('%' . $firstTlFilesUuid . '%')->fetchAllAssoc();
-        $availableFileEntries = [];
-        $skipFilesEntry = false;
-
-        //ToDo: gilt das wirklich für alle Bilder die mitgeliefert werden?
-        if (isset($jsonFile['tl_files'])) {
-            foreach ($jsonFile['tl_files'] as $fileEntry) {
-                foreach ($jsonFile['tl_files'] as $eachFile) {
-                    $path = $eachFile->path;
-                    $path = strstr($path, "{");
-                    $path = strstr($path, "}", true)."}";
-                    if (!in_array($path, $availableFileEntries) && strlen($path) == 38) {
-                        $availableFileEntries[] = $path;
-                    }
-                }
-            }
-        }
-
-        if (!empty($availableFileEntries)) {
-            foreach ($availableFileEntries as $availableFileEntry) {
-                $this->Database->prepare('DELETE FROM tl_files WHERE path LIKE ?')
-                    ->execute('%' . $availableFileEntry . '%');
-            }
-        }
-
         foreach ($jsonFile as $importDB => $importDatasets) {
 
             //sql statements for deleting removed data
@@ -1142,7 +1111,7 @@ class C4GImportDataCallback extends Backend
                         if (isset($dataset['uuid']) && !empty($dataset['uuid'])) {
                             if ($tableKey == "tl_files") {
                                 $path = stripslashes($dataset['path']);
-                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."' && HEX(uuid)='".$dataset['uuid']."'";
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."'";
                             } else {
                                 $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && uuid='".$dataset['uuid']."'";
                             }
@@ -1163,14 +1132,22 @@ class C4GImportDataCallback extends Backend
                 break;
             }
 
+            if ($importDataType == "diff") {
+                $queryType = "UPDATE";
+            } else {
+                $queryType = "INSERT";
+            }
+            unset($updateWhereQuery);
+            unset($updateWhereQueryValue);
             $dbFields = $this->Database->getFieldNames($importDB);
             if ($queryType == "UPDATE" && in_array("uuid", $dbFields) ) {
                 if ($importDB == "tl_files") {
-                    $updateWhereQuery = " WHERE HEX(uuid)=";
+                    $updateWhereQuery = " WHERE path=";
                 } else {
                     $updateWhereQuery = " WHERE uuid=";
                 }
             } else if ($queryType == "UPDATE") {
+                C4gLogModel::addLogEntry("core", "Skip update of table ".$importDB." because of missing uuid.");
                 continue;
             }
             foreach ($importDatasets as $importDataset) {
@@ -1179,6 +1156,7 @@ class C4GImportDataCallback extends Backend
                 } else {
                     $queryType = "INSERT";
                 }
+
                 $skipFilesEntry = false;
                 $sqlStatement = '';
                 $importDataset = (array) $importDataset;
@@ -1189,8 +1167,8 @@ class C4GImportDataCallback extends Backend
                 if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && $importDataset['uuid'] != "") {
                     //check if dataset can be updated or is a completely new one
                     if ($importDB == "tl_files") {
-                        $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE HEX(uuid)=?")
-                            ->execute($importDataset['uuid'])->fetchAssoc();
+                        $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE path=?")
+                            ->execute($importDataset['path'])->fetchAssoc();
                     } else {
                         $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE importId != '' && importId != 0 && uuid=?")
                             ->execute($importDataset['uuid'])->fetchAssoc();
@@ -1207,7 +1185,9 @@ class C4GImportDataCallback extends Backend
                     if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && ($importDbField == "id" || $importDbField == "pid")) {
                         continue;
                     }
-                    if ($queryType == "UPDATE" && $importDbField == "uuid") {
+                    if ($queryType == "UPDATE" && $importDbField == "uuid" && $importDB != "tl_files") {
+                        $updateWhereQueryValue = $importDbValue;
+                    } else if ($queryType == "UPDATE" && $importDbField == "path" && $importDB == "tl_files") {
                         $updateWhereQueryValue = $importDbValue;
                     }
 
@@ -1329,7 +1309,7 @@ class C4GImportDataCallback extends Backend
                         C4gLogModel::addLogEntry('core', 'Files already imported. tl_files will not be imported');
                     }
                 } else {
-                    if ($queryType == "UPDATE") {
+                    if ($queryType == "UPDATE" && isset($updateWhereQuery) && isset($updateWhereQueryValue) && $updateWhereQuery != "" && $updateWhereQueryValue != "") {
                         $sqlStatement = str_replace(";;", $updateWhereQuery."'".$updateWhereQueryValue."';", $sqlStatement);
                     } else  {
                         $sqlStatement = str_replace(');;', ');', $sqlStatement);
