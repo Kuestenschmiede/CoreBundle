@@ -273,7 +273,7 @@ class C4GImportDataCallback extends Backend
             $this->chmod_r($imagePath, 0775, 0664);
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
 
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
             if ($importDataType == "diff") {
                 $this->deleteOldDiffImages($file);
             }
@@ -422,20 +422,13 @@ class C4GImportDataCallback extends Backend
                 $objFolder = new \Contao\Folder('files/con4gis_import_data');
                 //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
                 $objFolder->unprotect();
-
-                try {
-                    \Contao\Dbafs::addResource('files/con4gis_import_data');
-                } catch (\Exception $e) {
-                    C4gLogModel::addLogEntry('core', 'Error synchronize new import file folder: ' . $e);
-                }
                 //}
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
-                $objFolder->synchronize();
             }
             $this->chmod_r($imagePath, 0775);
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
             if ($importDataType == "diff") {
                 $this->deleteOldDiffImages($file);
             }
@@ -1043,14 +1036,23 @@ class C4GImportDataCallback extends Backend
         return true;
     }
 
-    public function getSqlFromJson($file, $uuid, $importDataType)
+    public function getSqlFromJson($file, $uuid, $importDataType, $imagePath)
     {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if (!$file) {
             return false;
         }
         if ($importDataType == "diff") {
+            $idConfigFile = file_get_contents($rootDir . "/files" . $imagePath . "/id-config.json");
+            if ($idConfigFile) {
+                $allIdChangesJson = json_decode($idConfigFile);
+                $allIdChangesJson = json_decode(json_encode($allIdChangesJson), true);
+            } else {
+                $allIdChangesJson = false;
+            }
             $queryType = "UPDATE";
         } else {
+            $allIdChangesJson = false;
             $queryType = "INSERT";
         }
 
@@ -1097,9 +1099,12 @@ class C4GImportDataCallback extends Backend
         }
 
         //Get all changed IDs
-        $allChanges = $this->getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary);
+        $allChanges = $this->getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson);
         $allIdChanges = $allChanges['allIdChanges'];
         $allIdChangesNonRelations = $allChanges['allIdChangesNonRelations'];
+
+        $allIdChangesJson = json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
         foreach ($jsonFile as $importDB => $importDatasets) {
 
@@ -1118,13 +1123,16 @@ class C4GImportDataCallback extends Backend
                         } else if (isset($dataset['id']) && !empty($dataset['id'])) {
                             if ($tableKey == "tl_files") {
                                 $path = stripslashes($dataset['path']);
-                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."' && HEX(uuid)='".$dataset['uuid']."'";
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."'";
                             } else {
-                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && id=".$dataset['id'];
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && id=".$allIdChanges[$tableKey]['id'][$dataset['id']];
+                                unset($allIdChanges[$tableKey]['id'][$dataset['id']]);
                             }
                         }
                     }
                 }
+                $allIdChangesJson = json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
                 continue;
             }
 
@@ -1146,11 +1154,14 @@ class C4GImportDataCallback extends Backend
                 } else {
                     $updateWhereQuery = " WHERE uuid=";
                 }
-            } else if ($queryType == "UPDATE") {
+            } else if ($queryType == "UPDATE" && !isset($allIdChanges[$importDB]['id'])) {
                 C4gLogModel::addLogEntry("core", "Skip update of table ".$importDB." because of missing uuid.");
                 continue;
+            } else if ($queryType == "UPDATE" && isset($allIdChanges[$importDB]['id'])) {
+                $updateWhereQuery = " WHERE id=";
             }
             foreach ($importDatasets as $importDataset) {
+                unset($updateWhereQueryValue);
                 if ($importDataType == "diff") {
                     $queryType = "UPDATE";
                 } else {
@@ -1163,6 +1174,9 @@ class C4GImportDataCallback extends Backend
                 if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && $importDataset['uuid'] == "") {
                     C4gLogModel::addLogEntry("core", "Don't update dataset with id".$importDataset['id']." from table ".$importDB." because of empty uuid.");
                     continue;
+                } else if ($queryType == "UPDATE" && !array_key_exists($importDataset['id'], $allIdChanges[$importDB]['id']) && !in_array("uuid", $dbFields)) {
+                    C4gLogModel::addLogEntry("core", "Don't update dataset with id".$importDataset['id']." from table ".$importDB." because id not exists in id config.");
+                    continue;
                 }
                 if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && $importDataset['uuid'] != "") {
                     //check if dataset can be updated or is a completely new one
@@ -1173,6 +1187,12 @@ class C4GImportDataCallback extends Backend
                         $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE importId != '' && importId != 0 && uuid=?")
                             ->execute($importDataset['uuid'])->fetchAssoc();
                     }
+                    if (!$availableQuery) {
+                        $queryType = "INSERT";
+                    }
+                } else if ($queryType == "UPDATE" && array_key_exists($importDataset['id'], $allIdChanges[$importDB]['id'])) {
+                    $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE id=?")
+                        ->execute($allIdChanges[$importDB]['id'][$importDataset['id']])->fetchAssoc();
                     if (!$availableQuery) {
                         $queryType = "INSERT";
                     }
@@ -1189,6 +1209,8 @@ class C4GImportDataCallback extends Backend
                         $updateWhereQueryValue = $importDbValue;
                     } else if ($queryType == "UPDATE" && $importDbField == "path" && $importDB == "tl_files") {
                         $updateWhereQueryValue = $importDbValue;
+                    } else if ($updateWhereQuery == " WHERE id=" && $importDbField == "id") {
+                        $updateWhereQueryValue = $allIdChanges[$importDB]['id'][$importDataset['id']];
                     }
 
                     if ($importDbField == 'id') {
@@ -1322,9 +1344,13 @@ class C4GImportDataCallback extends Backend
         return $sqlStatements;
     }
 
-    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary)
+    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson)
     {
-        $allIdChanges = [];
+        if ($allIdChangesJson) {
+            $allIdChanges = $allIdChangesJson;
+        } else {
+            $allIdChanges = [];
+        }
         $allIdChangesNonRelations = [];
         foreach ($jsonFile as $importDB => $importDatasets) {
             if ($importDB == 'relations' or $importDB == 'hexValues') {
@@ -1351,7 +1377,9 @@ class C4GImportDataCallback extends Backend
                                 } else {
                                     $nextId = end($allIdChanges[$importDB][$importDbField]) + 1;
                                 }
-                                $allIdChanges[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
+                                if (!isset($allIdChanges[$importDB][$importDbField][$importDbValue])) {
+                                    $allIdChanges[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
+                                }
                                 unset($nextId);
                             }
                         } else {
