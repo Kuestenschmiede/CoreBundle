@@ -11,8 +11,7 @@
 var path = require('path');
 var config = {
   entry: {
-    'AlertHandler': './Resources/public/vendor/js/AlertHandler.js',
-    'c4g-vendor-fontawesome': './Resources/public/vendor/js/c4g-vendor-fontawesome.js'
+    'AlertHandler': './Resources/public/vendor/js/AlertHandler.js'
   },
   mode: "development",
   output: {
