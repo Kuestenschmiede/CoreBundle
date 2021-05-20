@@ -273,7 +273,7 @@ class C4GImportDataCallback extends Backend
             $this->chmod_r($imagePath, 0775, 0664);
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
 
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
             if ($importDataType == "diff") {
                 $this->deleteOldDiffImages($file);
             }
@@ -304,7 +304,7 @@ class C4GImportDataCallback extends Backend
                     C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
                 }
             }
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=?WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
+            $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($localImportData['import']['uuid'], $con4gisImportId);
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($localImportData['images']['path'], $con4gisImportId);
 
@@ -422,20 +422,13 @@ class C4GImportDataCallback extends Backend
                 $objFolder = new \Contao\Folder('files/con4gis_import_data');
                 //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
                 $objFolder->unprotect();
-
-                try {
-                    \Contao\Dbafs::addResource('files/con4gis_import_data');
-                } catch (\Exception $e) {
-                    C4gLogModel::addLogEntry('core', 'Error synchronize new import file folder: ' . $e);
-                }
                 //}
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
-                $objFolder->synchronize();
             }
             $this->chmod_r($imagePath, 0775);
             $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType);
+            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
             if ($importDataType == "diff") {
                 $this->deleteOldDiffImages($file);
             }
@@ -1043,14 +1036,23 @@ class C4GImportDataCallback extends Backend
         return true;
     }
 
-    public function getSqlFromJson($file, $uuid, $importDataType)
+    public function getSqlFromJson($file, $uuid, $importDataType, $imagePath)
     {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if (!$file) {
             return false;
         }
         if ($importDataType == "diff") {
+            $idConfigFile = file_get_contents($rootDir . "/files" . $imagePath . "/id-config.json");
+            if ($idConfigFile) {
+                $allIdChangesJson = json_decode($idConfigFile);
+                $allIdChangesJson = json_decode(json_encode($allIdChangesJson), true);
+            } else {
+                $allIdChangesJson = false;
+            }
             $queryType = "UPDATE";
         } else {
+            $allIdChangesJson = false;
             $queryType = "INSERT";
         }
 
@@ -1097,40 +1099,12 @@ class C4GImportDataCallback extends Backend
         }
 
         //Get all changed IDs
-        $allChanges = $this->getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary);
+        $allChanges = $this->getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson);
         $allIdChanges = $allChanges['allIdChanges'];
         $allIdChangesNonRelations = $allChanges['allIdChangesNonRelations'];
 
-        if (substr($jsonFile['tl_files'][0]->uuid, 0, 2) == '0x') {
-            $firstTlFilesUuid = substr($jsonFile['tl_files'][0]->uuid, 2);
-        } else {
-            $firstTlFilesUuid = $jsonFile['tl_files'][0]->uuid;
-        }
-
-        $tlFilesTableQuery = $this->Database->prepare('SELECT uuid FROM tl_files WHERE HEX(uuid) LIKE ?')->execute('%' . $firstTlFilesUuid . '%')->fetchAllAssoc();
-        $availableFileEntries = [];
-        $skipFilesEntry = false;
-
-        //ToDo: gilt das wirklich für alle Bilder die mitgeliefert werden?
-        if (isset($jsonFile['tl_files'])) {
-            foreach ($jsonFile['tl_files'] as $fileEntry) {
-                foreach ($jsonFile['tl_files'] as $eachFile) {
-                    $path = $eachFile->path;
-                    $path = strstr($path, "{");
-                    $path = strstr($path, "}", true)."}";
-                    if (!in_array($path, $availableFileEntries) && strlen($path) == 38) {
-                        $availableFileEntries[] = $path;
-                    }
-                }
-            }
-        }
-
-        if (!empty($availableFileEntries)) {
-            foreach ($availableFileEntries as $availableFileEntry) {
-                $this->Database->prepare('DELETE FROM tl_files WHERE path LIKE ?')
-                    ->execute('%' . $availableFileEntry . '%');
-            }
-        }
+        $allIdChangesJson = json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
         foreach ($jsonFile as $importDB => $importDatasets) {
 
@@ -1142,20 +1116,23 @@ class C4GImportDataCallback extends Backend
                         if (isset($dataset['uuid']) && !empty($dataset['uuid'])) {
                             if ($tableKey == "tl_files") {
                                 $path = stripslashes($dataset['path']);
-                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."' && HEX(uuid)='".$dataset['uuid']."'";
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."'";
                             } else {
                                 $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && uuid='".$dataset['uuid']."'";
                             }
                         } else if (isset($dataset['id']) && !empty($dataset['id'])) {
                             if ($tableKey == "tl_files") {
                                 $path = stripslashes($dataset['path']);
-                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."' && HEX(uuid)='".$dataset['uuid']."'";
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE path='".$path."'";
                             } else {
-                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && id=".$dataset['id'];
+                                $sqlStatements[] = "DELETE FROM ".$tableKey." WHERE importId != '' && importId != 0 && id=".$allIdChanges[$tableKey]['id'][$dataset['id']];
+                                unset($allIdChanges[$tableKey]['id'][$dataset['id']]);
                             }
                         }
                     }
                 }
+                $allIdChangesJson = json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
                 continue;
             }
 
@@ -1163,38 +1140,59 @@ class C4GImportDataCallback extends Backend
                 break;
             }
 
+            if ($importDataType == "diff") {
+                $queryType = "UPDATE";
+            } else {
+                $queryType = "INSERT";
+            }
+            unset($updateWhereQuery);
+            unset($updateWhereQueryValue);
             $dbFields = $this->Database->getFieldNames($importDB);
             if ($queryType == "UPDATE" && in_array("uuid", $dbFields) ) {
                 if ($importDB == "tl_files") {
-                    $updateWhereQuery = " WHERE HEX(uuid)=";
+                    $updateWhereQuery = " WHERE path=";
                 } else {
                     $updateWhereQuery = " WHERE uuid=";
                 }
-            } else if ($queryType == "UPDATE") {
+            } else if ($queryType == "UPDATE" && !isset($allIdChanges[$importDB]['id'])) {
+                C4gLogModel::addLogEntry("core", "Skip update of table ".$importDB." because of missing uuid.");
                 continue;
+            } else if ($queryType == "UPDATE" && isset($allIdChanges[$importDB]['id'])) {
+                $updateWhereQuery = " WHERE id=";
             }
             foreach ($importDatasets as $importDataset) {
+                unset($updateWhereQueryValue);
                 if ($importDataType == "diff") {
                     $queryType = "UPDATE";
                 } else {
                     $queryType = "INSERT";
                 }
+
                 $skipFilesEntry = false;
                 $sqlStatement = '';
                 $importDataset = (array) $importDataset;
                 if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && $importDataset['uuid'] == "") {
                     C4gLogModel::addLogEntry("core", "Don't update dataset with id".$importDataset['id']." from table ".$importDB." because of empty uuid.");
                     continue;
+                } else if ($queryType == "UPDATE" && !array_key_exists($importDataset['id'], $allIdChanges[$importDB]['id']) && !in_array("uuid", $dbFields)) {
+                    C4gLogModel::addLogEntry("core", "Don't update dataset with id".$importDataset['id']." from table ".$importDB." because id not exists in id config.");
+                    continue;
                 }
                 if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && $importDataset['uuid'] != "") {
                     //check if dataset can be updated or is a completely new one
                     if ($importDB == "tl_files") {
-                        $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE HEX(uuid)=?")
-                            ->execute($importDataset['uuid'])->fetchAssoc();
+                        $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE path=?")
+                            ->execute($importDataset['path'])->fetchAssoc();
                     } else {
                         $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE importId != '' && importId != 0 && uuid=?")
                             ->execute($importDataset['uuid'])->fetchAssoc();
                     }
+                    if (!$availableQuery) {
+                        $queryType = "INSERT";
+                    }
+                } else if ($queryType == "UPDATE" && array_key_exists($importDataset['id'], $allIdChanges[$importDB]['id'])) {
+                    $availableQuery = $this->Database->prepare("SELECT * FROM ".$importDB." WHERE id=?")
+                        ->execute($allIdChanges[$importDB]['id'][$importDataset['id']])->fetchAssoc();
                     if (!$availableQuery) {
                         $queryType = "INSERT";
                     }
@@ -1207,8 +1205,12 @@ class C4GImportDataCallback extends Backend
                     if ($queryType == "UPDATE" && in_array("uuid", $dbFields) && ($importDbField == "id" || $importDbField == "pid")) {
                         continue;
                     }
-                    if ($queryType == "UPDATE" && $importDbField == "uuid") {
+                    if ($queryType == "UPDATE" && $importDbField == "uuid" && $importDB != "tl_files") {
                         $updateWhereQueryValue = $importDbValue;
+                    } else if ($queryType == "UPDATE" && $importDbField == "path" && $importDB == "tl_files") {
+                        $updateWhereQueryValue = $importDbValue;
+                    } else if ($updateWhereQuery == " WHERE id=" && $importDbField == "id") {
+                        $updateWhereQueryValue = $allIdChanges[$importDB]['id'][$importDataset['id']];
                     }
 
                     if ($importDbField == 'id') {
@@ -1329,7 +1331,7 @@ class C4GImportDataCallback extends Backend
                         C4gLogModel::addLogEntry('core', 'Files already imported. tl_files will not be imported');
                     }
                 } else {
-                    if ($queryType == "UPDATE") {
+                    if ($queryType == "UPDATE" && isset($updateWhereQuery) && isset($updateWhereQueryValue) && $updateWhereQuery != "" && $updateWhereQueryValue != "") {
                         $sqlStatement = str_replace(";;", $updateWhereQuery."'".$updateWhereQueryValue."';", $sqlStatement);
                     } else  {
                         $sqlStatement = str_replace(');;', ');', $sqlStatement);
@@ -1342,9 +1344,13 @@ class C4GImportDataCallback extends Backend
         return $sqlStatements;
     }
 
-    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary)
+    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson)
     {
-        $allIdChanges = [];
+        if ($allIdChangesJson) {
+            $allIdChanges = $allIdChangesJson;
+        } else {
+            $allIdChanges = [];
+        }
         $allIdChangesNonRelations = [];
         foreach ($jsonFile as $importDB => $importDatasets) {
             if ($importDB == 'relations' or $importDB == 'hexValues') {
@@ -1371,7 +1377,9 @@ class C4GImportDataCallback extends Backend
                                 } else {
                                     $nextId = end($allIdChanges[$importDB][$importDbField]) + 1;
                                 }
-                                $allIdChanges[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
+                                if (!isset($allIdChanges[$importDB][$importDbField][$importDbValue])) {
+                                    $allIdChanges[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
+                                }
                                 unset($nextId);
                             }
                         } else {
@@ -1469,17 +1477,28 @@ class C4GImportDataCallback extends Backend
     public function importRunning($running = false, $id = 0)
     {
         if ($id == 0) {
-            $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")->execute()->fetchAllAssoc();
+            $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")
+                ->execute()->fetchAllAssoc();
             if ($importRunning) {
-                return true;
+                foreach ($importRunning as $import) {
+                    $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning='' WHERE tstamp<=? AND importRunning='1' AND id=?")
+                        ->execute(time(), time()-600, $import['id']);
+                }
+                $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")
+                    ->execute()->fetchAllAssoc();
+                if ($importRunning) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
 
             return false;
         } elseif ($id != 0) {
             if ($running) {
-                $this->Database->prepare("UPDATE tl_c4g_import_data SET importRunning = '1' WHERE id=?")->execute($id);
+                $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning = '1' WHERE id=?")->execute(time(), $id);
             } else {
-                $this->Database->prepare("UPDATE tl_c4g_import_data SET importRunning = '' WHERE id=?")->execute($id);
+                $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning = '' WHERE id=?")->execute(time(), $id);
             }
         }
     }

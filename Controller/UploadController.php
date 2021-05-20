@@ -17,6 +17,7 @@ use con4gis\CoreBundle\Classes\Exception\C4GImageDimensionsException;
 use con4gis\CoreBundle\Classes\Exception\C4GInvalidFileFormatException;
 use con4gis\CoreBundle\Classes\Utility\C4GByteConverter;
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
+use Contao\CoreBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\FileBag;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UploadController extends Controller
+class UploadController extends AbstractController
 {
     public function imageUploadAction(Request $request) {
 
@@ -164,7 +165,52 @@ class UploadController extends Controller
         }
     }
 
-    public function documentUploadAction(Request $request) {
+    public function fileUploadAction(Request $request) {
+        \System::loadLanguageFile('con4giscoreupload');
 
+        if ($request->files instanceof FileBag) {
+            $files = $request->files;
+            $uploadedFile = $files->get('upload');
+            if ($uploadedFile instanceof UploadedFile) {
+                $settings = C4gSettingsModel::findSettings();
+                $allowedTypes = explode(',', $settings->uploadAllowedDocumentTypes);
+                $maxSize = $settings->uploadMaxFileSize;
+                if (empty($allowedTypes) || !is_array($allowedTypes) ||
+                    !in_array($uploadedFile->getMimeType(), $allowedTypes, true)) {
+                    $allowedTypes = explode(',', $settings->uploadAllowedGenericTypes);
+                    if (empty($allowedTypes) || !is_array($allowedTypes) ||
+                        !in_array($uploadedFile->getMimeType(), $allowedTypes, true)) {
+                        return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+                    } else {
+                        $uploadDirectoryBinary = $settings->uploadPathGeneric;
+                    }
+                } else {
+                    $uploadDirectoryBinary = $settings->uploadPathDocuments;
+                }
+
+
+
+                if ($maxSize < $uploadedFile->getSize()) {
+                    return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+                }
+
+                $uploadDirectoryString = \FilesModel::findByUuid(\Contao\StringUtil::binToUuid($uploadDirectoryBinary))->path;
+
+                $subDirectory = date("Y-m-d");
+                $uploadDirectoryString = $uploadDirectoryString . "/" .$subDirectory;
+                if (!is_dir(TL_ROOT . "/" . $uploadDirectoryString)) {
+                    mkdir(TL_ROOT . "/" . $uploadDirectoryString, 0777, true);
+                }
+                $fileExtension = explode('/', $uploadedFile->getMimeType())[1];
+                $fileName   = md5(uniqid('', true)) . "." .$fileExtension;
+                $uploadPath = TL_ROOT . '/' . $uploadDirectoryString;
+                $uploadedFile->move($uploadPath, $fileName);
+                $url = \Contao\Controller::replaceInsertTags('{{env::url}}')."/".$uploadDirectoryString."/".$fileName;
+
+                return new JsonResponse(['url' => $url]);
+
+            }
+        }
+        return new JsonResponse([], Response::HTTP_BAD_REQUEST);
     }
 }
