@@ -16,3 +16,9 @@ con4gisUploadImage:
     defaults:
         _scope: frontend
         _controller: "con4gisCoreBundle:Upload:imageUpload"
+
+con4gisUploadFile:
+    path: /con4gis/upload/file
+    defaults:
+        _scope: frontend
+        _controller: "con4gisCoreBundle:Upload:fileUpload"
