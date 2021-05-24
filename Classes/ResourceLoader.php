@@ -313,7 +313,7 @@ class ResourceLoader
 //
         if ($resources['clipboard']) {
             // load clipboard
-            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js|async|static', self::JAVASCRIPT, 'clipboard');
+            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/clipboard.min.js', self::BODY, 'clipboard');
         }
 //        if ($resources['jspdf']) {
 //            // load clipboard
