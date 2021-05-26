@@ -90,5 +90,6 @@ $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\con4gis\CoreBundle\Classes
 $GLOBALS['TL_HOOKS']['getUserNavigation'][] = array('con4gis\CoreBundle\Classes\Hooks\con4gisNavigation','activateNavigation');
 
 $GLOBALS['TL_PURGE']['folders']['con4gis_log'] = [
-    'callback' => ['\con4gis\CoreBundle\Classes\Contao\Callback\MaintenanceCallback', 'purgeLog']
+    'callback' => ['\con4gis\CoreBundle\Classes\Contao\Callback\MaintenanceCallback', 'purgeLog'],
+    'affected' => []
 ];
