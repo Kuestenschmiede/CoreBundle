@@ -10,7 +10,7 @@
  */
 namespace con4gis\CoreBundle\Classes\Events;
 
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class AfterImportEvent extends Event
 {

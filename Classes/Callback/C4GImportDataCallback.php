@@ -59,8 +59,10 @@ class C4GImportDataCallback extends Backend
         $localIoData = $this->getLocalIoData();
 
         $localResponses = [];
-        foreach ($localIoData as $yamlConfig => $value) {
-            $localResponses[$yamlConfig] = (object) $value['import'];
+        if ($localIoData) {
+            foreach ($localIoData as $yamlConfig => $value) {
+                $localResponses[$yamlConfig] = (object) $value['import'];
+            }
         }
 
         foreach ($localResponses as $localResponse) {
