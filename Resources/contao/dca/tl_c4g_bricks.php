@@ -659,6 +659,9 @@ class tl_c4g_bricks extends Contao\Backend
                         }
                     }
                     break;
+                default:
+                    $bricks = $this->loadBricks(false);
+                    break;
             }
 
             if ($deleteKey) {
