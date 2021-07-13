@@ -168,12 +168,12 @@ export class AlertHandler {
       title: title,
       input: 'select',
       inputOptions: objOptions,
-      inputPlaceholder: 'Select a fruit',
+      inputPlaceholder: '-',
       showCancelButton: true,
       confirmButtonText: confirmText,
       cancelButtonText: cancelText,
       customClass: cssClass ? cssClass : ''
-    });
+    })
     return selectedValue;
   }
 }
