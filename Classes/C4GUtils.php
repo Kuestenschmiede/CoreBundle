@@ -13,6 +13,7 @@
 namespace con4gis\CoreBundle\Classes;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
+use Symfony\Component\HttpClient\HttpClient;
 use Contao\System;
 
 /**
@@ -429,25 +430,27 @@ class C4GUtils
                 $params = '&' . $params;
             }
             $keySearchUrl .= '?key=' . $settings->con4gisIoKey . '&service=' . $service . $params;
-
-            $REQUEST = new \Request();
+            $headers = [];
+//            $REQUEST = new \Request();
             if ($_SERVER['HTTP_REFERER']) {
-                $REQUEST->setHeader('Referer', $_SERVER['HTTP_REFERER']);
+                $headers['Referer'] = $_SERVER['HTTP_REFERER'];
             }
             if ($_SERVER['HTTP_USER_AGENT']) {
-                $REQUEST->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
+                $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
             }
-
-            $REQUEST->send($keySearchUrl);
-            if ($REQUEST->response) {
-                try {
-                    $response = \GuzzleHttp\json_decode($REQUEST->response);
-                } catch (\Exception $e) {
-                    C4gLogModel::addLogEntry('core', $e->getMessage());
-
-                    return false;
-                }
-
+            $client = HttpClient::create([
+                'headers' => $headers
+            ]);
+            try {
+                $response =$client->request('GET', $keySearchUrl, ['timeout' => 4]);
+            }
+            catch (\Exception $exception) {
+                return false;
+            }
+            $statusCode = $response->getStatusCode();
+            if ($response && $response->getStatusCode() === 200) {
+                $response = $response->getContent();
+                $response = \GuzzleHttp\json_decode($response);
                 if ($response && $response->key && (strlen($response->key) == 64)) {
                     \Contao\Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
                     if ($getKeyOnly) {
