@@ -442,23 +442,23 @@ class C4GUtils
                 'headers' => $headers
             ]);
             try {
-                $response =$client->request('GET', $keySearchUrl, ['timeout' => 4]);
+                $response =$client->request('GET', $keySearchUrl, ['timeout' => 2]);
+                $statusCode = $response->getStatusCode();
+                if ($response && $response->getStatusCode() === 200) {
+                    $response = $response->getContent();
+                    $response = \GuzzleHttp\json_decode($response);
+                    if ($response && $response->key && (strlen($response->key) == 64)) {
+                        \Contao\Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
+                        if ($getKeyOnly) {
+                            return $response->key;
+                        }
+
+                        return $response;
+                    }
+                }
             }
             catch (\Exception $exception) {
                 return false;
-            }
-            $statusCode = $response->getStatusCode();
-            if ($response && $response->getStatusCode() === 200) {
-                $response = $response->getContent();
-                $response = \GuzzleHttp\json_decode($response);
-                if ($response && $response->key && (strlen($response->key) == 64)) {
-                    \Contao\Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
-                    if ($getKeyOnly) {
-                        return $response->key;
-                    }
-
-                    return $response;
-                }
             }
         }
 
