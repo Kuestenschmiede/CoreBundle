@@ -431,7 +431,6 @@ class C4GUtils
             }
             $keySearchUrl .= '?key=' . $settings->con4gisIoKey . '&service=' . $service . $params;
             $headers = [];
-//            $REQUEST = new \Request();
             if ($_SERVER['HTTP_REFERER']) {
                 $headers['Referer'] = $_SERVER['HTTP_REFERER'];
             }
@@ -463,6 +462,48 @@ class C4GUtils
         }
 
         return false;
+    }
+    public static function getKeys($settings, $arrKeyParams) {
+        if ($settings && $settings->con4gisIoUrl && $settings->con4gisIoKey) {
+            $hour = date('YmdH', time());
+
+            $keySearchUrl = rtrim($settings->con4gisIoUrl, '/') . '/';
+            $keySearchUrl = $keySearchUrl . 'getMultipleKeys.php';
+            $services = '';
+            $ids = '';
+            foreach ($arrKeyParams as $keyParam) {
+                $services .= $keyParam[0] . ',';
+                $ids .= $keyParam[1] . ',';
+            }
+            $services = rtrim($services, ',');
+            $ids = rtrim($ids, ',');
+            $keySearchUrl .= '?key=' . $settings->con4gisIoKey . '&services=' . $services . '&ids=' . $ids;
+            $headers = [];
+            if ($_SERVER['HTTP_REFERER']) {
+                $headers['Referer'] = $_SERVER['HTTP_REFERER'];
+            }
+            if ($_SERVER['HTTP_USER_AGENT']) {
+                $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
+            }
+            $client = HttpClient::create([
+                'headers' => $headers
+            ]);
+            try {
+                $response =$client->request('GET', $keySearchUrl, ['timeout' => 2]);
+                $statusCode = $response->getStatusCode();
+                if ($response && $response->getStatusCode() === 200) {
+                    $response = $response->getContent();
+                    $response = \GuzzleHttp\json_decode($response, true);
+                    foreach ($response as $key => $valueKey) {
+                        \Contao\Session::getInstance()->set('ciokey_' . $arrKeyParams[$key][0] . '_' . $arrKeyParams[$key][1] ? "id=" . $arrKeyParams[$key][1] : '', $hour . '_' . $valueKey['key']);
+                    }
+                    return $response;
+                }
+            }
+            catch (\Exception $exception) {
+                return false;
+            }
+        }
     }
 
     /**
