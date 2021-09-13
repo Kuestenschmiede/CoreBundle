@@ -13,6 +13,7 @@
 namespace con4gis\CoreBundle\Classes;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
+use Symfony\Component\HttpClient\HttpClient;
 use Contao\System;
 
 /**
@@ -429,37 +430,80 @@ class C4GUtils
                 $params = '&' . $params;
             }
             $keySearchUrl .= '?key=' . $settings->con4gisIoKey . '&service=' . $service . $params;
-
-            $REQUEST = new \Request();
+            $headers = [];
             if ($_SERVER['HTTP_REFERER']) {
-                $REQUEST->setHeader('Referer', $_SERVER['HTTP_REFERER']);
+                $headers['Referer'] = $_SERVER['HTTP_REFERER'];
             }
             if ($_SERVER['HTTP_USER_AGENT']) {
-                $REQUEST->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
+                $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
             }
+            $client = HttpClient::create([
+                'headers' => $headers
+            ]);
+            try {
+                $response =$client->request('GET', $keySearchUrl, ['timeout' => 2]);
+                $statusCode = $response->getStatusCode();
+                if ($response && $response->getStatusCode() === 200) {
+                    $response = $response->getContent();
+                    $response = \GuzzleHttp\json_decode($response);
+                    if ($response && $response->key && (strlen($response->key) == 64)) {
+                        \Contao\Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
+                        if ($getKeyOnly) {
+                            return $response->key;
+                        }
 
-            $REQUEST->send($keySearchUrl);
-            if ($REQUEST->response) {
-                try {
-                    $response = \GuzzleHttp\json_decode($REQUEST->response);
-                } catch (\Exception $e) {
-                    C4gLogModel::addLogEntry('core', $e->getMessage());
-
-                    return false;
-                }
-
-                if ($response && $response->key && (strlen($response->key) == 64)) {
-                    \Contao\Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
-                    if ($getKeyOnly) {
-                        return $response->key;
+                        return $response;
                     }
-
-                    return $response;
                 }
+            }
+            catch (\Exception $exception) {
+                return false;
             }
         }
 
         return false;
+    }
+    public static function getKeys($settings, $arrKeyParams) {
+        if ($settings && $settings->con4gisIoUrl && $settings->con4gisIoKey) {
+            $hour = date('YmdH', time());
+
+            $keySearchUrl = rtrim($settings->con4gisIoUrl, '/') . '/';
+            $keySearchUrl = $keySearchUrl . 'getMultipleKeys.php';
+            $services = '';
+            $ids = '';
+            foreach ($arrKeyParams as $keyParam) {
+                $services .= $keyParam[0] . ',';
+                $ids .= $keyParam[1] . ',';
+            }
+            $services = rtrim($services, ',');
+            $ids = rtrim($ids, ',');
+            $keySearchUrl .= '?key=' . $settings->con4gisIoKey . '&services=' . $services . '&ids=' . $ids;
+            $headers = [];
+            if ($_SERVER['HTTP_REFERER']) {
+                $headers['Referer'] = $_SERVER['HTTP_REFERER'];
+            }
+            if ($_SERVER['HTTP_USER_AGENT']) {
+                $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
+            }
+            $client = HttpClient::create([
+                'headers' => $headers
+            ]);
+            try {
+                $response =$client->request('GET', $keySearchUrl, ['timeout' => 2]);
+                $statusCode = $response->getStatusCode();
+                if ($response && $response->getStatusCode() === 200) {
+                    $response = $response->getContent();
+                    $response = \GuzzleHttp\json_decode($response, true);
+                    foreach ($response as $key => $valueKey) {
+                        \Contao\Session::getInstance()->set('ciokey_' . $arrKeyParams[$key][0] . '_' . $arrKeyParams[$key][1] ? "id=" . $arrKeyParams[$key][1] : '', $hour . '_' . $valueKey['key']);
+                    }
+                    return $response;
+                }
+            }
+            catch (\Exception $exception) {
+                return false;
+            }
+        }
     }
 
     /**
