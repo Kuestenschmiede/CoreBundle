@@ -14,6 +14,7 @@ namespace con4gis\CoreBundle\Classes;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Contao\LayoutModel;
+use Contao\System;
 
 /**
  * Class ResourceLoader
@@ -34,6 +35,12 @@ class ResourceLoader
      */
     public static function loadJavaScriptResource($jsFile, $location = self::JAVASCRIPT, $key = '')
     {
+        $projectDir = System::getContainer()->getParameter("kernel.project_dir");
+        $webDir = $projectDir . "/web";
+        $timeStamp = filemtime($webDir . $jsFile);
+        if ($timeStamp) {
+            $jsFile .= "|" . $timeStamp;
+        }
         switch ($location) {
             case self::JAVASCRIPT:
                 if ($key === '') {
@@ -112,6 +119,8 @@ class ResourceLoader
      */
     public static function loadCssResource($cssFile, $key = '')
     {
+        $timeStamp = filemtime($cssFile);
+        $cssFile .= "|" . $timeStamp;
         if ($key === '') {
             $GLOBALS[self::CSS][] = $cssFile;
         } else {
