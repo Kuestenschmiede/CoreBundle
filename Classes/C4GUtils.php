@@ -438,10 +438,11 @@ class C4GUtils
                 $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
             }
             $client = HttpClient::create([
-                'headers' => $headers
+                'headers' => $headers,
             ]);
+
             try {
-                $response =$client->request('GET', $keySearchUrl, ['timeout' => 2]);
+                $response = $client->request('GET', $keySearchUrl, ['timeout' => 2]);
                 $statusCode = $response->getStatusCode();
                 if ($response && $response->getStatusCode() === 200) {
                     $response = $response->getContent();
@@ -455,15 +456,15 @@ class C4GUtils
                         return $response;
                     }
                 }
-            }
-            catch (\Exception $exception) {
+            } catch (\Exception $exception) {
                 return false;
             }
         }
 
         return false;
     }
-    public static function getKeys($settings, $arrKeyParams) {
+    public static function getKeys($settings, $arrKeyParams)
+    {
         if ($settings && $settings->con4gisIoUrl && $settings->con4gisIoKey) {
             $hour = date('YmdH', time());
 
@@ -486,21 +487,22 @@ class C4GUtils
                 $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
             }
             $client = HttpClient::create([
-                'headers' => $headers
+                'headers' => $headers,
             ]);
+
             try {
-                $response =$client->request('GET', $keySearchUrl, ['timeout' => 2]);
+                $response = $client->request('GET', $keySearchUrl, ['timeout' => 2]);
                 $statusCode = $response->getStatusCode();
                 if ($response && $response->getStatusCode() === 200) {
                     $response = $response->getContent();
                     $response = \GuzzleHttp\json_decode($response, true);
                     foreach ($response as $key => $valueKey) {
-                        \Contao\Session::getInstance()->set('ciokey_' . $arrKeyParams[$key][0] . '_' . $arrKeyParams[$key][1] ? "id=" . $arrKeyParams[$key][1] : '', $hour . '_' . $valueKey['key']);
+                        \Contao\Session::getInstance()->set('ciokey_' . $arrKeyParams[$key][0] . '_' . $arrKeyParams[$key][1] ? 'id=' . $arrKeyParams[$key][1] : '', $hour . '_' . $valueKey['key']);
                     }
+
                     return $response;
                 }
-            }
-            catch (\Exception $exception) {
+            } catch (\Exception $exception) {
                 return false;
             }
         }
