@@ -15,12 +15,12 @@ use con4gis\CoreBundle\Classes\C4GApiCache;
 use con4gis\CoreBundle\Classes\C4GUtils;
 use Contao\Database;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class BaseController extends Controller
+class BaseController extends AbstractController
 {
     protected static $useCache = false;
 
