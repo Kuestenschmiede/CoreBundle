@@ -13,6 +13,7 @@ namespace con4gis\CoreBundle\Classes\Callback;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Backend;
+use Contao\BackendUser;
 use Contao\Folder;
 use Contao\Message;
 use Contao\PageRedirect;
@@ -41,6 +42,12 @@ class C4GImportDataCallback extends Backend
     public function loadBaseData($cron)
     {
         $cronIds = [];
+        global $objPage;
+        $objPage->language = BackendUser::getInstance()->language;
+        if ($objPage->language === "de")  {
+            // append DE so import names can be resolved
+            $objPage->language .= "-DE";
+        }
         // Get installed contao and con4gis Core version
         $installedPackages = $this->getContainer()->getParameter('kernel.packages');
         $coreVersion = $installedPackages['con4gis/core'];
@@ -482,7 +489,7 @@ class C4GImportDataCallback extends Backend
         $event = new AfterImportEvent();
         $event->setImportType($importType);
         $dispatcher = System::getContainer()->get('event_dispatcher');
-        $dispatcher->dispatch($event::NAME, $event);
+        $dispatcher->dispatch($event, $event::NAME);
         $error = $event->getError();
 
         if ($error) {

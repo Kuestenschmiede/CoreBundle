@@ -318,7 +318,7 @@ class tl_c4g_import_data extends Contao\Backend
         $event = new BeforeImportButtonLoadEvent();
         $dispatcher = System::getContainer()->get('event_dispatcher');
         $event->setImportData($arrRow);
-        $dispatcher->dispatch($event::NAME, $event);
+        $dispatcher->dispatch($event, $event::NAME);
         $importCompatible = $event->getImportCompatible();
         $updateCompatible = $event->getUpdateCompatible();
         $releaseCompatible = $event->getReleaseCompatible();
