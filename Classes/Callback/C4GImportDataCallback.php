@@ -855,7 +855,7 @@ class C4GImportDataCallback extends Backend
             //Getting additional Data
             $event = new AdditionalImportProxyDataEvent();
             $dispatcher = System::getContainer()->get('event_dispatcher');
-            $dispatcher->dispatch($event::NAME, $event);
+            $dispatcher->dispatch($event, $event::NAME);
             $additionalProxyData = $event->getProxyData();
 
             if ($additionalProxyData && is_array($additionalProxyData)) {
