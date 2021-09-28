@@ -44,9 +44,9 @@ class C4GImportDataCallback extends Backend
         $cronIds = [];
         global $objPage;
         $objPage->language = BackendUser::getInstance()->language;
-        if ($objPage->language === "de")  {
+        if ($objPage->language === 'de') {
             // append DE so import names can be resolved
-            $objPage->language .= "-DE";
+            $objPage->language .= '-DE';
         }
         // Get installed contao and con4gis Core version
         $installedPackages = $this->getContainer()->getParameter('kernel.packages');
