@@ -37,12 +37,19 @@ class ResourceLoader
     {
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
         $webDir = $projectDir . '/web';
-        $timeStamp = filemtime($webDir . $jsFile);
-        if ($timeStamp) {
-            $jsFile .= '|' . $timeStamp;
+        if (!C4GUtils::startsWith($jsFile, '/')) {
+            $jsFile = '/'.$jsFile;
+        }
+        try {
+            $timeStamp = filemtime($webDir . $jsFile);
+        } catch (\Throwable $throwable) {
+            return;
         }
         switch ($location) {
             case self::JAVASCRIPT:
+                if ($timeStamp) {
+                    $jsFile .= '|' . $timeStamp;
+                }
                 if ($key === '') {
                     $GLOBALS[self::JAVASCRIPT][] = $jsFile;
                 } else {
@@ -51,6 +58,9 @@ class ResourceLoader
 
                 break;
             case self::HEAD:
+                if ($timeStamp) {
+                    $jsFile .= '?v=' . $timeStamp;
+                }
                 if ($key === '') {
                     $GLOBALS[self::HEAD][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
                 } else {
@@ -59,6 +69,9 @@ class ResourceLoader
 
                 break;
             case self::BODY:
+                if ($timeStamp) {
+                    $jsFile .= '?v=' . $timeStamp;
+                }
                 if ($key === '') {
                     $GLOBALS[self::BODY][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
                 } else {
@@ -322,7 +335,7 @@ class ResourceLoader
 //
         if ($resources['clipboard']) {
             // load clipboard
-            ResourceLoader::loadJavaScriptResource('/bundles/con4giscore/vendor/js/clipboard.min.js', self::BODY, 'clipboard');
+            ResourceLoader::loadJavaScriptResource('/bundles/con4giscore/vendor/clipboard.min.js', self::BODY, 'clipboard');
         }
 //        if ($resources['jspdf']) {
 //            // load clipboard
