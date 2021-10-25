@@ -38,7 +38,7 @@ class ResourceLoader
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
         $webDir = $projectDir . '/web';
         if (!C4GUtils::startsWith($jsFile, '/')) {
-            $jsFile = '/'.$jsFile;
+            $jsFile = '/' . $jsFile;
         }
         if (file_exists($webDir . $jsFile)) {
             $timeStamp = filemtime($webDir . $jsFile);
@@ -135,7 +135,7 @@ class ResourceLoader
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
         $webDir = $projectDir . '/web';
         if (!C4GUtils::startsWith($cssFile, '/')) {
-            $cssFile = '/'.$cssFile;
+            $cssFile = '/' . $cssFile;
         }
         if (file_exists($webDir . $cssFile)) {
             $cssFile .= '|' . filemtime($webDir . $cssFile);
