@@ -40,10 +40,10 @@ class ResourceLoader
         if (!C4GUtils::startsWith($jsFile, '/')) {
             $jsFile = '/'.$jsFile;
         }
-        try {
+        if (file_exists($webDir . $jsFile)) {
             $timeStamp = filemtime($webDir . $jsFile);
-        } catch (\Throwable $throwable) {
-            return;
+        } else {
+            $timeStamp = 0;
         }
         switch ($location) {
             case self::JAVASCRIPT:
@@ -132,8 +132,14 @@ class ResourceLoader
      */
     public static function loadCssResource($cssFile, $key = '')
     {
-        $timeStamp = filemtime($cssFile);
-        $cssFile .= '|' . $timeStamp;
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
+        $webDir = $projectDir . '/web';
+        if (!C4GUtils::startsWith($cssFile, '/')) {
+            $cssFile = '/'.$cssFile;
+        }
+        if (file_exists($webDir . $cssFile)) {
+            $cssFile .= '|' . filemtime($webDir . $cssFile);
+        }
         if ($key === '') {
             $GLOBALS[self::CSS][] = $cssFile;
         } else {
