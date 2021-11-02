@@ -517,8 +517,8 @@ class tl_c4g_bricks extends Contao\Backend
         $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE pid=$userid AND showBundle=$showBundle")->fetchAllAssoc();
         if ($bricks && $bricks[0]) {
             $tstamp = intval($bricks[0]['tstamp']);
-            $before_seven_days = time() - (7 * 24 * 60 * 60);
-            $renewData = $tstamp < $before_seven_days ? true : false; //autom. renew after one week
+            $before_two_days = time() - (2 * 24 * 60 * 60);
+            $renewData = $tstamp < $before_two_days ? true : false; //autom. renew after two days
         }
 
         $bundles = $this->bundles;
