@@ -1,24 +1,21 @@
 con4gisDeliverFile:
     path: /con4gis/api/deliver
-    defaults:
-        _scope: frontend
-        _controller: "con4gisCoreBundle:Api:deliver"
+    controller: con4gis\CoreBundle\Controller\ApiController::deliverAction
+    methods: [GET]
+
 Con4gisCoreBundle:
     path: /con4gis/api/{_url_fragment}
-    defaults:
-        _scope: frontend
-        _controller: "con4gisCoreBundle:Api:run"
+    controller: con4gis\CoreBundle\Controller\ApiController::runAction
+    methods: [GET]
     requirements:
-        _url_fragment: .*
+        _url_fragment: '.*'
 
 con4gisUploadImage:
     path: /con4gis/upload/image
-    defaults:
-        _scope: frontend
-        _controller: "con4gisCoreBundle:Upload:imageUpload"
+    controller: con4gis\CoreBundle\Controller\UploadController::imageUploadAction
+    methods: [GET]
 
 con4gisUploadFile:
     path: /con4gis/upload/file
-    defaults:
-        _scope: frontend
-        _controller: "con4gisCoreBundle:Upload:fileUpload"
+    controller: con4gis\CoreBundle\Controller\UploadController::fileUploadAction
+    methods: [GET]

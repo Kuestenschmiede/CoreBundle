@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    con4gis\CoreBundle\Controller\ApiController:
+        public: true
+        class: con4gis\CoreBundle\Controller\ApiController

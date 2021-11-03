@@ -12,15 +12,15 @@
 namespace con4gis\CoreBundle\Controller;
 
 use con4gis\CoreBundle\Classes\C4GApiCache;
-use Contao\CoreBundle\Controller\FrontendController;
 use Contao\System;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class ApiController extends FrontendController
+class ApiController extends AbstractController
 {
 
     /**
