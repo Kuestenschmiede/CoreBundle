@@ -12,6 +12,7 @@
 namespace con4gis\CoreBundle\Controller;
 
 use con4gis\CoreBundle\Classes\C4GApiCache;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -22,6 +23,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends AbstractController
 {
+    public function __construct(ContaoFramework $framework)
+    {
+        $framework->initialize();
+    }
 
     /**
      * @var string
