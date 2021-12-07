@@ -17,16 +17,21 @@ use con4gis\CoreBundle\Classes\Exception\C4GImageDimensionsException;
 use con4gis\CoreBundle\Classes\Exception\C4GInvalidFileFormatException;
 use con4gis\CoreBundle\Classes\Utility\C4GByteConverter;
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
-use Contao\CoreBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Contao\System;
 
-class UploadController extends AbstractController
+class UploadController
 {
+    public function __construct(ContaoFramework $framework)
+    {
+        $framework->initialize();
+    }
+
     public function imageUploadAction(Request $request) {
 
         if ($request->query->get('CKEditor')) {
@@ -166,7 +171,7 @@ class UploadController extends AbstractController
     }
 
     public function fileUploadAction(Request $request) {
-        \System::loadLanguageFile('con4giscoreupload');
+        System::loadLanguageFile('con4giscoreupload');
 
         if ($request->files instanceof FileBag) {
             $files = $request->files;

@@ -6,3 +6,7 @@ services:
     con4gis\CoreBundle\Controller\ApiController:
         public: true
         class: con4gis\CoreBundle\Controller\ApiController
+
+    con4gis\CoreBundle\Controller\UploadController:
+        public: true
+        class: con4gis\CoreBundle\Controller\UploadController

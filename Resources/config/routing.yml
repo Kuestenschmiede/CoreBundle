@@ -18,4 +18,4 @@ con4gisUploadImage:
 con4gisUploadFile:
     path: /con4gis/upload/file
     controller: con4gis\CoreBundle\Controller\UploadController::fileUploadAction
-    methods: [GET]
+    methods: [GET,POST]
