@@ -106,7 +106,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         'con4gisIoKey' => [
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'],
             'exclude'                 => true,
-            'inputType'               => 'text',
+            'inputType'               => 'password',
             'eval'                    => ['maxlength' => 32],
             'sql'                     => "varchar(32) default ''"
         ],
