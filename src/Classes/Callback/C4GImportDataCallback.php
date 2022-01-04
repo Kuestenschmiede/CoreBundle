@@ -325,7 +325,7 @@ class C4GImportDataCallback extends Backend
 
 //      lokaler Import Ende
         } elseif (!$availableLocal) {
-            $objSettings = \con4gis\CoreBundle\src\Resources\contao\models\C4gSettingsModel::findSettings();
+            $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
             $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
             $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
             $basedataUrl .= '&mode=' . 'ioData';
@@ -844,7 +844,7 @@ class C4GImportDataCallback extends Backend
      */
     public function getCon4gisImportData($importData, $mode, $data = false, $coreVersion = false, $contaoVersion = false)
     {
-        $objSettings = \con4gis\CoreBundle\src\Resources\contao\models\C4gSettingsModel::findSettings();
+        $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
         if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
             $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . $importData;
             $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;

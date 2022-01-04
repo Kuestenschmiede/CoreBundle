@@ -60,9 +60,9 @@ array_insert($GLOBALS['TL_CTE']['con4gis'], 2, array
 (
     'c4g_activationpage' => 'con4gis\CoreBundle\src\Resources\contao\modules\ContentC4gActivationpage'
 ));
-$GLOBALS['TL_MODELS']['tl_c4g_activationkey'] = 'con4gis\CoreBundle\src\Resources\contao\models\C4gActivationkeyModel';
+$GLOBALS['TL_MODELS']['tl_c4g_activationkey'] = 'con4gis\CoreBundle\Resources\contao\models\C4gActivationkeyModel';
 
-$GLOBALS['TL_MODELS']['tl_c4g_settings'] = 'con4gis\CoreBundle\src\Resources\contao\models\C4gSettingsModel';
+$GLOBALS['TL_MODELS']['tl_c4g_settings'] = 'con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel';
 
 /**
  * Con4Gis Caching
