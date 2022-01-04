@@ -11,17 +11,17 @@
 var path = require('path');
 var config = {
   entry: {
-    'AlertHandler': './Resources/public/vendor/js/AlertHandler.js'
+    'AlertHandler': './src/Resources/public/vendor/js/AlertHandler.js'
   },
   mode: "production",
   output: {
     filename: '[name].js',
-    path: path.resolve('./Resources/public/dist/js'),
+    path: path.resolve('./src/Resources/public/dist/js'),
     chunkFilename: '[name].bundle.[contenthash].js',
-    publicPath: "bundles/con4gismaps/dist/js/"
+    publicPath: "bundles/con4giscore/dist/js/"
   },
   resolve: {
-    modules: ['node_modules', 'Resources/public/vendor/js'],
+    modules: ['node_modules', 'src/Resources/public/vendor/js'],
     extensions: ['.js']
   },
   module: {
@@ -29,7 +29,7 @@ var config = {
       {
         include: [
           path.resolve('.'),
-          path.resolve('./Resources/public/vendor/js/')
+          path.resolve('./src/Resources/public/vendor/js/')
         ],
       }
     ]

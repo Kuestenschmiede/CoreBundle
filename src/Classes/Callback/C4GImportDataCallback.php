@@ -227,7 +227,7 @@ class C4GImportDataCallback extends Backend
 
         if ($availableLocal) {
             $imagePath = './../files' . $importData['images']['path'];
-            $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/Resources/con4gis/' . $importData['general']['filename'];
+            $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/src/Resources/con4gis/' . $importData['general']['filename'];
             $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
             $importType = $importData['import']['type'];
             if (isset($importData['import']['datatype'])) {
@@ -325,7 +325,7 @@ class C4GImportDataCallback extends Backend
 
 //      lokaler Import Ende
         } elseif (!$availableLocal) {
-            $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
+            $objSettings = \con4gis\CoreBundle\src\Resources\contao\models\C4gSettingsModel::findSettings();
             $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
             $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
             $basedataUrl .= '&mode=' . 'ioData';
@@ -844,7 +844,7 @@ class C4GImportDataCallback extends Backend
      */
     public function getCon4gisImportData($importData, $mode, $data = false, $coreVersion = false, $contaoVersion = false)
     {
-        $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
+        $objSettings = \con4gis\CoreBundle\src\Resources\contao\models\C4gSettingsModel::findSettings();
         if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
             $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . $importData;
             $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
@@ -900,7 +900,7 @@ class C4GImportDataCallback extends Backend
         $arrBasedataFolders = [
             'maps' => $rootDir . '/vendor/con4gis/maps/Resources/con4gis',
             'visualization' => $rootDir . '/vendor/con4gis/visualization/Resources/con4gis',
-            'core' => $rootDir . '/vendor/con4gis/core/Resources/con4gis',
+            'core' => $rootDir . '/vendor/con4gis/core/src/Resources/con4gis',
             'data' => $rootDir . '/vendor/con4gis/data/Resources/con4gis',
             'firefighter' => $rootDir . '/vendor/con4gis/firefighter/Resources/con4gis',
         ];

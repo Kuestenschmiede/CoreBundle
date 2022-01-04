@@ -41,7 +41,7 @@
         /**
          * @var string
          */
-        private $_sApiUrl = 'src/con4gis/CoreBundle/Resources/contao/api/index.php';
+        private $_sApiUrl = 'con4gis/CoreBundle/src/Resources/contao/api/index.php';
 
 
         /**

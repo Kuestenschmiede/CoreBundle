@@ -22,7 +22,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class Plugin implements RoutingPluginInterface, BundlePluginInterface, ConfigPluginInterface
+class Plugin implements RoutingPluginInterface, BundlePluginInterface
 {
     /**
      * {@inheritdoc}
@@ -48,10 +48,5 @@ class Plugin implements RoutingPluginInterface, BundlePluginInterface, ConfigPlu
                 ->setLoadAfter([ContaoCoreBundle::class])
                 ->setReplace(['con4gis_api']),
         ];
-    }
-
-    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
-    {
-        $loader->load('@con4gisCoreBundle/Resources/config/config.yml');
     }
 }

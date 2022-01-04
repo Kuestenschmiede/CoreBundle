@@ -31,7 +31,7 @@ class ApiController extends AbstractController
     /**
      * @var string
      */
-    private $_sApiUrl = 'con4gis/CoreBundle/Resources/contao/api/index.php';
+    private $_sApiUrl = 'con4gis/CoreBundle/src/Resources/contao/api/index.php';
     private static $_sApiBundleVersion = '1.1.1';
 
     public function runAction($_url_fragment)

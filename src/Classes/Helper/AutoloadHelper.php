@@ -25,7 +25,7 @@ class AutoloadHelper
      */
     public static function loadTemplates($strPath, $strRgex = '/^.+\.[x]*html[5]*$/i')
     {
-        $folder = (substr_count($strPath, 'system/modules')) ? '/templates' : '/Resources/contao/templates';
+        $folder = (substr_count($strPath, 'system/modules')) ? '/templates' : '/src/Resources/contao/templates';
         $strPath = self::makePath($strPath, $folder);
         $objFiles = self::getFiles($strPath, $strRgex);
 
