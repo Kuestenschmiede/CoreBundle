@@ -208,4 +208,16 @@ class ArrayHelper
 
         return false;
     }
+
+    /**
+     * @param $object
+     * @return array|mixed
+     */
+    public static function objectToArray($object) {
+        if (is_object($object))
+            $d = get_object_vars($object);
+
+        return is_array($object) ? array_map(__FUNCTION__, $object) : $object;
+    }
+
 }
