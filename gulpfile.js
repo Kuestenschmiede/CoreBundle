@@ -8,7 +8,7 @@ const notify = require('gulp-notify');
 const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
 
-const publicPath = 'Resources/public/';
+const publicPath = 'src/Resources/public/';
 
 const paths = {
     src: {

@@ -43,7 +43,7 @@ $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['FAILMSG_2'] = 'Contao-Ei
 
 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECK']['HEADLINE']       = 'API-Check';
 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECK']['INTRO']          = 'Dieses Tool prüft die con4gis-API und reconfiguriert, wenn notwendig, die .htaccess-Datei des API-Verzeichnisses.';
-$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECK']['WARNING']        = 'Dieser Vorgang kann die .htaccess im API-Verzeichnis ("CoreBundle/Resources/contao/api/") beschädigen, wenn diese zuvor manuell bearbeitet wurde. Ein Backup der Datei wird daher empfohlen!.';
+$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECK']['WARNING']        = 'Dieser Vorgang kann die .htaccess im API-Verzeichnis ("CoreBundle/src/Resources/contao/api/") beschädigen, wenn diese zuvor manuell bearbeitet wurde. Ein Backup der Datei wird daher empfohlen!.';
 
 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECK']['WORKS']          = 'Die API funktioniert ordnungsgemäß.';
 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['APICHECK']['REPAIRED']       = 'Die API konnte erfolgreich repariert werden.';
