@@ -89,7 +89,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'showBundleNames' =>
         [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['showBundleNames'],
             'exclude'                 => true,
             'default'                 => false,
             'inputType'               => 'checkbox',
@@ -97,14 +96,12 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
             'sql'                     => "char(1) NOT NULL default '0'"
         ],
         'con4gisIoUrl' =>[
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'],
             'exclude'                 => true,
             'inputType'               => 'text',
             'eval'                    => ['maxlength' => 100],
             'sql'                     => "varchar(100) default ''"
         ],
         'con4gisIoKey' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'],
             'exclude'                 => true,
             'inputType'               => 'text',
             'eval'                    => ['maxlength' => 32],
@@ -112,7 +109,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ],
         'c4g_uitheme_css_select' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_uitheme_css_select'],
             'exclude'                 => true,
             'default'                 => 'base',
             'inputType'               => 'radio',
@@ -123,7 +119,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'c4g_appearance_themeroller_css' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['c4g_appearance_themeroller_css'],
             'exclude'                 => true,
             'inputType'               => 'fileTree',
             'eval'                    => array('fieldType'=>'radio', 'files'=>true, 'extensions'=>'css', 'class'=>'long'),
@@ -131,7 +126,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadAllowedImageTypes' => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageTypes'],
             'inputType' => 'text',
             'default' => 'image/jpg,image/jpeg,image/png,image/gif',
             'eval' => array('mandatory' => false),
@@ -139,7 +133,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadAllowedImageWidth' => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageWidth'],
             'inputType' => 'text',
             'default'   => '800',
             'eval'      => array('mandatory' => false, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
@@ -147,7 +140,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadAllowedImageHeight' => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedImageHeight'],
             'inputType' => 'text',
             'default'   => '600',
             'eval'      => array('mandatory' => false, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
@@ -155,7 +147,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadPathImages'  => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathImages'],
             'exclude'   => true,
             'default'   => null,
             'inputType' => 'fileTree',
@@ -164,7 +155,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadAllowedDocumentTypes' => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedDocumentTypes'],
             'inputType' => 'text',
             'default' => 'application/pdf',
             'eval' => array('mandatory' => false),
@@ -172,7 +162,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadPathDocuments'  => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathDocuments'],
             'exclude'   => true,
             'default'   => null,
             'inputType' => 'fileTree',
@@ -181,7 +170,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadAllowedGenericTypes' => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadAllowedGenericTypes'],
             'inputType' => 'text',
             'default' => 'application/zip',
             'eval' => array('mandatory' => false),
@@ -189,7 +177,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadPathGeneric'  => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadPathGeneric'],
             'exclude'   => true,
             'default'   => null,
             'inputType' => 'fileTree',
@@ -198,14 +185,12 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         ),
         'uploadMaxFileSize' => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'],
             'inputType' => 'text',
             'default'   => '2048000',
             'eval'      => array('mandatory' => false, 'rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr'),
             'sql'       => "varchar(255) NOT NULL default '2048000'"
         ),
         'disableJQueryLoading' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_settings']['disableJQueryLoading'],
             'exclude'                 => true,
             'default'                 => false,
             'inputType'               => 'checkbox',
