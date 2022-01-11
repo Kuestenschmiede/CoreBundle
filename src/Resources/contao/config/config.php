@@ -10,7 +10,6 @@
  * @link https://www.con4gis.org
  */
 
-use Contao\ArrayUtil;
 
 // API-Registration
 $GLOBALS['TL_API'] = array();
@@ -27,7 +26,7 @@ $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
 /**
  * Backend Modules
  */
-ArrayUtil::arrayInsert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array
+array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array
 (
     'con4gis' => [
         'c4g_bricks'   => ['tables' => ['tl_c4g_bricks']],
@@ -37,7 +36,7 @@ ArrayUtil::arrayInsert($GLOBALS['BE_MOD'], array_search('content', array_keys($G
     ]
 ));
 
-ArrayUtil::arrayInsert($GLOBALS['BE_MOD'], array_search('con4gis', array_keys($GLOBALS['BE_MOD'])) + 1, array
+array_insert($GLOBALS['BE_MOD'], array_search('con4gis', array_keys($GLOBALS['BE_MOD'])) + 1, array
 (
     'con4gis_stage' => []
 ));
@@ -56,7 +55,7 @@ $GLOBALS['TL_HEAD'][] = "<script>window.FontAwesomeConfig = {searchPseudoElement
 /**
  * Content Elements
  */
-ArrayUtil::arrayInsert($GLOBALS['TL_CTE']['con4gis'], 2, array
+array_insert($GLOBALS['TL_CTE']['con4gis'], 2, array
 (
     'c4g_activationpage' => 'con4gis\CoreBundle\src\Resources\contao\modules\ContentC4gActivationpage'
 ));
