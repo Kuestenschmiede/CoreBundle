@@ -10,7 +10,6 @@
  * @link https://www.con4gis.org
  */
 
-use \con4gis\CoreBundle\Classes\Hooks\con4gisInsertTags;
 
 // API-Registration
 $GLOBALS['TL_API'] = array();
