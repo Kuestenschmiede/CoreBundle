@@ -195,8 +195,8 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['type'],
             'inputType'               => 'select',
             'options'                 => array(
-                'demo'                  => $GLOBALS['TL_LANG']['tl_c4g_import_data']['type_demo'],
-                'basedata'              => $GLOBALS['TL_LANG']['tl_c4g_import_data']['type_basedata'],
+                'demo'                  => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['type_demo'],
+                'basedata'              => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['type_basedata'],
             ),
             'default'                 => '',
             'sorting'                 => true,
@@ -208,8 +208,8 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['source'],
             'inputType'               => 'select',
             'options'                 => array(
-                'locale'                => $GLOBALS['TL_LANG']['tl_c4g_import_data']['source_locale'],
-                'io'                    => $GLOBALS['TL_LANG']['tl_c4g_import_data']['source_io']
+                'locale'                => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['source_locale'],
+                'io'                    => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['source_io']
             ),
             'default'                 => '',
             'sorting'                 => true,

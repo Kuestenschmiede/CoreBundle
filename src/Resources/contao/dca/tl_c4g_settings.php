@@ -58,7 +58,7 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         (
             'edit' => array
             (
-                'label'         => $GLOBALS['TL_LANG']['tl_c4g_settings']['edit'],
+                'label'         => &$GLOBALS['TL_LANG']['tl_c4g_settings']['edit'],
                 'href'          => 'act=edit',
                 'icon'          => 'edit.svg',
             )
