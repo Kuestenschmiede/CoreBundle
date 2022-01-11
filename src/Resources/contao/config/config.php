@@ -74,7 +74,7 @@ $GLOBALS['TL_MODELS']['tl_c4g_settings'] = 'con4gis\CoreBundle\Resources\contao\
  * eg: $GLOBALS['CON4GIS']['USE_CACHE']['PARAMS']['method'] = array('getLive'); => request with method=getLive will be cached
  *
  */
-if (!$GLOBALS['CON4GIS'] || !$GLOBALS['CON4GIS']['USE_CACHE'])
+if (!array_key_exists('CON4GIS', $GLOBALS) || !!array_key_exists('USE_CACHE', $GLOBALS['CON4GIS']))
 {
     $GLOBALS['CON4GIS']['USE_CACHE'] = array();
     $GLOBALS['CON4GIS']['USE_CACHE']['SERVICES'] = array();
