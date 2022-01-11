@@ -18,8 +18,6 @@
  */
 
 use con4gis\CoreBundle\Classes\C4GVersionProvider;
-use con4gis\CoreBundle\Classes\Helper\ArrayHelper;
-use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Config;
 use Contao\Date;
 use Contao\Image;
