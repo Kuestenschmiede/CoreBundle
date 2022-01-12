@@ -30,7 +30,7 @@ class C4GVersionProvider
     {
         $installedPackages = System::getContainer()->getParameter('kernel.packages');
 
-        return ($package && ($installedPackages[$package]));
+        return ($package && array_key_exists($package, $installedPackages));
     }
 
     /**

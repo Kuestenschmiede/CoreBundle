@@ -33,7 +33,7 @@ class DCAOperation
 
     public function label(string $dcaName, string $operationName)
     {
-        $this->global['label'] = $GLOBALS['TL_LANG'][$dcaName][$operationName];
+        $this->global['label'] = &$GLOBALS['TL_LANG'][$dcaName][$operationName];
     }
 
     public function href(string $href)

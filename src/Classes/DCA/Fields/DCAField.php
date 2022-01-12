@@ -119,7 +119,7 @@ class DCAField
 
     public function reference(string $reference)
     {
-        $this->global['reference'] = $GLOBALS['TL_LANG'][$this->dcaName][$reference];
+        $this->global['reference'] = &$GLOBALS['TL_LANG'][$this->dcaName][$reference];
 
         return $this;
     }
