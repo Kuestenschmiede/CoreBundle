@@ -333,97 +333,97 @@ class tl_c4g_bricks extends Contao\Backend
         $this->bundles = [
             'core' => [
                 'repo' => 'CoreBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['core'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['core'],
                 'icon' => $iconPath.'core_c4g.svg'
             ],
             'data' => [
                 'repo' => 'DataBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['data'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['data'],
                 'icon' => $iconPath.'data_c4g.svg'
             ],
             'documents' => [
                 'repo' => 'DocumentsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'],
                 'icon' => $iconPath.'documents_c4g.svg'
             ],
             'editor' => [
                 'repo' => 'EditorBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'],
                 'icon' => $iconPath.'editor_c4g.svg'
             ],
             'export' => [
                 'repo' => 'ExportBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['export'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['export'],
                 'icon' => $iconPath.'export_c4g.svg'
             ],
             'firefighter' => [
                 'repo' => 'FirefighterBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'],
                 'icon' => $iconPath.'firefighter_c4g.svg'
             ],
             'framework' => [
                 'repo' => 'FrameworksBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'],
                 'icon' => $iconPath.'framework_c4g.svg'
             ],
             'forum' => [
                 'repo' => 'ForumBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
                 'icon' => $iconPath.'forum_c4g.svg'
             ],
             'groups' => [
                 'repo' => 'GroupsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['groups'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['groups'],
                 'icon' => $iconPath.'groups_c4g.svg'
             ],
             'import' => [
                 'repo' => 'ImportBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['import'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['import'],
                 'icon' => $iconPath.'import_c4g.svg'
             ],
             'ldap' => [
                 'repo' => 'LdapBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'],
                 'icon' => $iconPath.'ldap_c4g.svg'
             ],
             'maps' => [
                 'repo' => 'MapsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
                 'icon' => $iconPath.'maps_c4g.svg'
             ],
             'projects' => [
                 'repo' => 'ProjectsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'],
                 'icon' => $iconPath.'projects_c4g.svg'
             ],
             'pwa' => [
                 'repo' => 'PwaBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'],
                 'icon' => $iconPath.'pwa_c4g.svg'
             ],
             'queue' => [
                 'repo' => 'QueueBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'],
                 'icon' => $iconPath.'queue_c4g.svg'
             ],
             'reservation' => [
                 'repo' => 'ReservationBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['reservation'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['reservation'],
                 'icon' => $iconPath.'reservation_c4g.svg'
             ],
             'tracking' => [
                 'repo' => 'TrackingBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'],
                 'icon' => $iconPath.'tracking_c4g.svg'
             ],
             'visualization' => [
                 'repo' => 'VisualizationBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'],
                 'icon' => $iconPath.'visualization_c4g.svg'
             ],
             'io-travel-costs' => [
                 'repo' => 'IOTravelCostsBundle',
-                'description' => $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'],
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'],
                 'icon' => $iconPath.'io-travel-costs_c4g.svg'
             ]
         ];

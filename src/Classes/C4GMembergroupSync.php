@@ -60,14 +60,14 @@ class C4GMembergroupSync extends \Contao\BackendModule
 
                 $this->buttons[] = [
                     action => 'exec',
-                    label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['SYNCBINDINGS'],
+                    label => &$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['SYNCBINDINGS'],
                 ];
 
                 break;
         }
         $this->buttons[] = [
             action => 'back',
-            label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK'],
+            label => &$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK'],
         ];
 
         return parent::generate();

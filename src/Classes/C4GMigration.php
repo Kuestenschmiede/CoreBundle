@@ -68,16 +68,16 @@ class C4GMigration extends \Contao\BackendModule
                 if ($this->checkMod()) {
                     $this->buttons[] = [
                         action => 'exec',
-                        label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['MIGRATE'],
+                        label => &$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BTN']['MIGRATE'],
                     ];
                     $this->buttons[] = [
                         action => 'back',
-                        label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CANCEL'],
+                        label => &$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['CANCEL'],
                     ];
                 } else {
                     $this->buttons[] = [
                         action => 'back',
-                        label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK'],
+                        label => &$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK'],
                     ];
                 }
 
@@ -247,7 +247,7 @@ class C4GMigration extends \Contao\BackendModule
 
         $this->buttons[] = [
                     action => 'back',
-                    label => $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK'],
+                    label => &$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['BACK'],
                 ];
     }
 }
