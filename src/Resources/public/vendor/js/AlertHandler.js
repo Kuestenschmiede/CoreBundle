@@ -46,7 +46,6 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: content,
-      type: "error",
       customClass: cssClass ? cssClass : ''
     });
   }
@@ -55,7 +54,6 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: content,
-      type: "info",
       customClass: cssClass ? cssClass : ''
     });;
   }
@@ -64,7 +62,6 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: content,
-      type: "info",
       customClass: cssClass ? cssClass : ''
     }).then (
         function () {
@@ -77,7 +74,6 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: content,
-      type: "info",
       showLoaderOnConfirm: true,
       customClass: cssClass ? cssClass : '',
       preConfirm: (data) => {
@@ -90,7 +86,6 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: text,
-      type: "warning",
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
@@ -108,7 +103,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       html: html,
-      type: "warning",
+      //type: "warning",
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
@@ -127,7 +122,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: text,
-      type: "warning",
+      //type: "warning",
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
