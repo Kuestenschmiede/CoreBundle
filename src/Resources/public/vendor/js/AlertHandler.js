@@ -89,7 +89,6 @@ export class AlertHandler {
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
-      dangerMode: true,
       customClass: cssClass ? cssClass : ''
     }).then((willDelete) => {
       if (willDelete.value) {
@@ -103,11 +102,9 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       html: html,
-      //type: "warning",
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
-      dangerMode: true,
       customClass: cssClass ? cssClass : ''
     }).then((willDelete) => {
       if (willDelete.value) {
@@ -122,7 +119,6 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: text,
-      //type: "warning",
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
@@ -133,7 +129,6 @@ export class AlertHandler {
         })
       },
       allowOutsideClick: () => !Swal.isLoading(),
-      dangerMode: true,
       customClass: cssClass ? cssClass : ''
     });
   }
