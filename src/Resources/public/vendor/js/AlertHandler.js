@@ -8,16 +8,6 @@
  * @link https://www.con4gis.org
  */
 
-/**
- * con4gis - the gis-kit
- *
- * @package   con4gis
- * @author    con4gis contributors (see "authors.txt")
- * @license   GNU/LGPL http://opensource.org/licenses/lgpl-3.0.html
- * @copyright Küstenschmiede GmbH Software & Design 2011 - 2018
- * @link      https://www.kuestenschmiede.de
- */
-
 import Swal from 'sweetalert2';
 
 /**
@@ -46,6 +36,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: content,
+      icon: "error",
       customClass: cssClass ? cssClass : ''
     });
   }
@@ -54,6 +45,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: content,
+      icon: "info",
       customClass: cssClass ? cssClass : ''
     });;
   }
@@ -62,6 +54,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: content,
+      icon: "info",
       customClass: cssClass ? cssClass : ''
     }).then (
         function () {
@@ -74,6 +67,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: content,
+      icon: "info",
       showLoaderOnConfirm: true,
       customClass: cssClass ? cssClass : '',
       preConfirm: (data) => {
@@ -86,6 +80,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: text,
+      icon: "warning",
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
@@ -102,6 +97,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       html: html,
+      icon: "warning",
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
@@ -119,6 +115,7 @@ export class AlertHandler {
     Swal.fire({
       title: title,
       text: text,
+      icon: "warning",
       showCancelButton: true,
       confirmButtonText: confirmText ? confirmText : "Confirm",
       cancelButtonText: cancelText ? cancelText : "Cancel",
