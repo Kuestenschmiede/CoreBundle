@@ -61,7 +61,7 @@ class BundleHelper
         $bundelPatteren = $bundleRoot . '/*/*/*Bundle.php';
         $bundleFiles = glob($bundelPatteren);
 
-        if (is_array($bundleFiles) && count($bundleFiles)) {
+        if (is_array($bundleFiles) && is_countable($bundleFiles) && count($bundleFiles)) {
             foreach ($bundleFiles as $bundleFile) {
                 // coreBundle muss seperat registriert werden, damit der BundleHelper gefunden wird!
                 if (!substr_count($bundleFile, 'src/con4gis/CoreBundle/con4gisCoreBundle.php')) {

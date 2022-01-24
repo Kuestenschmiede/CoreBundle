@@ -90,7 +90,7 @@ class con4gisNavigation extends \System
         }
 
         //fallback to remove empty staging nav
-        if ($arrModules['con4gis_stage'] && $arrModules['con4gis_stage']['modules'] && count($arrModules['con4gis_stage']['modules']) == 0) {
+        if ($arrModules['con4gis_stage'] && $arrModules['con4gis_stage']['modules'] && is_countable($arrModules['con4gis_stage']['modules']) && count($arrModules['con4gis_stage']['modules']) == 0) {
             unset($arrModules['con4gis_stage']);
         }
 

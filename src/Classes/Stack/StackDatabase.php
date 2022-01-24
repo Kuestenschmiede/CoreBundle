@@ -71,7 +71,7 @@ class StackDatabase implements StackInterface
      */
     public function push(array $item)
     {
-        if (count($item)) {
+        if (is_countable($item) && count($item)) {
             $data = serialize($item);
             $query = 'INSERT INTO `' . $this->table . '` SET ';
             $query .= '`data` = \'' . $data . '\', ';
@@ -88,7 +88,7 @@ class StackDatabase implements StackInterface
     {
         $data = $this->top();
 
-        if (is_array($data) && count($data)) {
+        if (is_array($data) && is_countable($data) && count($data)) {
             $query = 'DELETE FROM `' . $this->table . '` WHERE `id` = ' . $data['id'];
             $this->execute($query);
 

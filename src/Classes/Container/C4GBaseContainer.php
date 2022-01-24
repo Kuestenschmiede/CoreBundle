@@ -77,7 +77,7 @@ abstract class C4GBaseContainer implements \Iterator, \Countable
     {
         $this->elements[] = $element;
         if ($key === null || (!is_string($key) && !is_int($key))) {
-            $key = count($this->elements) - 1;
+            $key = is_countable($this->elements) ? count($this->elements) - 1 : 0;
         }
         $this->keys[] = $key;
 
@@ -126,6 +126,6 @@ abstract class C4GBaseContainer implements \Iterator, \Countable
 
     public function count()
     {
-        return count($this->keys);
+        return is_countable($this->keys) ? count($this->keys) : 0;
     }
 }

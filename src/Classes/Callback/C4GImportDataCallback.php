@@ -43,6 +43,11 @@ class C4GImportDataCallback extends Backend
     {
         $cronIds = [];
         global $objPage;
+
+        if (!$objPage) {
+            return [];
+        }
+
         $objPage->language = BackendUser::getInstance()->language;
         if ($objPage->language === 'de') {
             // append DE so import names can be resolved
@@ -62,7 +67,7 @@ class C4GImportDataCallback extends Backend
                 }
             }
         }
-        $responsesLength = count($responses);
+        $responsesLength = is_countable($responses) ? count($responses) : 0;
         $localIoData = $this->getLocalIoData();
 
         $localResponses = [];
@@ -152,7 +157,7 @@ class C4GImportDataCallback extends Backend
                 $response->tables = '';
             }
             $count = 0;
-            $arrayLength = count($localData) - 1;
+            $arrayLength = is_countable($localData) ? count($localData) - 1 : 0;
             foreach ($localData as $data) {
                 if ($data['id'] == $response->id) {
                     break;
@@ -365,23 +370,19 @@ class C4GImportDataCallback extends Backend
             }
 
             // Getting data from downloades json config file
-            $zip = zip_open($downloadPath . $filename);
-
+            $archive = new ZipArchive();
+            $zip = $archive->open($downloadPath . $filename, ZipArchive::RDONLY);
             if ($zip) {
-                while ($zip_entry = zip_read($zip)) {
-                    if (zip_entry_name($zip_entry) == 'io-data.yml') {
-                        if (zip_entry_open($zip, $zip_entry)) {
-                            // Read open directory entry
-                            $contents = zip_entry_read($zip_entry);
-                            zip_entry_close($zip_entry);
-                            $yaml = new Parser();
-                            $importData = $yaml->parse($contents);
-
-                            break;
-                        }
+                for ($i = 0; $i < $archive->numFiles; $i++) {
+                    $statIndex = $archive->statIndex($i);
+                    if ($statIndex['name'] == 'io-data.yml') {
+                        $contents = $archive->getFromName($statIndex['name']);
+                        $yaml = new Parser();
+                        $importData = $yaml->parse($contents);
                     }
                 }
-                zip_close($zip);
+
+                $archive->close();
             }
 
             if (isset($importData['import']['datatype'])) {
@@ -759,30 +760,21 @@ class C4GImportDataCallback extends Backend
         $contentsJson = '';
 
         try {
-            $zip = zip_open($localFile);
+            $archive = new ZipArchive();
+            $zip = $archive->open($localFile, ZipArchive::RDONLY);
             if ($zip) {
-                while ($zip_entry = zip_read($zip)) {
-                    if (zip_entry_name($zip_entry) == 'io-data.yml') {
-                        if (zip_entry_open($zip, $zip_entry)) {
-                            // Read open directory entry
-                            $contents = zip_entry_read($zip_entry);
-                            zip_entry_close($zip_entry);
-
-//                            break;
-                        }
+                for ($i = 0; $i < $archive->numFiles; $i++) {
+                    $statIndex = $archive->statIndex($i);
+                    if ($statIndex['name'] == 'io-data.yml') {
+                        $contents = $archive->getFromName($statIndex['name']);
                     }
-                    if (strpos(zip_entry_name($zip_entry), '.json') !== false) {
-                        if (zip_entry_open($zip, $zip_entry)) {
-                            // Read open directory entry
-                            $contentsJson = zip_entry_read($zip_entry);
-                            zip_entry_close($zip_entry);
-
-//                                    break;
-                        }
+                    if (strpos($statIndex['name'], '.json') !== false) {
+                        $contentsJson = $archive->getFromName($statIndex['name']);
                     }
                 }
-                zip_close($zip);
+                $archive->close();
             }
+
             if ($contents == '' || $contentsJson == '') {
                 try {
                     $errorContent = file_get_contents($localFile);
@@ -946,33 +938,25 @@ class C4GImportDataCallback extends Backend
                 $contentsJson = '';
 
                 try {
-                    $zip = zip_open($importFile);
 
+
+
+                    $archive = new ZipArchive();
+                    $zip = $archive->open($importFile, ZipArchive::RDONLY);
                     if ($zip) {
-                        while ($zip_entry = zip_read($zip)) {
-                            if (zip_entry_name($zip_entry) == 'io-data.yml') {
-                                if (zip_entry_open($zip, $zip_entry)) {
-                                    // Read open directory entry
-                                    $contents = zip_entry_read($zip_entry);
-                                    zip_entry_close($zip_entry);
-                                    $yaml = new Parser();
-                                    $newYamlConfigArray[$count] = $yaml->parse($contents);
-                                    $count++;
-
-//                                    break;
-                                }
+                        for ($i = 0; $i < $archive->numFiles; $i++) {
+                            $statIndex = $archive->statIndex($i);
+                            if ($statIndex['name'] == 'io-data.yml') {
+                                $contents = $archive->getFromName($statIndex['name']);
+                                $yaml = new Parser();
+                                $newYamlConfigArray[$count] = $yaml->parse($contents);
+                                $count++;
                             }
-                            if (strpos(zip_entry_name($zip_entry), '.json') !== false) {
-                                if (zip_entry_open($zip, $zip_entry)) {
-                                    // Read open directory entry
-                                    $contentsJson = zip_entry_read($zip_entry);
-                                    zip_entry_close($zip_entry);
-
-//                                    break;
-                                }
+                            if (strpos($statIndex['name'], '.json') !== false) {
+                                $contentsJson = $archive->getFromName($statIndex['name']);
                             }
                         }
-                        zip_close($zip);
+                        $archive->close();
                     }
                     if ($contents == '' || $contentsJson == '') {
                         C4gLogModel::addLogEntry('core', 'Import data file (' . $importFile . ') not complete.');
@@ -1111,7 +1095,7 @@ class C4GImportDataCallback extends Backend
             if (!in_array($secondTable[0], $relationTablesPrimary)) {
                 $relationTablesPrimary[] = $secondTable[0];
             }
-            if (!in_array($secondTable[1], $dbRelationPrimary[$secondTable[0]])) {
+            if (is_array($dbRelationPrimary[$secondTable[0]]) && !in_array($secondTable[1], $dbRelationPrimary[$secondTable[0]])) {
                 $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
             }
         }
@@ -1250,7 +1234,7 @@ class C4GImportDataCallback extends Backend
                                     $unserial = hex2bin(substr($importDbValue, 2));
 
                                     if (strpos($unserial, '{')) {
-                                        $unserial = unserialize($unserial);
+                                        $unserial = \Contao\StringUtil::deserialize($unserial);
                                         $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                         $newImportDbValue = serialize($unserial);
                                         $newImportDbValue = bin2hex($newImportDbValue);
@@ -1270,7 +1254,7 @@ class C4GImportDataCallback extends Backend
                                     $importDbValue = $newImportDbValue;
                                 } elseif (strpos($importDbValue, '{')) {
                                     $unserial = hex2bin(substr($importDbValue, 2));
-                                    $unserial = unserialize($unserial);
+                                    $unserial = \Contao\StringUtil::deserialize($unserial);
                                     $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                     $newImportDbValue = serialize($unserial);
                                     $newImportDbValue = bin2hex($newImportDbValue);

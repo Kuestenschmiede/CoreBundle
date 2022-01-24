@@ -25,7 +25,7 @@ class ArrayHelper
         $new_array = [];
         $sortable_array = [];
 
-        if (count($array) > 0) {
+        if (is_countable($array) && (count($array) > 0)) {
             foreach ($array as $k => $v) {
                 if (is_array($v)) {
                     foreach ($v as $k2 => $v2) {
@@ -73,7 +73,7 @@ class ArrayHelper
         $new_array = [];
         $sortable_array = [];
 
-        if (count($array) > 0) {
+        if (is_countable($array) && (count($array) > 0)) {
             foreach ($array as $k => $v) {
                 $value = $v->$on;
                 if ($value) {
@@ -167,7 +167,7 @@ class ArrayHelper
      */
     public static function filter_by_value($array, $index, $value, $newKeys = false)
     {
-        if (is_array($array) && count($array) > 0) {
+        if (is_array($array) && is_countable($array) && (count($array) > 0)) {
             $newarray = [];
             foreach (array_keys($array) as $key) {
                 $temp[$key] = $array[$key][$index];
@@ -195,7 +195,7 @@ class ArrayHelper
             return $array;
         }
         $object = new \stdClass();
-        if (is_array($array) && count($array) > 0) {
+        if (is_array($array) && is_countable($array) && (count($array) > 0)) {
             foreach ($array as $name => $value) {
                 $name = (trim($name));
                 if ($name != '') {

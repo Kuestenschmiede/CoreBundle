@@ -77,7 +77,7 @@ class DcaHelper
             System::loadLanguageFile($table);
             $fields = $db->listFields($table);
 
-            if (is_array($fields) && count($fields)) {
+            if (is_array($fields) && (is_countable($arrResult) && count($fields))) {
                 foreach ($fields as $field) {
                     if ($field['name'] != 'PRIMARY') {
                         if (isset($GLOBALS['TL_LANG'][$table][$field['name']][0])) {

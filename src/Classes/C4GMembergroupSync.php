@@ -93,20 +93,21 @@ class C4GMembergroupSync extends \Contao\BackendModule
 
             if ($objMembers) {
                 foreach ($objMembers as $objMember) {
-                    $memberGroupIds = $objMember->groups ? unserialize($objMember->groups) : [];
+                    $memberGroupIds = $objMember->groups ? \Contao\StringUtil::deserialize($objMember->groups) : [];
 
                     foreach ($memberGroupIds as $memberGroupId) {
                         if (!MemberGroupModel::isMemberOfGroup($memberGroupId, $objMember->id)) {
                             $objGroup = MemberGroupModel::findByPk($memberGroupId);
                             if ($objGroup) {
                                 // check if the group has a member-limitation
-                                if ($objGroup->cg_max_member > 0 && $objGroup->cg_max_member <= count(unserialize($objGroup->cg_member))) {
+                                $count = is_countable($count) && count(\Contao\StringUtil::deserialize($objGroup->cg_member) : count(\Contao\StringUtil::deserialize($objGroup->cg_member)) : 0;
+                                if ($objGroup->cg_max_member > 0 && $objGroup->cg_max_member <= $count) {
                                     $this->output[] = '<span class="c4g_warning">' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNC']['ERROR_GROUPLIMITREACHED'], $objMember->id, $objGroup->id) . '</span>';
 
                                     continue;
                                 }
 
-                                $members = $objGroup->cg_member ? unserialize($objGroup->cg_member) : [];
+                                $members = $objGroup->cg_member ? \Contao\StringUtil::deserialize($objGroup->cg_member) : [];
                                 $members[] = $objMember->id;
                                 $objGroup->cg_member = serialize($members);
                                 $objGroup->save();
