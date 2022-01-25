@@ -68,7 +68,7 @@ class con4gisNavigation extends \System
                 $favorite = $brick['favorite'];
 
                 foreach ($arrModules['con4gis']['modules'] as $name => $module) {
-                    if ($module['brick'] && $module['brick'] == $brickkey) {
+                    if (isset($module['brick']) && $module['brick'] == $brickkey) {
                         $additionalClass = $arrModules['con4gis']['modules'][$name]['class'];
                         if ($showBundleNames) {
                             $arrModules['con4gis']['modules'][$name]['label'] = '[' . $brickkey . '] ' . $GLOBALS['TL_LANG']['MOD'][$name][0];
@@ -90,7 +90,7 @@ class con4gisNavigation extends \System
         }
 
         //fallback to remove empty staging nav
-        if ($arrModules['con4gis_stage'] && $arrModules['con4gis_stage']['modules'] && is_countable($arrModules['con4gis_stage']['modules']) && count($arrModules['con4gis_stage']['modules']) == 0) {
+        if (isset($arrModules['con4gis_stage']) && $arrModules['con4gis_stage'] && $arrModules['con4gis_stage']['modules'] && is_countable($arrModules['con4gis_stage']['modules']) && count($arrModules['con4gis_stage']['modules']) == 0) {
             unset($arrModules['con4gis_stage']);
         }
 
