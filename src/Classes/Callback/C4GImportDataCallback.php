@@ -1428,6 +1428,10 @@ class C4GImportDataCallback extends Backend
         if (!is_array($importDbValue)) {
             $newValue = $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$importDbValue];
 
+            if (is_numeric($importDbValue) && is_null($newValue)) {
+                $newValue = 0;
+            }
+
             return (String) $newValue;
         }
         foreach ($importDbValue as $key => $value) {
