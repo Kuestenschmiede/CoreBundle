@@ -67,6 +67,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         (
             'fields'                  => array('caption', 'type', 'source', 'bundles', 'bundlesVersion', 'description', 'importVersion', 'availableVersion'),
             'showColumns'             => true,
+            'label_callback'          => ['tl_c4g_import_data', 'labelCallback'],
         ),
         'global_operations' => array
         (
@@ -513,6 +514,38 @@ class tl_c4g_import_data extends Contao\Backend
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
         return '<a href="https://con4gis.io/blaupausen"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a><br>';
+    }
+
+    /**
+     * @param $row
+     * @param $label
+     * @return var
+     */
+    public function labelCallback($row, $label){
+        $userLng = BackendUser::getInstance()->language;
+
+        $caption = $this->get_string_between($row['caption'], "::".$userLng."}}", "{{");
+        $description = $this->get_string_between($row['description'], "::".$userLng."}}", "{{");
+        
+        $newLabel['caption'] = $caption;
+        $newLabel['type'] = $row['type'];
+        $newLabel['source'] = $row['source'];
+        $newLabel['bundles'] = $row['bundles'];
+        $newLabel['bundlesVersion'] = $row['bundlesVersion'];
+        $newLabel['description'] = $description;
+        $newLabel['importVersion'] = $row['importVersion'];
+        $newLabel['availableVersion'] = $row['availableVersion'];
+
+        return $newLabel;
+    }
+
+    private function get_string_between($string, $start, $end){
+        $string = " ".$string;
+        $ini = strpos($string,$start);
+        if ($ini == 0) return "";
+        $ini += strlen($start);
+        $len = strpos($string,$end,$ini) - $ini;
+        return substr($string,$ini,$len);
     }
 
 }

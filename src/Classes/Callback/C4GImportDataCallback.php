@@ -42,17 +42,6 @@ class C4GImportDataCallback extends Backend
     public function loadBaseData($cron)
     {
         $cronIds = [];
-        global $objPage;
-
-        if (!$objPage) {
-            return [];
-        }
-
-        $objPage->language = BackendUser::getInstance()->language;
-        if ($objPage->language === 'de') {
-            // append DE so import names can be resolved
-            $objPage->language .= '-DE';
-        }
         // Get installed contao and con4gis Core version
         $installedPackages = $this->getContainer()->getParameter('kernel.packages');
         $coreVersion = $installedPackages['con4gis/core'];
@@ -99,7 +88,8 @@ class C4GImportDataCallback extends Backend
                             $cronIds[] = $response->id;
                         }
                     } else {
-                        $this->Database->prepare('INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=?')->execute($response->id, $this->replaceInsertTags($response->caption), $this->replaceInsertTags($response->description), $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables);
+                        $this->Database->prepare('INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=?')->execute($response->id, $response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables);
+
                     }
                 }
             }
@@ -122,7 +112,7 @@ class C4GImportDataCallback extends Backend
                                 $cronIds[] = $response->id;
                             }
                         } else {
-                            $dbExecute = $this->Database->prepare('UPDATE tl_c4g_import_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=? WHERE id=?')->execute($this->replaceInsertTags($response->caption), $this->replaceInsertTags($response->description), $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables, $data['id']);
+                            $dbExecute = $this->Database->prepare('UPDATE tl_c4g_import_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=? WHERE id=?')->execute($response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables, $data['id']);
                         }
                     } elseif ($data['importVersion'] == '') {
                         if ($data['id'] != 0 or $data['id'] != '') {
@@ -164,7 +154,7 @@ class C4GImportDataCallback extends Backend
                 }
                 if ($data['id'] != $response->id && $count == $arrayLength) {
                     if ($this->checkImportResponse($response)) {
-                        $this->Database->prepare('INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=?')->execute($response->id, $this->replaceInsertTags($response->caption), $this->replaceInsertTags($response->description), $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables);
+                        $this->Database->prepare('INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=?')->execute($response->id, $response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables);
                     }
                 }
                 $count++;
