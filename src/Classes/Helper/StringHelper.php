@@ -35,6 +35,29 @@ class StringHelper
     }
 
     /**
+     * @param $string
+     * @return void
+     */
+    public static function addSpaceBeforeBracket($string) {
+        $result = $string;
+        $bPos = strpos($string, '&40;');
+        if (($bPos > 1) && ($string[$bPos-1] != ' ')) {
+            $str1 = substr($string,0, $bPos);
+            $result = $str1.' '.substr($string, $bPos);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $string
+     * @return void
+     */
+    public static function spaceToNbsp($string) {
+        return str_replace(' ','&nbsp;', $string);
+    }
+
+    /**
      * @param $str
      * @return bool
      */
