@@ -890,10 +890,10 @@ class C4GImportDataCallback extends Backend
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $arrBasedataFolders = [
-            'maps' => $rootDir . '/vendor/con4gis/maps/Resources/con4gis',
-            'visualization' => $rootDir . '/vendor/con4gis/visualization/Resources/con4gis',
+            'maps' => $rootDir . '/vendor/con4gis/maps/src/Resources/con4gis',
+            'visualization' => $rootDir . '/vendor/con4gis/src/visualization/Resources/con4gis',
             'core' => $rootDir . '/vendor/con4gis/core/src/Resources/con4gis',
-            'data' => $rootDir . '/vendor/con4gis/data/Resources/con4gis',
+            'data' => $rootDir . '/vendor/con4gis/data/src/Resources/con4gis',
             'firefighter' => $rootDir . '/vendor/con4gis/firefighter/Resources/con4gis',
         ];
 
@@ -1096,6 +1096,8 @@ class C4GImportDataCallback extends Backend
                 $relationTablesPrimary[] = $secondTable[0];
             }
             if (is_array($dbRelationPrimary[$secondTable[0]]) && !in_array($secondTable[1], $dbRelationPrimary[$secondTable[0]])) {
+                $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
+            } elseif (!is_array($dbRelationPrimary[$secondTable[0]])) {
                 $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
             }
         }
