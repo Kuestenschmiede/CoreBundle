@@ -55,21 +55,21 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['show'] = array("Einstellung anzeigen","");
 /** DESCRIPTIONS */
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['core'] = 'con4gis Kernfunktionen';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'] = 'PDF Generator';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'] = 'Frontend Karteneditor (verwaist)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['export'] = 'CSV Exporter';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'] = 'Einsatzverwaltung (Feuerwehr)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'] = 'Diskussionsforum, FAQ- oder Ticketsystem';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'] = 'React Framework für Frontendmodule (NEU)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'] = 'React Framework für Frontendmodule';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['groups'] = 'Frontend Mitgliederverwaltung';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['import'] = 'CSV Importer';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'] = 'LDAP Schnittstelle (Front- und Backend)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'] = 'LDAP & Active Directory Schnittstelle';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'] = 'Der Kartenbaustein';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['data'] = 'Karten- und Listendaten pflegen';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['oauth'] = 'OAuth & OpenID Connect Schnittstelle';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'] = 'Framework für Frontendmodule';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'] = 'Progressive Web App';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Stapelverarbeitung von Prozessen (Warteschlange)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['reservation'] = 'Reservierungsformulare (Tische, Räume, ...)';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Positionsverfolgung (verwaist)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Positionsverfolgung';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Fahrtkostenrechner (erfordert con4gis.io)';
 

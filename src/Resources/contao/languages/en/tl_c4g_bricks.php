@@ -55,21 +55,21 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['show'] = array("Show settings","");
 /** DESCRIPTIONS */
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['core'] = 'con4gis core functions';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'] = 'PDF Generator';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'] = 'Frontend mapeditor (abandoned)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['export'] = 'CSV Exporter';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'] = 'Operation Management (firefighter)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'] = 'Discussions forum, FAQ and ticketsystem';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'] = 'React Framework for front-end modules (NEW)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['groups'] = 'Frontend member management';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['import'] = 'CSV Importer';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'] = 'LDAP Interface (frontend/backend)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'] = 'LDAP & Active Directory Interface';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'] = 'The map brick';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['data'] = 'Maintain map and list data';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['reservation'] = 'Reservation forms (tables, rooms, ...)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['oauth'] = 'OAuth & OpenID Connect Interface';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'] = 'Framework for frontend modules';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'] = 'Progressive Web App';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Batch processing of processes (queue)';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Position tracking (abandoned)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Position tracking';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Travel cost calculator (requires con4gis.io)';
 

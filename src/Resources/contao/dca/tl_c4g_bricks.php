@@ -391,6 +391,11 @@ class tl_c4g_bricks extends Contao\Backend
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
                 'icon' => $iconPath.'maps_c4g.svg'
             ],
+            'oauth' => [
+                'repo' => 'OAuthBundle',
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['oauth'],
+                'icon' => $iconPath.'oauth_c4g.svg'
+            ],
             'projects' => [
                 'repo' => 'ProjectsBundle',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'],
@@ -438,7 +443,9 @@ class tl_c4g_bricks extends Contao\Backend
 
         $versions = [];
         foreach ($packages as $package) {
-            $versions[$package] = $this->versionProvider->getLatestVersion($package);
+            if ($version = $this->versionProvider->getLatestVersion($package)) {
+                $versions[$package] = $version;
+            }
         }
         return $versions;
     }
@@ -556,9 +563,9 @@ class tl_c4g_bricks extends Contao\Backend
                 $set['brickkey'] = $bundle;
                 $set['brickname'] = $values['icon'] ? Image::getHtml($values['icon']) : $bundle;
                 $set['repository'] = $values['repo'];
-                $set['description'] = $values['description'];
-                $set['installedVersion'] = $installedVersion;
-                $set['latestVersion'] = $latestVersion;
+                $set['description'] = $values['description'] ?: '-';
+                $set['installedVersion'] = $installedVersion ?: '-';
+                $set['latestVersion'] = $latestVersion ?: '-';
                 $set['withSettings'] = intval($this->checkSettings($bundle));
                 $set['icon'] = $values['icon'];
                 $set['showBundle'] = $installedVersion != '' ? "1" : "0";
@@ -584,7 +591,7 @@ class tl_c4g_bricks extends Contao\Backend
                     $set['brickname'] = $bundle;
                     $set['repository'] = '-';
                     $set['description'] = '-';
-                    $set['installedVersion'] = $installedVersion;
+                    $set['installedVersion'] = $installedVersion ?: '-';
                     $set['latestVersion']    = '-';
                     $set['withSettings'] = intval($this->checkSettings($bundle));
                     $set['showBundle'] = "1";
@@ -827,7 +834,7 @@ class tl_c4g_bricks extends Contao\Backend
         $brickArr = [];
         foreach ($GLOBALS['BE_MOD']['con4gis'] as $key=>$module) {
             if ($module['brick']) {
-                $brickArr[$module['brick']][] = ['do' => $key, 'icon' => $module['icon'], 'title' => $GLOBALS['TL_LANG']['MOD'][$key][1]];
+                $brickArr[$module['brick']][] = ['do' => $key, 'icon' => $module['icon'] ?: '', 'title' => $GLOBALS['TL_LANG']['MOD'][$key][1]];
             }
         }
 
@@ -836,7 +843,7 @@ class tl_c4g_bricks extends Contao\Backend
         foreach ($buttons as $key=>$button) {
             if ((strpos($href, $button) > 0) && ($brickArr[$row['brickkey']][$key])) {
                 $do = $brickArr[$row['brickkey']][$key]['do'];
-                $icon = $brickArr[$row['brickkey']][$key]['icon'];
+                $icon = $brickArr[$row['brickkey']][$key]['icon'] ?: '';
                 $title = $brickArr[$row['brickkey']][$key]['title'];
                 $foundButton = true;
                 break;

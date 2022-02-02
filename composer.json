@@ -22,7 +22,7 @@
         "issues": "https://github.com/Kuestenschmiede/CoreBundle/issues"
     },
     "require": {
-        "php": ">=7.4",
+        "php": "^7.4 || ^8.0",
         "contao/core-bundle": "^4.9",
         "guzzlehttp/guzzle": "^6.5",
         "contao-components/jquery": "^3.6"
