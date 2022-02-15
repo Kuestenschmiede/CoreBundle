@@ -41,6 +41,12 @@ array_insert($GLOBALS['BE_MOD'], array_search('con4gis', array_keys($GLOBALS['BE
     'con4gis_stage' => []
 ));
 
+if(TL_MODE == "FE") {
+    // TODO replace with symfony csrf token
+    $rq = \Contao\RequestToken::get();
+    $GLOBALS['TL_HEAD'][] = "<script>var c4g_rq = '" . $rq . "';</script>";
+}
+
 /**
  * Content Elements
  */
