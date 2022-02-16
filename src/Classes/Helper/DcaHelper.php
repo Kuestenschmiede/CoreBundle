@@ -54,8 +54,12 @@ class DcaHelper
                 }
             }
         }
+        $options = [];
+        foreach ($tables as $table) {
+            $options[$table] = $table;
+        }
 
-        return $tables;
+        return $options;
     }
 
     /**
