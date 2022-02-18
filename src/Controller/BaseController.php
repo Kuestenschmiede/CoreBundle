@@ -76,7 +76,7 @@ class BaseController extends AbstractController
     {
         $this->initializeContao();
         $cacheSettings = Database::getInstance()->execute("SELECT * FROM tl_c4g_settings LIMIT 1")->fetchAllAssoc();
-        $cacheSettings = $cacheSettings[0]['caching'];
+        $cacheSettings = isset($cacheSettings[0]['caching']) ? $cacheSettings[0]['caching'] : '';
         self::$useCache = (is_array(deserialize($cacheSettings)) && in_array($configParam, deserialize($cacheSettings)));
     }
 

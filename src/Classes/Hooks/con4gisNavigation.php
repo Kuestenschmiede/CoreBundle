@@ -59,6 +59,7 @@ class con4gisNavigation extends \System
 
         if ($result) {
             $settings = C4gSettingsModel::findAll();
+            $showBundleNames = false;
             if ($settings && $settings[0]) {
                 $showBundleNames = $settings[0]->showBundleNames;
             }
