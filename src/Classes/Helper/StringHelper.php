@@ -54,7 +54,18 @@ class StringHelper
      * @return void
      */
     public static function spaceToNbsp($string) {
-        return str_replace(' ','&nbsp;', $string);
+        $htmlTag = false;
+        for ($i = 0; $i < strlen($string); $i++) {
+            if ($string[$i] === '<') {
+                $htmlTag = true;
+            } else if ($string[$i] === '>') {
+                $htmlTag = false;
+            } else if (!trim($string[$i]) && (trim($string[$i]) !== '0') && !$htmlTag) {
+                $string[$i] = '~';
+            }
+        }
+        $result = str_replace('~','&nbsp;', $string);
+        return $result;
     }
 
     /**
