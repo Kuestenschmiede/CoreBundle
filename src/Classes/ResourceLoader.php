@@ -265,13 +265,13 @@ class ResourceLoader
                     $jQueryLoaded = true;
                 }
 
-                if ($GLOBALS['CON4GIS']['JQUERY-LOADED']) {
+                if (isset($GLOBALS['CON4GIS']['JQUERY-LOADED']) && $GLOBALS['CON4GIS']['JQUERY-LOADED']) {
                     $jQueryLoaded = true;
                 }
 
                 $neededResources['jquery'] = !$jQueryLoaded;
                 $settings = C4gSettingsModel::findSettings();
-                $dontLoadJQuery = $settings->disableJQueryLoading;
+                $dontLoadJQuery = isset($settings->disableJQueryLoading) && $settings->disableJQueryLoading;
                 if ($dontLoadJQuery) {
                     $neededResources['jquery'] = false;
                 }
