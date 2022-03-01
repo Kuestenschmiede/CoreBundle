@@ -37,6 +37,10 @@ class ResourceLoader
     {
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
         $webDir = $projectDir . '/web';
+        // check for changed directory name
+        if (!file_exists($webDir)) {
+            $webDir = $projectDir . '/public';
+        }
         if (!C4GUtils::startsWith($jsFile, '/')) {
             $jsFile = '/' . $jsFile;
         }
