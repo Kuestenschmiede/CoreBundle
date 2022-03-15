@@ -549,6 +549,43 @@ class C4GUtils
 
     }
     /**
+     * returns the lon/lat for an address string
+     * @param array $coordinates
+     * @return array
+     */
+    public static function reverseGeocode($coordinates) {
+        $settings = C4gMapSettingsModel::findOnly();
+        if ($settings->con4gisIoUrl && $settings->con4gisIoKey){
+            $searchUrl = rtrim($settings->con4gisIoUrl, '/') . '/';
+            $searchUrl .= 'reverse.php?key=' . $settings->con4gisIoKey;
+            $searchUrl .= '&lon=' . $coordinates[0] . '&lat=' . $coordinates[1] . '&format=json';
+
+            $headers = [];
+            if ($_SERVER['HTTP_REFERER']) {
+                $headers['Referer'] = $_SERVER['HTTP_REFERER'];
+            }
+            if ($_SERVER['HTTP_USER_AGENT']) {
+                $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
+            }
+            $client = HttpClient::create([
+                'headers' => $headers,
+            ]);
+            try {
+                $response = $client->request('GET', $searchUrl, ['timeout' => 2]);
+                $statusCode = $response->getStatusCode();
+                if ($response && $response->getStatusCode() === 200) {
+                    $response = $response->getContent();
+                    $response = \GuzzleHttp\json_decode($response, true);
+                    return $response['display_name'];
+                }
+            } catch (\Exception $exception) {
+                return false;
+            }
+
+        }
+
+    }
+    /**
      * @return string
      */
     public static function getGUID()
