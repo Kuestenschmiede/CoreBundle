@@ -13,6 +13,8 @@
 namespace con4gis\CoreBundle\Classes;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
+use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
+use con4gis\MapsBundle\Resources\contao\models\C4gMapSettingsModel;
 use Symfony\Component\HttpClient\HttpClient;
 use Contao\System;
 
@@ -507,7 +509,45 @@ class C4GUtils
             }
         }
     }
+    /**
+     * returns the lon/lat for an address string
+     * @param string $strAddress
+     * @return array
+     */
+    public static function geocodeAddress($strAddress) {
+        $settings = C4gMapSettingsModel::findOnly();
+        if ($settings->con4gisIoUrl && $settings->con4gisIoKey){
+            $searchUrl = rtrim($settings->con4gisIoUrl, '/') . '/';
+            $searchUrl .= 'search.php?key=' . $settings->con4gisIoKey;
+            $searchUrl .= '&q=' . urlencode($strAddress) . '&format=json';
 
+            $headers = [];
+            if ($_SERVER['HTTP_REFERER']) {
+                $headers['Referer'] = $_SERVER['HTTP_REFERER'];
+            }
+            if ($_SERVER['HTTP_USER_AGENT']) {
+                $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
+            }
+            $client = HttpClient::create([
+                'headers' => $headers,
+            ]);
+            try {
+                $response = $client->request('GET', $searchUrl, ['timeout' => 2]);
+                $statusCode = $response->getStatusCode();
+                if ($response && $response->getStatusCode() === 200) {
+                    $response = $response->getContent();
+                    $response = \GuzzleHttp\json_decode($response, true);
+                    $elemResponse = $response[0];
+                    $coordinates = [$elemResponse['lon'], $elemResponse['lat']];
+                    return $coordinates;
+                }
+            } catch (\Exception $exception) {
+                return false;
+            }
+
+        }
+
+    }
     /**
      * @return string
      */
