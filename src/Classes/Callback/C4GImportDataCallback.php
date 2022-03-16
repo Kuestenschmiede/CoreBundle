@@ -830,15 +830,16 @@ class C4GImportDataCallback extends Backend
         if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
             $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . $importData;
             $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
-            $basedataUrl .= '&mode=' . $mode;
+            $arrData = [];
+            $arrData['mode'] = $mode;
             if (isset($data)) {
-                $basedataUrl .= '&data=' . str_replace(' ', '%20', $data);
+                $arrData['data'] = str_replace(' ', '%20', $data);
             }
             if (isset($coreVersion)) {
-                $basedataUrl .= '&coreVersion=' . str_replace(' ', '%20', $coreVersion);
+                $arrData['coreVersion'] = str_replace(' ', '%20', $coreVersion);
             }
             if (isset($contaoVersion)) {
-                $basedataUrl .= '&contaoVersion=' . str_replace(' ', '%20', $contaoVersion);
+                $arrData['contaoVersion'] = str_replace(' ', '%20', $contaoVersion);
             }
 
             //Getting additional Data
@@ -849,7 +850,7 @@ class C4GImportDataCallback extends Backend
 
             if ($additionalProxyData && is_array($additionalProxyData)) {
                 foreach ($additionalProxyData as $proxyData) {
-                    $basedataUrl .= '&' . $proxyData['proxyKey'] . '=' . str_replace(' ', '%20', $proxyData['proxyData']);
+                    $arrData[$proxyData['proxyKey']] = str_replace(' ', '%20', $proxyData['proxyData']);
                 }
             }
 
@@ -860,7 +861,7 @@ class C4GImportDataCallback extends Backend
             if ($_SERVER['HTTP_USER_AGENT']) {
                 $REQUEST->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
             }
-            $REQUEST->send($basedataUrl);
+            $REQUEST->send($basedataUrl, \Safe\json_encode($arrData));
             $response = $REQUEST->response;
             if ($response) {
                 if (substr($response, 0, 2) == '[{' && substr($response, -2, 2) == '}]') {
