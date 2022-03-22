@@ -214,11 +214,7 @@ class C4GImportDataCallback extends Backend
             $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/src/Resources/con4gis/' . $importData['general']['filename'];
             $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
             $importType = $importData['import']['type'];
-            if (isset($importData['import']['datatype'])) {
-                $importDataType = $importData['import']['datatype'];
-            } else {
-                $importDataType = 'full';
-            }
+            $importDataType = $importData['import']['datatype'] ?? 'full';
 
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
