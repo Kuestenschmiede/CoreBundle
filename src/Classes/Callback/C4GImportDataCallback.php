@@ -101,19 +101,19 @@ class C4GImportDataCallback extends Backend
                 if ($response->id == $data['id']) {
                     if ($this->checkImportResponse($response)) {
                         if ($cron) {
-                            $dbExecute = $this->Database->prepare('UPDATE tl_c4g_import_data SET bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=? WHERE id=?')->execute($response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables, $data['id']);
+                            $this->Database->prepare('UPDATE tl_c4g_import_data SET bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=? WHERE id=?')->execute($response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables, $data['id']);
                             if (strpos($response->tables, $response->type)) {
                                 $cronIds[] = $response->id;
                             }
                         } else {
-                            $dbExecute = $this->Database->prepare('UPDATE tl_c4g_import_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=? WHERE id=?')->execute($response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables, $data['id']);
+                            $this->Database->prepare('UPDATE tl_c4g_import_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=? WHERE id=?')->execute($response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables, $data['id']);
                         }
                     } elseif ($data['importVersion'] == '') {
                         if ($data['id'] != 0 or $data['id'] != '') {
-                            $dbExecute = $this->Database->prepare('DELETE FROM tl_c4g_import_data WHERE id=?')->execute($data['id']);
+                            $this->Database->prepare('DELETE FROM tl_c4g_import_data WHERE id=?')->execute($data['id']);
                         }
                     } elseif ($data['importVersion'] != '') {
-                        $dbExecute = $this->Database->prepare('UPDATE tl_c4g_import_data SET availableVersion=? WHERE id=?')->execute('', $data['id']);
+                        $this->Database->prepare('UPDATE tl_c4g_import_data SET availableVersion=? WHERE id=?')->execute('', $data['id']);
                     }
                     $available = true;
                 }
@@ -588,7 +588,6 @@ class C4GImportDataCallback extends Backend
 
         $localData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=?')->execute($con4gisDeleteId);
         $con4gisDeleteUuid = $localData->importUuid;
-        $con4gisDeleteBundles = $localData->bundles;
         $con4gisDeletePath = $localData->importFilePath;
         $con4gisDeleteDirectory = './../files' . $con4gisDeletePath . '/';
         $con4gisDeleteUuidLength = strlen($con4gisDeleteUuid);
@@ -717,7 +716,7 @@ class C4GImportDataCallback extends Backend
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12');
         curl_setopt($ch, CURLOPT_FILE, $fp);
-        $con = curl_exec($ch);
+        curl_exec($ch);
         curl_close($ch);
         fclose($fp);
 
@@ -773,7 +772,7 @@ class C4GImportDataCallback extends Backend
         $responses = $this->getCon4gisImportData('getBasedata.php', 'specificData', $con4gisImport);
 
         foreach ($responses as $response) {
-            $objUpdate = $this->Database->prepare('UPDATE tl_c4g_import_data SET bundles=? WHERE id=?')->execute($response->bundles, $dc->id);
+            $this->Database->prepare('UPDATE tl_c4g_import_data SET bundles=? WHERE id=?')->execute($response->bundles, $dc->id);
         }
     }
 
@@ -826,7 +825,7 @@ class C4GImportDataCallback extends Backend
                 return false;
             }
 
-            return $responses = [];
+            return [];
         }
     }
 
@@ -861,7 +860,7 @@ class C4GImportDataCallback extends Backend
         if ($importId) {
             foreach ($arrBasedataFolders as $arrBasedataFolder => $value) {
                 if (file_exists($value) && is_dir($value)) {
-                    foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
+                    foreach ($basedataFiles[$arrBasedataFolder] as $file) {
                         if (str_ends_with($file, '-diff.c4g')) {
                             $importName = strstr($file, '-diff.c4g', true);
                             $fullimport = array_search($importName . '.c4g', $basedataFiles[$arrBasedataFolder]);
@@ -996,10 +995,8 @@ class C4GImportDataCallback extends Backend
             } else {
                 $allIdChangesJson = false;
             }
-            $queryType = 'UPDATE';
         } else {
             $allIdChangesJson = false;
-            $queryType = 'INSERT';
         }
 
         $filesMessageCount = 0;
@@ -1504,7 +1501,6 @@ class C4GImportDataCallback extends Backend
             $importDatasetId = substr($uuid, 0, -5);
             $likeOperator = $importDatasetId . '_____';
         } else {
-            $importDatasetId = $uuid;
             $likeOperator = $uuid;
         }
 
