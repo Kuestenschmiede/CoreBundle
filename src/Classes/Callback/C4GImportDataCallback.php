@@ -597,10 +597,7 @@ class C4GImportDataCallback extends Backend
             $data = $_REQUEST;
             $importId = $data['id'];
         }
-
-        $cronImportData = $this->Database->prepare(
-            'SELECT * FROM tl_c4g_import_data WHERE id=?'
-        )->execute($importId)->fetchAssoc();
+        
         $this->importBaseData($importId);
 
         PageRedirect::redirect('/contao?do=c4g_io_data');
