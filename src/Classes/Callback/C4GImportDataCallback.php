@@ -607,15 +607,13 @@ class C4GImportDataCallback extends Backend
         $data = $_REQUEST;
         $con4gisDeleteId = $data['id'];
         $localData = $this->Database->prepare(
-            'SELECT * FROM tl_c4g_import_data WHERE id=?'
-        )->execute($con4gisDeleteId);
-        $con4gisReleaseUuid = $localData->importUuid;
-        $con4gisDeleteTables = $localData->importTables;
-        if ($con4gisDeleteTables == null or $con4gisDeleteTables == '') {
+            'SELECT * FROM tl_c4g_import_data WHERE id = ?'
+        )->execute($con4gisDeleteId)->fetchAssoc();
+        $con4gisReleaseUuid = $localData['importUuid'];
+        $con4gisDeleteTables = explode(',', $localData['importTables']);
+        $con4gisDeleteTables = str_replace(' ', '', $con4gisDeleteTables);
+        if (empty($con4gisDeleteTables)) {
             $con4gisDeleteTables = ['tl_c4g_'];
-        } else {
-            $con4gisDeleteTables = explode(',', $con4gisDeleteTables);
-            $con4gisDeleteTables = str_replace(' ', '', $con4gisDeleteTables);
         }
 
         if ($con4gisReleaseUuid >= 6) {
