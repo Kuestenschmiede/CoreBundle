@@ -766,22 +766,6 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function strposa($haystack, $needles = [], $offset = 0)
-    {
-        $chr = [];
-        foreach ($needles as $needle) {
-            $res = strpos($haystack, $needle, $offset);
-            if ($res !== false) {
-                $chr[$needle] = $res;
-            }
-        }
-        if (empty($chr)) {
-            return false;
-        }
-
-        return min($chr);
-    }
-
     public function saveData(DataContainer $dc)
     {
         $con4gisImport = $this->Input->post('con4gisImport');
