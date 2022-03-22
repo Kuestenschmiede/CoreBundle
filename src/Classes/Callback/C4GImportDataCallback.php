@@ -488,7 +488,10 @@ class C4GImportDataCallback extends Backend
             try {
                 $this->Database->query($sqlStatement);
             } catch (Exception $e) {
-                C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Error while executing SQL-Import: ' . $e->getMessage()
+                );
             }
         }
         $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
