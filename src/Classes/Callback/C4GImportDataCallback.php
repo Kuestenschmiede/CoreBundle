@@ -494,9 +494,15 @@ class C4GImportDataCallback extends Backend
                 );
             }
         }
-        $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
-        $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
-        $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
+        $statement = $this->Database->prepare(
+            'UPDATE tl_c4g_import_data SET importVersion = ?, importUuid = ?, importFilePath = ? WHERE id = ?'
+        );
+        $statement->execute(
+            $importData['import']['version'],
+            $importData['import']['uuid'],
+            $importData['images']['path'],
+            $con4gisImportId
+        );
 
         $objFolder = new Folder('files/con4gis_import_data/io-data/');
         $objFolder->purge();
