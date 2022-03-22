@@ -13,14 +13,12 @@ namespace con4gis\CoreBundle\Classes\Callback;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Folder;
 use Contao\Message;
 use Contao\PageRedirect;
 use Contao\StringUtil;
 use Contao\DataContainer;
 use Contao\System;
-use Dbafs;
 use Exception;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
