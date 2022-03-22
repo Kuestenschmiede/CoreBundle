@@ -624,7 +624,10 @@ class C4GImportDataCallback extends Backend
                 foreach ($con4gisDeleteTables as $con4gisDeleteTable) {
                     if (strpos($table, $con4gisDeleteTable) !== false) {
                         if ($this->Database->fieldExists('importId', $table)) {
-                            $this->Database->prepare("UPDATE $table SET importId=? WHERE importId=?")->execute('0', $con4gisReleaseUuid);
+                            $statement = $this->Database->prepare(
+                                "UPDATE $table SET importId=? WHERE importId = ?"
+                            );
+                            $statement->execute('0', $con4gisReleaseUuid);
                         }
                     }
                 }
