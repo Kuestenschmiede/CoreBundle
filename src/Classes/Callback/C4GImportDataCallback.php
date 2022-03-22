@@ -618,7 +618,7 @@ class C4GImportDataCallback extends Backend
             $con4gisDeleteTables = str_replace(' ', '', $con4gisDeleteTables);
         }
 
-        if ($con4gisReleaseUuid != 0 && $con4gisReleaseUuid != '' && $con4gisReleaseUuid >= 6) {
+        if ($con4gisReleaseUuid >= 6) {
             //Release import data
             $tables = $this->Database->listTables();
 
