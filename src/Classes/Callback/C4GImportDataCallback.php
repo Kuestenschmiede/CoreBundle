@@ -299,10 +299,10 @@ class C4GImportDataCallback extends Backend
 //      lokaler Import Ende
         } elseif (!$availableLocal) {
             $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
-            $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
-            $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
-            $basedataUrl .= '&mode=' . 'ioData';
-            $basedataUrl .= '&data=' . $con4gisImportId;
+            $baseDataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
+            $baseDataUrl .= '?key=' . $objSettings->con4gisIoKey;
+            $baseDataUrl .= '&mode=' . 'ioData';
+            $baseDataUrl .= '&data=' . $con4gisImportId;
             if ($importId) {
                 $currentImport = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')
                     ->execute($con4gisImportId)->fetchAssoc();
@@ -310,15 +310,15 @@ class C4GImportDataCallback extends Backend
                     $importVersion = $currentImport['importVersion'];
                     $availableVersion = $currentImport['availableVersion'];
                     if (($importVersion + 1) != $availableVersion || $importVersion == '') {
-                        $basedataUrl .= '&datatype=full';
+                        $baseDataUrl .= '&datatype=full';
                     } else {
-                        $basedataUrl .= '&datatype=diff';
+                        $baseDataUrl .= '&datatype=diff';
                     }
                 } else {
-                    $basedataUrl .= '&datatype=diff';
+                    $baseDataUrl .= '&datatype=diff';
                 }
             } else {
-                $basedataUrl .= '&datatype=full';
+                $baseDataUrl .= '&datatype=full';
             }
 
             $downloadPath = './../files/con4gis_import_data/io-data/';
@@ -329,7 +329,7 @@ class C4GImportDataCallback extends Backend
             }
 
             mkdir($downloadPath, 0770, true);
-            $downloadSuccess = $this->download($basedataUrl, $downloadFile);
+            $downloadSuccess = $this->download($baseDataUrl, $downloadFile);
             if (!$downloadSuccess) {
                 $this->importRunning(false, $con4gisImportId);
                 PageRedirect::redirect('/contao?do=c4g_io_data');
@@ -752,8 +752,8 @@ class C4GImportDataCallback extends Backend
     {
         $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
         if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
-            $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . $importData;
-            $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
+            $baseDataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . $importData;
+            $baseDataUrl .= '?key=' . $objSettings->con4gisIoKey;
             $arrData = [];
             $arrData['mode'] = $mode;
             if (isset($data)) {
@@ -785,7 +785,7 @@ class C4GImportDataCallback extends Backend
             if ($_SERVER['HTTP_USER_AGENT']) {
                 $REQUEST->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
             }
-            $REQUEST->send($basedataUrl, \Safe\json_encode($arrData));
+            $REQUEST->send($baseDataUrl, \Safe\json_encode($arrData));
             $response = $REQUEST->response;
             if ($response) {
                 if (substr($response, 0, 2) == '[{' && substr($response, -2, 2) == '}]') {
