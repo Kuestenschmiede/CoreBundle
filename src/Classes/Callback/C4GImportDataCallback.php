@@ -928,20 +928,6 @@ class C4GImportDataCallback extends Backend
         rmdir($directory);
     }
 
-    /**
-     * con4gisIO
-     * @param $href
-     * @param $label
-     * @param $title
-     * @param $class
-     * @param $attributes
-     * @return string
-     */
-    public function con4gisIO($href, $label, $title, $class, $attributes)
-    {
-        return '<a href="https://con4gis.io/blaupausen"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' target="_blank" rel="noopener">' . $label . '</a><br>';
-    }
-
     public function deleteOldDiffImages($file)
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
