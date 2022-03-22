@@ -288,7 +288,6 @@ class C4GImportDataCallback extends Backend
 
         $this->importRunning(true, $con4gisImportId);
 
-//      lokaler Import
         if ($importId) {
             $localImportData = $this->getLocalIoData(true);
         } else {
@@ -353,7 +352,6 @@ class C4GImportDataCallback extends Backend
                 $objFolder->unprotect();
             }
             $this->chmod_r($imagePath, 0775, 0664);
-//      lokaler Import Ende
         } else {
             $objSettings = C4gSettingsModel::findSettings();
             $baseDataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
@@ -501,7 +499,6 @@ class C4GImportDataCallback extends Backend
         $objFolder->purge();
         $objFolder->delete();
 
-        //Generate Symlinks and sync filesystem
         $this->import('Contao\Automator', 'Automator');
         $this->Automator->generateSymlinks();
 
