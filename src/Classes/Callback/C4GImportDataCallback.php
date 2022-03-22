@@ -194,16 +194,16 @@ class C4GImportDataCallback extends Backend
 
 //      lokaler Import
         if ($importId) {
-            $localImportDatas = $this->getLocalIoData(true);
+            $localImportData = $this->getLocalIoData(true);
         } else {
-            $localImportDatas = $this->getLocalIoData();
+            $localImportData = $this->getLocalIoData();
         }
 
         $availableLocal = false;
-        foreach ($localImportDatas as $localImportData) {
-            if ($localImportData['import']['id'] == $con4gisImportId) {
+        foreach ($localImportData as $localImportDatum) {
+            if ($localImportDatum['import']['id'] == $con4gisImportId) {
                 $availableLocal = true;
-                $importData = $localImportData;
+                $importData = $localImportDatum;
 
                 break;
             }
@@ -289,8 +289,8 @@ class C4GImportDataCallback extends Backend
                 }
             }
             $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($localImportData['import']['uuid'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($localImportData['images']['path'], $con4gisImportId);
+            $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
+            $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
 
             $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
             $objFolder->purge();
