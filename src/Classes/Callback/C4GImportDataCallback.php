@@ -31,8 +31,8 @@ class C4GImportDataCallback extends Backend
     public function __construct()
     {
         parent::__construct();
-        $this->import('BackendUser', 'User');
     }
+
     public function loadBaseData($cron)
     {
         $cronIds = [];
