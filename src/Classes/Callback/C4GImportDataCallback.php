@@ -33,10 +33,6 @@ class C4GImportDataCallback extends Backend
         parent::__construct();
         $this->import('BackendUser', 'User');
     }
-
-    /**
-     * loadBaseData
-     */
     public function loadBaseData($cron)
     {
         $cronIds = [];
@@ -177,9 +173,6 @@ class C4GImportDataCallback extends Backend
         return substr($string, $ini, $len);
     }
 
-    /**
-     * importBaseData
-     */
     public function importBaseData($importId = false)
     {
         if ($this->importRunning()) {
@@ -266,9 +259,7 @@ class C4GImportDataCallback extends Backend
                 mkdir($imagePath, 0770, true);
                 $this->cpy($cache . '/images', $imagePath);
                 $objFolder = new \Contao\Folder('files/con4gis_import_data');
-                //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
                 $objFolder->unprotect();
-                //}
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
@@ -314,7 +305,6 @@ class C4GImportDataCallback extends Backend
             $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
             $objFolder->purge();
             $objFolder->delete();
-//            $this->recursiveRemoveDirectory($cache);
 
 //      lokaler Import Ende
         } elseif (!$availableLocal) {
@@ -419,9 +409,7 @@ class C4GImportDataCallback extends Backend
                 mkdir($imagePath, 0770, true);
                 $this->cpy($cache . '/images', $imagePath);
                 $objFolder = new \Contao\Folder('files/con4gis_import_data');
-                //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
                 $objFolder->unprotect();
-                //}
                 $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
@@ -492,9 +480,6 @@ class C4GImportDataCallback extends Backend
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
-    /**
-     * updateBaseData
-     */
     public function updateBaseData($importId = false)
     {
         if ($this->importRunning()) {
@@ -533,9 +518,6 @@ class C4GImportDataCallback extends Backend
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
-    /**
-     * releaseBaseData
-     */
     public function releaseBaseData()
     {
         // Check current action
@@ -581,9 +563,6 @@ class C4GImportDataCallback extends Backend
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
-    /**
-     * deleteBaseData
-     */
     public function deleteBaseData($importId = false, $download = false, $update = false)
     {
         if (!$download) {
@@ -684,8 +663,6 @@ class C4GImportDataCallback extends Backend
                         }
                         $this->import('Contao\Automator', 'Automator');
                         $this->Automator->generateSymlinks();
-//                        //Sync filesystem
-//                        Dbafs::syncFiles();
                     } else {
                         $this->importRunning(false, $con4gisDeleteId);
                         C4gLogModel::addLogEntry('core', 'Could not delete import directory: Wrong path!');
@@ -805,9 +782,6 @@ class C4GImportDataCallback extends Backend
         return min($chr);
     }
 
-    /**
-     * saveData
-     */
     public function saveData(DataContainer $dc)
     {
         $con4gisImport = $this->Input->post('con4gisImport');
@@ -819,9 +793,6 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    /**
-     * getCon4gisImportData
-     */
     public function getCon4gisImportData($importData, $mode, $data = false, $coreVersion = false, $contaoVersion = false)
     {
         $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
@@ -1559,7 +1530,6 @@ class C4GImportDataCallback extends Backend
 
         //Delete import data
         $tables = $this->Database->listTables();
-
         foreach ($tables as $table) {
             foreach ($con4gisDeleteTables as $con4gisDeleteTable) {
                 if (strpos($table, $con4gisDeleteTable) !== false) {
