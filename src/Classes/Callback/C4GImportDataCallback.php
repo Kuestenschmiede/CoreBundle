@@ -353,48 +353,6 @@ class C4GImportDataCallback extends Backend
                 $objFolder->unprotect();
             }
             $this->chmod_r($imagePath, 0775, 0664);
-            $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
-            if ($importDataType == 'diff') {
-                $this->deleteOldDiffImages($file);
-            }
-
-            if (!$sqlStatements) {
-                C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
-                Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
-                $this->importRunning(false, $con4gisImportId);
-                if (!$importId) {
-                    $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
-                    $objFolder->purge();
-                    $objFolder->delete();
-                    $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
-                    $objFolder->purge();
-                    $objFolder->delete();
-                }
-
-                return false;
-            }
-
-            foreach ($sqlStatements as $sqlStatement) {
-                if ($sqlStatement == '') {
-                    break;
-                }
-
-                try {
-                    $this->Database->query($sqlStatement);
-                } catch (Exception $e) {
-                    C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
-                }
-            }
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
-
-            $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
-            $objFolder->purge();
-            $objFolder->delete();
-
 //      lokaler Import Ende
         } else {
             $objSettings = C4gSettingsModel::findSettings();
@@ -500,47 +458,48 @@ class C4GImportDataCallback extends Backend
                 $objFolder->unprotect();
             }
             $this->chmod_r($imagePath, 0775);
-            $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
-            if ($importDataType == 'diff') {
-                $this->deleteOldDiffImages($file);
-            }
-
-            if (!$sqlStatements) {
-                C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
-                Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
-                $this->importRunning(false, $con4gisImportId);
-                if (!$importId) {
-                    $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
-                    $objFolder->purge();
-                    $objFolder->delete();
-                    $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
-                    $objFolder->purge();
-                    $objFolder->delete();
-                }
-
-                return false;
-            }
-
-            foreach ($sqlStatements as $sqlStatement) {
-                if ($sqlStatement == '') {
-                    break;
-                }
-
-                try {
-                    $this->Database->query($sqlStatement);
-                } catch (Exception $e) {
-                    C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
-                }
-            }
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=?WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
-
-            $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
-            $objFolder->purge();
-            $objFolder->delete();
         }
+
+        $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
+        $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
+        if ($importDataType == 'diff') {
+            $this->deleteOldDiffImages($file);
+        }
+
+        if (!$sqlStatements) {
+            C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
+            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
+            $this->importRunning(false, $con4gisImportId);
+            if (!$importId) {
+                $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
+                $objFolder->purge();
+                $objFolder->delete();
+                $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
+                $objFolder->purge();
+                $objFolder->delete();
+            }
+
+            return false;
+        }
+
+        foreach ($sqlStatements as $sqlStatement) {
+            if ($sqlStatement == '') {
+                break;
+            }
+
+            try {
+                $this->Database->query($sqlStatement);
+            } catch (Exception $e) {
+                C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+            }
+        }
+        $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
+        $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
+        $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
+
+        $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
+        $objFolder->purge();
+        $objFolder->delete();
 
         //Generate Symlinks and sync filesystem
         $this->import('Contao\Automator', 'Automator');
