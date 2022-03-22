@@ -112,7 +112,7 @@ class C4GImportDataCallback extends Backend
                         if ($data['id'] != 0 or $data['id'] != '') {
                             $this->Database->prepare('DELETE FROM tl_c4g_import_data WHERE id=?')->execute($data['id']);
                         }
-                    } elseif ($data['importVersion'] != '') {
+                    } else {
                         $this->Database->prepare('UPDATE tl_c4g_import_data SET availableVersion=? WHERE id=?')->execute('', $data['id']);
                     }
                     $available = true;
@@ -146,7 +146,7 @@ class C4GImportDataCallback extends Backend
                 if ($data['id'] == $response->id) {
                     break;
                 }
-                if ($data['id'] != $response->id && $count == $arrayLength) {
+                if ($count == $arrayLength) {
                     if ($this->checkImportResponse($response)) {
                         $this->Database->prepare('INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=?')->execute($response->id, $response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables);
                     }
@@ -234,8 +234,11 @@ class C4GImportDataCallback extends Backend
                         PageRedirect::redirect('/contao?do=c4g_io_data');
                     }
                 }
-            } elseif (($alreadyImported['importVersion'] == '' || !$alreadyImported) && $importId) {
-                C4gLogModel::addLogEntry('core', 'Cant update automaticly. Import not found in database. Abort import.');
+            } elseif (!$alreadyImported && $importId) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Cant update automatically. Import not found in database. Abort import.'
+                );
                 $this->importRunning(false, $con4gisImportId);
 
                 return false;
@@ -297,7 +300,7 @@ class C4GImportDataCallback extends Backend
             $objFolder->delete();
 
 //      lokaler Import Ende
-        } elseif (!$availableLocal) {
+        } else {
             $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
             $baseDataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
             $baseDataUrl .= '?key=' . $objSettings->con4gisIoKey;
@@ -371,8 +374,11 @@ class C4GImportDataCallback extends Backend
                         PageRedirect::redirect('/contao?do=c4g_io_data');
                     }
                 }
-            } elseif (($alreadyImported['importVersion'] == '' || !$alreadyImported) && $importId) {
-                C4gLogModel::addLogEntry('core', 'Cant update automaticly. Import information not found in database. Abort import.');
+            } elseif (!$alreadyImported && $importId) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Cant update automatically. Import information not found in database. Abort import.'
+                );
                 $this->importRunning(false, $con4gisImportId);
 
                 return false;
