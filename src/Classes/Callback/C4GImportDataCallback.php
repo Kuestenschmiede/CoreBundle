@@ -577,7 +577,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             )->execute($importId)->fetchAssoc();
             if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
-                if ($cronImportData['importVersion'] == '' || $cronImportData['importVersion'] == '0' || $cronImportData['importVersion'] == 0) {
+                if (!$cronImportData['importVersion']) {
                     C4gLogModel::addLogEntry(
                         'core',
                         'New import is currently unavailable. Import will not be updated.'
