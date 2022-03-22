@@ -347,9 +347,9 @@ class C4GImportDataCallback extends Backend
 
                 mkdir($imagePath, 0770, true);
                 $this->cpy($cache . '/images', $imagePath);
-                $objFolder = new \Contao\Folder('files/con4gis_import_data');
+                $objFolder = new Folder('files/con4gis_import_data');
                 $objFolder->unprotect();
-                $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
+                $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
             $this->chmod_r($imagePath, 0775, 0664);
@@ -452,9 +452,9 @@ class C4GImportDataCallback extends Backend
 
                 mkdir($imagePath, 0770, true);
                 $this->cpy($cache . '/images', $imagePath);
-                $objFolder = new \Contao\Folder('files/con4gis_import_data');
+                $objFolder = new Folder('files/con4gis_import_data');
                 $objFolder->unprotect();
-                $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
+                $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
             $this->chmod_r($imagePath, 0775);
@@ -471,10 +471,10 @@ class C4GImportDataCallback extends Backend
             Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
             $this->importRunning(false, $con4gisImportId);
             if (!$importId) {
-                $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
+                $objFolder = new Folder('files/con4gis_import_data/io-data/');
                 $objFolder->purge();
                 $objFolder->delete();
-                $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
+                $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->purge();
                 $objFolder->delete();
             }
@@ -497,7 +497,7 @@ class C4GImportDataCallback extends Backend
         $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
         $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
 
-        $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
+        $objFolder = new Folder('files/con4gis_import_data/io-data/');
         $objFolder->purge();
         $objFolder->delete();
 
@@ -671,7 +671,7 @@ class C4GImportDataCallback extends Backend
                 if (is_dir($con4gisDeleteDirectory)) {
                     unlink($con4gisDeleteDirectory . '/.public');
                     if (strpos($con4gisDeleteDirectory, '/files/con4gis_import_data/')) {
-                        $objFolder = new \Contao\Folder('files' . $con4gisDeletePath);
+                        $objFolder = new Folder('files' . $con4gisDeletePath);
                         if (!$objFolder->isEmpty()) {
                             $objFolder->purge();
                         }
@@ -685,7 +685,7 @@ class C4GImportDataCallback extends Backend
                         foreach ($con4gisImportFolderScan as $con4gisImportFolder) {
                             if (substr($con4gisImportFolder, 0, -5) == $con4gisDeleteDatasetId) {
                                 if (is_dir('files/con4gis_import_data/' . $con4gisImportFolder)) {
-                                    $objFolder = new \Contao\Folder('files/con4gis_import_data/' . $con4gisImportFolder);
+                                    $objFolder = new Folder('files/con4gis_import_data/' . $con4gisImportFolder);
                                     $objFolder->unprotect();
                                     if (!$objFolder->isEmpty()) {
                                         $objFolder->purge();
@@ -697,7 +697,7 @@ class C4GImportDataCallback extends Backend
                         $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
                         if (count($con4gisImportFolderScan) == 1) {
                             if (in_array('.public', $con4gisImportFolderScan)) {
-                                $objFolder = new \Contao\Folder('files/con4gis_import_data');
+                                $objFolder = new Folder('files/con4gis_import_data');
                                 $objFolder->unprotect();
                                 $objFolder->delete();
                             }
