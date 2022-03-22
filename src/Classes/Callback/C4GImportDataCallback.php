@@ -363,11 +363,7 @@ class C4GImportDataCallback extends Backend
                 $archive->close();
             }
 
-            if (isset($importData['import']['datatype'])) {
-                $importDataType = $importData['import']['datatype'];
-            } else {
-                $importDataType = 'full';
-            }
+            $importDataType = $importData['import']['datatype'] ?? 'full';
 
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
