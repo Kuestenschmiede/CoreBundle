@@ -357,7 +357,7 @@ class C4GImportDataCallback extends Backend
                 return false;
             }
 
-            // Getting data from downloades json config file
+            // Getting data from download's json config file
             $archive = new ZipArchive();
             $zip = $archive->open($downloadPath . $filename, ZipArchive::RDONLY);
             if ($zip) {
