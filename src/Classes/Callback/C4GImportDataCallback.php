@@ -44,9 +44,9 @@ class C4GImportDataCallback extends Backend
         // Check current action
         $responses = $this->getCon4gisImportData('getBasedata.php', 'allData', false, $coreVersion, $contaoVersion);
         if ($responses) {
-            foreach ($responses as $keyResponse => $respons) {
-                foreach ($respons as $innerKeyResponse => $innerResponse) {
-                    $responses[$keyResponse]->$innerKeyResponse = str_replace('"', '', $innerResponse);
+            foreach ($responses as $response) {
+                foreach ($response as $innerKey => $innerResponse) {
+                    $response->$innerKey = str_replace('"', '', $innerResponse);
                 }
             }
         }
