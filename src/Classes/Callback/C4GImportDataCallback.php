@@ -41,7 +41,7 @@ class C4GImportDataCallback extends Backend
     {
         $cronIds = [];
         // Get installed contao and con4gis Core version
-        $installedPackages = $this->getContainer()->getParameter('kernel.packages');
+        $installedPackages = static::getContainer()->getParameter('kernel.packages');
         $coreVersion = $installedPackages['con4gis/core'];
         $contaoVersion = $installedPackages['contao/core-bundle'];
 
