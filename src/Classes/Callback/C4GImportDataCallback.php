@@ -591,9 +591,7 @@ class C4GImportDataCallback extends Backend
 
                 return false;
             }
-            $cronImport = true;
         } else {
-            $cronImport = false;
             $data = $_REQUEST;
             $importId = $data['id'];
         }
