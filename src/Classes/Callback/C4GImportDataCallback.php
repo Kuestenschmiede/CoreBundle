@@ -1331,10 +1331,10 @@ class C4GImportDataCallback extends Backend
                             ) {
                                 if ($firstPrimaryChange) {
                                     $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
-                                    if ($highestId && $highestId != 0 && $highestId != '' && $highestId != null) {
+                                    if ($highestId) {
                                         $highestId = (int) $highestId[$importDbField];
                                         $nextId = $highestId + 1;
-                                    } elseif (!$highestId) {
+                                    } else {
                                         $nextId = 1;
                                     }
                                     $firstPrimaryChange = false;
