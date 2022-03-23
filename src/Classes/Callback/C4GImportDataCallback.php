@@ -855,7 +855,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    private function getLocalIoData($importId = false)
+    private function getLocalIoData($importId = false): array
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $arrBasedataFolders = [
@@ -934,7 +934,7 @@ class C4GImportDataCallback extends Backend
                 } catch (\Throwable $e) {
                     C4gLogModel::addLogEntry('core', 'Import data file not complete: ' . $e);
 
-                    return false;
+                    return [];
                 }
             }
         }
@@ -977,27 +977,26 @@ class C4GImportDataCallback extends Backend
     private function recursiveDeleteDiffFolder($deleteFolder)
     {
         if (str_ends_with($deleteFolder, '/files')) {
-            return false;
+            return;
         }
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $folder = new Folder($deleteFolder);
         if ($folder->isEmpty()) {
             $this->recursiveRemoveDirectory($rootDir . '/' . $deleteFolder);
         } else {
-            return false;
+            return;
         }
         $deleteCurrentFolder = strrchr($deleteFolder, '/');
         $deletePreFolder = str_replace($deleteCurrentFolder, '', $deleteFolder);
         $this->recursiveDeleteDiffFolder($deletePreFolder);
 
-        return true;
     }
 
-    private function getSqlFromJson($file, $uuid, $importDataType, $imagePath)
+    private function getSqlFromJson($file, $uuid, $importDataType, $imagePath): array
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if (!$file) {
-            return false;
+            return [];
         }
         if ($importDataType == 'diff') {
             $idConfigFile = file_get_contents($rootDir . '/files' . $imagePath . '/id-config.json');
