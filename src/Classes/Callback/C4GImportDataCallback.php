@@ -19,7 +19,6 @@ use Contao\Message;
 use Contao\PageRedirect;
 use Contao\Request;
 use Contao\StringUtil;
-use Contao\DataContainer;
 use Contao\System;
 use Exception;
 use GuzzleHttp\Utils;
@@ -253,19 +252,6 @@ class C4GImportDataCallback extends Backend
         if ($cron) {
             return $cronIds;
         }
-    }
-
-    public function getStringBetween($string, $start, $end)
-    {
-        $string = ' ' . $string;
-        $ini = strpos($string, $start);
-        if ($ini == 0) {
-            return '';
-        }
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-
-        return substr($string, $ini, $len);
     }
 
     public function importBaseData($importId = false)
@@ -815,20 +801,6 @@ class C4GImportDataCallback extends Backend
             C4gLogModel::addLogEntry('core', 'Error reading downloaded file: ' . $e);
 
             return false;
-        }
-    }
-
-    public function saveData(DataContainer $dc)
-    {
-        $con4gisImport = $this->Input::post('con4gisImport');
-
-        $responses = $this->getCon4gisImportData('getBasedata.php', 'specificData', $con4gisImport);
-
-        foreach ($responses as $response) {
-            $statement = $this->Database->prepare(
-                'UPDATE tl_c4g_import_data SET bundles = ? WHERE id = ?'
-            );
-            $statement->execute($response->bundles, $dc->id);
         }
     }
 
