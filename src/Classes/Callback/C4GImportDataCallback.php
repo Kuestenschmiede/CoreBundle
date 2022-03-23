@@ -736,7 +736,7 @@ class C4GImportDataCallback extends Backend
         return true;
     }
 
-    public function download($remoteFile, $localFile)
+    private function download($remoteFile, $localFile)
     {
         $fp = fopen($localFile, 'w');
         $ch = curl_init();
@@ -855,7 +855,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function getLocalIoData($importId = false)
+    private function getLocalIoData($importId = false)
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $arrBasedataFolders = [
@@ -942,7 +942,7 @@ class C4GImportDataCallback extends Backend
         return $newYamlConfigArray;
     }
 
-    public function recursiveRemoveDirectory($directory)
+    private function recursiveRemoveDirectory($directory)
     {
         foreach (glob("{$directory}/*") as $file) {
             if (is_dir($file)) {
@@ -954,7 +954,7 @@ class C4GImportDataCallback extends Backend
         rmdir($directory);
     }
 
-    public function deleteOldDiffImages($file)
+    private function deleteOldDiffImages($file)
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $jsonFile = (array) Utils::jsonDecode($file);
@@ -974,7 +974,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function recursiveDeleteDiffFolder($deleteFolder)
+    private function recursiveDeleteDiffFolder($deleteFolder)
     {
         if (str_ends_with($deleteFolder, '/files')) {
             return false;
@@ -993,7 +993,7 @@ class C4GImportDataCallback extends Backend
         return true;
     }
 
-    public function getSqlFromJson($file, $uuid, $importDataType, $imagePath)
+    private function getSqlFromJson($file, $uuid, $importDataType, $imagePath)
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if (!$file) {
@@ -1399,12 +1399,12 @@ class C4GImportDataCallback extends Backend
         return $newValue ?? $importDbValue;
     }
 
-    public function isUuid($uuid): bool
+    private function isUuid($uuid): bool
     {
         return ctype_xdigit($uuid) && strlen($uuid) == 32;
     }
 
-    public function checkImportResponse($response): bool
+    private function checkImportResponse($response): bool
     {
         $response = (array) $response;
         $requiredKeys = [
@@ -1433,7 +1433,7 @@ class C4GImportDataCallback extends Backend
         return true;
     }
 
-    public function importRunning($running = false, $id = 0)
+    private function importRunning($running = false, $id = 0)
     {
         if ($id == 0) {
             $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")
@@ -1462,7 +1462,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function cpy($source, $dest)
+    private function cpy($source, $dest)
     {
         if (is_dir($source)) {
             $dir_handle = opendir($source);
@@ -1484,7 +1484,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function chmod_r($path, $modeDirectory = false, $modeFile = false)
+    private function chmod_r($path, $modeDirectory = false, $modeFile = false)
     {
         $dir = new DirectoryIterator($path);
         if ($modeDirectory || $modeFile) {
@@ -1501,7 +1501,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function deleteOlderImports($uuid, $con4gisDeleteTables)
+    private function deleteOlderImports($uuid, $con4gisDeleteTables)
     {
         if (strlen($uuid) > 5) {
             $importDatasetId = substr($uuid, 0, -5);
