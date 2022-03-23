@@ -872,9 +872,7 @@ class C4GImportDataCallback extends Backend
             $response = $request->response;
             if ($response) {
                 if (substr($response, 0, 2) == '[{' && substr($response, -2, 2) == '}]') {
-                    $responses = \GuzzleHttp\json_decode($response);
-
-                    return $responses;
+                    return \GuzzleHttp\json_decode($response);
                 }
 
                 return false;
