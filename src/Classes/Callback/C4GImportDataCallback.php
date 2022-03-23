@@ -22,6 +22,7 @@ use Contao\StringUtil;
 use Contao\DataContainer;
 use Contao\System;
 use Exception;
+use GuzzleHttp\Utils;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
 use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
@@ -868,11 +869,11 @@ class C4GImportDataCallback extends Backend
             if ($_SERVER['HTTP_USER_AGENT']) {
                 $request->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
             }
-            $request->send($baseDataUrl, \Safe\json_encode($arrData));
+            $request->send($baseDataUrl, Utils::jsonEncode($arrData));
             $response = $request->response;
             if ($response) {
                 if (substr($response, 0, 2) == '[{' && substr($response, -2, 2) == '}]') {
-                    return \GuzzleHttp\json_decode($response);
+                    return Utils::jsonDecode($response);
                 }
 
                 return false;
@@ -984,7 +985,7 @@ class C4GImportDataCallback extends Backend
     public function deleteOldDiffImages($file)
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
-        $jsonFile = (array) json_decode($file);
+        $jsonFile = (array) Utils::jsonDecode($file);
         if (isset($jsonFile['deleted']->tl_files)) {
             foreach ($jsonFile['deleted']->tl_files as $deleteTlFileDataset) {
                 $deleteTlFileDataset = (array) $deleteTlFileDataset;
@@ -1029,8 +1030,8 @@ class C4GImportDataCallback extends Backend
         if ($importDataType == 'diff') {
             $idConfigFile = file_get_contents($rootDir . '/files' . $imagePath . '/id-config.json');
             if ($idConfigFile) {
-                $allIdChangesJson = json_decode($idConfigFile);
-                $allIdChangesJson = json_decode(json_encode($allIdChangesJson), true);
+                $allIdChangesJson = Utils::jsonDecode($idConfigFile);
+                $allIdChangesJson = Utils::jsonDecode(Utils::jsonEncode($allIdChangesJson), true);
             } else {
                 $allIdChangesJson = false;
             }
@@ -1040,7 +1041,7 @@ class C4GImportDataCallback extends Backend
 
         $filesMessageCount = 0;
         $importId = $uuid;
-        $jsonFile = (array) json_decode($file);
+        $jsonFile = (array) Utils::jsonDecode($file);
         $sqlStatements = [];
         $relations = array_slice($jsonFile, -1, 1);
         $relationTables = [];
@@ -1087,7 +1088,7 @@ class C4GImportDataCallback extends Backend
         $allIdChanges = $allChanges['allIdChanges'];
         $allIdChangesNonRelations = $allChanges['allIdChangesNonRelations'];
 
-        $allIdChangesJson = json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $allIdChangesJson = Utils::jsonEncode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
         foreach ($jsonFile as $importDB => $importDatasets) {
@@ -1115,7 +1116,7 @@ class C4GImportDataCallback extends Backend
                         }
                     }
                 }
-                $allIdChangesJson = json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                $allIdChangesJson = Utils::jsonEncode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
                 continue;
