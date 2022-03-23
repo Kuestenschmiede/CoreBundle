@@ -738,15 +738,12 @@ class C4GImportDataCallback extends Backend
             $this->importRunning(false, $con4gisDeleteId);
         }
 
+        C4gLogModel::addLogEntry('core', 'The import data was successfully deleted.');
         if (!$update) {
-            C4gLogModel::addLogEntry('core', 'The import data was successfully deleted.');
             Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['deletedSuccessfull']);
             PageRedirect::redirect('/contao?do=c4g_io_data');
-        } else {
-            C4gLogModel::addLogEntry('core', 'The import data was successfully deleted.');
-
-            return true;
         }
+        return true;
     }
 
     public function download($remoteFile, $localFile)
