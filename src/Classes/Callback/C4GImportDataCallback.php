@@ -1329,7 +1329,7 @@ class C4GImportDataCallback extends Backend
                                 if ($firstPrimaryChange) {
                                     $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
                                     if ($highestId && $highestId != 0 && $highestId != '' && $highestId != null) {
-                                        $highestId = (Int) $highestId[$importDbField];
+                                        $highestId = (int) $highestId[$importDbField];
                                         $nextId = $highestId + 1;
                                     } elseif (!$highestId) {
                                         $nextId = 1;
@@ -1348,7 +1348,7 @@ class C4GImportDataCallback extends Backend
                                 if ($firstPrimaryChange) {
                                     $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
                                     if ($highestId && $highestId != 0 && $highestId != '' && $highestId != null) {
-                                        $highestId = (Int) $highestId[$importDbField];
+                                        $highestId = (int) $highestId[$importDbField];
                                         $nextId = $highestId + 1;
                                     } elseif (!$highestId) {
                                         $nextId = 1;
@@ -1374,7 +1374,7 @@ class C4GImportDataCallback extends Backend
     private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations): array|string
     {
         if (is_object($relations['relations'])) {
-            $relations = (Array) $relations['relations'];
+            $relations = (array) $relations['relations'];
         }
         $primaryRelation = $relations[$importDB . '.' . $importDbField];
         $primaryRelation = explode('.', $primaryRelation);
@@ -1385,15 +1385,15 @@ class C4GImportDataCallback extends Backend
                 $newValue = 0;
             }
 
-            return (String) $newValue;
+            return (string) $newValue;
         }
         foreach ($importDbValue as $key => $value) {
             if (is_array($value)) {
                 $newValue[$key] = $this->changeDbValue($importDB, $importDbField, $value, $allIdChanges, $relations);
             } elseif (is_numeric($value) && $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value]) {
-                $newValue[$key] = (String) $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value];
+                $newValue[$key] = (string) $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value];
             } else {
-                $newValue[$key] = (String) $value;
+                $newValue[$key] = (string) $value;
             }
         }
 
