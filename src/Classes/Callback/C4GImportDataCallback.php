@@ -854,7 +854,7 @@ class C4GImportDataCallback extends Backend
             $dispatcher->dispatch($event, $event::NAME);
             $additionalProxyData = $event->getProxyData();
 
-            if ($additionalProxyData && is_array($additionalProxyData)) {
+            if ($additionalProxyData) {
                 foreach ($additionalProxyData as $proxyData) {
                     $arrData[$proxyData['proxyKey']] = str_replace(' ', '%20', $proxyData['proxyData']);
                 }
