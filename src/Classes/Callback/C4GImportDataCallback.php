@@ -1305,7 +1305,7 @@ class C4GImportDataCallback extends Backend
         return $sqlStatements;
     }
 
-    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson)
+    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson): array
     {
         if ($allIdChangesJson) {
             $allIdChanges = $allIdChangesJson;
@@ -1371,7 +1371,7 @@ class C4GImportDataCallback extends Backend
         return ['allIdChanges' => $allIdChanges, 'allIdChangesNonRelations' => $allIdChangesNonRelations];
     }
 
-    private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations)
+    private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations): array|string
     {
         if (is_object($relations['relations'])) {
             $relations = (Array) $relations['relations'];
@@ -1502,7 +1502,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    private function deleteOlderImports($uuid, $con4gisDeleteTables)
+    private function deleteOlderImports($uuid, $con4gisDeleteTables): bool
     {
         if (strlen($uuid) > 5) {
             $importDatasetId = substr($uuid, 0, -5);
