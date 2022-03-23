@@ -1425,15 +1425,19 @@ class C4GImportDataCallback extends Backend
     private function importRunning($running = false, $id = 0)
     {
         if ($id == 0) {
-            $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")
-                ->execute()->fetchAllAssoc();
+            $importRunning = $this->Database->prepare(
+                "SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'"
+            )->execute()->fetchAllAssoc();
             if ($importRunning) {
                 foreach ($importRunning as $import) {
-                    $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning='' WHERE tstamp<=? AND importRunning='1' AND id=?")
-                        ->execute(time(), time() - 600, $import['id']);
+                    $this->Database->prepare(
+                        "UPDATE tl_c4g_import_data SET tstamp = ?, importRunning = '' ".
+                        "WHERE tstamp <= ? AND importRunning = '1' AND id = ?"
+                    )->execute(time(), time() - 600, $import['id']);
                 }
-                $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")
-                    ->execute()->fetchAllAssoc();
+                $importRunning = $this->Database->prepare(
+                    "SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'"
+                )->execute()->fetchAllAssoc();
                 if ($importRunning) {
                     return true;
                 }
@@ -1442,11 +1446,15 @@ class C4GImportDataCallback extends Backend
             }
 
             return false;
-        } elseif ($id != 0) {
+        } else {
             if ($running) {
-                $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning = '1' WHERE id=?")->execute(time(), $id);
+                $this->Database->prepare(
+                    "UPDATE tl_c4g_import_data SET tstamp = ?, importRunning = '1' WHERE id= ?"
+                )->execute(time(), $id);
             } else {
-                $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning = '' WHERE id=?")->execute(time(), $id);
+                $this->Database->prepare(
+                    "UPDATE tl_c4g_import_data SET tstamp = ?, importRunning = '' WHERE id = ?"
+                )->execute(time(), $id);
             }
         }
     }
