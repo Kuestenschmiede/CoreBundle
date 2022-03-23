@@ -1096,28 +1096,27 @@ class C4GImportDataCallback extends Backend
             //sql statements for deleting removed data
             if ($importDB == 'deleted') {
                 foreach ($importDatasets as $tableKey => $tableDataset) {
+                    $validTables = $this->Database->listTables();
+                    if (!in_array($tableKey, $validTables)) {
+                        continue;
+                    }
                     foreach ($tableDataset as $dataset) {
                         $dataset = (array) $dataset;
-                        $validTables = $this->Database->listTables();
-                        if (!in_array($tableKey, $validTables)) {
+                        $query = "DELETE FROM $tableKey";
+                        if ($tableKey == 'tl_files' && !empty($dataset['uuid']) && !empty($dataset['id'])) {
+                            $path = stripslashes($dataset['path']);
+                            $query .= " WHERE path=$path";
+                        } elseif (!empty($dataset['uuid'])) {
+                            $query .= " WHERE importId != '' AND importId != 0 AND uuid = '" .
+                                $dataset['uuid'] . "'";
+                        } elseif (!empty($dataset['id'])) {
+                            $query .= " WHERE importId != '' AND importId != 0 AND id = " .
+                                $allIdChanges[$tableKey]['id'][$dataset['id']];
+                            unset($allIdChanges[$tableKey]['id'][$dataset['id']]);
+                        } else {
                             continue;
                         }
-                        if (isset($dataset['uuid']) && !empty($dataset['uuid'])) {
-                            if ($tableKey == 'tl_files') {
-                                $path = stripslashes($dataset['path']);
-                                $sqlStatements[] = 'DELETE FROM ' . $tableKey . " WHERE path='" . $path . "'";
-                            } else {
-                                $sqlStatements[] = 'DELETE FROM ' . $tableKey . " WHERE importId != '' && importId != 0 && uuid='" . $dataset['uuid'] . "'";
-                            }
-                        } elseif (isset($dataset['id']) && !empty($dataset['id'])) {
-                            if ($tableKey == 'tl_files') {
-                                $path = stripslashes($dataset['path']);
-                                $sqlStatements[] = 'DELETE FROM ' . $tableKey . " WHERE path='" . $path . "'";
-                            } else {
-                                $sqlStatements[] = 'DELETE FROM ' . $tableKey . " WHERE importId != '' && importId != 0 && id=" . $allIdChanges[$tableKey]['id'][$dataset['id']];
-                                unset($allIdChanges[$tableKey]['id'][$dataset['id']]);
-                            }
-                        }
+                        $sqlStatements[] = $query;
                     }
                 }
                 $allIdChangesJson = Utils::jsonEncode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -1126,7 +1125,7 @@ class C4GImportDataCallback extends Backend
                 continue;
             }
 
-            if ($importDB == 'relations' or $importDB == 'hexValues') {
+            if ($importDB == 'relations' || $importDB == 'hexValues') {
                 break;
             }
 
