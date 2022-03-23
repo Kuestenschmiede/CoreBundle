@@ -1098,6 +1098,10 @@ class C4GImportDataCallback extends Backend
                 foreach ($importDatasets as $tableKey => $tableDataset) {
                     foreach ($tableDataset as $dataset) {
                         $dataset = (array) $dataset;
+                        $validTables = $this->Database->listTables();
+                        if (!in_array($tableKey, $validTables)) {
+                            continue;
+                        }
                         if (isset($dataset['uuid']) && !empty($dataset['uuid'])) {
                             if ($tableKey == 'tl_files') {
                                 $path = stripslashes($dataset['path']);
