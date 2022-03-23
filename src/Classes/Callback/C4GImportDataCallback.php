@@ -861,15 +861,15 @@ class C4GImportDataCallback extends Backend
                 }
             }
 
-            $REQUEST = new Request();
+            $request = new Request();
             if ($_SERVER['HTTP_REFERER']) {
-                $REQUEST->setHeader('Referer', $_SERVER['HTTP_REFERER']);
+                $request->setHeader('Referer', $_SERVER['HTTP_REFERER']);
             }
             if ($_SERVER['HTTP_USER_AGENT']) {
-                $REQUEST->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
+                $request->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
             }
-            $REQUEST->send($baseDataUrl, \Safe\json_encode($arrData));
-            $response = $REQUEST->response;
+            $request->send($baseDataUrl, \Safe\json_encode($arrData));
+            $response = $request->response;
             if ($response) {
                 if (substr($response, 0, 2) == '[{' && substr($response, -2, 2) == '}]') {
                     $responses = \GuzzleHttp\json_decode($response);
