@@ -1321,7 +1321,7 @@ class C4GImportDataCallback extends Backend
             $firstPrimaryChange = true;
             foreach ($importDatasets as $importDataset) {
                 $importDataset = (array) $importDataset;
-                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) ? $importDB : false;
+                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) && $importDB;
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if ($importDbField == 'id') {
                         if ($primaryImportRelationTable) {
