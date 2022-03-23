@@ -1092,7 +1092,6 @@ class C4GImportDataCallback extends Backend
         file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
         foreach ($jsonFile as $importDB => $importDatasets) {
-
             //sql statements for deleting removed data
             if ($importDB == 'deleted') {
                 foreach ($importDatasets as $tableKey => $tableDataset) {
