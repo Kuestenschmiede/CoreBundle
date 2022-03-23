@@ -1330,7 +1330,9 @@ class C4GImportDataCallback extends Backend
                                 in_array($importDbField, $dbRelationPrimary[$importDB])
                             ) {
                                 if ($firstPrimaryChange) {
-                                    $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
+                                    $highestId = $this->Database->prepare(
+                                        "SELECT * FROM $importDB ORDER BY id DESC LIMIT 1"
+                                    )->execute()->fetchAssoc();
                                     if ($highestId) {
                                         $highestId = (int) $highestId[$importDbField];
                                         $nextId = $highestId + 1;
