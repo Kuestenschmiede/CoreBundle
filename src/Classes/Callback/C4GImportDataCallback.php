@@ -1283,8 +1283,18 @@ class C4GImportDataCallback extends Backend
                         }
                     }
                 }
-                if ($queryType == 'UPDATE' && isset($updateWhereQuery) && isset($updateWhereQueryValue) && $updateWhereQuery != '' && $updateWhereQueryValue != '') {
-                    $sqlStatement = str_replace(';;', $updateWhereQuery . "'" . $updateWhereQueryValue . "';", $sqlStatement);
+                if (
+                    $queryType == 'UPDATE' &&
+                    isset($updateWhereQuery) &&
+                    isset($updateWhereQueryValue) &&
+                    $updateWhereQuery != '' &&
+                    $updateWhereQueryValue != ''
+                ) {
+                    $sqlStatement = str_replace(
+                        ';;',
+                        $updateWhereQuery . "'" . $updateWhereQueryValue . "';",
+                        $sqlStatement
+                    );
                 } else {
                     $sqlStatement = str_replace(');;', ');', $sqlStatement);
                 }
