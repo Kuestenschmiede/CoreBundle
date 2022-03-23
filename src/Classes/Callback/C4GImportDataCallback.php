@@ -333,13 +333,13 @@ class C4GImportDataCallback extends Backend
                 $zip->close();
 
                 mkdir($imagePath, 0770, true);
-                $this->cpy($cache . '/images', $imagePath);
+                $this->copy($cache . '/images', $imagePath);
                 $objFolder = new Folder('files/con4gis_import_data');
                 $objFolder->unprotect();
                 $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
-            $this->chmod_r($imagePath, 0775, 0664);
+            $this->recursivelyChangeFilePermissions($imagePath, 0775, 0664);
         } else {
             $objSettings = C4gSettingsModel::findSettings();
             $baseDataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
@@ -437,13 +437,13 @@ class C4GImportDataCallback extends Backend
                 $zip->close();
 
                 mkdir($imagePath, 0770, true);
-                $this->cpy($cache . '/images', $imagePath);
+                $this->copy($cache . '/images', $imagePath);
                 $objFolder = new Folder('files/con4gis_import_data');
                 $objFolder->unprotect();
                 $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
-            $this->chmod_r($imagePath, 0775);
+            $this->recursivelyChangeFilePermissions($imagePath, 0775);
         }
 
         $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
@@ -1451,7 +1451,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    private function cpy($source, $dest)
+    private function copy($source, $dest)
     {
         if (is_dir($source)) {
             $dir_handle = opendir($source);
@@ -1461,7 +1461,7 @@ class C4GImportDataCallback extends Backend
                         if (!is_dir($dest . '/' . $file)) {
                             mkdir($dest . '/' . $file);
                         }
-                        $this->cpy($source . '/' . $file, $dest . '/' . $file);
+                        $this->copy($source . '/' . $file, $dest . '/' . $file);
                     } else {
                         copy($source . '/' . $file, $dest . '/' . $file);
                     }
@@ -1473,7 +1473,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    private function chmod_r($path, $modeDirectory = false, $modeFile = false)
+    private function recursivelyChangeFilePermissions($path, $modeDirectory = false, $modeFile = false)
     {
         $dir = new DirectoryIterator($path);
         if ($modeDirectory || $modeFile) {
@@ -1481,7 +1481,7 @@ class C4GImportDataCallback extends Backend
                 if ($item->isDir() && $modeDirectory) {
                     chmod($item->getPathname(), $modeDirectory);
                     if ($item->isDir() && !$item->isDot()) {
-                        $this->chmod_r($item->getPathname(), $modeDirectory, $modeFile);
+                        $this->recursivelyChangeFilePermissions($item->getPathname(), $modeDirectory, $modeFile);
                     }
                 } elseif (!$item->isDir() && $modeFile) {
                     chmod($item->getPathname(), $modeFile);
