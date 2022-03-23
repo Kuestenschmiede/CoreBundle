@@ -818,7 +818,7 @@ class C4GImportDataCallback extends Backend
 
     public function saveData(DataContainer $dc)
     {
-        $con4gisImport = $this->Input->post('con4gisImport');
+        $con4gisImport = $this->Input::post('con4gisImport');
 
         $responses = $this->getCon4gisImportData('getBasedata.php', 'specificData', $con4gisImport);
 
