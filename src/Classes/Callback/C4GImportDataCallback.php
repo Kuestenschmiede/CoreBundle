@@ -1222,13 +1222,11 @@ class C4GImportDataCallback extends Backend
                                         $unserial = \Contao\StringUtil::deserialize($unserial);
                                         $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                         $newImportDbValue = serialize($unserial);
-                                        $newImportDbValue = bin2hex($newImportDbValue);
-                                        $newImportDbValue = $this->prepend('0x', $newImportDbValue);
+                                        $newImportDbValue = '0x'.bin2hex($newImportDbValue);
                                         $importDbValue = $newImportDbValue;
                                     } else {
                                         $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
-                                        $newImportDbValue = bin2hex($newImportDbValue);
-                                        $newImportDbValue = $this->prepend('0x', $newImportDbValue);
+                                        $newImportDbValue = '0x'.bin2hex($newImportDbValue);
                                         $importDbValue = $newImportDbValue;
                                     }
                                 } elseif (substr($importDbValue, 0, 2) == 'a:') {
@@ -1242,8 +1240,7 @@ class C4GImportDataCallback extends Backend
                                     $unserial = \Contao\StringUtil::deserialize($unserial);
                                     $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                     $newImportDbValue = serialize($unserial);
-                                    $newImportDbValue = bin2hex($newImportDbValue);
-                                    $newImportDbValue = $this->prepend('0x', $newImportDbValue);
+                                    $newImportDbValue = '0x'.bin2hex($newImportDbValue);
                                     $importDbValue = $newImportDbValue;
                                 } elseif (is_numeric($importDbValue)) {
                                     $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations);
@@ -1433,15 +1430,6 @@ class C4GImportDataCallback extends Backend
     public function isUuid($uuid): bool
     {
         return ctype_xdigit($uuid) && strlen($uuid) == 32;
-    }
-
-    public function prepend($string, $chunk)
-    {
-        if (!empty($chunk) && isset($chunk)) {
-            return $string . $chunk;
-        }
-
-        return $string;
     }
 
     public function checkImportResponse($response)
