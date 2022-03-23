@@ -17,6 +17,7 @@ use Contao\Backend;
 use Contao\Folder;
 use Contao\Message;
 use Contao\PageRedirect;
+use Contao\Request;
 use Contao\StringUtil;
 use Contao\DataContainer;
 use Contao\System;
@@ -860,7 +861,7 @@ class C4GImportDataCallback extends Backend
                 }
             }
 
-            $REQUEST = new \Contao\Request();
+            $REQUEST = new Request();
             if ($_SERVER['HTTP_REFERER']) {
                 $REQUEST->setHeader('Referer', $_SERVER['HTTP_REFERER']);
             }
