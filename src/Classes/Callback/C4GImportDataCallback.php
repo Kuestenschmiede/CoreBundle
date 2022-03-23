@@ -802,8 +802,6 @@ class C4GImportDataCallback extends Backend
                         'core',
                         'Error with downloaded import data file (' . $localFile . '). Error: ' . $e
                     );
-
-                    return false;
                 }
 
                 return false;
