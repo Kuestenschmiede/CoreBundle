@@ -1324,8 +1324,11 @@ class C4GImportDataCallback extends Backend
                 $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) && $importDB;
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if ($importDbField == 'id') {
-                        if ($primaryImportRelationTable) {
-                            if (in_array($importDbField, $dbRelationPrimary[$importDB]) && is_numeric($importDbValue)) {
+                        if (is_numeric($importDbValue)) {
+                            if (
+                                !$primaryImportRelationTable ||
+                                in_array($importDbField, $dbRelationPrimary[$importDB])
+                            ) {
                                 if ($firstPrimaryChange) {
                                     $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
                                     if ($highestId && $highestId != 0 && $highestId != '' && $highestId != null) {
@@ -1341,23 +1344,6 @@ class C4GImportDataCallback extends Backend
                                 if (!isset($allIdChanges[$importDB][$importDbField][$importDbValue])) {
                                     $allIdChanges[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
                                 }
-                                unset($nextId);
-                            }
-                        } else {
-                            if (is_numeric($importDbValue)) {
-                                if ($firstPrimaryChange) {
-                                    $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
-                                    if ($highestId && $highestId != 0 && $highestId != '' && $highestId != null) {
-                                        $highestId = (int) $highestId[$importDbField];
-                                        $nextId = $highestId + 1;
-                                    } elseif (!$highestId) {
-                                        $nextId = 1;
-                                    }
-                                    $firstPrimaryChange = false;
-                                } else {
-                                    $nextId = end($allIdChangesNonRelations[$importDB][$importDbField]) + 1;
-                                }
-                                $allIdChangesNonRelations[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
                                 unset($nextId);
                             }
                         }
