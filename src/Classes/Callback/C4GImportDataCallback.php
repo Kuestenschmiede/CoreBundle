@@ -786,12 +786,22 @@ class C4GImportDataCallback extends Backend
                 try {
                     $errorContent = file_get_contents($localFile);
                     if ($errorContent == 'no_file') {
-                        C4gLogModel::addLogEntry('core', "Didn't found file on Proxy-Server. Please try again later or contact support@con4gis.io");
+                        C4gLogModel::addLogEntry(
+                            'core',
+                            'Did not find file on Proxy-Server. '.
+                            'Please try again later or contact support@con4gis.io'
+                        );
                     } else {
-                        C4gLogModel::addLogEntry('core', 'Downloaded import data file (' . $localFile . ') not complete.');
+                        C4gLogModel::addLogEntry(
+                            'core',
+                            'Downloaded import data file (' . $localFile . ') not complete.'
+                        );
                     }
                 } catch (\Throwable $e) {
-                    C4gLogModel::addLogEntry('core', 'Error with downloaded import data file (' . $localFile . '). Error: ' . $e);
+                    C4gLogModel::addLogEntry(
+                        'core',
+                        'Error with downloaded import data file (' . $localFile . '). Error: ' . $e
+                    );
 
                     return false;
                 }
