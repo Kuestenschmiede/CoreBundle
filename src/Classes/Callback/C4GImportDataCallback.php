@@ -1430,13 +1430,9 @@ class C4GImportDataCallback extends Backend
         return $newValue ?? $importDbValue;
     }
 
-    public function isUuid($uuid)
+    public function isUuid($uuid): bool
     {
-        if (ctype_xdigit($uuid) && strlen($uuid) == 32) {
-            return true;
-        }
-
-        return false;
+        return ctype_xdigit($uuid) && strlen($uuid) == 32;
     }
 
     public function prepend($string, $chunk)
