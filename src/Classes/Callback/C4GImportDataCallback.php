@@ -1010,7 +1010,6 @@ class C4GImportDataCallback extends Backend
             $allIdChangesJson = false;
         }
 
-        $filesMessageCount = 0;
         $importId = $uuid;
         $jsonFile = (array) Utils::jsonDecode($file);
         $sqlStatements = [];
@@ -1128,7 +1127,6 @@ class C4GImportDataCallback extends Backend
                     $queryType = 'INSERT';
                 }
 
-                $skipFilesEntry = false;
                 $sqlStatement = '';
                 $importDataset = (array) $importDataset;
                 if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && $importDataset['uuid'] == '') {
@@ -1285,18 +1283,12 @@ class C4GImportDataCallback extends Backend
                         }
                     }
                 }
-                if ($importDB == 'tl_files' && $skipFilesEntry) {
-                    if ($filesMessageCount == 0) {
-                        C4gLogModel::addLogEntry('core', 'Files already imported. tl_files will not be imported');
-                    }
+                if ($queryType == 'UPDATE' && isset($updateWhereQuery) && isset($updateWhereQueryValue) && $updateWhereQuery != '' && $updateWhereQueryValue != '') {
+                    $sqlStatement = str_replace(';;', $updateWhereQuery . "'" . $updateWhereQueryValue . "';", $sqlStatement);
                 } else {
-                    if ($queryType == 'UPDATE' && isset($updateWhereQuery) && isset($updateWhereQueryValue) && $updateWhereQuery != '' && $updateWhereQueryValue != '') {
-                        $sqlStatement = str_replace(';;', $updateWhereQuery . "'" . $updateWhereQueryValue . "';", $sqlStatement);
-                    } else {
-                        $sqlStatement = str_replace(');;', ');', $sqlStatement);
-                    }
-                    $sqlStatements[] = $sqlStatement;
+                    $sqlStatement = str_replace(');;', ');', $sqlStatement);
                 }
+                $sqlStatements[] = $sqlStatement;
             }
         }
 
