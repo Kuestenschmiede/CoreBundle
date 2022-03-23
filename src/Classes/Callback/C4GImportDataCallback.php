@@ -823,7 +823,10 @@ class C4GImportDataCallback extends Backend
         $responses = $this->getCon4gisImportData('getBasedata.php', 'specificData', $con4gisImport);
 
         foreach ($responses as $response) {
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET bundles=? WHERE id=?')->execute($response->bundles, $dc->id);
+            $statement = $this->Database->prepare(
+                'UPDATE tl_c4g_import_data SET bundles = ? WHERE id = ?'
+            );
+            $statement->execute($response->bundles, $dc->id);
         }
     }
 
