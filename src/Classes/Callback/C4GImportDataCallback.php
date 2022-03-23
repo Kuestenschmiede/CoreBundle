@@ -1393,7 +1393,7 @@ class C4GImportDataCallback extends Backend
             } elseif (is_numeric($value) && $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value]) {
                 $newValue[$key] = (String) $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value];
             } else {
-                $newValue[$key] = (String) $importDbValue[$key];
+                $newValue[$key] = (String) $value;
             }
         }
 
