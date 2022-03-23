@@ -1432,25 +1432,33 @@ class C4GImportDataCallback extends Backend
         return ctype_xdigit($uuid) && strlen($uuid) == 32;
     }
 
-    public function checkImportResponse($response)
+    public function checkImportResponse($response): bool
     {
         $response = (array) $response;
-        $keys = ['cloud_import', 'uuid', 'id', 'caption', 'description', 'version', 'bundles', 'bundlesVersion', 'source', 'type'];
-        foreach ($keys as $key) {
-            if (array_key_exists($key, $response)) {
-                $checkBool = true;
-            } else {
-                $checkBool = false;
+        $requiredKeys = [
+            'cloud_import',
+            'uuid',
+            'id',
+            'caption',
+            'description',
+            'version',
+            'bundles',
+            'bundlesVersion',
+            'source',
+            'type'
+        ];
 
-                break;
+        foreach ($requiredKeys as $key) {
+            if (!array_key_exists($key, $response)) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Could not read import file or import file is not complete.'
+                );
+                return false;
             }
         }
-        if ($checkBool) {
-            return true;
-        }
-        C4gLogModel::addLogEntry('core', 'Could not read import file or import file is not complete.');
 
-        return false;
+        return true;
     }
 
     public function importRunning($running = false, $id = 0)
