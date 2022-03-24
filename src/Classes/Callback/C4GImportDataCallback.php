@@ -11,6 +11,7 @@
 
 namespace con4gis\CoreBundle\Classes\Callback;
 
+use con4gis\CoreBundle\Classes\C4GUtils;
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Contao\Backend;
@@ -99,7 +100,7 @@ class C4GImportDataCallback extends Backend
                             $response->source,
                             $response->tables
                         );
-                        if (strpos($response->tables, $response->type) !== false) {
+                        if (C4GUtils::stringContains($response->tables, $response->type)) {
                             $cronIds[] = $response->id;
                         }
                     } else {
@@ -576,7 +577,7 @@ class C4GImportDataCallback extends Backend
 
             foreach ($tables as $table) {
                 foreach ($con4gisDeleteTables as $con4gisDeleteTable) {
-                    if (strpos($table, $con4gisDeleteTable) !== false) {
+                    if (C4GUtils::stringContains($table, $con4gisDeleteTable)) {
                         if ($this->Database->fieldExists('importId', $table)) {
                             $statement = $this->Database->prepare(
                                 "UPDATE $table SET importId=? WHERE importId = ?"
@@ -763,7 +764,7 @@ class C4GImportDataCallback extends Backend
                     if ($statIndex['name'] == 'io-data.yml') {
                         $contents = $archive->getFromName($statIndex['name']);
                     }
-                    if (strpos($statIndex['name'], '.json') !== false) {
+                    if (C4GUtils::stringContains($statIndex['name'], '.json')) {
                         $contentsJson = $archive->getFromName($statIndex['name']);
                     }
                 }
@@ -844,7 +845,7 @@ class C4GImportDataCallback extends Backend
             $request->send($baseDataUrl, Utils::jsonEncode($arrData));
             $response = $request->response;
             if ($response) {
-                if (substr($response, 0, 2) == '[{' && substr($response, -2, 2) == '}]') {
+                if (C4GUtils::startsWith($response, '[{') && C4GUtils::endsWith($response, '}]')) {
                     return Utils::jsonDecode($response);
                 }
 
@@ -872,7 +873,7 @@ class C4GImportDataCallback extends Backend
             if (file_exists($value) && is_dir($value)) {
                 $basedataFiles[$arrBasedataFolder] = array_slice(scandir($value), 2);
                 foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
-                    if (!$importId && str_ends_with($file, '-diff.c4g')) {
+                    if (!$importId && C4GUtils::endsWith($file, '-diff.c4g')) {
                         unset($basedataFiles[$arrBasedataFolder][$basedataFile]);
 
                         continue;
@@ -887,7 +888,7 @@ class C4GImportDataCallback extends Backend
             foreach ($arrBasedataFolders as $arrBasedataFolder => $value) {
                 if (file_exists($value) && is_dir($value)) {
                     foreach ($basedataFiles[$arrBasedataFolder] as $file) {
-                        if (str_ends_with($file, '-diff.c4g')) {
+                        if (C4GUtils::endsWith($file, '-diff.c4g')) {
                             $importName = strstr($file, '-diff.c4g', true);
                             $fullimport = array_search($importName . '.c4g', $basedataFiles[$arrBasedataFolder]);
                             if ($fullimport) {
@@ -921,7 +922,7 @@ class C4GImportDataCallback extends Backend
                                 $newYamlConfigArray[$count] = $yaml->parse($contents);
                                 $count++;
                             }
-                            if (strpos($statIndex['name'], '.json') !== false) {
+                            if (C4GUtils::stringContains($statIndex['name'], '.json')) {
                                 $contentsJson = $archive->getFromName($statIndex['name']);
                             }
                         }
@@ -976,7 +977,7 @@ class C4GImportDataCallback extends Backend
 
     private function recursiveDeleteDiffFolder($deleteFolder)
     {
-        if (str_ends_with($deleteFolder, '/files')) {
+        if (C4GUtils::endsWith($deleteFolder, '/files')) {
             return;
         }
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -1160,7 +1161,7 @@ class C4GImportDataCallback extends Backend
                 if (!array_key_exists('importId', $importDataset)) {
                     $importDataset['importId'] = $importId;
                 }
-                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) ? $importDB : false;
+                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) && $importDB;
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && ($importDbField == 'id' || $importDbField == 'pid')) {
                         continue;
@@ -1184,7 +1185,7 @@ class C4GImportDataCallback extends Backend
                     } elseif (in_array($importDB, $relationTables)) {
                         if (in_array($importDbField, $dbRelation[$importDB])) {
                             if ($importDbValue != '0') {
-                                if (substr($importDbValue, 0, 2) == '0x' && $importDB != 'tl_files') {
+                                if (C4GUtils::startsWith($importDbValue, '0x') && $importDB != 'tl_files') {
                                     $unserial = hex2bin(substr($importDbValue, 2));
 
                                     if (strpos($unserial, '{')) {
@@ -1198,7 +1199,7 @@ class C4GImportDataCallback extends Backend
                                         $newImportDbValue = '0x'.bin2hex($newImportDbValue);
                                         $importDbValue = $newImportDbValue;
                                     }
-                                } elseif (substr($importDbValue, 0, 2) == 'a:') {
+                                } elseif (C4GUtils::startsWith($importDbValue, 'a:')) {
                                     $importDbValue = str_replace('\"', '"', $importDbValue);
                                     $unserial = StringUtil::deserialize($importDbValue);
                                     $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
@@ -1231,17 +1232,17 @@ class C4GImportDataCallback extends Backend
                             $sqlStatement = $sqlStatement . '';
                         } else {
                             if ($queryType == 'INSERT') {
-                                if ($sqlStatement == '' && substr($importDbValue, 0, 2) == '0x') {
+                                if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (' . $importDbValue . ');;';
                                 } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash') {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
                                 } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash') {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
-                                } elseif ($sqlStatement == '' && substr($importDbValue, 0, 2) != '0x') {
+                                } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES ('" . $importDbValue . "');;";
                                 } elseif ($sqlStatement == '' && $importDbValue === null) {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (NULL);;';
-                                } elseif (substr($importDbValue, 0, 2) == '0x') {
+                                } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                     $sqlStatement = str_replace(');;', ", $importDbValue);;", $sqlStatement);
                                 } elseif ($isHexValue && $importDbField != 'hash') {
@@ -1258,17 +1259,17 @@ class C4GImportDataCallback extends Backend
                                     $sqlStatement = str_replace(');;', ", '$importDbValue');;", $sqlStatement);
                                 }
                             } elseif ($queryType == 'UPDATE') {
-                                if ($sqlStatement == '' && substr($importDbValue, 0, 2) == '0x') {
+                                if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = ' . $importDbValue . ';;';
                                 } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash') {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
                                 } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash') {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
-                                } elseif ($sqlStatement == '' && substr($importDbValue, 0, 2) != '0x') {
+                                } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = '" . $importDbValue . "';;";
                                 } elseif ($sqlStatement == '' && $importDbValue === null) {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = NULL;;';
-                                } elseif (substr($importDbValue, 0, 2) == '0x') {
+                                } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = str_replace(';;', ", `$importDbField` = $importDbValue;;", $sqlStatement);
                                 } elseif ($isHexValue && $importDbField != 'hash') {
                                     $sqlStatement = str_replace(';;', ", `$importDbField` = UNHEX('$importDbValue');;", $sqlStatement);
@@ -1515,7 +1516,7 @@ class C4GImportDataCallback extends Backend
         $tables = $this->Database->listTables();
         foreach ($tables as $table) {
             foreach ($con4gisDeleteTables as $con4gisDeleteTable) {
-                if (strpos($table, $con4gisDeleteTable) !== false) {
+                if (C4GUtils::stringContains($table, $con4gisDeleteTable)) {
                     if ($this->Database->fieldExists('importId', $table)) {
                         try {
                             $this->Database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
