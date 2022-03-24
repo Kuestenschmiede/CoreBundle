@@ -1188,7 +1188,7 @@ class C4GImportDataCallback extends Backend
                                     $unserial = hex2bin(substr($importDbValue, 2));
 
                                     if (strpos($unserial, '{')) {
-                                        $unserial = \Contao\StringUtil::deserialize($unserial);
+                                        $unserial = StringUtil::deserialize($unserial);
                                         $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                         $newImportDbValue = serialize($unserial);
                                         $newImportDbValue = '0x'.bin2hex($newImportDbValue);
@@ -1206,7 +1206,7 @@ class C4GImportDataCallback extends Backend
                                     $importDbValue = $newImportDbValue;
                                 } elseif (strpos($importDbValue, '{')) {
                                     $unserial = hex2bin(substr($importDbValue, 2));
-                                    $unserial = \Contao\StringUtil::deserialize($unserial);
+                                    $unserial = StringUtil::deserialize($unserial);
                                     $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                     $newImportDbValue = serialize($unserial);
                                     $newImportDbValue = '0x'.bin2hex($newImportDbValue);
