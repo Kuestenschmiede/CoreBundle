@@ -1360,7 +1360,8 @@ class C4GImportDataCallback extends Backend
         return ['allIdChanges' => $allIdChanges, 'allIdChangesNonRelations' => $allIdChangesNonRelations];
     }
 
-    private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations): array|string
+    //ToDo different result types works >= php 8
+    private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations) //: array|string
     {
         if (is_object($relations['relations'])) {
             $relations = (array) $relations['relations'];
