@@ -833,7 +833,7 @@ class tl_c4g_bricks extends Contao\Backend
 
         $brickArr = [];
         foreach ($GLOBALS['BE_MOD']['con4gis'] as $key=>$module) {
-            if ($module['brick']) {
+            if (array_key_exists('brick', $module ) && $module['brick']) {
                 $brickArr[$module['brick']][] = ['do' => $key, 'icon' => $module['icon'] ?: '', 'title' => $GLOBALS['TL_LANG']['MOD'][$key][1]];
             }
         }
@@ -841,7 +841,7 @@ class tl_c4g_bricks extends Contao\Backend
         $buttons = ['firstButton', 'secondButton', 'thirdButton', 'fourthButton', 'fifthButton', 'sixthButton', 'seventhButton', 'eighthButton', 'ninthButton', 'tenthButton', 'eleventhButton'];
         $foundButton = false;
         foreach ($buttons as $key=>$button) {
-            if ((strpos($href, $button) > 0) && ($brickArr[$row['brickkey']][$key])) {
+            if ((strpos($href, $button) > 0) && array_key_exists('brickkey', $row) && array_key_exists($row['brickkey'], $brickArr) && array_key_exists($key, $brickArr[$row['brickkey']]) && ($brickArr[$row['brickkey']][$key])) {
                 $do = $brickArr[$row['brickkey']][$key]['do'];
                 $icon = $brickArr[$row['brickkey']][$key]['icon'] ?: '';
                 $title = $brickArr[$row['brickkey']][$key]['title'];
@@ -924,7 +924,7 @@ class tl_c4g_bricks extends Contao\Backend
 
         $showButton = false;
         foreach ($GLOBALS['BE_MOD']['con4gis'] as $key=>$module) {
-            if ($module['brick'] == $row['brickkey']) {
+            if (array_key_exists('brick', $module) && array_key_exists('brickkey', $row) && $module['brick'] == $row['brickkey']) {
                 $showButton = true;
                 break;
             }
