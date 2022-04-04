@@ -22,7 +22,6 @@ use Contao\Request;
 use Contao\StringUtil;
 use Contao\System;
 use Exception;
-use GuzzleHttp\Utils;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
 use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
