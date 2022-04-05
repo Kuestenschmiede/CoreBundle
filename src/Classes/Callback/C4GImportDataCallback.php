@@ -22,7 +22,6 @@ use Contao\Request;
 use Contao\StringUtil;
 use Contao\System;
 use Exception;
-use GuzzleHttp\Utils;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
 use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
@@ -1360,8 +1359,8 @@ class C4GImportDataCallback extends Backend
         return ['allIdChanges' => $allIdChanges, 'allIdChangesNonRelations' => $allIdChangesNonRelations];
     }
 
-    //ToDo different result types works >= php 8
-    private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations) //: array|string
+    // Do not add return type to ensure BC for PHP < 8
+    private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations)
     {
         if (is_object($relations['relations'])) {
             $relations = (array) $relations['relations'];
