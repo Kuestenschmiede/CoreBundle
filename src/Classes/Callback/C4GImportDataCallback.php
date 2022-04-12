@@ -330,7 +330,6 @@ class C4GImportDataCallback extends Backend
             $zip = new ZipArchive;
             if ($zip->open($c4gPath) === true) {
                 $zip->extractTo($cache);
-                $zip->close();
 
                 mkdir($imagePath, 0770, true);
                 $this->copy($cache . '/images', $imagePath);
@@ -339,6 +338,7 @@ class C4GImportDataCallback extends Backend
                 $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
+            $zip->close();
             $this->recursivelyChangeFilePermissions($imagePath, 0775, 0664);
         } else {
             $objSettings = C4gSettingsModel::findSettings();
@@ -390,9 +390,8 @@ class C4GImportDataCallback extends Backend
                         $importData = $yaml->parse($contents);
                     }
                 }
-
-                $archive->close();
             }
+            $archive->close();
 
             $importDataType = $importData['import']['datatype'] ?? 'full';
 
@@ -434,7 +433,6 @@ class C4GImportDataCallback extends Backend
             $zip = new ZipArchive;
             if ($zip->open($downloadPath . $filename) === true) {
                 $zip->extractTo($cache);
-                $zip->close();
 
                 mkdir($imagePath, 0770, true);
                 $this->copy($cache . '/images', $imagePath);
@@ -443,6 +441,7 @@ class C4GImportDataCallback extends Backend
                 $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
+            $zip->close();
             $this->recursivelyChangeFilePermissions($imagePath, 0775);
         }
 
@@ -767,9 +766,7 @@ class C4GImportDataCallback extends Backend
                         $contentsJson = $archive->getFromName($statIndex['name']);
                     }
                 }
-                $archive->close();
             }
-
             if ($contents == '' || $contentsJson == '') {
                 try {
                     $errorContent = file_get_contents($localFile);
@@ -791,15 +788,15 @@ class C4GImportDataCallback extends Backend
                         'Error with downloaded import data file (' . $localFile . '). Error: ' . $e
                     );
                 }
-
+                $archive && $zip  ? $archive->close() : false;
                 return false;
             }
+            $archive && $zip ? $archive->close() : false;
             C4gLogModel::addLogEntry('core', 'The import data was successfully downloaded.');
-
             return true;
         } catch (\Exception $e) {
             C4gLogModel::addLogEntry('core', 'Error reading downloaded file: ' . $e);
-
+            $archive && $zip  ? $archive->close() : false;
             return false;
         }
     }
@@ -907,9 +904,6 @@ class C4GImportDataCallback extends Backend
                 $contentsJson = '';
 
                 try {
-
-
-
                     $archive = new ZipArchive();
                     $zip = $archive->open($importFile, ZipArchive::RDONLY);
                     if ($zip) {
@@ -925,15 +919,15 @@ class C4GImportDataCallback extends Backend
                                 $contentsJson = $archive->getFromName($statIndex['name']);
                             }
                         }
-                        $archive->close();
                     }
+                    $archive->close();
                     if ($contents == '' || $contentsJson == '') {
                         C4gLogModel::addLogEntry('core', 'Import data file (' . $importFile . ') not complete.');
                         $newYamlConfigArray[$count] = false;
                     }
                 } catch (\Throwable $e) {
                     C4gLogModel::addLogEntry('core', 'Import data file not complete: ' . $e);
-
+                    $archive->close();
                     return [];
                 }
             }
@@ -1178,6 +1172,9 @@ class C4GImportDataCallback extends Backend
                             $importDbValue = $allIdChanges[$importDB][$importDbField][$importDbValue];
                         } else {
                             $importDbValue = $allIdChangesNonRelations[$importDB][$importDbField][$importDbValue];
+                        }
+                        if ($importDbValue == '') {
+                            $importDbValue = 0;
                         }
                     } elseif ($importDbField == 'importId') {
                         $importDbValue = $importId;
