@@ -549,11 +549,12 @@ class C4GUtils
 
     }
     /**
-     * returns the lon/lat for an address string
+     * returns the address as a string or array for given coordinates
      * @param array $coordinates
-     * @return array
+     * @param bool $getArray
+     * @return mixed
      */
-    public static function reverseGeocode($coordinates) {
+    public static function reverseGeocode($coordinates, $getArray = false) {
         $settings = C4gMapSettingsModel::findOnly();
         if ($settings->con4gisIoUrl && $settings->con4gisIoKey){
             $searchUrl = rtrim($settings->con4gisIoUrl, '/') . '/';
@@ -576,7 +577,12 @@ class C4GUtils
                 if ($response && $response->getStatusCode() === 200) {
                     $response = $response->getContent();
                     $response = \GuzzleHttp\json_decode($response, true);
-                    return $response['display_name'];
+                    if ($getArray) {
+                        return $response['address'];
+                    }
+                    else {
+                        return $response['display_name'];
+                    }
                 }
             } catch (\Exception $exception) {
                 return false;
