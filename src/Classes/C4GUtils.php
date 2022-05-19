@@ -679,4 +679,76 @@ class C4GUtils
 
         return false;
     }
+
+    /**
+     * @param $str
+     * @return bool
+     */
+    public static function isBinary($str)
+    {
+        if (!C4gUtils::containsUmlaut($str)) {
+            return false;
+        }
+
+        return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
+    }
+
+    /**
+     * @param $uuid
+     * @return bool
+     */
+    public static function isValidUuid($uuid)
+    {
+        if (!is_string($uuid) || (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/', $uuid) !== 1)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $str
+     * @return bool
+     */
+    public static function containsUmlaut($str)
+    {
+        $umlauts = explode(',', 'Ŕ,Á,Â,Ă,Ä,Ĺ,Ç,Č,É,Ę,Ë,Ě,Í,Î,Ď,Ň,Ó,Ô,Ő,Ö,Ř,Ů,Ú,Ű,Ü,Ý,ŕ,á,â,ă,ä,ĺ,ç,č,é,ę,ë,ě,í,î,ď,đ,ň,ó,ô,ő,ö,ř,ů,ú,ű,ü,ý,˙,Ń,ń,ß');
+        foreach ($umlauts as $umlaut) {
+            if (false !== (strpos($str, $umlaut))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @param $text
+     * @param $length
+     * @return array|false|string|string[]|null
+     */
+    public static function truncate($text, $length)
+    {
+        $text = str_replace('><', '> <', $text);
+        $text = strip_tags($text);
+        $text = htmlspecialchars($text, ENT_QUOTES, 'utf-8');
+        $length = abs((int) $length);
+        $firstFullstop = strpos($text, '.');
+        if ($firstFullstop && $firstFullstop <= ($length - 1)) {
+            for ($i = 0, $j = strlen($text); $i < $j; $i++) {
+                if ((strstr('.', $text[$i])) && ($i <= ($length - 1))) {
+                    $firstFullstop = $i;
+                }
+            }
+
+            return substr($text, 0, $firstFullstop + 1);
+        }
+
+        if (strlen($text) > $length) {
+            $text = preg_replace("/^(.{1,$length})(\s.*|$)/s", '\\1...', $text);
+        }
+
+        return($text);
+    }
 }

@@ -104,8 +104,8 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         'con4gisIoKey' => [
             'exclude'                 => true,
             'inputType'               => 'text',
-            'eval'                    => ['maxlength' => 32],
-            'sql'                     => "varchar(32) default ''"
+            'eval'                    => ['maxlength' => 34],
+            'sql'                     => "varchar(34) default ''"
         ],
         'c4g_uitheme_css_select' => array
         (

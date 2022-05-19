@@ -11,16 +11,16 @@
 
 namespace con4gis\CoreBundle\Classes\Callback;
 
+use con4gis\CoreBundle\Classes\C4GUtils;
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
+use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Folder;
 use Contao\Message;
 use Contao\PageRedirect;
+use Contao\Request;
 use Contao\StringUtil;
-use Contao\DataContainer;
 use Contao\System;
-use Dbafs;
 use Exception;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
@@ -33,26 +33,28 @@ class C4GImportDataCallback extends Backend
     public function __construct()
     {
         parent::__construct();
-        $this->import('BackendUser', 'User');
     }
 
-    /**
-     * loadBaseData
-     */
     public function loadBaseData($cron)
     {
         $cronIds = [];
         // Get installed contao and con4gis Core version
-        $installedPackages = $this->getContainer()->getParameter('kernel.packages');
+        $installedPackages = static::getContainer()->getParameter('kernel.packages');
         $coreVersion = $installedPackages['con4gis/core'];
         $contaoVersion = $installedPackages['contao/core-bundle'];
 
         // Check current action
-        $responses = $this->getCon4gisImportData('getBasedata.php', 'allData', false, $coreVersion, $contaoVersion);
+        $responses = $this->getCon4gisImportData(
+            'getBasedata.php',
+            'allData',
+            false,
+            $coreVersion,
+            $contaoVersion
+        );
         if ($responses) {
-            foreach ($responses as $keyResponse => $respons) {
-                foreach ($respons as $innerKeyResponse => $innerResponse) {
-                    $responses[$keyResponse]->$innerKeyResponse = str_replace('"', '', $innerResponse);
+            foreach ($responses as $response) {
+                foreach ($response as $innerKey => $innerResponse) {
+                    $response->$innerKey = str_replace('"', '', $innerResponse);
                 }
             }
         }
@@ -83,12 +85,40 @@ class C4GImportDataCallback extends Backend
                 }
                 if ($this->checkImportResponse($response)) {
                     if ($cron) {
-                        $this->Database->prepare('INSERT INTO tl_c4g_import_data SET id=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=?')->execute($response->id, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables);
-                        if (strpos($response->tables, $response->type) !== false) {
+                        $statement = $this->Database->prepare(
+                            'INSERT INTO tl_c4g_import_data '.
+                            'SET id = ?, bundles = ?, bundlesVersion = ?, availableVersion = ?, '.
+                            'type = ?, source = ?, importTables = ?'
+                        );
+                        $statement->execute(
+                            $response->id,
+                            $response->bundles,
+                            $response->bundlesVersion,
+                            $response->version,
+                            $response->type,
+                            $response->source,
+                            $response->tables
+                        );
+                        if (C4GUtils::stringContains($response->tables, $response->type)) {
                             $cronIds[] = $response->id;
                         }
                     } else {
-                        $this->Database->prepare('INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=?')->execute($response->id, $response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables);
+                        $statement = $this->Database->prepare(
+                            'INSERT INTO tl_c4g_import_data '.
+                            'SET id = ?, caption = ?, description = ?, bundles = ?, bundlesVersion = ?, '.
+                            'availableVersion = ?, type = ?, source = ?, importTables = ?'
+                        );
+                        $statement->execute(
+                            $response->id,
+                            $response->caption,
+                            $response->description,
+                            $response->bundles,
+                            $response->bundlesVersion,
+                            $response->version,
+                            $response->type,
+                            $response->source,
+                            $response->tables
+                        );
 
                     }
                 }
@@ -107,19 +137,53 @@ class C4GImportDataCallback extends Backend
                 if ($response->id == $data['id']) {
                     if ($this->checkImportResponse($response)) {
                         if ($cron) {
-                            $dbExecute = $this->Database->prepare('UPDATE tl_c4g_import_data SET bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=? WHERE id=?')->execute($response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables, $data['id']);
+                            $statement = $this->Database->prepare(
+                                'UPDATE tl_c4g_import_data SET bundles = ?, bundlesVersion = ?, '.
+                                'availableVersion = ?, type = ?, source = ?, importTables = ? '.
+                                'WHERE id = ?'
+                            );
+                            $statement->execute(
+                                $response->bundles,
+                                $response->bundlesVersion,
+                                $response->version,
+                                $response->type,
+                                $response->source,
+                                $response->tables,
+                                $data['id']
+                            );
                             if (strpos($response->tables, $response->type)) {
                                 $cronIds[] = $response->id;
                             }
                         } else {
-                            $dbExecute = $this->Database->prepare('UPDATE tl_c4g_import_data SET caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=? WHERE id=?')->execute($response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables, $data['id']);
+                            $statement = $this->Database->prepare(
+                                'UPDATE tl_c4g_import_data SET caption = ?, description = ?, bundles = ?, '.
+                                'bundlesVersion = ?, availableVersion = ?, type = ?, source = ?, importTables = ? '.
+                                'WHERE id = ?'
+                            );
+                            $statement->execute(
+                                $response->caption,
+                                $response->description,
+                                $response->bundles,
+                                $response->bundlesVersion,
+                                $response->version,
+                                $response->type,
+                                $response->source,
+                                $response->tables,
+                                $data['id']
+                            );
                         }
                     } elseif ($data['importVersion'] == '') {
                         if ($data['id'] != 0 or $data['id'] != '') {
-                            $dbExecute = $this->Database->prepare('DELETE FROM tl_c4g_import_data WHERE id=?')->execute($data['id']);
+                            $statement = $this->Database->prepare(
+                                'DELETE FROM tl_c4g_import_data WHERE id = ?'
+                            );
+                            $statement->execute($data['id']);
                         }
-                    } elseif ($data['importVersion'] != '') {
-                        $dbExecute = $this->Database->prepare('UPDATE tl_c4g_import_data SET availableVersion=? WHERE id=?')->execute('', $data['id']);
+                    } else {
+                        $statement = $this->Database->prepare(
+                            'UPDATE tl_c4g_import_data SET availableVersion = ? WHERE id = ?'
+                        );
+                        $statement->execute('', $data['id']);
                     }
                     $available = true;
                 }
@@ -127,12 +191,21 @@ class C4GImportDataCallback extends Backend
             //Delete Import if it's not available anymore
             if (!$available) {
                 if ($data['importVersion'] != '') {
-                    $this->Database->prepare('UPDATE tl_c4g_import_data SET availableVersion=? WHERE id=?')->execute('', $data['id']);
+                    $statement = $this->Database->prepare(
+                        'UPDATE tl_c4g_import_data SET availableVersion = ? WHERE id = ?'
+                    );
+                    $statement->execute('', $data['id']);
                 } else {
                     if ($data['id'] != 0 or $data['id'] != '') {
-                        $this->Database->prepare('DELETE FROM tl_c4g_import_data WHERE id=?')->execute($data['id']);
+                        $statement = $this->Database->prepare(
+                            'DELETE FROM tl_c4g_import_data WHERE id=?'
+                        );
+                        $statement->execute($data['id']);
                     } else {
-                        C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
+                        C4gLogModel::addLogEntry(
+                            'core',
+                            'Error deleting unavailable import: wrong id set!'
+                        );
                     }
                 }
             }
@@ -152,9 +225,24 @@ class C4GImportDataCallback extends Backend
                 if ($data['id'] == $response->id) {
                     break;
                 }
-                if ($data['id'] != $response->id && $count == $arrayLength) {
+                if ($count == $arrayLength) {
                     if ($this->checkImportResponse($response)) {
-                        $this->Database->prepare('INSERT INTO tl_c4g_import_data SET id=?, caption=?, description=?, bundles=?, bundlesVersion=?, availableVersion=?, type=?, source=?, importTables=?')->execute($response->id, $response->caption, $response->description, $response->bundles, $response->bundlesVersion, $response->version, $response->type, $response->source, $response->tables);
+                        $statement = $this->Database->prepare(
+                            'INSERT INTO tl_c4g_import_data SET id = ?, caption = ?, '.
+                            'description = ?, bundles = ?, bundlesVersion = ?, '.
+                            'availableVersion = ?, type = ?, source = ?, importTables = ?'
+                        );
+                        $statement->execute(
+                            $response->id,
+                            $response->caption,
+                            $response->description,
+                            $response->bundles,
+                            $response->bundlesVersion,
+                            $response->version,
+                            $response->type,
+                            $response->source,
+                            $response->tables
+                        );
                     }
                 }
                 $count++;
@@ -166,33 +254,18 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function getStringBetween($string, $start, $end)
-    {
-        $string = ' ' . $string;
-        $ini = strpos($string, $start);
-        if ($ini == 0) {
-            return '';
-        }
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-
-        return substr($string, $ini, $len);
-    }
-
-    /**
-     * importBaseData
-     */
     public function importBaseData($importId = false)
     {
         if ($this->importRunning()) {
-            \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
+            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
             PageRedirect::redirect('/contao?do=c4g_io_data');
-
-            return false;
         }
         if ($importId) {
             $con4gisImportId = $importId;
-            $cronImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
+            $statement = $this->Database->prepare(
+                'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
+            );
+            $cronImportData = $statement->execute($con4gisImportId)->fetchAssoc();
             if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
                 return false;
             }
@@ -203,18 +276,17 @@ class C4GImportDataCallback extends Backend
 
         $this->importRunning(true, $con4gisImportId);
 
-//      lokaler Import
         if ($importId) {
-            $localImportDatas = $this->getLocalIoData(true);
+            $localImportData = $this->getLocalIoData(true);
         } else {
-            $localImportDatas = $this->getLocalIoData();
+            $localImportData = $this->getLocalIoData();
         }
 
         $availableLocal = false;
-        foreach ($localImportDatas as $localImportData) {
-            if ($localImportData['import']['id'] == $con4gisImportId) {
+        foreach ($localImportData as $localImportDatum) {
+            if ($localImportDatum['import']['id'] == $con4gisImportId) {
                 $availableLocal = true;
-                $importData = $localImportData;
+                $importData = $localImportDatum;
 
                 break;
             }
@@ -225,11 +297,7 @@ class C4GImportDataCallback extends Backend
             $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/src/Resources/con4gis/' . $importData['general']['filename'];
             $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
             $importType = $importData['import']['type'];
-            if (isset($importData['import']['datatype'])) {
-                $importDataType = $importData['import']['datatype'];
-            } else {
-                $importDataType = 'full';
-            }
+            $importDataType = $importData['import']['datatype'] ?? 'full';
 
             $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
@@ -237,24 +305,23 @@ class C4GImportDataCallback extends Backend
                     $deleted = $this->deleteBaseData($importId, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
-                        \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         C4gLogModel::addLogEntry('core', 'Error deleting old import data for automatic import. Stopped Import');
                         PageRedirect::redirect('/contao?do=c4g_io_data');
-
-                        return false;
                     }
                 } elseif ($importDataType == 'full') {
                     $deleted = $this->deleteBaseData(false, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
-                        \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         PageRedirect::redirect('/contao?do=c4g_io_data');
-
-                        return false;
                     }
                 }
-            } elseif (($alreadyImported['importVersion'] == '' || !$alreadyImported) && $importId) {
-                C4gLogModel::addLogEntry('core', 'Cant update automaticly. Import not found in database. Abort import.');
+            } elseif (!$alreadyImported && $importId) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Cant update automatically. Import not found in database. Abort import.'
+                );
                 $this->importRunning(false, $con4gisImportId);
 
                 return false;
@@ -263,68 +330,22 @@ class C4GImportDataCallback extends Backend
             $zip = new ZipArchive;
             if ($zip->open($c4gPath) === true) {
                 $zip->extractTo($cache);
-                $zip->close();
 
                 mkdir($imagePath, 0770, true);
-                $this->cpy($cache . '/images', $imagePath);
-                $objFolder = new \Contao\Folder('files/con4gis_import_data');
-                //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
+                $this->copy($cache . '/images', $imagePath);
+                $objFolder = new Folder('files/con4gis_import_data');
                 $objFolder->unprotect();
-                //}
-                $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
+                $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
-            $this->chmod_r($imagePath, 0775, 0664);
-            $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
-            if ($importDataType == 'diff') {
-                $this->deleteOldDiffImages($file);
-            }
-
-            if (!$sqlStatements) {
-                C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
-                \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
-                $this->importRunning(false, $con4gisImportId);
-                if (!$importId) {
-                    $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
-                    $objFolder->purge();
-                    $objFolder->delete();
-                    $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
-                    $objFolder->purge();
-                    $objFolder->delete();
-                }
-
-                return false;
-            }
-
-            foreach ($sqlStatements as $sqlStatement) {
-                if ($sqlStatement == '') {
-                    break;
-                }
-
-                try {
-                    $this->Database->query($sqlStatement);
-                } catch (Exception $e) {
-                    C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
-                }
-            }
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($localImportData['import']['uuid'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($localImportData['images']['path'], $con4gisImportId);
-
-            $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
-            $objFolder->purge();
-            $objFolder->delete();
-//            $this->recursiveRemoveDirectory($cache);
-
-//      lokaler Import Ende
-        } elseif (!$availableLocal) {
-            $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
-            $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
-            $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
-            $basedataUrl .= '&mode=' . 'ioData';
-            $basedataUrl .= '&data=' . $con4gisImportId;
+            $zip->close();
+            $this->recursivelyChangeFilePermissions($imagePath, 0775, 0664);
+        } else {
+            $objSettings = C4gSettingsModel::findSettings();
+            $baseDataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . 'getBasedata.php';
+            $baseDataUrl .= '?key=' . $objSettings->con4gisIoKey;
+            $baseDataUrl .= '&mode=' . 'ioData';
+            $baseDataUrl .= '&data=' . $con4gisImportId;
             if ($importId) {
                 $currentImport = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')
                     ->execute($con4gisImportId)->fetchAssoc();
@@ -332,15 +353,15 @@ class C4GImportDataCallback extends Backend
                     $importVersion = $currentImport['importVersion'];
                     $availableVersion = $currentImport['availableVersion'];
                     if (($importVersion + 1) != $availableVersion || $importVersion == '') {
-                        $basedataUrl .= '&datatype=full';
+                        $baseDataUrl .= '&datatype=full';
                     } else {
-                        $basedataUrl .= '&datatype=diff';
+                        $baseDataUrl .= '&datatype=diff';
                     }
                 } else {
-                    $basedataUrl .= '&datatype=diff';
+                    $baseDataUrl .= '&datatype=diff';
                 }
             } else {
-                $basedataUrl .= '&datatype=full';
+                $baseDataUrl .= '&datatype=full';
             }
 
             $downloadPath = './../files/con4gis_import_data/io-data/';
@@ -351,15 +372,13 @@ class C4GImportDataCallback extends Backend
             }
 
             mkdir($downloadPath, 0770, true);
-            $downloadSuccess = $this->download($basedataUrl, $downloadFile);
+            $downloadSuccess = $this->download($baseDataUrl, $downloadFile);
             if (!$downloadSuccess) {
                 $this->importRunning(false, $con4gisImportId);
                 PageRedirect::redirect('/contao?do=c4g_io_data');
-
-                return false;
             }
 
-            // Getting data from downloades json config file
+            // Getting data from download's json config file
             $archive = new ZipArchive();
             $zip = $archive->open($downloadPath . $filename, ZipArchive::RDONLY);
             if ($zip) {
@@ -371,23 +390,20 @@ class C4GImportDataCallback extends Backend
                         $importData = $yaml->parse($contents);
                     }
                 }
-
-                $archive->close();
             }
+            $archive->close();
 
-            if (isset($importData['import']['datatype'])) {
-                $importDataType = $importData['import']['datatype'];
-            } else {
-                $importDataType = 'full';
-            }
+            $importDataType = $importData['import']['datatype'] ?? 'full';
 
-            $alreadyImported = $this->Database->prepare('SELECT importVersion FROM tl_c4g_import_data WHERE id=?')->execute($con4gisImportId)->fetchAssoc();
+            $alreadyImported = $this->Database->prepare(
+                'SELECT importVersion FROM tl_c4g_import_data WHERE id = ?'
+            )->execute($con4gisImportId)->fetchAssoc();
             if ($alreadyImported['importVersion'] != '') {
                 if ($importId && $importDataType == 'full') {
                     $deleted = $this->deleteBaseData($importId, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
-                        \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
 
                         return false;
                     }
@@ -395,14 +411,15 @@ class C4GImportDataCallback extends Backend
                     $deleted = $this->deleteBaseData(false, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
-                        \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         PageRedirect::redirect('/contao?do=c4g_io_data');
-
-                        return false;
                     }
                 }
-            } elseif (($alreadyImported['importVersion'] == '' || !$alreadyImported) && $importId) {
-                C4gLogModel::addLogEntry('core', 'Cant update automaticly. Import information not found in database. Abort import.');
+            } elseif (!$alreadyImported && $importId) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Cant update automatically. Import information not found in database. Abort import.'
+                );
                 $this->importRunning(false, $con4gisImportId);
 
                 return false;
@@ -416,61 +433,68 @@ class C4GImportDataCallback extends Backend
             $zip = new ZipArchive;
             if ($zip->open($downloadPath . $filename) === true) {
                 $zip->extractTo($cache);
-                $zip->close();
 
                 mkdir($imagePath, 0770, true);
-                $this->cpy($cache . '/images', $imagePath);
-                $objFolder = new \Contao\Folder('files/con4gis_import_data');
-                //if (!$objFolder->isUnprotected()) { //Rework >= Contao 4.7
+                $this->copy($cache . '/images', $imagePath);
+                $objFolder = new Folder('files/con4gis_import_data');
                 $objFolder->unprotect();
-                //}
-                $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
+                $objFolder = new Folder('files' . $importData['images']['path']);
                 $objFolder->unprotect();
             }
-            $this->chmod_r($imagePath, 0775);
-            $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-            $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
-            if ($importDataType == 'diff') {
-                $this->deleteOldDiffImages($file);
-            }
-
-            if (!$sqlStatements) {
-                C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
-                \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
-                $this->importRunning(false, $con4gisImportId);
-                if (!$importId) {
-                    $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
-                    $objFolder->purge();
-                    $objFolder->delete();
-                    $objFolder = new \Contao\Folder('files' . $importData['images']['path']);
-                    $objFolder->purge();
-                    $objFolder->delete();
-                }
-
-                return false;
-            }
-
-            foreach ($sqlStatements as $sqlStatement) {
-                if ($sqlStatement == '') {
-                    break;
-                }
-
-                try {
-                    $this->Database->query($sqlStatement);
-                } catch (Exception $e) {
-                    C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
-                }
-            }
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=?WHERE id=?')->execute($importData['import']['version'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute($importData['import']['uuid'], $con4gisImportId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importFilePath=? WHERE id=?')->execute($importData['images']['path'], $con4gisImportId);
-
-            $objFolder = new \Contao\Folder('files/con4gis_import_data/io-data/');
-            $objFolder->purge();
-            $objFolder->delete();
+            $zip->close();
+            $this->recursivelyChangeFilePermissions($imagePath, 0775);
         }
 
-        //Generate Symlinks and sync filesystem
+        $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
+        $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
+        if ($importDataType == 'diff') {
+            $this->deleteOldDiffImages($file);
+        }
+
+        if (!$sqlStatements) {
+            C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
+            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
+            $this->importRunning(false, $con4gisImportId);
+            if (!$importId) {
+                $objFolder = new Folder('files/con4gis_import_data/io-data/');
+                $objFolder->purge();
+                $objFolder->delete();
+                $objFolder = new Folder('files' . $importData['images']['path']);
+                $objFolder->purge();
+                $objFolder->delete();
+            }
+
+            return false;
+        }
+
+        foreach ($sqlStatements as $sqlStatement) {
+            if ($sqlStatement == '') {
+                break;
+            }
+
+            try {
+                $this->Database->query($sqlStatement);
+            } catch (Exception $e) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Error while executing SQL-Import: ' . $e->getMessage()
+                );
+            }
+        }
+        $statement = $this->Database->prepare(
+            'UPDATE tl_c4g_import_data SET importVersion = ?, importUuid = ?, importFilePath = ? WHERE id = ?'
+        );
+        $statement->execute(
+            $importData['import']['version'],
+            $importData['import']['uuid'],
+            $importData['images']['path'],
+            $con4gisImportId
+        );
+
+        $objFolder = new Folder('files/con4gis_import_data/io-data/');
+        $objFolder->purge();
+        $objFolder->delete();
+
         $this->import('Contao\Automator', 'Automator');
         $this->Automator->generateSymlinks();
 
@@ -494,88 +518,83 @@ class C4GImportDataCallback extends Backend
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
-    /**
-     * updateBaseData
-     */
     public function updateBaseData($importId = false)
     {
         if ($this->importRunning()) {
-            \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
+            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
             PageRedirect::redirect('/contao?do=c4g_io_data');
-
-            return false;
         }
 
         if ($importId) {
-            $cronImportData = $this->Database->prepare('SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
+            $cronImportData = $this->Database->prepare(
+                'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
+            )->execute($importId)->fetchAssoc();
             if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
-                if ($cronImportData['importVersion'] == '' || $cronImportData['importVersion'] == '0' || $cronImportData['importVersion'] == 0) {
-                    C4gLogModel::addLogEntry('core', 'New import is currently unavailable. Import will not be updated.');
+                if (!$cronImportData['importVersion']) {
+                    C4gLogModel::addLogEntry(
+                        'core',
+                        'New import is currently unavailable. Import will not be updated.'
+                    );
                 } elseif ($cronImportData['availableVersion'] != $cronImportData['importVersion']) {
-                    C4gLogModel::addLogEntry('core', 'Imported version is equal or higher than available version. Import will not be updated.');
+                    C4gLogModel::addLogEntry(
+                        'core',
+                        'Imported version is higher than available version. Import will not be updated.'
+                    );
                 }
 
                 return false;
             }
-            $cronImport = true;
         } else {
-            $cronImport = false;
             $data = $_REQUEST;
             $importId = $data['id'];
         }
-
-        $cronImportData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=?')->execute($importId)->fetchAssoc();
-        if ($cronImportData && $cronImport) {
-            $this->importBaseData($importId);
-        } else {
-            //ToDo: with importId only for manual diff import testing
-            $this->importBaseData($importId);
-        }
+        
+        $this->importBaseData($importId);
 
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
-    /**
-     * releaseBaseData
-     */
     public function releaseBaseData()
     {
         // Check current action
         $data = $_REQUEST;
         $con4gisDeleteId = $data['id'];
-        $localData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=?')->execute($con4gisDeleteId);
-        $con4gisReleaseUuid = $localData->importUuid;
-        $con4gisReleaseBundles = $localData->bundles;
-        $con4gisDeleteTables = $localData->importTables;
-        if ($con4gisDeleteTables == null or $con4gisDeleteTables == '') {
+        $localData = $this->Database->prepare(
+            'SELECT * FROM tl_c4g_import_data WHERE id = ?'
+        )->execute($con4gisDeleteId)->fetchAssoc();
+        $con4gisReleaseUuid = $localData['importUuid'];
+        $con4gisDeleteTables = explode(',', $localData['importTables']);
+        $con4gisDeleteTables = str_replace(' ', '', $con4gisDeleteTables);
+        if (empty($con4gisDeleteTables)) {
             $con4gisDeleteTables = ['tl_c4g_'];
-        } else {
-            $con4gisDeleteTables = explode(',', $con4gisDeleteTables);
-            $con4gisDeleteTables = str_replace(' ', '', $con4gisDeleteTables);
         }
 
-        if ($con4gisReleaseUuid != 0 && $con4gisReleaseUuid != '' && $con4gisReleaseUuid >= 6) {
+        if ($con4gisReleaseUuid >= 6) {
             //Release import data
             $tables = $this->Database->listTables();
 
             foreach ($tables as $table) {
                 foreach ($con4gisDeleteTables as $con4gisDeleteTable) {
-                    if (strpos($table, $con4gisDeleteTable) !== false) {
+                    if (C4GUtils::stringContains($table, $con4gisDeleteTable)) {
                         if ($this->Database->fieldExists('importId', $table)) {
-                            $this->Database->prepare("UPDATE $table SET importId=? WHERE importId=?")->execute('0', $con4gisReleaseUuid);
+                            $statement = $this->Database->prepare(
+                                "UPDATE $table SET importId=? WHERE importId = ?"
+                            );
+                            $statement->execute('0', $con4gisReleaseUuid);
                         }
                     }
                 }
             }
 
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute('', $con4gisDeleteId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute('0', $con4gisDeleteId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importfilePath=? WHERE id=?')->execute('', $con4gisDeleteId);
+            $statement = $this->Database->prepare(
+                'UPDATE tl_c4g_import_data SET importVersion = ?, importUuid = ?, importfilePath = ? WHERE id = ?'
+            );
+            $statement->execute('', '0', '', $con4gisDeleteId);
 
             $this->loadBaseData(false);
         } else {
             C4gLogModel::addLogEntry('core', 'Error releasing unavailable import: wrong id set!');
-            \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError']);
+            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError']);
         }
 
         C4gLogModel::addLogEntry('core', 'The import data was successfully released.');
@@ -583,18 +602,13 @@ class C4GImportDataCallback extends Backend
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
-    /**
-     * deleteBaseData
-     */
     public function deleteBaseData($importId = false, $download = false, $update = false)
     {
         if (!$download) {
             if ($this->importRunning()) {
                 C4gLogModel::addLogEntry('core', 'Import already running. Try again later ');
-                \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
+                Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
                 PageRedirect::redirect('/contao?do=c4g_io_data');
-
-                return false;
             }
         }
 
@@ -609,13 +623,14 @@ class C4GImportDataCallback extends Backend
             $this->importRunning(true, $con4gisDeleteId);
         }
 
-        $localData = $this->Database->prepare('SELECT * FROM tl_c4g_import_data WHERE id=?')->execute($con4gisDeleteId);
-        $con4gisDeleteUuid = $localData->importUuid;
-        $con4gisDeleteBundles = $localData->bundles;
-        $con4gisDeletePath = $localData->importFilePath;
+        $localData = $this->Database->prepare(
+            'SELECT * FROM tl_c4g_import_data WHERE id = ?'
+        )->execute($con4gisDeleteId)->fetchAssoc();
+        $con4gisDeleteUuid = $localData['importUuid'];
+        $con4gisDeletePath = $localData['importFilePath'];
         $con4gisDeleteDirectory = './../files' . $con4gisDeletePath . '/';
         $con4gisDeleteUuidLength = strlen($con4gisDeleteUuid);
-        $con4gisDeleteTables = $localData->importTables;
+        $con4gisDeleteTables = $localData['importTables'];
         if ($con4gisDeleteTables == null or $con4gisDeleteTables == '') {
             $con4gisDeleteTables = ['tl_c4g_'];
         } else {
@@ -642,10 +657,8 @@ class C4GImportDataCallback extends Backend
                 if ($importFolderCount > 1) {
                     C4gLogModel::addLogEntry('core', 'Older import folder in file system. Reimport everything manually.');
                     $this->importRunning(false, $con4gisDeleteId);
-                    \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport']);
+                    Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport']);
                     PageRedirect::redirect('/contao?do=c4g_io_data');
-
-                    return false;
                 }
             }
 
@@ -653,7 +666,7 @@ class C4GImportDataCallback extends Backend
                 if (is_dir($con4gisDeleteDirectory)) {
                     unlink($con4gisDeleteDirectory . '/.public');
                     if (strpos($con4gisDeleteDirectory, '/files/con4gis_import_data/')) {
-                        $objFolder = new \Contao\Folder('files' . $con4gisDeletePath);
+                        $objFolder = new Folder('files' . $con4gisDeletePath);
                         if (!$objFolder->isEmpty()) {
                             $objFolder->purge();
                         }
@@ -667,7 +680,7 @@ class C4GImportDataCallback extends Backend
                         foreach ($con4gisImportFolderScan as $con4gisImportFolder) {
                             if (substr($con4gisImportFolder, 0, -5) == $con4gisDeleteDatasetId) {
                                 if (is_dir('files/con4gis_import_data/' . $con4gisImportFolder)) {
-                                    $objFolder = new \Contao\Folder('files/con4gis_import_data/' . $con4gisImportFolder);
+                                    $objFolder = new Folder('files/con4gis_import_data/' . $con4gisImportFolder);
                                     $objFolder->unprotect();
                                     if (!$objFolder->isEmpty()) {
                                         $objFolder->purge();
@@ -679,15 +692,13 @@ class C4GImportDataCallback extends Backend
                         $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
                         if (count($con4gisImportFolderScan) == 1) {
                             if (in_array('.public', $con4gisImportFolderScan)) {
-                                $objFolder = new \Contao\Folder('files/con4gis_import_data');
+                                $objFolder = new Folder('files/con4gis_import_data');
                                 $objFolder->unprotect();
                                 $objFolder->delete();
                             }
                         }
                         $this->import('Contao\Automator', 'Automator');
                         $this->Automator->generateSymlinks();
-//                        //Sync filesystem
-//                        Dbafs::syncFiles();
                     } else {
                         $this->importRunning(false, $con4gisDeleteId);
                         C4gLogModel::addLogEntry('core', 'Could not delete import directory: Wrong path!');
@@ -698,40 +709,33 @@ class C4GImportDataCallback extends Backend
             $deletedOldImports = $this->deleteOlderImports($con4gisDeleteUuid, $con4gisDeleteTables);
             if (!$deletedOldImports) {
                 $this->importRunning(false, $con4gisDeleteId);
-                \Contao\Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                 PageRedirect::redirect('/contao?do=c4g_io_data');
-
-                return false;
             }
 
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importVersion=? WHERE id=?')->execute('', $con4gisDeleteId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importUuid=? WHERE id=?')->execute('0', $con4gisDeleteId);
-            $this->Database->prepare('UPDATE tl_c4g_import_data SET importfilePath=? WHERE id=?')->execute('', $con4gisDeleteId);
-
+            $statement = $this->Database->prepare(
+                'UPDATE tl_c4g_import_data SET importVersion = ?, importUuid = ?, importfilePath = ? WHERE id = ?'
+            );
+            $statement->execute('', '0', '', $con4gisDeleteId);
             $this->loadBaseData(false);
         } else {
             C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
             PageRedirect::redirect('/contao?do=c4g_io_data');
-
-            return false;
         }
 
         if (!$download) {
             $this->importRunning(false, $con4gisDeleteId);
         }
 
+        C4gLogModel::addLogEntry('core', 'The import data was successfully deleted.');
         if (!$update) {
-            C4gLogModel::addLogEntry('core', 'The import data was successfully deleted.');
             Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['deletedSuccessfull']);
             PageRedirect::redirect('/contao?do=c4g_io_data');
-        } else {
-            C4gLogModel::addLogEntry('core', 'The import data was successfully deleted.');
-
-            return true;
         }
+        return true;
     }
 
-    public function download($remoteFile, $localFile)
+    private function download($remoteFile, $localFile)
     {
         $fp = fopen($localFile, 'w');
         $ch = curl_init();
@@ -742,7 +746,7 @@ class C4GImportDataCallback extends Backend
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12');
         curl_setopt($ch, CURLOPT_FILE, $fp);
-        $con = curl_exec($ch);
+        curl_exec($ch);
         curl_close($ch);
         fclose($fp);
 
@@ -758,78 +762,51 @@ class C4GImportDataCallback extends Backend
                     if ($statIndex['name'] == 'io-data.yml') {
                         $contents = $archive->getFromName($statIndex['name']);
                     }
-                    if (strpos($statIndex['name'], '.json') !== false) {
+                    if (C4GUtils::stringContains($statIndex['name'], '.json')) {
                         $contentsJson = $archive->getFromName($statIndex['name']);
                     }
                 }
-                $archive->close();
             }
-
             if ($contents == '' || $contentsJson == '') {
                 try {
                     $errorContent = file_get_contents($localFile);
                     if ($errorContent == 'no_file') {
-                        C4gLogModel::addLogEntry('core', "Didn't found file on Proxy-Server. Please try again later or contact support@con4gis.io");
+                        C4gLogModel::addLogEntry(
+                            'core',
+                            'Did not find file on Proxy-Server. '.
+                            'Please try again later or contact support@con4gis.io'
+                        );
                     } else {
-                        C4gLogModel::addLogEntry('core', 'Downloaded import data file (' . $localFile . ') not complete.');
+                        C4gLogModel::addLogEntry(
+                            'core',
+                            'Downloaded import data file (' . $localFile . ') not complete.'
+                        );
                     }
                 } catch (\Throwable $e) {
-                    C4gLogModel::addLogEntry('core', 'Error with downloaded import data file (' . $localFile . '). Error: ' . $e);
-
-                    return false;
+                    C4gLogModel::addLogEntry(
+                        'core',
+                        'Error with downloaded import data file (' . $localFile . '). Error: ' . $e
+                    );
                 }
-
+                $archive && $zip  ? $archive->close() : false;
                 return false;
             }
+            $archive && $zip ? $archive->close() : false;
             C4gLogModel::addLogEntry('core', 'The import data was successfully downloaded.');
-
             return true;
         } catch (\Exception $e) {
             C4gLogModel::addLogEntry('core', 'Error reading downloaded file: ' . $e);
-
+            $archive && $zip  ? $archive->close() : false;
             return false;
         }
     }
 
-    public function strposa($haystack, $needles = [], $offset = 0)
-    {
-        $chr = [];
-        foreach ($needles as $needle) {
-            $res = strpos($haystack, $needle, $offset);
-            if ($res !== false) {
-                $chr[$needle] = $res;
-            }
-        }
-        if (empty($chr)) {
-            return false;
-        }
-
-        return min($chr);
-    }
-
-    /**
-     * saveData
-     */
-    public function saveData(DataContainer $dc)
-    {
-        $con4gisImport = $this->Input->post('con4gisImport');
-
-        $responses = $this->getCon4gisImportData('getBasedata.php', 'specificData', $con4gisImport);
-
-        foreach ($responses as $response) {
-            $objUpdate = $this->Database->prepare('UPDATE tl_c4g_import_data SET bundles=? WHERE id=?')->execute($response->bundles, $dc->id);
-        }
-    }
-
-    /**
-     * getCon4gisImportData
-     */
     public function getCon4gisImportData($importData, $mode, $data = false, $coreVersion = false, $contaoVersion = false)
     {
-        $objSettings = \con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel::findSettings();
+        $objSettings = C4gSettingsModel::findSettings();
         if ($objSettings->con4gisIoUrl && $objSettings->con4gisIoKey) {
-            $basedataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . $importData;
-            $basedataUrl .= '?key=' . $objSettings->con4gisIoKey;
+            $baseDataUrl = rtrim($objSettings->con4gisIoUrl, '/') . '/' . $importData;
+            $baseDataUrl .= '?key=' . $objSettings->con4gisIoKey;
             $arrData = [];
             $arrData['mode'] = $mode;
             if (isset($data)) {
@@ -848,36 +825,34 @@ class C4GImportDataCallback extends Backend
             $dispatcher->dispatch($event, $event::NAME);
             $additionalProxyData = $event->getProxyData();
 
-            if ($additionalProxyData && is_array($additionalProxyData)) {
+            if ($additionalProxyData) {
                 foreach ($additionalProxyData as $proxyData) {
                     $arrData[$proxyData['proxyKey']] = str_replace(' ', '%20', $proxyData['proxyData']);
                 }
             }
 
-            $REQUEST = new \Contao\Request();
+            $request = new Request();
             if ($_SERVER['HTTP_REFERER']) {
-                $REQUEST->setHeader('Referer', $_SERVER['HTTP_REFERER']);
+                $request->setHeader('Referer', $_SERVER['HTTP_REFERER']);
             }
             if ($_SERVER['HTTP_USER_AGENT']) {
-                $REQUEST->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
+                $request->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
             }
-            $REQUEST->send($basedataUrl, \Safe\json_encode($arrData));
-            $response = $REQUEST->response;
+            $request->send($baseDataUrl, \json_encode($arrData));
+            $response = $request->response;
             if ($response) {
-                if (substr($response, 0, 2) == '[{' && substr($response, -2, 2) == '}]') {
-                    $responses = \GuzzleHttp\json_decode($response);
-
-                    return $responses;
+                if (C4GUtils::startsWith($response, '[{') && C4GUtils::endsWith($response, '}]')) {
+                    return \json_decode($response);
                 }
 
                 return false;
             }
 
-            return $responses = [];
+            return [];
         }
     }
 
-    public function getLocalIoData($importId = false)
+    private function getLocalIoData($importId = false): array
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $arrBasedataFolders = [
@@ -894,7 +869,7 @@ class C4GImportDataCallback extends Backend
             if (file_exists($value) && is_dir($value)) {
                 $basedataFiles[$arrBasedataFolder] = array_slice(scandir($value), 2);
                 foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
-                    if (!$importId && str_ends_with($file, '-diff.c4g')) {
+                    if (!$importId && C4GUtils::endsWith($file, '-diff.c4g')) {
                         unset($basedataFiles[$arrBasedataFolder][$basedataFile]);
 
                         continue;
@@ -908,8 +883,8 @@ class C4GImportDataCallback extends Backend
         if ($importId) {
             foreach ($arrBasedataFolders as $arrBasedataFolder => $value) {
                 if (file_exists($value) && is_dir($value)) {
-                    foreach ($basedataFiles[$arrBasedataFolder] as $basedataFile => $file) {
-                        if (str_ends_with($file, '-diff.c4g')) {
+                    foreach ($basedataFiles[$arrBasedataFolder] as $file) {
+                        if (C4GUtils::endsWith($file, '-diff.c4g')) {
                             $importName = strstr($file, '-diff.c4g', true);
                             $fullimport = array_search($importName . '.c4g', $basedataFiles[$arrBasedataFolder]);
                             if ($fullimport) {
@@ -929,9 +904,6 @@ class C4GImportDataCallback extends Backend
                 $contentsJson = '';
 
                 try {
-
-
-
                     $archive = new ZipArchive();
                     $zip = $archive->open($importFile, ZipArchive::RDONLY);
                     if ($zip) {
@@ -943,20 +915,20 @@ class C4GImportDataCallback extends Backend
                                 $newYamlConfigArray[$count] = $yaml->parse($contents);
                                 $count++;
                             }
-                            if (strpos($statIndex['name'], '.json') !== false) {
+                            if (C4GUtils::stringContains($statIndex['name'], '.json')) {
                                 $contentsJson = $archive->getFromName($statIndex['name']);
                             }
                         }
-                        $archive->close();
                     }
+                    $archive->close();
                     if ($contents == '' || $contentsJson == '') {
                         C4gLogModel::addLogEntry('core', 'Import data file (' . $importFile . ') not complete.');
                         $newYamlConfigArray[$count] = false;
                     }
                 } catch (\Throwable $e) {
                     C4gLogModel::addLogEntry('core', 'Import data file not complete: ' . $e);
-
-                    return false;
+                    $archive->close();
+                    return [];
                 }
             }
         }
@@ -964,7 +936,7 @@ class C4GImportDataCallback extends Backend
         return $newYamlConfigArray;
     }
 
-    public function recursiveRemoveDirectory($directory)
+    private function recursiveRemoveDirectory($directory)
     {
         foreach (glob("{$directory}/*") as $file) {
             if (is_dir($file)) {
@@ -976,24 +948,10 @@ class C4GImportDataCallback extends Backend
         rmdir($directory);
     }
 
-    /**
-     * con4gisIO
-     * @param $href
-     * @param $label
-     * @param $title
-     * @param $class
-     * @param $attributes
-     * @return string
-     */
-    public function con4gisIO($href, $label, $title, $class, $attributes)
-    {
-        return '<a href="https://con4gis.io/blaupausen"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' target="_blank" rel="noopener">' . $label . '</a><br>';
-    }
-
-    public function deleteOldDiffImages($file)
+    private function deleteOldDiffImages($file)
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
-        $jsonFile = (array) json_decode($file);
+        $jsonFile = (array) \json_decode($file);
         if (isset($jsonFile['deleted']->tl_files)) {
             foreach ($jsonFile['deleted']->tl_files as $deleteTlFileDataset) {
                 $deleteTlFileDataset = (array) $deleteTlFileDataset;
@@ -1010,48 +968,44 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function recursiveDeleteDiffFolder($deleteFolder)
+    private function recursiveDeleteDiffFolder($deleteFolder)
     {
-        if (str_ends_with($deleteFolder, '/files')) {
-            return false;
+        if (C4GUtils::endsWith($deleteFolder, '/files')) {
+            return;
         }
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         $folder = new Folder($deleteFolder);
         if ($folder->isEmpty()) {
             $this->recursiveRemoveDirectory($rootDir . '/' . $deleteFolder);
         } else {
-            return false;
+            return;
         }
         $deleteCurrentFolder = strrchr($deleteFolder, '/');
         $deletePreFolder = str_replace($deleteCurrentFolder, '', $deleteFolder);
         $this->recursiveDeleteDiffFolder($deletePreFolder);
 
-        return true;
     }
 
-    public function getSqlFromJson($file, $uuid, $importDataType, $imagePath)
+    private function getSqlFromJson($file, $uuid, $importDataType, $imagePath): array
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if (!$file) {
-            return false;
+            return [];
         }
         if ($importDataType == 'diff') {
             $idConfigFile = file_get_contents($rootDir . '/files' . $imagePath . '/id-config.json');
             if ($idConfigFile) {
-                $allIdChangesJson = json_decode($idConfigFile);
-                $allIdChangesJson = json_decode(json_encode($allIdChangesJson), true);
+                $allIdChangesJson = \json_decode($idConfigFile);
+                $allIdChangesJson = \json_decode(json_encode($allIdChangesJson), true);
             } else {
                 $allIdChangesJson = false;
             }
-            $queryType = 'UPDATE';
         } else {
             $allIdChangesJson = false;
-            $queryType = 'INSERT';
         }
 
-        $filesMessageCount = 0;
         $importId = $uuid;
-        $jsonFile = (array) json_decode($file);
+        $jsonFile = (array) \json_decode($file);
         $sqlStatements = [];
         $relations = array_slice($jsonFile, -1, 1);
         $relationTables = [];
@@ -1098,41 +1052,43 @@ class C4GImportDataCallback extends Backend
         $allIdChanges = $allChanges['allIdChanges'];
         $allIdChangesNonRelations = $allChanges['allIdChangesNonRelations'];
 
-        $allIdChangesJson = json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $allIdChangesJson = \json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
         foreach ($jsonFile as $importDB => $importDatasets) {
-
             //sql statements for deleting removed data
             if ($importDB == 'deleted') {
                 foreach ($importDatasets as $tableKey => $tableDataset) {
+                    $validTables = $this->Database->listTables();
+                    if (!in_array($tableKey, $validTables)) {
+                        continue;
+                    }
                     foreach ($tableDataset as $dataset) {
                         $dataset = (array) $dataset;
-                        if (isset($dataset['uuid']) && !empty($dataset['uuid'])) {
-                            if ($tableKey == 'tl_files') {
-                                $path = stripslashes($dataset['path']);
-                                $sqlStatements[] = 'DELETE FROM ' . $tableKey . " WHERE path='" . $path . "'";
-                            } else {
-                                $sqlStatements[] = 'DELETE FROM ' . $tableKey . " WHERE importId != '' && importId != 0 && uuid='" . $dataset['uuid'] . "'";
-                            }
-                        } elseif (isset($dataset['id']) && !empty($dataset['id'])) {
-                            if ($tableKey == 'tl_files') {
-                                $path = stripslashes($dataset['path']);
-                                $sqlStatements[] = 'DELETE FROM ' . $tableKey . " WHERE path='" . $path . "'";
-                            } else {
-                                $sqlStatements[] = 'DELETE FROM ' . $tableKey . " WHERE importId != '' && importId != 0 && id=" . $allIdChanges[$tableKey]['id'][$dataset['id']];
-                                unset($allIdChanges[$tableKey]['id'][$dataset['id']]);
-                            }
+                        $query = "DELETE FROM $tableKey";
+                        if ($tableKey == 'tl_files' && !empty($dataset['uuid']) && !empty($dataset['id'])) {
+                            $path = stripslashes($dataset['path']);
+                            $query .= " WHERE path=$path";
+                        } elseif (!empty($dataset['uuid'])) {
+                            $query .= " WHERE importId != '' AND importId != 0 AND uuid = '" .
+                                $dataset['uuid'] . "'";
+                        } elseif (!empty($dataset['id'])) {
+                            $query .= " WHERE importId != '' AND importId != 0 AND id = " .
+                                $allIdChanges[$tableKey]['id'][$dataset['id']];
+                            unset($allIdChanges[$tableKey]['id'][$dataset['id']]);
+                        } else {
+                            continue;
                         }
+                        $sqlStatements[] = $query;
                     }
                 }
-                $allIdChangesJson = json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                $allIdChangesJson = \json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
                 continue;
             }
 
-            if ($importDB == 'relations' or $importDB == 'hexValues') {
+            if ($importDB == 'relations' || $importDB == 'hexValues') {
                 break;
             }
 
@@ -1165,7 +1121,6 @@ class C4GImportDataCallback extends Backend
                     $queryType = 'INSERT';
                 }
 
-                $skipFilesEntry = false;
                 $sqlStatement = '';
                 $importDataset = (array) $importDataset;
                 if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && $importDataset['uuid'] == '') {
@@ -1199,7 +1154,7 @@ class C4GImportDataCallback extends Backend
                 if (!array_key_exists('importId', $importDataset)) {
                     $importDataset['importId'] = $importId;
                 }
-                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) ? $importDB : false;
+                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) && $importDB;
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && ($importDbField == 'id' || $importDbField == 'pid')) {
                         continue;
@@ -1218,28 +1173,29 @@ class C4GImportDataCallback extends Backend
                         } else {
                             $importDbValue = $allIdChangesNonRelations[$importDB][$importDbField][$importDbValue];
                         }
+                        if ($importDbValue == '') {
+                            $importDbValue = 0;
+                        }
                     } elseif ($importDbField == 'importId') {
                         $importDbValue = $importId;
                     } elseif (in_array($importDB, $relationTables)) {
                         if (in_array($importDbField, $dbRelation[$importDB])) {
                             if ($importDbValue != '0') {
-                                if (substr($importDbValue, 0, 2) == '0x' && $importDB != 'tl_files') {
+                                if (C4GUtils::startsWith($importDbValue, '0x') && $importDB != 'tl_files') {
                                     $unserial = hex2bin(substr($importDbValue, 2));
 
                                     if (strpos($unserial, '{')) {
-                                        $unserial = \Contao\StringUtil::deserialize($unserial);
+                                        $unserial = StringUtil::deserialize($unserial);
                                         $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                         $newImportDbValue = serialize($unserial);
-                                        $newImportDbValue = bin2hex($newImportDbValue);
-                                        $newImportDbValue = $this->prepend('0x', $newImportDbValue);
+                                        $newImportDbValue = '0x'.bin2hex($newImportDbValue);
                                         $importDbValue = $newImportDbValue;
                                     } else {
                                         $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
-                                        $newImportDbValue = bin2hex($newImportDbValue);
-                                        $newImportDbValue = $this->prepend('0x', $newImportDbValue);
+                                        $newImportDbValue = '0x'.bin2hex($newImportDbValue);
                                         $importDbValue = $newImportDbValue;
                                     }
-                                } elseif (substr($importDbValue, 0, 2) == 'a:') {
+                                } elseif (C4GUtils::startsWith($importDbValue, 'a:')) {
                                     $importDbValue = str_replace('\"', '"', $importDbValue);
                                     $unserial = StringUtil::deserialize($importDbValue);
                                     $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
@@ -1247,11 +1203,10 @@ class C4GImportDataCallback extends Backend
                                     $importDbValue = $newImportDbValue;
                                 } elseif (strpos($importDbValue, '{')) {
                                     $unserial = hex2bin(substr($importDbValue, 2));
-                                    $unserial = \Contao\StringUtil::deserialize($unserial);
+                                    $unserial = StringUtil::deserialize($unserial);
                                     $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                     $newImportDbValue = serialize($unserial);
-                                    $newImportDbValue = bin2hex($newImportDbValue);
-                                    $newImportDbValue = $this->prepend('0x', $newImportDbValue);
+                                    $newImportDbValue = '0x'.bin2hex($newImportDbValue);
                                     $importDbValue = $newImportDbValue;
                                 } elseif (is_numeric($importDbValue)) {
                                     $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations);
@@ -1273,17 +1228,17 @@ class C4GImportDataCallback extends Backend
                             $sqlStatement = $sqlStatement . '';
                         } else {
                             if ($queryType == 'INSERT') {
-                                if ($sqlStatement == '' && substr($importDbValue, 0, 2) == '0x') {
+                                if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (' . $importDbValue . ');;';
                                 } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash') {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
                                 } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash') {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
-                                } elseif ($sqlStatement == '' && substr($importDbValue, 0, 2) != '0x') {
+                                } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES ('" . $importDbValue . "');;";
                                 } elseif ($sqlStatement == '' && $importDbValue === null) {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (NULL);;';
-                                } elseif (substr($importDbValue, 0, 2) == '0x') {
+                                } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                     $sqlStatement = str_replace(');;', ", $importDbValue);;", $sqlStatement);
                                 } elseif ($isHexValue && $importDbField != 'hash') {
@@ -1300,17 +1255,17 @@ class C4GImportDataCallback extends Backend
                                     $sqlStatement = str_replace(');;', ", '$importDbValue');;", $sqlStatement);
                                 }
                             } elseif ($queryType == 'UPDATE') {
-                                if ($sqlStatement == '' && substr($importDbValue, 0, 2) == '0x') {
+                                if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = ' . $importDbValue . ';;';
                                 } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash') {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
                                 } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash') {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
-                                } elseif ($sqlStatement == '' && substr($importDbValue, 0, 2) != '0x') {
+                                } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = '" . $importDbValue . "';;";
                                 } elseif ($sqlStatement == '' && $importDbValue === null) {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = NULL;;';
-                                } elseif (substr($importDbValue, 0, 2) == '0x') {
+                                } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = str_replace(';;', ", `$importDbField` = $importDbValue;;", $sqlStatement);
                                 } elseif ($isHexValue && $importDbField != 'hash') {
                                     $sqlStatement = str_replace(';;', ", `$importDbField` = UNHEX('$importDbValue');;", $sqlStatement);
@@ -1325,25 +1280,29 @@ class C4GImportDataCallback extends Backend
                         }
                     }
                 }
-                if ($importDB == 'tl_files' && $skipFilesEntry) {
-                    if ($filesMessageCount == 0) {
-                        C4gLogModel::addLogEntry('core', 'Files already imported. tl_files will not be imported');
-                    }
+                if (
+                    $queryType == 'UPDATE' &&
+                    isset($updateWhereQuery) &&
+                    isset($updateWhereQueryValue) &&
+                    $updateWhereQuery != '' &&
+                    $updateWhereQueryValue != ''
+                ) {
+                    $sqlStatement = str_replace(
+                        ';;',
+                        $updateWhereQuery . "'" . $updateWhereQueryValue . "';",
+                        $sqlStatement
+                    );
                 } else {
-                    if ($queryType == 'UPDATE' && isset($updateWhereQuery) && isset($updateWhereQueryValue) && $updateWhereQuery != '' && $updateWhereQueryValue != '') {
-                        $sqlStatement = str_replace(';;', $updateWhereQuery . "'" . $updateWhereQueryValue . "';", $sqlStatement);
-                    } else {
-                        $sqlStatement = str_replace(');;', ');', $sqlStatement);
-                    }
-                    $sqlStatements[] = $sqlStatement;
+                    $sqlStatement = str_replace(');;', ');', $sqlStatement);
                 }
+                $sqlStatements[] = $sqlStatement;
             }
         }
 
         return $sqlStatements;
     }
 
-    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson)
+    private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson): array
     {
         if ($allIdChangesJson) {
             $allIdChanges = $allIdChangesJson;
@@ -1359,17 +1318,22 @@ class C4GImportDataCallback extends Backend
             $firstPrimaryChange = true;
             foreach ($importDatasets as $importDataset) {
                 $importDataset = (array) $importDataset;
-                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) ? $importDB : false;
+                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) && $importDB;
                 foreach ($importDataset as $importDbField => $importDbValue) {
                     if ($importDbField == 'id') {
-                        if ($primaryImportRelationTable) {
-                            if (in_array($importDbField, $dbRelationPrimary[$importDB]) && is_numeric($importDbValue)) {
+                        if (is_numeric($importDbValue)) {
+                            if (
+                                !$primaryImportRelationTable ||
+                                in_array($importDbField, $dbRelationPrimary[$importDB])
+                            ) {
                                 if ($firstPrimaryChange) {
-                                    $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
-                                    if ($highestId && $highestId != 0 && $highestId != '' && $highestId != null) {
-                                        $highestId = (Int) $highestId[$importDbField];
+                                    $highestId = $this->Database->prepare(
+                                        "SELECT * FROM $importDB ORDER BY id DESC LIMIT 1"
+                                    )->execute()->fetchAssoc();
+                                    if ($highestId) {
+                                        $highestId = (int) $highestId[$importDbField];
                                         $nextId = $highestId + 1;
-                                    } elseif (!$highestId) {
+                                    } else {
                                         $nextId = 1;
                                     }
                                     $firstPrimaryChange = false;
@@ -1379,23 +1343,6 @@ class C4GImportDataCallback extends Backend
                                 if (!isset($allIdChanges[$importDB][$importDbField][$importDbValue])) {
                                     $allIdChanges[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
                                 }
-                                unset($nextId);
-                            }
-                        } else {
-                            if (is_numeric($importDbValue)) {
-                                if ($firstPrimaryChange) {
-                                    $highestId = $this->Database->prepare("SELECT * FROM $importDB ORDER BY id DESC LIMIT 1")->execute()->fetchAssoc();
-                                    if ($highestId && $highestId != 0 && $highestId != '' && $highestId != null) {
-                                        $highestId = (Int) $highestId[$importDbField];
-                                        $nextId = $highestId + 1;
-                                    } elseif (!$highestId) {
-                                        $nextId = 1;
-                                    }
-                                    $firstPrimaryChange = false;
-                                } else {
-                                    $nextId = end($allIdChangesNonRelations[$importDB][$importDbField]) + 1;
-                                }
-                                $allIdChangesNonRelations[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
                                 unset($nextId);
                             }
                         }
@@ -1409,10 +1356,11 @@ class C4GImportDataCallback extends Backend
         return ['allIdChanges' => $allIdChanges, 'allIdChangesNonRelations' => $allIdChangesNonRelations];
     }
 
+    // Do not add return type to ensure BC for PHP < 8
     private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations)
     {
         if (is_object($relations['relations'])) {
-            $relations = (Array) $relations['relations'];
+            $relations = (array) $relations['relations'];
         }
         $primaryRelation = $relations[$importDB . '.' . $importDbField];
         $primaryRelation = explode('.', $primaryRelation);
@@ -1423,72 +1371,71 @@ class C4GImportDataCallback extends Backend
                 $newValue = 0;
             }
 
-            return (String) $newValue;
+            return (string) $newValue;
         }
         foreach ($importDbValue as $key => $value) {
             if (is_array($value)) {
                 $newValue[$key] = $this->changeDbValue($importDB, $importDbField, $value, $allIdChanges, $relations);
             } elseif (is_numeric($value) && $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value]) {
-                $newValue[$key] = (String) $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value];
+                $newValue[$key] = (string) $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value];
             } else {
-                $newValue[$key] = (String) $importDbValue[$key];
+                $newValue[$key] = (string) $value;
             }
         }
 
         return $newValue ?? $importDbValue;
     }
 
-    public function isUuid($uuid)
+    private function isUuid($uuid): bool
     {
-        if (ctype_xdigit($uuid) && strlen($uuid) == 32) {
-            return true;
-        }
-
-        return false;
+        return ctype_xdigit($uuid) && strlen($uuid) == 32;
     }
 
-    public function prepend($string, $chunk)
-    {
-        if (!empty($chunk) && isset($chunk)) {
-            return $string . $chunk;
-        }
-
-        return $string;
-    }
-
-    public function checkImportResponse($response)
+    private function checkImportResponse($response): bool
     {
         $response = (array) $response;
-        $keys = ['cloud_import', 'uuid', 'id', 'caption', 'description', 'version', 'bundles', 'bundlesVersion', 'source', 'type'];
-        foreach ($keys as $key) {
-            if (array_key_exists($key, $response)) {
-                $checkBool = true;
-            } else {
-                $checkBool = false;
+        $requiredKeys = [
+            'cloud_import',
+            'uuid',
+            'id',
+            'caption',
+            'description',
+            'version',
+            'bundles',
+            'bundlesVersion',
+            'source',
+            'type'
+        ];
 
-                break;
+        foreach ($requiredKeys as $key) {
+            if (!array_key_exists($key, $response)) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Could not read import file or import file is not complete.'
+                );
+                return false;
             }
         }
-        if ($checkBool) {
-            return true;
-        }
-        C4gLogModel::addLogEntry('core', 'Could not read import file or import file is not complete.');
 
-        return false;
+        return true;
     }
 
-    public function importRunning($running = false, $id = 0)
+    private function importRunning($running = false, $id = 0)
     {
         if ($id == 0) {
-            $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")
-                ->execute()->fetchAllAssoc();
+            $importRunning = $this->Database->prepare(
+                "SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'"
+            )->execute()->fetchAllAssoc();
             if ($importRunning) {
                 foreach ($importRunning as $import) {
-                    $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning='' WHERE tstamp<=? AND importRunning='1' AND id=?")
-                        ->execute(time(), time() - 600, $import['id']);
+                    $this->Database->prepare(
+                        "UPDATE tl_c4g_import_data SET tstamp = ?, importRunning = '' ".
+                        "WHERE tstamp <= ? AND importRunning = '1' AND id = ?"
+                    )->execute(time(), time() - 600, $import['id']);
                 }
-                $importRunning = $this->Database->prepare("SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'")
-                    ->execute()->fetchAllAssoc();
+                $importRunning = $this->Database->prepare(
+                    "SELECT id FROM tl_c4g_import_data WHERE importRunning = '1'"
+                )->execute()->fetchAllAssoc();
                 if ($importRunning) {
                     return true;
                 }
@@ -1497,16 +1444,20 @@ class C4GImportDataCallback extends Backend
             }
 
             return false;
-        } elseif ($id != 0) {
+        } else {
             if ($running) {
-                $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning = '1' WHERE id=?")->execute(time(), $id);
+                $this->Database->prepare(
+                    "UPDATE tl_c4g_import_data SET tstamp = ?, importRunning = '1' WHERE id= ?"
+                )->execute(time(), $id);
             } else {
-                $this->Database->prepare("UPDATE tl_c4g_import_data SET tstamp=?, importRunning = '' WHERE id=?")->execute(time(), $id);
+                $this->Database->prepare(
+                    "UPDATE tl_c4g_import_data SET tstamp = ?, importRunning = '' WHERE id = ?"
+                )->execute(time(), $id);
             }
         }
     }
 
-    public function cpy($source, $dest)
+    private function copy($source, $dest)
     {
         if (is_dir($source)) {
             $dir_handle = opendir($source);
@@ -1516,7 +1467,7 @@ class C4GImportDataCallback extends Backend
                         if (!is_dir($dest . '/' . $file)) {
                             mkdir($dest . '/' . $file);
                         }
-                        $this->cpy($source . '/' . $file, $dest . '/' . $file);
+                        $this->copy($source . '/' . $file, $dest . '/' . $file);
                     } else {
                         copy($source . '/' . $file, $dest . '/' . $file);
                     }
@@ -1528,7 +1479,7 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function chmod_r($path, $modeDirectory = false, $modeFile = false)
+    private function recursivelyChangeFilePermissions($path, $modeDirectory = false, $modeFile = false)
     {
         $dir = new DirectoryIterator($path);
         if ($modeDirectory || $modeFile) {
@@ -1536,7 +1487,7 @@ class C4GImportDataCallback extends Backend
                 if ($item->isDir() && $modeDirectory) {
                     chmod($item->getPathname(), $modeDirectory);
                     if ($item->isDir() && !$item->isDot()) {
-                        $this->chmod_r($item->getPathname(), $modeDirectory, $modeFile);
+                        $this->recursivelyChangeFilePermissions($item->getPathname(), $modeDirectory, $modeFile);
                     }
                 } elseif (!$item->isDir() && $modeFile) {
                     chmod($item->getPathname(), $modeFile);
@@ -1545,13 +1496,12 @@ class C4GImportDataCallback extends Backend
         }
     }
 
-    public function deleteOlderImports($uuid, $con4gisDeleteTables)
+    private function deleteOlderImports($uuid, $con4gisDeleteTables): bool
     {
         if (strlen($uuid) > 5) {
             $importDatasetId = substr($uuid, 0, -5);
             $likeOperator = $importDatasetId . '_____';
         } else {
-            $importDatasetId = $uuid;
             $likeOperator = $uuid;
         }
 
@@ -1561,10 +1511,9 @@ class C4GImportDataCallback extends Backend
 
         //Delete import data
         $tables = $this->Database->listTables();
-
         foreach ($tables as $table) {
             foreach ($con4gisDeleteTables as $con4gisDeleteTable) {
-                if (strpos($table, $con4gisDeleteTable) !== false) {
+                if (C4GUtils::stringContains($table, $con4gisDeleteTable)) {
                     if ($this->Database->fieldExists('importId', $table)) {
                         try {
                             $this->Database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
