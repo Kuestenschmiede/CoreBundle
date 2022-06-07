@@ -181,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'caption' => array
         (
-            'sql'                     => "varchar(255) NOT NULL",
+            'sql'                     => "varchar(255) NOT NULL default ''",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['caption'],
             'inputType'               => 'text',
             'default'                 => '',
@@ -192,7 +192,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'type' => array
         (
-            'sql'                     => "varchar(255) NOT NULL",
+            'sql'                     => "varchar(255) NOT NULL default ''",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['type'],
             'inputType'               => 'select',
             'options'                 => array(
@@ -205,7 +205,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'source' => array
         (
-            'sql'                     => "varchar(255) NOT NULL",
+            'sql'                     => "varchar(255) NOT NULL default ''",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['source'],
             'inputType'               => 'select',
             'options'                 => array(
@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'bundles' => array
         (
-            'sql'                     => "varchar(255) NOT NULL",
+            'sql'                     => "varchar(255) NOT NULL default ''",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['bundles'],
             'inputType'               => 'text',
             'default'                 => '',
@@ -227,7 +227,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'bundlesVersion' => array
         (
-            'sql'                     => "text NOT NULL",
+            'sql'                     => "text NOT NULL default ''",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['bundlesVersion'],
             'inputType'               => 'text',
             'default'                 => '',
@@ -254,7 +254,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         ),
         'description' => array
         (
-            'sql'                     => "text NOT NULL",
+            'sql'                     => "text NULL",
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['description'],
             'inputType'               => 'text',
             'default'                 => '',
