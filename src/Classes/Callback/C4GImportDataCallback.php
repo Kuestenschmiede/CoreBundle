@@ -87,10 +87,11 @@ class C4GImportDataCallback extends Backend
                     if ($cron) {
                         $statement = $this->Database->prepare(
                             'INSERT INTO tl_c4g_import_data '.
-                            'SET id = ?, bundles = ?, bundlesVersion = ?, availableVersion = ?, '.
+                            'SET tstamp = ?, id = ?, bundles = ?, bundlesVersion = ?, availableVersion = ?, '.
                             'type = ?, source = ?, importTables = ?'
                         );
                         $statement->execute(
+                            time(),
                             $response->id,
                             $response->bundles,
                             $response->bundlesVersion,
@@ -105,10 +106,11 @@ class C4GImportDataCallback extends Backend
                     } else {
                         $statement = $this->Database->prepare(
                             'INSERT INTO tl_c4g_import_data '.
-                            'SET id = ?, caption = ?, description = ?, bundles = ?, bundlesVersion = ?, '.
+                            'SET tstamp = ?, id = ?, caption = ?, description = ?, bundles = ?, bundlesVersion = ?, '.
                             'availableVersion = ?, type = ?, source = ?, importTables = ?'
                         );
                         $statement->execute(
+                            time(),
                             $response->id,
                             $response->caption,
                             $response->description,
@@ -124,7 +126,7 @@ class C4GImportDataCallback extends Backend
                 }
             }
         }
-        //Update data from con4gis.io
+
         foreach ($localData as $data) {
             $available = false;
             foreach ($responses as $response) {
@@ -138,11 +140,12 @@ class C4GImportDataCallback extends Backend
                     if ($this->checkImportResponse($response)) {
                         if ($cron) {
                             $statement = $this->Database->prepare(
-                                'UPDATE tl_c4g_import_data SET bundles = ?, bundlesVersion = ?, '.
+                                'UPDATE tl_c4g_import_data SET tstamp = ?, bundles = ?, bundlesVersion = ?, '.
                                 'availableVersion = ?, type = ?, source = ?, importTables = ? '.
                                 'WHERE id = ?'
                             );
                             $statement->execute(
+                                time(),
                                 $response->bundles,
                                 $response->bundlesVersion,
                                 $response->version,
@@ -151,16 +154,17 @@ class C4GImportDataCallback extends Backend
                                 $response->tables,
                                 $data['id']
                             );
-                            if (strpos($response->tables, $response->type)) {
+                            if (C4GUtils::stringContains($response->tables, $response->type)) {
                                 $cronIds[] = $response->id;
                             }
                         } else {
                             $statement = $this->Database->prepare(
-                                'UPDATE tl_c4g_import_data SET caption = ?, description = ?, bundles = ?, '.
+                                'UPDATE tl_c4g_import_data SET tstamp = ?, caption = ?, description = ?, bundles = ?, '.
                                 'bundlesVersion = ?, availableVersion = ?, type = ?, source = ?, importTables = ? '.
                                 'WHERE id = ?'
                             );
                             $statement->execute(
+                                time(),
                                 $response->caption,
                                 $response->description,
                                 $response->bundles,
@@ -181,9 +185,9 @@ class C4GImportDataCallback extends Backend
                         }
                     } else {
                         $statement = $this->Database->prepare(
-                            'UPDATE tl_c4g_import_data SET availableVersion = ? WHERE id = ?'
+                            'UPDATE tl_c4g_import_data SET tstamp = ?, availableVersion = ? WHERE id = ?'
                         );
-                        $statement->execute('', $data['id']);
+                        $statement->execute(time(), '', $data['id']);
                     }
                     $available = true;
                 }
@@ -192,9 +196,9 @@ class C4GImportDataCallback extends Backend
             if (!$available) {
                 if ($data['importVersion'] != '') {
                     $statement = $this->Database->prepare(
-                        'UPDATE tl_c4g_import_data SET availableVersion = ? WHERE id = ?'
+                        'UPDATE tl_c4g_import_data SET tstamp = ?, availableVersion = ? WHERE id = ?'
                     );
-                    $statement->execute('', $data['id']);
+                    $statement->execute(time(), '', $data['id']);
                 } else {
                     if ($data['id'] != 0 or $data['id'] != '') {
                         $statement = $this->Database->prepare(
@@ -228,11 +232,12 @@ class C4GImportDataCallback extends Backend
                 if ($count == $arrayLength) {
                     if ($this->checkImportResponse($response)) {
                         $statement = $this->Database->prepare(
-                            'INSERT INTO tl_c4g_import_data SET id = ?, caption = ?, '.
+                            'INSERT INTO tl_c4g_import_data SET tstamp = ?, id = ?, caption = ?, '.
                             'description = ?, bundles = ?, bundlesVersion = ?, '.
                             'availableVersion = ?, type = ?, source = ?, importTables = ?'
                         );
                         $statement->execute(
+                            time(),
                             $response->id,
                             $response->caption,
                             $response->description,
@@ -482,9 +487,10 @@ class C4GImportDataCallback extends Backend
             }
         }
         $statement = $this->Database->prepare(
-            'UPDATE tl_c4g_import_data SET importVersion = ?, importUuid = ?, importFilePath = ? WHERE id = ?'
+            'UPDATE tl_c4g_import_data SET tstamp=?, importVersion = ?, importUuid = ?, importFilePath = ? WHERE id = ?'
         );
         $statement->execute(
+            time(),
             $importData['import']['version'],
             $importData['import']['uuid'],
             $importData['images']['path'],
@@ -529,6 +535,7 @@ class C4GImportDataCallback extends Backend
             $cronImportData = $this->Database->prepare(
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             )->execute($importId)->fetchAssoc();
+
             if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
                 if (!$cronImportData['importVersion']) {
                     C4gLogModel::addLogEntry(
@@ -587,9 +594,9 @@ class C4GImportDataCallback extends Backend
             }
 
             $statement = $this->Database->prepare(
-                'UPDATE tl_c4g_import_data SET importVersion = ?, importUuid = ?, importfilePath = ? WHERE id = ?'
+                'UPDATE tl_c4g_import_data SET tstamp = ?, importVersion = ?, importUuid = ?, importfilePath = ? WHERE id = ?'
             );
-            $statement->execute('', '0', '', $con4gisDeleteId);
+            $statement->execute(time(), '', '0', '', $con4gisDeleteId);
 
             $this->loadBaseData(false);
         } else {
@@ -714,9 +721,9 @@ class C4GImportDataCallback extends Backend
             }
 
             $statement = $this->Database->prepare(
-                'UPDATE tl_c4g_import_data SET importVersion = ?, importUuid = ?, importfilePath = ? WHERE id = ?'
+                'UPDATE tl_c4g_import_data SET tstamp = ?, importVersion = ?, importUuid = ?, importfilePath = ? WHERE id = ?'
             );
-            $statement->execute('', '0', '', $con4gisDeleteId);
+            $statement->execute(time(), '', '0', '', $con4gisDeleteId);
             $this->loadBaseData(false);
         } else {
             C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
