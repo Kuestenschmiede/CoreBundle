@@ -266,6 +266,7 @@ class C4GImportDataCallback extends Backend
             PageRedirect::redirect('/contao?do=c4g_io_data');
             return false;
         }
+        $availableLocal = false;
         if ($importId) {
             $con4gisImportId = $importId;
             $statement = $this->Database->prepare(
@@ -275,26 +276,18 @@ class C4GImportDataCallback extends Backend
             if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
                 return false;
             }
+
+            $this->importRunning(true, $con4gisImportId);
         } else {
             $data = $_REQUEST;
             $con4gisImportId = $data['id'];
-        }
-
-        $this->importRunning(true, $con4gisImportId);
-
-        if ($importId) {
-            $localImportData = $this->getLocalIoData(true);
-        } else {
             $localImportData = $this->getLocalIoData();
-        }
-
-        $availableLocal = false;
-        foreach ($localImportData as $localImportDatum) {
-            if ($localImportDatum['import']['id'] == $con4gisImportId) {
-                $availableLocal = true;
-                $importData = $localImportDatum;
-
-                break;
+            foreach ($localImportData as $localImportDatum) {
+                if ($localImportDatum['import']['id'] == $con4gisImportId) {
+                    $availableLocal = true;
+                    $importData = $localImportDatum;
+                    break;
+                }
             }
         }
 
@@ -336,11 +329,17 @@ class C4GImportDataCallback extends Backend
             }
 
             $zip = new ZipArchive;
+
             if ($zip->open($c4gPath) === true) {
                 $zip->extractTo($cache);
 
                 mkdir($imagePath, 0770, true);
-                $this->copy($cache . '/images', $imagePath);
+                if (!$this->copy($cache . '/images', $imagePath)) {
+                    C4gLogModel::addLogEntry(
+                        'core',
+                        'Error when copying the import data.'
+                    );
+                }
                 $objFolder = new Folder('files/con4gis_import_data');
                 $objFolder->unprotect();
                 $objFolder = new Folder('files' . $importData['images']['path']);
@@ -375,13 +374,17 @@ class C4GImportDataCallback extends Backend
             $downloadPath = './../files/con4gis_import_data/io-data/';
             $filename = 'io-data-proxy.c4g';
             $downloadFile = $downloadPath . $filename;
-            if (file_exists($downloadPath) && is_dir($downloadPath)) {
+            if (!file_exists($downloadPath) && is_dir($downloadPath)) {
                 $this->recursiveRemoveDirectory($downloadPath);
             }
 
             mkdir($downloadPath, 0770, true);
             $downloadSuccess = $this->download($baseDataUrl, $downloadFile);
             if (!$downloadSuccess) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Cant update. Import file cannot be downloaded. Abort import.'
+                );
                 $this->importRunning(false, $con4gisImportId);
                 PageRedirect::redirect('/contao?do=c4g_io_data');
                 return false;
@@ -390,6 +393,7 @@ class C4GImportDataCallback extends Backend
             // Getting data from download's json config file
             $archive = new ZipArchive();
             $zip = $archive->open($downloadPath . $filename, ZipArchive::RDONLY);
+            $extracted = false;
             if ($zip) {
                 for ($i = 0; $i < $archive->numFiles; $i++) {
                     $statIndex = $archive->statIndex($i);
@@ -439,6 +443,8 @@ class C4GImportDataCallback extends Backend
             $importType = $importData['import']['type'];
 
             $imagePath = './../files' . $importData['images']['path'];
+
+
             $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
 
             $zip = new ZipArchive;
@@ -453,6 +459,20 @@ class C4GImportDataCallback extends Backend
                 $objFolder->unprotect();
             }
             $zip->close();
+            $this->recursivelyChangeFilePermissions($imagePath, 0775);
+
+
+            if (!$this->copy($cache . '/images', $imagePath)) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Error when copying the import data.'
+                );
+            }
+
+            $objFolder = new Folder('files/con4gis_import_data');
+            $objFolder->unprotect();
+            $objFolder = new Folder('files' . $importData['images']['path']);
+            $objFolder->unprotect();
             $this->recursivelyChangeFilePermissions($imagePath, 0775);
         }
 
@@ -480,7 +500,11 @@ class C4GImportDataCallback extends Backend
 
         foreach ($sqlStatements as $sqlStatement) {
             if ($sqlStatement == '') {
-                break;
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Find empty sql statement'
+                );
+                continue; //ToDo check
             }
 
             try {
@@ -544,25 +568,10 @@ class C4GImportDataCallback extends Backend
             )->execute($importId)->fetchAssoc();
 
             if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
-                if (!$cronImportData['importVersion']) {
-                    C4gLogModel::addLogEntry(
-                        'core',
-                        'New import is currently unavailable. Import will not be updated.'
-                    );
-                } elseif ($cronImportData['availableVersion'] != $cronImportData['importVersion']) {
-                    C4gLogModel::addLogEntry(
-                        'core',
-                        'Imported version is higher than available version. Import will not be updated.'
-                    );
-                }
-
                 return false;
             }
-        } else {
-            $data = $_REQUEST;
-            $importId = $data['id'];
         }
-        
+
         $this->importBaseData($importId);
 
         PageRedirect::redirect('/contao?do=c4g_io_data');
@@ -1478,6 +1487,7 @@ class C4GImportDataCallback extends Backend
 
     private function copy($source, $dest)
     {
+        $result = false;
         if (is_dir($source)) {
             $dir_handle = opendir($source);
             while ($file = readdir($dir_handle)) {
@@ -1486,16 +1496,18 @@ class C4GImportDataCallback extends Backend
                         if (!is_dir($dest . '/' . $file)) {
                             mkdir($dest . '/' . $file);
                         }
-                        $this->copy($source . '/' . $file, $dest . '/' . $file);
+                        $result = $this->copy($source . '/' . $file, $dest . '/' . $file);
                     } else {
-                        copy($source . '/' . $file, $dest . '/' . $file);
+                        $result = copy($source . '/' . $file, $dest . '/' . $file);
                     }
                 }
             }
             closedir($dir_handle);
         } else {
-            copy($source, $dest);
+            $result = copy($source, $dest);
         }
+
+        return $result;
     }
 
     private function recursivelyChangeFilePermissions($path, $modeDirectory = false, $modeFile = false)
