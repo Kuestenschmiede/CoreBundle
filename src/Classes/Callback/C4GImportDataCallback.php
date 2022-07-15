@@ -374,7 +374,7 @@ class C4GImportDataCallback extends Backend
             $downloadPath = './../files/con4gis_import_data/io-data/';
             $filename = 'io-data-proxy.c4g';
             $downloadFile = $downloadPath . $filename;
-            if (!file_exists($downloadPath) && is_dir($downloadPath)) {
+            if (!file_exists($downloadFile) && is_dir($downloadPath)) {
                 $this->recursiveRemoveDirectory($downloadPath);
             }
 
