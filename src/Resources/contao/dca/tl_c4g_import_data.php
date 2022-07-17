@@ -345,7 +345,7 @@ class tl_c4g_import_data extends Contao\Backend
             foreach ($bundles as $key => $value) {
 //            $pos = strpos($value, 'Bundle');
 //            $bundleName = strtolower(substr($value,0,$pos));
-                $version = $installedPackages['con4gis/'.$value];
+                $version = key_exists('con4gis/'.$value, $installedPackages) ? $installedPackages['con4gis/'.$value] : false;
                 if (!$version) {
                     if (!empty($compatibleImportType)) {
                         if (in_array($importType, $compatibleImportType)) {
