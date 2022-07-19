@@ -35,6 +35,10 @@ class C4GImportDataCallback extends Backend
         parent::__construct();
     }
 
+    /**
+     * @param $cron
+     * @return array|void
+     */
     public function loadBaseData($cron)
     {
         $cronIds = [];
@@ -259,6 +263,11 @@ class C4GImportDataCallback extends Backend
         }
     }
 
+    /**
+     * @param $importId
+     * @return false|void
+     * @throws Exception
+     */
     public function importBaseData($importId = false)
     {
         if ($this->importRunning()) {
@@ -273,7 +282,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             );
             $cronImportData = $statement->execute($con4gisImportId)->fetchAssoc();
-            if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+            if (!$cronImportData['availableVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
                 return false;
             }
 
@@ -291,10 +300,12 @@ class C4GImportDataCallback extends Backend
             }
         }
 
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
         if ($availableLocal) {
-            $imagePath = './../files' . $importData['images']['path'];
-            $c4gPath = './../vendor/con4gis/' . $importData['general']['bundle'] . '/src/Resources/con4gis/' . $importData['general']['filename'];
-            $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
+            $imagePath = $rootDir.'/files' . $importData['images']['path'];
+            $c4gPath = $rootDir.'/vendor/con4gis/' . $importData['general']['bundle'] . '/src/Resources/con4gis/' . $importData['general']['filename'];
+            $cache = $rootDir.'/files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
             $importType = $importData['import']['type'];
             $importDataType = $importData['import']['datatype'] ?? 'full';
 
@@ -359,7 +370,7 @@ class C4GImportDataCallback extends Backend
                 if ($currentImport) {
                     $importVersion = $currentImport['importVersion'];
                     $availableVersion = $currentImport['availableVersion'];
-                    if (($importVersion + 1) != $availableVersion || $importVersion == '') {
+                    if ((($importVersion + 1) != $availableVersion) || $importVersion == '') {
                         $baseDataUrl .= '&datatype=full';
                     } else {
                         $baseDataUrl .= '&datatype=diff';
@@ -371,14 +382,30 @@ class C4GImportDataCallback extends Backend
                 $baseDataUrl .= '&datatype=full';
             }
 
-            $downloadPath = './../files/con4gis_import_data/io-data/';
+            $downloadPath = $rootDir.'/files/con4gis_import_data/io-data/';
             $filename = 'io-data-proxy.c4g';
             $downloadFile = $downloadPath . $filename;
-            if (!file_exists($downloadFile) && is_dir($downloadPath)) {
+
+            //remove old files
+            if (file_exists($downloadFile) || is_dir($downloadPath)) {
                 $this->recursiveRemoveDirectory($downloadPath);
             }
 
-            mkdir($downloadPath, 0770, true);
+            if (!mkdir($downloadPath, 0770, true)) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Cant create path: '.$downloadPath.'. Abort import.'
+                );
+                $this->importRunning(false, $con4gisImportId);
+                PageRedirect::redirect('/contao?do=c4g_io_data');
+                return false;
+            } else {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Can create path: '.$downloadPath
+                );
+            }
+
             $downloadSuccess = $this->download($baseDataUrl, $downloadFile);
             if (!$downloadSuccess) {
                 C4gLogModel::addLogEntry(
@@ -442,10 +469,10 @@ class C4GImportDataCallback extends Backend
 
             $importType = $importData['import']['type'];
 
-            $imagePath = './../files' . $importData['images']['path'];
+            $imagePath = $rootDir.'/files' . $importData['images']['path'];
 
 
-            $cache = './../files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
+            $cache = $rootDir.'/files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
 
             $zip = new ZipArchive;
             if ($zip->open($downloadPath . $filename) === true) {
@@ -554,6 +581,11 @@ class C4GImportDataCallback extends Backend
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
+    /**
+     * @param $importId
+     * @return false|void
+     * @throws Exception
+     */
     public function updateBaseData($importId = false)
     {
         if ($this->importRunning()) {
@@ -567,7 +599,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             )->execute($importId)->fetchAssoc();
 
-            if ($cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+            if (!$cronImportData['availableVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
                 return false;
             }
         }
@@ -577,6 +609,9 @@ class C4GImportDataCallback extends Backend
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
+    /**
+     * @return void
+     */
     public function releaseBaseData()
     {
         // Check current action
@@ -625,6 +660,13 @@ class C4GImportDataCallback extends Backend
         PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
+    /**
+     * @param $importId
+     * @param $download
+     * @param $update
+     * @return bool
+     * @throws Exception
+     */
     public function deleteBaseData($importId = false, $download = false, $update = false)
     {
         if (!$download) {
@@ -635,6 +677,8 @@ class C4GImportDataCallback extends Backend
                 return false;
             }
         }
+
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
         if ($importId) {
             $con4gisDeleteId = $importId;
@@ -652,7 +696,7 @@ class C4GImportDataCallback extends Backend
         )->execute($con4gisDeleteId)->fetchAssoc();
         $con4gisDeleteUuid = $localData['importUuid'];
         $con4gisDeletePath = $localData['importFilePath'];
-        $con4gisDeleteDirectory = './../files' . $con4gisDeletePath . '/';
+        $con4gisDeleteDirectory = $rootDir.'/files' . $con4gisDeletePath . '/';
         $con4gisDeleteUuidLength = strlen($con4gisDeleteUuid);
         $con4gisDeleteTables = $localData['importTables'];
         if ($con4gisDeleteTables == null or $con4gisDeleteTables == '') {
@@ -664,7 +708,7 @@ class C4GImportDataCallback extends Backend
 
         if ($con4gisDeleteUuid != 0 && $con4gisDeleteUuid != '' && $con4gisDeleteUuidLength >= 6) {
             if ($importId) {
-                $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
+                $con4gisImportFolderScan = array_diff(scandir($rootDir.'/files/con4gis_import_data'), ['.', '..']);
                 if (strlen($con4gisDeleteUuid) > 5) {
                     $con4gisDeleteDatasetId = substr($con4gisDeleteUuid, 0, -5);
                 } else {
@@ -696,7 +740,9 @@ class C4GImportDataCallback extends Backend
                             $objFolder->purge();
                         }
                         $objFolder->delete();
-                        $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
+
+
+                        $con4gisImportFolderScan = array_diff(scandir($rootDir.'/files/con4gis_import_data'), ['.', '..']);
                         if (strlen($con4gisDeleteUuid) > 5) {
                             $con4gisDeleteDatasetId = substr($con4gisDeleteUuid, 0, -5);
                         } else {
@@ -714,14 +760,17 @@ class C4GImportDataCallback extends Backend
                                 }
                             }
                         }
-                        $con4gisImportFolderScan = array_diff(scandir('./../files/con4gis_import_data'), ['.', '..']);
-                        if (count($con4gisImportFolderScan) == 1) {
-                            if (in_array('.public', $con4gisImportFolderScan)) {
-                                $objFolder = new Folder('files/con4gis_import_data');
-                                $objFolder->unprotect();
-                                $objFolder->delete();
-                            }
-                        }
+
+//ToDo Why do we always have to delete this directory as well?
+//                        $con4gisImportFolderScan = array_diff(scandir($rootDir.'/files/con4gis_import_data'), ['.', '..']);
+//                        if (count($con4gisImportFolderScan) == 1) {
+//                            if (in_array('.public', $con4gisImportFolderScan)) {
+//                                $objFolder = new Folder('files/con4gis_import_data');
+//                                $objFolder->unprotect();
+//                                $objFolder->delete();
+//                            }
+//                        }
+
                         $this->import('Contao\Automator', 'Automator');
                         $this->Automator->generateSymlinks();
                     } else {
@@ -763,6 +812,11 @@ class C4GImportDataCallback extends Backend
         return true;
     }
 
+    /**
+     * @param $remoteFile
+     * @param $localFile
+     * @return bool
+     */
     private function download($remoteFile, $localFile)
     {
         $fp = fopen($localFile, 'w');
@@ -829,6 +883,14 @@ class C4GImportDataCallback extends Backend
         }
     }
 
+    /**
+     * @param $importData
+     * @param $mode
+     * @param $data
+     * @param $coreVersion
+     * @param $contaoVersion
+     * @return array|false|mixed|void
+     */
     public function getCon4gisImportData($importData, $mode, $data = false, $coreVersion = false, $contaoVersion = false)
     {
         $objSettings = C4gSettingsModel::findSettings();
@@ -880,6 +942,10 @@ class C4GImportDataCallback extends Backend
         }
     }
 
+    /**
+     * @param $importId
+     * @return array
+     */
     private function getLocalIoData($importId = false): array
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -964,6 +1030,10 @@ class C4GImportDataCallback extends Backend
         return $newYamlConfigArray;
     }
 
+    /**
+     * @param $directory
+     * @return void
+     */
     private function recursiveRemoveDirectory($directory)
     {
         foreach (glob("{$directory}/*") as $file) {
@@ -976,6 +1046,10 @@ class C4GImportDataCallback extends Backend
         rmdir($directory);
     }
 
+    /**
+     * @param $file
+     * @return void
+     */
     private function deleteOldDiffImages($file)
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -996,6 +1070,11 @@ class C4GImportDataCallback extends Backend
         }
     }
 
+    /**
+     * @param $deleteFolder
+     * @return void
+     * @throws Exception
+     */
     private function recursiveDeleteDiffFolder($deleteFolder)
     {
         if (C4GUtils::endsWith($deleteFolder, '/files')) {
@@ -1014,6 +1093,13 @@ class C4GImportDataCallback extends Backend
 
     }
 
+    /**
+     * @param $file
+     * @param $uuid
+     * @param $importDataType
+     * @param $imagePath
+     * @return array
+     */
     private function getSqlFromJson($file, $uuid, $importDataType, $imagePath): array
     {
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -1330,6 +1416,13 @@ class C4GImportDataCallback extends Backend
         return $sqlStatements;
     }
 
+    /**
+     * @param $jsonFile
+     * @param $relationTablesPrimary
+     * @param $dbRelationPrimary
+     * @param $allIdChangesJson
+     * @return array
+     */
     private function getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson): array
     {
         if ($allIdChangesJson) {
@@ -1385,6 +1478,14 @@ class C4GImportDataCallback extends Backend
     }
 
     // Do not add return type to ensure BC for PHP < 8
+    /**
+     * @param $importDB
+     * @param $importDbField
+     * @param $importDbValue
+     * @param $allIdChanges
+     * @param $relations
+     * @return array|string
+     */
     private function changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations)
     {
         if (is_object($relations['relations'])) {
@@ -1414,11 +1515,19 @@ class C4GImportDataCallback extends Backend
         return $newValue ?? $importDbValue;
     }
 
+    /**
+     * @param $uuid
+     * @return bool
+     */
     private function isUuid($uuid): bool
     {
         return ctype_xdigit($uuid) && strlen($uuid) == 32;
     }
 
+    /**
+     * @param $response
+     * @return bool
+     */
     private function checkImportResponse($response): bool
     {
         $response = (array) $response;
@@ -1448,6 +1557,11 @@ class C4GImportDataCallback extends Backend
         return true;
     }
 
+    /**
+     * @param $running
+     * @param $id
+     * @return bool|void
+     */
     private function importRunning($running = false, $id = 0)
     {
         if ($id == 0) {
@@ -1485,6 +1599,11 @@ class C4GImportDataCallback extends Backend
         }
     }
 
+    /**
+     * @param $source
+     * @param $dest
+     * @return bool
+     */
     private function copy($source, $dest)
     {
         $result = false;
@@ -1510,6 +1629,12 @@ class C4GImportDataCallback extends Backend
         return $result;
     }
 
+    /**
+     * @param $path
+     * @param $modeDirectory
+     * @param $modeFile
+     * @return void
+     */
     private function recursivelyChangeFilePermissions($path, $modeDirectory = false, $modeFile = false)
     {
         $dir = new DirectoryIterator($path);
@@ -1527,6 +1652,11 @@ class C4GImportDataCallback extends Backend
         }
     }
 
+    /**
+     * @param $uuid
+     * @param $con4gisDeleteTables
+     * @return bool
+     */
     private function deleteOlderImports($uuid, $con4gisDeleteTables): bool
     {
         if (strlen($uuid) > 5) {
