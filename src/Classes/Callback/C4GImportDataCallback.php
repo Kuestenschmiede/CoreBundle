@@ -399,11 +399,6 @@ class C4GImportDataCallback extends Backend
                 $this->importRunning(false, $con4gisImportId);
                 PageRedirect::redirect('/contao?do=c4g_io_data');
                 return false;
-            } else {
-                C4gLogModel::addLogEntry(
-                    'core',
-                    'Can create path: '.$downloadPath
-                );
             }
 
             $downloadSuccess = $this->download($baseDataUrl, $downloadFile);
