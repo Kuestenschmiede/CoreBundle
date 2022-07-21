@@ -1247,7 +1247,7 @@ class C4GImportDataCallback extends Backend
                         $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . ' WHERE path=?')
                             ->execute($importDataset['path'])->fetchAssoc();
                     } else {
-                        $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . " WHERE importId != '' && importId != 0 && uuid=?")
+                        $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . " WHERE importId != '' AND importId != 0 AND uuid=?")
                             ->execute($importDataset['uuid'])->fetchAssoc();
                     }
                     if (!$availableQuery) {
