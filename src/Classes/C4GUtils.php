@@ -742,12 +742,18 @@ class C4GUtils
                 }
             }
 
+            $text = html_entity_decode(htmlspecialchars($text));
+            $text = str_replace('&amp;', '&', $text);
+
             return substr($text, 0, $firstFullstop + 1);
         }
 
         if (strlen($text) > $length) {
             $text = preg_replace("/^(.{1,$length})(\s.*|$)/s", '\\1...', $text);
         }
+
+        $text = html_entity_decode(htmlspecialchars($text));
+        $text = str_replace('&amp;', '&', $text);
 
         return($text);
     }
