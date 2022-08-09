@@ -162,23 +162,25 @@ export class AutocompleteHandler {
                     let event = jQuery.Event("keydown", {keyCode: 8});
                     $(cssClass).trigger(event);
                 }
-                for(let i in data) {
-                    if(data.hasOwnProperty(i)) {
-                        if (cssClass.indexOf('from') != -1) {
-                            // do not add twice
-                            if (!scope.containerAddresses.arrFromNames.includes(data[i].display_name)) {
-                                scope.containerAddresses.arrFromNames.push(data[i].display_name);
-                                scope.containerAddresses.arrFromPositions.push([data[i].lat, data[i].lon]);
+                else {
+                    for(let i in data) {
+                        if(data.hasOwnProperty(i)) {
+                            if (cssClass.indexOf('from') != -1) {
+                                // do not add twice
+                                if (!scope.containerAddresses.arrFromNames.includes(data[i].display_name)) {
+                                    scope.containerAddresses.arrFromNames.push(data[i].display_name);
+                                    scope.containerAddresses.arrFromPositions.push([data[i].lat, data[i].lon]);
+                                }
                             }
-                        }
-                        else if (cssClass.indexOf('to') != -1){
-                            if (!scope.containerAddresses.arrToNames.includes(data[i].display_name)) {
-                                scope.containerAddresses.arrToNames.push(data[i].display_name);
-                                scope.containerAddresses.arrToPositions.push([data[i].lat, data[i].lon]);
+                            else if (cssClass.indexOf('to') != -1){
+                                if (!scope.containerAddresses.arrToNames.includes(data[i].display_name)) {
+                                    scope.containerAddresses.arrToNames.push(data[i].display_name);
+                                    scope.containerAddresses.arrToPositions.push([data[i].lat, data[i].lon]);
+                                }
                             }
-                        }
-                        else {
-                            console.log("This is weird");
+                            else {
+                                console.log("This is weird");
+                            }
                         }
                     }
                 }
