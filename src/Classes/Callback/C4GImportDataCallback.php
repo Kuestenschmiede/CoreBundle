@@ -1339,9 +1339,9 @@ class C4GImportDataCallback extends Backend
                             if ($queryType == 'INSERT') {
                                 if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (' . $importDbValue . ');;';
-                                } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash') {
+                                } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
-                                } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash') {
+                                } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
                                 } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES ('" . $importDbValue . "');;";
@@ -1350,10 +1350,10 @@ class C4GImportDataCallback extends Backend
                                 } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                     $sqlStatement = str_replace(');;', ", $importDbValue);;", $sqlStatement);
-                                } elseif ($isHexValue && $importDbField != 'hash') {
+                                } elseif ($isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
                                     $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                     $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
-                                } elseif ($this->isUuid($importDbValue) && $importDbField != 'hash') {
+                                } elseif ($this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
                                     $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
                                     $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
                                 } elseif ($importDbValue === null) {
@@ -1366,9 +1366,9 @@ class C4GImportDataCallback extends Backend
                             } elseif ($queryType == 'UPDATE') {
                                 if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = ' . $importDbValue . ';;';
-                                } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash') {
+                                } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
-                                } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash') {
+                                } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
                                 } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = '" . $importDbValue . "';;";
@@ -1376,9 +1376,9 @@ class C4GImportDataCallback extends Backend
                                     $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = NULL;;';
                                 } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
                                     $sqlStatement = str_replace(';;', ", `$importDbField` = $importDbValue;;", $sqlStatement);
-                                } elseif ($isHexValue && $importDbField != 'hash') {
+                                } elseif ($isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
                                     $sqlStatement = str_replace(';;', ", `$importDbField` = UNHEX('$importDbValue');;", $sqlStatement);
-                                } elseif ($this->isUuid($importDbValue) && $importDbField != 'hash') {
+                                } elseif ($this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
                                     $sqlStatement = str_replace(';;', ", `$importDbField` = UNHEX('$importDbValue');;", $sqlStatement);
                                 } elseif ($importDbValue === null) {
                                     $sqlStatement = str_replace(';;', ", `$importDbField` = NULL;;", $sqlStatement);
