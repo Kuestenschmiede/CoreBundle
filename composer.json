@@ -49,6 +49,9 @@
         "preferred-install": "dist"
     },
     "extra": {
-        "contao-manager-plugin": "con4gis\\CoreBundle\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "con4gis\\CoreBundle\\ContaoManager\\Plugin",
+        "branch-alias": {
+            "dev-main": "6.0.x-dev"
+        }
     }
 }
