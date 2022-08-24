@@ -10,3 +10,7 @@ services:
     con4gis\CoreBundle\Controller\UploadController:
         public: true
         class: con4gis\CoreBundle\Controller\UploadController
+
+    con4gis\CoreBundle\Classes\Service\InjectableStaticService:
+        public: true
+        class: con4gis\CoreBundle\Classes\Service\InjectableStaticService
