@@ -482,10 +482,10 @@ class C4GUtils
             $ids = rtrim($ids, ',');
             $keySearchUrl .= '?key=' . $settings->con4gisIoKey . '&services=' . $services . '&ids=' . $ids;
             $headers = [];
-            if ($_SERVER['HTTP_REFERER']) {
+            if (isset($_SERVER['HTTP_REFERER'])) {
                 $headers['Referer'] = $_SERVER['HTTP_REFERER'];
             }
-            if ($_SERVER['HTTP_USER_AGENT']) {
+            if (isset($_SERVER['HTTP_USER_AGENT'])) {
                 $headers['User-Agent'] = $_SERVER['HTTP_USER_AGENT'];
             }
             $client = HttpClient::create([
