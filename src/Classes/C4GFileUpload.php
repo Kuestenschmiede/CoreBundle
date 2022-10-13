@@ -80,6 +80,7 @@ class C4GFileUpload
                 $sUploadDir = trim($sUploadDir, '/') . '/';
                 // test
                 $sUploadDir = str_replace('web/', '', $sUploadDir);
+                $sUploadDir = str_replace('public/', '', $sUploadDir);
                 $sFileName = basename($_FILES['uploadFile']['name']);
                 $sUniqFileName = md5(uniqid('', true)) . '.' . $aInfo['extension'];
                 // get protocol and host name to send the absolute image path to CKEditor
