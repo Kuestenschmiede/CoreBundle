@@ -734,17 +734,22 @@ class C4GUtils
         $text = strip_tags($text);
         $text = htmlspecialchars($text, ENT_QUOTES, 'utf-8');
         $length = abs((int) $length);
-        $firstFullstop = strpos($text, '.');
-        if ($firstFullstop && $firstFullstop <= ($length - 1)) {
+        $dot = strpos($text, '.');
+        $firstFullstop = 0;
+        if ($dot && $dot <= ($length - 1)) {
             for ($i = 0, $j = strlen($text); $i < $j; $i++) {
                 if ((strstr('.', $text[$i])) && ($i <= ($length - 1))) {
-                    $firstFullstop = $i;
+                    if ($i > ($length*0.7)) {
+                        $firstFullstop = $i;
+                    }
                 }
             }
 
             $text = html_entity_decode(htmlspecialchars($text));
             $text = str_replace('&amp;', '&', $text);
+        }
 
+        if ($firstFullstop) {
             return substr($text, 0, $firstFullstop + 1);
         }
 
