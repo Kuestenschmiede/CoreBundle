@@ -339,7 +339,7 @@ class C4GImportDataCallback extends Backend
                 return false;
             }
 
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
 
             if ($zip->open($c4gPath) === true) {
                 $zip->extractTo($cache);
@@ -469,7 +469,7 @@ class C4GImportDataCallback extends Backend
 
             $cache = $rootDir.'/files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
 
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
             if ($zip->open($downloadPath . $filename) === true) {
                 $zip->extractTo($cache);
 
@@ -1016,7 +1016,7 @@ class C4GImportDataCallback extends Backend
                     }
                 } catch (\Throwable $e) {
                     C4gLogModel::addLogEntry('core', 'Import data file not complete: ' . $e);
-                    $archive->close();
+                    $archive ? $archive->close() : false;
                     return [];
                 }
             }
