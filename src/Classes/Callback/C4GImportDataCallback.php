@@ -282,7 +282,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             );
             $cronImportData = $statement->execute($con4gisImportId)->fetchAssoc();
-            if (!$cronImportData['availableVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+            if (!$cronImportData['availableVersion'] || !$cronImportData['importVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
                 return false;
             }
 
@@ -428,12 +428,23 @@ class C4GImportDataCallback extends Backend
             }
             $archive->close();
 
+            //Check import data
+            if (!$importData['import']['version'] || !$importData['import']['uuid'] || !$importData['images']['path'] || !$con4gisImportId) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Cant update. Import file is empty. Abort import.'
+                );
+                $this->importRunning(false, $con4gisImportId);
+                PageRedirect::redirect('/contao?do=c4g_io_data');
+                return false;
+            }
+
             $importDataType = $importData['import']['datatype'] ?? 'full';
 
             $alreadyImported = $this->Database->prepare(
                 'SELECT importVersion FROM tl_c4g_import_data WHERE id = ?'
             )->execute($con4gisImportId)->fetchAssoc();
-            if ($alreadyImported['importVersion'] != '') {
+            if ($alreadyImported && $alreadyImported['importVersion']) {
                 if ($importId && $importDataType == 'full') {
                     $deleted = $this->deleteBaseData($importId, true, true);
                     if (!$deleted) {
@@ -594,7 +605,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             )->execute($importId)->fetchAssoc();
 
-            if (!$cronImportData['availableVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+            if (!$cronImportData['availableVersion'] || !$cronImportData['importVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
                 return false;
             }
         }
