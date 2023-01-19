@@ -282,7 +282,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             );
             $cronImportData = $statement->execute($con4gisImportId)->fetchAssoc();
-            if (!$cronImportData['availableVersion'] || !$cronImportData['importVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+            if (!$cronImportData['availableVersion'] || ($cronImportData['importVersion'] && ($cronImportData['importVersion'] >= $cronImportData['availableVersion']))) {
                 return false;
             }
 
@@ -605,7 +605,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             )->execute($importId)->fetchAssoc();
 
-            if (!$cronImportData['availableVersion'] || !$cronImportData['importVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+            if (!$cronImportData['availableVersion'] || ($cronImportData['importVersion'] && ($cronImportData['importVersion'] >= $cronImportData['availableVersion']))) {
                 return false;
             }
         }
