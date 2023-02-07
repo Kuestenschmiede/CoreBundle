@@ -512,6 +512,7 @@ class tl_c4g_bricks extends Contao\Backend
 	    $userid = $this->User->id;
 	    $showBundle = '1';
         $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE pid=$userid AND showBundle=$showBundle")->fetchAllAssoc();
+        $renewData = false;
         if ($bricks && $bricks[0]) {
             $tstamp = intval($bricks[0]['tstamp']);
             $before_two_days = time() - (2 * 24 * 60 * 60);
