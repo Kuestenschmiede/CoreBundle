@@ -137,7 +137,7 @@ class C4GImportDataCallback extends Backend
                 if (isset($response->datatype) && $response->datatype == 'diff') {
                     continue;
                 }
-                if (!$response->tables) {
+                if (!property_exists($response, 'tables') || !$response->tables) {
                     $response->tables = '';
                 }
                 if ($response->id == $data['id']) {
