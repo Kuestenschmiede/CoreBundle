@@ -21,6 +21,6 @@ class DeleteOperation extends DCAOperation
         $this->label($dca->getName(), 'delete');
         $this->href('act=delete');
         $this->icon('delete.svg');
-        $this->attributes('onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null  . '\')) return false; Backend.getScrollOffset();"');
+        $this->attributes('onclick="if (!confirm(\'' . (isset($GLOBALS['TL_LANG']['MSC']['deleteConfirm']) ? $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] : null) . '\')) return false; Backend.getScrollOffset();"');
     }
 }
