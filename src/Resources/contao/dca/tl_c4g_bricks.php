@@ -346,11 +346,11 @@ class tl_c4g_bricks extends Contao\Backend
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'],
                 'icon' => $iconPath.'documents_c4g.svg'
             ],
-            'editor' => [
-                'repo' => 'EditorBundle',
-                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'],
-                'icon' => $iconPath.'editor_c4g.svg'
-            ],
+//            'editor' => [
+//                'repo' => 'EditorBundle',
+//                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'],
+//                'icon' => $iconPath.'editor_c4g.svg'
+//            ],
             'export' => [
                 'repo' => 'ExportBundle',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['export'],
@@ -480,12 +480,12 @@ class tl_c4g_bricks extends Contao\Backend
             $ivArr = explode('.',$iv);
             $lvArr = explode('.',$lv);
 
-            $imajor = $ivArr[0] && is_int($ivArr[0]) ? intval($ivArr[0]) : false;
-            $lmajor = $lvArr[0] && is_int($lvArr[0]) ? intval($lvArr[0]) : false;
-            $iminor = $ivArr[1] && is_int($ivArr[1]) ? intval($ivArr[1]) : false;
-            $lminor = $lvArr[1] && is_int($lvArr[1]) ? intval($lvArr[1]) : false;
-            $ibugfix = $ivArr[2] && is_int($ivArr[2]) ? intval($ivArr[2]) : false;
-            $lbugfix = $lvArr[2] && is_int($lvArr[2]) ? intval($lvArr[2]) : false;
+            $imajor = key_exists(0, $ivArr) && $ivArr[0] && is_int($ivArr[0]) ? intval($ivArr[0]) : false;
+            $lmajor = key_exists(0, $lvArr) && $lvArr[0] && is_int($lvArr[0]) ? intval($lvArr[0]) : false;
+            $iminor = key_exists(1, $ivArr) && $ivArr[1] && is_int($ivArr[1]) ? intval($ivArr[1]) : false;
+            $lminor = key_exists(1, $lvArr) && $lvArr[1] && is_int($lvArr[1]) ? intval($lvArr[1]) : false;
+            $ibugfix = key_exists(2, $ivArr) && $ivArr[2] && is_int($ivArr[2]) ? intval($ivArr[2]) : false;
+            $lbugfix = key_exists(2, $lvArr) && $lvArr[2] && is_int($lvArr[2]) ? intval($lvArr[2]) : false;
 
             if (($lmajor && $imajor) && ($lmajor > $imajor)) {
                 return true;
@@ -512,6 +512,7 @@ class tl_c4g_bricks extends Contao\Backend
 	    $userid = $this->User->id;
 	    $showBundle = '1';
         $bricks = Database::getInstance()->execute("SELECT * FROM tl_c4g_bricks WHERE pid=$userid AND showBundle=$showBundle")->fetchAllAssoc();
+        $renewData = false;
         if ($bricks && $bricks[0]) {
             $tstamp = intval($bricks[0]['tstamp']);
             $before_two_days = time() - (2 * 24 * 60 * 60);
@@ -540,7 +541,7 @@ class tl_c4g_bricks extends Contao\Backend
 
             //get official packages
             foreach ($bundles as $bundle => $values) {
-                if ($installedPackages['con4gis/'.$bundle]) {
+                if (key_exists('con4gis/'.$bundle, $installedPackages) && $installedPackages['con4gis/'.$bundle]) {
                     $installedVersion = $installedPackages['con4gis/'.$bundle];
                     $latestVersion = $this->versions['con4gis/'.$bundle];
 
@@ -569,17 +570,17 @@ class tl_c4g_bricks extends Contao\Backend
                 $set['withSettings'] = intval($this->checkSettings($bundle));
                 $set['icon'] = $values['icon'];
                 $set['showBundle'] = $installedVersion != '' ? "1" : "0";
-                $set['favorite'] = $favorites[$bundle] ? $favorites[$bundle] : '0';
+                $set['favorite'] = key_exists($bundle, $favorites) && $favorites[$bundle] ? $favorites[$bundle] : '0';
 
                 $this->Database->prepare("INSERT INTO tl_c4g_bricks %s")->set($set)->execute();
             }
 
             //get develop packages
             foreach ($installedPackages as $vendorBundle=>$version) {
-                if ((substr($vendorBundle,0,7) == 'con4gis') && (!$this->versions[$vendorBundle])) {
+                if ((substr($vendorBundle,0,7) == 'con4gis') && (!key_exists($vendorBundle, $this->versions) || !$this->versions[$vendorBundle])) {
                     $bundle = substr($vendorBundle,8);
 
-                    if ($bundles[$bundle]) {
+                    if (key_exists($bundle, $bundles) && $bundles[$bundle]) {
                         continue;
                     }
 
@@ -595,7 +596,7 @@ class tl_c4g_bricks extends Contao\Backend
                     $set['latestVersion']    = '-';
                     $set['withSettings'] = intval($this->checkSettings($bundle));
                     $set['showBundle'] = "1";
-                    $set['favorite'] = $favorites[$bundle] ? $favorites[$bundle] : '0';
+                    $set['favorite'] = key_exists($bundle, $favorites) && $favorites[$bundle] ? $favorites[$bundle] : '0';
 
                     $this->Database->prepare("INSERT INTO tl_c4g_bricks %s")->set($set)->execute();
                 }

@@ -137,7 +137,7 @@ class C4GImportDataCallback extends Backend
                 if (isset($response->datatype) && $response->datatype == 'diff') {
                     continue;
                 }
-                if (!$response->tables) {
+                if (!property_exists($response, 'tables') || !$response->tables) {
                     $response->tables = '';
                 }
                 if ($response->id == $data['id']) {
@@ -282,7 +282,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             );
             $cronImportData = $statement->execute($con4gisImportId)->fetchAssoc();
-            if (!$cronImportData['availableVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+            if (!$cronImportData['availableVersion'] || ($cronImportData['importVersion'] && ($cronImportData['importVersion'] >= $cronImportData['availableVersion']))) {
                 return false;
             }
 
@@ -339,7 +339,7 @@ class C4GImportDataCallback extends Backend
                 return false;
             }
 
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
 
             if ($zip->open($c4gPath) === true) {
                 $zip->extractTo($cache);
@@ -428,12 +428,23 @@ class C4GImportDataCallback extends Backend
             }
             $archive->close();
 
+            //Check import data
+            if (!$importData['import']['version'] || !$importData['import']['uuid'] || !$importData['images']['path'] || !$con4gisImportId) {
+                C4gLogModel::addLogEntry(
+                    'core',
+                    'Cant update. Import file is empty. Abort import.'
+                );
+                $this->importRunning(false, $con4gisImportId);
+                PageRedirect::redirect('/contao?do=c4g_io_data');
+                return false;
+            }
+
             $importDataType = $importData['import']['datatype'] ?? 'full';
 
             $alreadyImported = $this->Database->prepare(
                 'SELECT importVersion FROM tl_c4g_import_data WHERE id = ?'
             )->execute($con4gisImportId)->fetchAssoc();
-            if ($alreadyImported['importVersion'] != '') {
+            if ($alreadyImported && $alreadyImported['importVersion']) {
                 if ($importId && $importDataType == 'full') {
                     $deleted = $this->deleteBaseData($importId, true, true);
                     if (!$deleted) {
@@ -469,7 +480,7 @@ class C4GImportDataCallback extends Backend
 
             $cache = $rootDir.'/files/con4gis_import_data/io-data/' . str_replace('.c4g', '', $importData['general']['filename']);
 
-            $zip = new ZipArchive;
+            $zip = new ZipArchive();
             if ($zip->open($downloadPath . $filename) === true) {
                 $zip->extractTo($cache);
 
@@ -594,7 +605,7 @@ class C4GImportDataCallback extends Backend
                 'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
             )->execute($importId)->fetchAssoc();
 
-            if (!$cronImportData['availableVersion'] || $cronImportData['importVersion'] >= $cronImportData['availableVersion']) {
+            if (!$cronImportData['availableVersion'] || ($cronImportData['importVersion'] && ($cronImportData['importVersion'] >= $cronImportData['availableVersion']))) {
                 return false;
             }
         }
@@ -1016,7 +1027,7 @@ class C4GImportDataCallback extends Backend
                     }
                 } catch (\Throwable $e) {
                     C4gLogModel::addLogEntry('core', 'Import data file not complete: ' . $e);
-                    $archive->close();
+                    $archive ? $archive->close() : false;
                     return [];
                 }
             }
