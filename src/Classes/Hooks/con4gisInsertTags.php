@@ -54,7 +54,7 @@ class con4gisInsertTags extends \System
      */
     public function replaceTag($strTag)
     {
-        $packages = System::getContainer()->getParameter('kernel.packages');
+//        $packages = System::getContainer()->getParameter('kernel.packages');
         if ($packages && $strTag) {
             $arrSplit = explode('::', $strTag);
 

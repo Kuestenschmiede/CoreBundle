@@ -14,13 +14,17 @@ use Contao\Config;
 use Contao\Date;
 use Contao\Image;
 use Contao\StringUtil;
+use Contao\BackendUser;
+use Contao\DC_Table;
+use Contao\Database;
+use Contao\Input;
 
 $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 (
 	// Config
 	'config' => array
 	(
-		'dataContainer'    => 'Table',
+		'dataContainer'    => DC_Table::class,
 		'notCopyable'      => true,
 		'notCreatable'     => true,
 		'enableVersioning' => false,
@@ -325,7 +329,7 @@ class tl_c4g_bricks extends Contao\Backend
 	{
 		parent::__construct();
         $this->versionProvider = new C4GVersionProvider();
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
         //$this->User->authenticate();
 
         $iconPath = 'bundles/con4giscore/images/be-icons/';
@@ -451,7 +455,7 @@ class tl_c4g_bricks extends Contao\Backend
     }
 
     private function getInstalledPackages() {
-        $packages = $this->getContainer()->getParameter('kernel.packages');
+//        $packages = $this->getContainer()->getParameter('kernel.packages');
         $installed = [];
         foreach ($packages as $key => $value) {
             if (strpos($key, 'con4gis') !== false) {
@@ -616,7 +620,7 @@ class tl_c4g_bricks extends Contao\Backend
         $GLOBALS['TL_DCA']['tl_c4g_bricks']['list']['sorting']['filter']['pid'] = array('pid = ?', $this->User->id);
 
         // Check current action
-        $key = Contao\Input::get('key');
+        $key = Input::get('key');
         $bricks = [];
         if ($key) {
             $switchKey = $key;

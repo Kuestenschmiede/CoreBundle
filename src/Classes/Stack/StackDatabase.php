@@ -9,6 +9,7 @@
  * @link https://www.con4gis.org
  */
 namespace con4gis\CoreBundle\Classes\Stack;
+use Contao\Database;
 
 /**
  * Class StackDatabase
@@ -29,7 +30,7 @@ class StackDatabase implements StackInterface
      */
     protected function getDb()
     {
-        return \Contao\Database::getInstance();
+        return Database::getInstance();
     }
 
     /**

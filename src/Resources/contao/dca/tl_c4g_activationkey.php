@@ -9,13 +9,14 @@
  * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
+use Contao\DC_Table;
 
 $GLOBALS['TL_DCA']['tl_c4g_activationkey'] = array
 (
 //___CONFIG________________________________________________________________________________________________________________________________
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'sql' => array

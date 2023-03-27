@@ -8,6 +8,10 @@
  * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
+use Contao\Backend;
+use Contao\Input;
+use Contao\DC_Table;
+use Contao\Database;
 
 $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
 (
@@ -15,11 +19,11 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
 	// Config
 	'config' => array
 	(
-        'dataContainer'     => 'Table',
+        'dataContainer'     => DC_Table::class,
         'enableVersioning'  => false,
         'notDeletable' => true,
         'notCopyable' => true,
-        'closed' => (\Input::get('id')),
+        'closed' => (Input::get('id')),
         'onload_callback'			=> array
         (
             array('tl_c4g_settings', 'loadDataset'),
@@ -209,15 +213,15 @@ class tl_c4g_settings extends Backend
     {
         $objConfig = Database::getInstance()->prepare("SELECT id FROM tl_c4g_settings")->execute();
 
-        if (\Input::get('key')) return;
+        if (Input::get('key')) return;
 
-        if(!$objConfig->numRows && !\Input::get('act'))
+        if(!$objConfig->numRows && !Input::get('act'))
         {
             $this->redirect($this->addToUrl('act=create'));
         }
 
 
-        if(!\Input::get('id') && !\Input::get('act'))
+        if(!Input::get('id') && !Input::get('act'))
         {
             $GLOBALS['TL_DCA']['tl_c4g_settings']['config']['notCreatable'] = true;
             $this->redirect($this->addToUrl('act=edit&id='.$objConfig->id));

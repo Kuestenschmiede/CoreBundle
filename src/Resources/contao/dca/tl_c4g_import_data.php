@@ -25,7 +25,8 @@ use Contao\StringUtil;
 use Contao\System;
 use con4gis\CoreBundle\Classes\Callback\C4GImportDataCallback;
 use con4gis\CoreBundle\Classes\Events\BeforeImportButtonLoadEvent;
-
+use Contao\BackendUser;
+use Contao\DC_Table;
 /**
  * Table tl_c4g_import_data
  */
@@ -35,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
     // Config
     'config' => array
     (
-        'dataContainer'               => 'Table',
+        'dataContainer'               => DC_Table::class,
         'sql'                         => array
         (
             'keys' => array
@@ -299,7 +300,7 @@ class tl_c4g_import_data extends Contao\Backend
     public function __construct()
     {
         parent::__construct();
-        $this->import('BackendUser', 'User');
+        $this->import(BackendUser::class, 'User');
         $this->importDataCallback = new C4GImportDataCallback();
     }
 
@@ -335,7 +336,7 @@ class tl_c4g_import_data extends Contao\Backend
         $bundles = explode(",", $arrRow['bundles']);
         $bundlesVersion = explode(",", $arrRow['bundlesVersion']);
         $isInstalled = false;
-        $installedPackages = $this->getContainer()->getParameter('kernel.packages');
+        $installedPackages = System::getContainer()->getParameter('kernel.packages');
         $importAllowed = true;
 
         $bundles = str_replace(" ", "", $bundles);
@@ -343,8 +344,8 @@ class tl_c4g_import_data extends Contao\Backend
 
         if ($source != "locale") {
             foreach ($bundles as $key => $value) {
-//            $pos = strpos($value, 'Bundle');
-//            $bundleName = strtolower(substr($value,0,$pos));
+                $pos = strpos($value, 'Bundle');
+                $bundleName = strtolower(substr($value,0,$pos));
                 $version = key_exists('con4gis/'.$value, $installedPackages) ? $installedPackages['con4gis/'.$value] : false;
                 if (!$version) {
                     if (!empty($compatibleImportType)) {
@@ -490,8 +491,7 @@ class tl_c4g_import_data extends Contao\Backend
      */
     public function getCon4gisImportTemplates()
     {
-
-        $installedPackages = $this->getContainer()->getParameter('kernel.packages');
+        $installedPackages = System::getContainer()->getParameter('kernel.packages');
         $coreVersion = $installedPackages['con4gis/core'];
         $contaoVersion = $installedPackages['contao/core-bundle'];
         $responses = $this->importDataCallback->getCon4gisImportData("getBasedata.php", "allData", false, $coreVersion, $contaoVersion);

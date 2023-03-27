@@ -9,7 +9,7 @@
  * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
-
+use Contao\Backend;
 /***
  * Palettes
  */
@@ -120,7 +120,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['c4g_activationpage_visitor_redirect'
 /**
  * Class tl_content_c4g_activationpage
  */
-class tl_content_c4g_activationpage extends \Backend
+class tl_content_c4g_activationpage extends Backend
 {
     public function get_registered_action_handlers ()
     {
