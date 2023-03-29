@@ -17,6 +17,7 @@ use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use con4gis\MapsBundle\Resources\contao\models\C4gMapSettingsModel;
 use Symfony\Component\HttpClient\HttpClient;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class C4GUtils
@@ -450,7 +451,8 @@ class C4GUtils
                     $response = $response->getContent();
                     $response = \GuzzleHttp\json_decode($response);
                     if ($response && $response->key && (strlen($response->key) == 64)) {
-                        \Contao\Session::getInstance()->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
+                        $objSession = System::getContainer()->get('session');
+                        $objSession->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
                         if ($getKeyOnly) {
                             return $response->key;
                         }
@@ -499,7 +501,8 @@ class C4GUtils
                     $response = $response->getContent();
                     $response = \GuzzleHttp\json_decode($response, true);
                     foreach ($response as $key => $valueKey) {
-                        \Contao\Session::getInstance()->set('ciokey_' . $arrKeyParams[$key][0] . '_' . $arrKeyParams[$key][1] ? 'id=' . $arrKeyParams[$key][1] : '', $hour . '_' . $valueKey['key']);
+                        $objSession = System::getContainer()->get('session');
+                        $objSession->set('ciokey_' . $arrKeyParams[$key][0] . '_' . $arrKeyParams[$key][1] ? 'id=' . $arrKeyParams[$key][1] : '', $hour . '_' . $valueKey['key']);
                     }
 
                     return $response;

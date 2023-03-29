@@ -8,18 +8,8 @@
  * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
-
-/**
- * con4gis - the gis-kit
- *
- * @version   php 7
- * @package   con4gis
- * @author    con4gis contributors (see "authors.txt")
- * @license   GNU/LGPL http://opensource.org/licenses/lgpl-3.0.html
- * @copyright Küstenschmiede GmbH Software & Design 2011 - 2018
- * @link      https://www.kuestenschmiede.de
- */
-
+use Contao\Backend;
+use Contao\DC_Table;
 /**
  * Table tl_c4g_log
  */
@@ -29,7 +19,7 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
     // Config
     'config' => array
     (
-        'dataContainer'               => 'Table',
+        'dataContainer'               => DC_Table::class,
         'sql'                         => array
         (
             'keys' => array
@@ -155,7 +145,7 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
         ),
     ),
 );
-class tl_c4g_log extends \Backend
+class tl_c4g_log extends Backend
 {
 
 }

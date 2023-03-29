@@ -13,13 +13,15 @@
 namespace con4gis\CoreBundle\Classes\Hooks;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
+use Contao\BackendUser;
 use Contao\System;
+use Contao\Database;
 
 /**
  * Class con4gisNavigation
  * @package con4gis\CoreBundle\Classes\Hooks
  */
-class con4gisNavigation extends \System
+class con4gisNavigation extends System
 {
     /**
      * Instanz des Symfony EventDispatchers
@@ -33,7 +35,7 @@ class con4gisNavigation extends \System
      */
     public function __construct($dispatcher = null)
     {
-        $this->import('BackendUser', 'User');
+        $this->import(BackendUser::class, 'User');
 
         if ($dispatcher !== null) {
             $this->dispatcher = $dispatcher;
@@ -49,11 +51,11 @@ class con4gisNavigation extends \System
      */
     public function activateNavigation($arrModules, $blnShowAll)
     {
-        if (!\Database::getInstance()->tableExists('tl_c4g_bricks')) {
+        if (!Database::getInstance()->tableExists('tl_c4g_bricks')) {
             return $arrModules;
         }
 
-        $result = \Database::getInstance()
+        $result = Database::getInstance()
             ->prepare('SELECT brickkey, favorite FROM tl_c4g_bricks WHERE pid=?')
             ->execute($this->User->id)->fetchAllAssoc();
 

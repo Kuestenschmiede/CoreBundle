@@ -11,6 +11,8 @@
 
 namespace con4gis\CoreBundle\Classes\DCA;
 
+use Contao\DC_Table;
+
 class DCAConfig
 {
     protected $global;
@@ -21,7 +23,7 @@ class DCAConfig
         $this->global = &$GLOBALS[DCA::TL_DCA][$dcaName][DCA::CONFIG];
 
         $this->label($GLOBALS['TL_CONFIG']['websiteTitle']);
-        $this->dataContainer('Table');
+        $this->dataContainer(DC_Table::class);
         $this->enableVersioning(true);
         $this->sqlKeys('id', 'primary');
     }

@@ -14,6 +14,7 @@ namespace con4gis\CoreBundle\Controller;
 use con4gis\CoreBundle\Classes\C4GApiCache;
 use con4gis\CoreBundle\Classes\C4GUtils;
 use Contao\Database;
+use Contao\StringUtil;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,7 +48,7 @@ class BaseController extends AbstractController
     {
         $this->cacheInstance = C4GApiCache::getInstance($container);
     }
-    
+
     protected function initialize($withEntityManager=true)
     {
         if ($withEntityManager) {
@@ -77,7 +78,7 @@ class BaseController extends AbstractController
         $this->initializeContao();
         $cacheSettings = Database::getInstance()->execute("SELECT * FROM tl_c4g_settings LIMIT 1")->fetchAllAssoc();
         $cacheSettings = isset($cacheSettings[0]['caching']) ? $cacheSettings[0]['caching'] : '';
-        self::$useCache = (is_array(deserialize($cacheSettings)) && in_array($configParam, deserialize($cacheSettings)));
+        self::$useCache = (is_array(StringUtil::deserialize($cacheSettings)) && in_array($configParam, StringUtil::deserialize($cacheSettings)));
     }
 
     protected function checkAndStoreCachedData(Request $request)

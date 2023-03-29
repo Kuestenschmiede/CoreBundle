@@ -11,6 +11,7 @@
  */
 
 namespace con4gis\CoreBundle\Resources\contao\models;
+use Contao\Database;
 
 /**
  * Class C4gActivationkeyModel
@@ -47,13 +48,13 @@ class C4gActivationkeyModel extends \Model
 		// find an appropriate activationpage
 		//
 		// try to find a page with a specific handler for the key-action
-        $db = \Database::getInstance();
+        $db = Database::getInstance();
         $objActivationPages = $db->prepare("SELECT * FROM tl_content WHERE type=? AND c4g_activationpage_action_handler=?")
             ->execute('c4g_activationpage', $keyAction[0]);
 
         if (!$objActivationPages) {
             // if no page was found, try to find pages with automatic-handlers
-            $db = \Database::getInstance();
+            $db = Database::getInstance();
             $objActivationPages = $db->prepare("SELECT * FROM tl_content WHERE type=? AND c4g_activationpage_action_handler=?")
                 ->execute('c4g_activationpage', '');
 
