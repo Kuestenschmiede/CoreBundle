@@ -27,6 +27,7 @@ use ZipArchive;
 use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
 use con4gis\CoreBundle\Classes\Events\AdditionalImportProxyDataEvent;
 use DirectoryIterator;
+use Composer\InstalledVersions;
 
 class C4GImportDataCallback extends Backend
 {
@@ -43,9 +44,23 @@ class C4GImportDataCallback extends Backend
     {
         $cronIds = [];
         // Get installed contao and con4gis Core version
-//        $installedPackages = static::getContainer()->getParameter('kernel.packages');
-        $coreVersion = $installedPackages['con4gis/core'];
-        $contaoVersion = $installedPackages['contao/core-bundle'];
+
+
+        if (System::getContainer()->hasParameter('kernel.packages')) {
+            $installedPackages = System::getContainer()->getParameter('kernel.packages');
+            $coreVersion = $installedPackages['con4gis/core'];
+            $contaoVersion = $installedPackages['contao/core-bundle'];
+        }
+        else {
+           $installedPackages = InstalledVersions::getInstalledPackages();
+           if (array_search('con4gis/core', $installedPackages)) {
+               $coreVersion = InstalledVersions::getVersion('con4gis/core');
+           }
+           if (array_search('contao/core-bundle', $installedPackages)) {
+               $contaoVersion = InstalledVersions::getVersion('contao/core-bundle');
+           }
+        }
+
 
         // Check current action
         $responses = $this->getCon4gisImportData(

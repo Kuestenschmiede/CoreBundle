@@ -18,6 +18,9 @@ use Contao\BackendUser;
 use Contao\DC_Table;
 use Contao\Database;
 use Contao\Input;
+use Contao\Controller;
+use Contao\Environment;
+use Composer\InstalledVersions;
 
 $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 (
@@ -456,10 +459,22 @@ class tl_c4g_bricks extends Contao\Backend
 
     private function getInstalledPackages() {
 //        $packages = $this->getContainer()->getParameter('kernel.packages');
-        $installed = [];
-        foreach ($packages as $key => $value) {
-            if (strpos($key, 'con4gis') !== false) {
-                $installed[$key] = $value;
+        if ($this->getContainer()->hasParameter('kernel.packages')) {
+            $packages = $this->getContainer()->getParameter('kernel.packages');
+            $installed = [];
+            foreach ($packages as $key => $value) {
+                if (strpos($key, 'con4gis') !== false) {
+                    $installed[$key] = $value;
+                }
+            }
+        }
+        else {
+            $packages = array_flip(InstalledVersions::getInstalledPackages());
+            $installed = [];
+            foreach ($packages as $key => $value) {
+                if (strpos($key, 'con4gis') !== false) {
+                    $installed[$key] = InstalledVersions::getVersion($value);
+                }
             }
         }
         return $installed;
@@ -668,7 +683,7 @@ class tl_c4g_bricks extends Contao\Backend
 
             if ($deleteKey) {
                 //delete key per redirect
-                \Contao\Controller::redirect(str_replace('&key='.$key, '', \Environment::get('request')));
+                Controller::redirect(str_replace('&key='.$key, '', Environment::get('request')));
             }
 
         } else {
@@ -754,7 +769,7 @@ class tl_c4g_bricks extends Contao\Backend
     {
         $rt = Input::get('rt');
         $href = "/contao?do=c4g_io_data&rt=$rt&key=importData";
-        return $this->User->hasAccess('c4g_io_data', 'modules') ?  '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+        return $this->User->hasAccess('c4g_io_data', 'modules') ?  '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
     }
 
     /**
@@ -770,7 +785,7 @@ class tl_c4g_bricks extends Contao\Backend
     {
         $rt = Input::get('rt');
         $href = "/contao?do=c4g_log&rt=$rt&key=serverLogs";
-        return $this->User->hasAccess('c4g_log', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+        return $this->User->hasAccess('c4g_log', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
     }
 
     /**
@@ -880,7 +895,7 @@ class tl_c4g_bricks extends Contao\Backend
     public function showDocs($row, $href, $label, $title, $icon) {
         $attributes = 'style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
-        return '<a href="https://docs.con4gis.org/con4gis-'.$row['brickkey'].'" title="'.specialchars($title).'" '.$attributes.' target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
+        return '<a href="https://docs.con4gis.org/con4gis-'.$row['brickkey'].'" title="'.StringUtil::specialchars($title).'" '.$attributes.' target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
     }
 
     /**
@@ -895,7 +910,7 @@ class tl_c4g_bricks extends Contao\Backend
     public function showPackagist($row, $href, $label, $title, $icon) {
         $attributes = 'style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
-        return '<a href="https://packagist.org/packages/con4gis/'.$row['brickkey'].'" title="'.specialchars($title).'" '.$attributes.' target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
+        return '<a href="https://packagist.org/packages/con4gis/'.$row['brickkey'].'" title="'.StringUtil::specialchars($title).'" '.$attributes.' target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
     }
 
     /**
@@ -909,7 +924,7 @@ class tl_c4g_bricks extends Contao\Backend
      */
     public function showGitHub($row, $href, $label, $title, $icon) {
         $imgAttributes = 'style="width: 18px; height: 18px"';
-        return '<a href="https://github.com/Kuestenschmiede/'.$row['repository'].'" title="'.specialchars($title).'" target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
+        return '<a href="https://github.com/Kuestenschmiede/'.$row['repository'].'" title="'.StringUtil::specialchars($title).'" target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
     }
 
     /**

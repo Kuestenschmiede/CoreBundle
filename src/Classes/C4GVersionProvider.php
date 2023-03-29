@@ -13,6 +13,7 @@ namespace con4gis\CoreBundle\Classes;
 use Contao\Request;
 use Contao\System;
 use Symfony\Component\HttpClient\HttpClient;
+use Composer\InstalledVersions;
 /**
  * Class C4GVersionProvider
  * Provides methods to determine the latest version of a bundle from packagist.org.
@@ -28,9 +29,15 @@ class C4GVersionProvider
      */
     public static function isInstalled(string $package)
     {
-//        $installedPackages = System::getContainer()->getParameter('kernel.packages');
+        if (System::getContainer()->hasParameter('kernel.packages')) {
+            $installedPackages = System::getContainer()->getParameter('kernel.packages');
+            return ($package && array_key_exists($package, $installedPackages));
+        }
+        else {
+            return InstalledVersions::isInstalled($package);
+        }
 
-//        return ($package && array_key_exists($package, $installedPackages));
+
     }
 
     /**

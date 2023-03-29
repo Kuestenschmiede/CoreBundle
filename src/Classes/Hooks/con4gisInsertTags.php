@@ -12,6 +12,7 @@
 
 namespace con4gis\CoreBundle\Classes\Hooks;
 
+use Composer\InstalledVersions;
 use Contao\System;
 
 /**
@@ -55,22 +56,45 @@ class con4gisInsertTags extends \System
     public function replaceTag($strTag)
     {
 //        $packages = System::getContainer()->getParameter('kernel.packages');
-        if ($packages && $strTag) {
-            $arrSplit = explode('::', $strTag);
+        if (System::getContainer()->hasParameter('kernel.packages')) {
+            $packages = System::getContainer()->getParameter('kernel.packages');
+            if ($packages && $strTag) {
+                $arrSplit = explode('::', $strTag);
 
-            if ($arrSplit && (($arrSplit[0] == 'con4gis')) && isset($arrSplit[1])) {
-                $fieldName = $arrSplit[1];
-                switch ($fieldName) {
-                    case 'version': return $packages['con4gis/maps'];
-                    default:
-                        if ($packages['con4gis/' . $fieldName]) {
-                            return $this->checkVersionTag($packages['con4gis/' . $fieldName]);
-                        }
+                if ($arrSplit && (($arrSplit[0] == 'con4gis')) && isset($arrSplit[1])) {
+                    $fieldName = $arrSplit[1];
+                    switch ($fieldName) {
+                        case 'version': return $packages['con4gis/maps'];
+                        default:
+                            if ($packages['con4gis/' . $fieldName]) {
+                                return $this->checkVersionTag($packages['con4gis/' . $fieldName]);
+                            }
 
-                        return 'not installed';
+                            return 'not installed';
+                    }
                 }
             }
         }
+        else {
+            $packages = array_flip(InstalledVersions::getInstalledPackages());
+            if ($packages && $strTag) {
+                $arrSplit = explode('::', $strTag);
+
+                if ($arrSplit && (($arrSplit[0] == 'con4gis')) && isset($arrSplit[1])) {
+                    $fieldName = $arrSplit[1];
+                    switch ($fieldName) {
+                        case 'version': return InstalledVersions::getVersion('con4gis/' . $fieldName);
+                        default:
+                            if ($packages['con4gis/' . $fieldName]) {
+                                return $this->checkVersionTag(InstalledVersions::getVersion('con4gis/' . $fieldName));
+                            }
+
+                            return 'not installed';
+                    }
+                }
+            }
+        }
+
 
         return false;
     }
