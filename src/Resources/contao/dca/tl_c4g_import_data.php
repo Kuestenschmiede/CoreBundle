@@ -517,7 +517,7 @@ class tl_c4g_import_data extends Contao\Backend
         $responses = $this->importDataCallback->getCon4gisImportData("getBasedata.php", "allData", false, $coreVersion, $contaoVersion);
         $arrReturn = [];
         foreach ($responses as $response) {
-            $arrReturn[$response->id] = \InsertTags::replaceInsertTags($response->caption);
+            $arrReturn[$response->id] = System::getContainer()->get('contao.insert_tag.parser')->replace($response->caption);
         }
         return $arrReturn;
     }

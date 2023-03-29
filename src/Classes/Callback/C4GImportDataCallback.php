@@ -18,10 +18,10 @@ use Contao\Backend;
 use Contao\Folder;
 use Contao\Message;
 use Contao\PageRedirect;
-use Contao\Request;
 use Contao\StringUtil;
 use Contao\System;
 use Exception;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
 use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
@@ -941,16 +941,24 @@ class C4GImportDataCallback extends Backend
                     $arrData[$proxyData['proxyKey']] = str_replace(' ', '%20', $proxyData['proxyData']);
                 }
             }
+            $client = HttpClient::create();
+            $response = $client->request('GET', $url)->getContent();
+            if (!$response) {
+                $response = '';
+            }
 
-            $request = new Request();
-            if ($_SERVER['HTTP_REFERER']) {
-                $request->setHeader('Referer', $_SERVER['HTTP_REFERER']);
-            }
-            if ($_SERVER['HTTP_USER_AGENT']) {
-                $request->setHeader('User-Agent', $_SERVER['HTTP_USER_AGENT']);
-            }
-            $request->send($baseDataUrl, \json_encode($arrData));
-            $response = $request->response;
+            $request = $client->request(
+                'GET',
+                $baseDataUrl,
+                [
+                    'headers' => [
+                        'Referer'       => $_SERVER['HTTP_REFERER'] ?: "",
+                        'User-Agent'    => $_SERVER['HTTP_USER_AGENT'] ?: ""
+                    ],
+                    'query' => json_encode($arrData)
+                ]
+            );
+            $response = $request->getContent();
             if ($response) {
                 if (C4GUtils::startsWith($response, '[{') && C4GUtils::endsWith($response, '}]')) {
                     return \json_decode($response);

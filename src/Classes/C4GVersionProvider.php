@@ -10,7 +10,6 @@
  */
 namespace con4gis\CoreBundle\Classes;
 
-use Contao\Request;
 use Contao\System;
 use Symfony\Component\HttpClient\HttpClient;
 use Composer\InstalledVersions;

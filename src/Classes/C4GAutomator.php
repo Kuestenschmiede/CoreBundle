@@ -17,7 +17,7 @@ use Contao\System;
 /**
  * Provide methods to run automated jobs.
  */
-class C4GAutomator extends \Contao\System
+class C4GAutomator extends System
 {
     /**
      * Make the constuctor public
@@ -25,7 +25,7 @@ class C4GAutomator extends \Contao\System
     public function __construct()
     {
         parent::__construct();
-        self::log('Purged the con4gis cache', __METHOD__, TL_CRON);
+//        self::log('Purged the con4gis cache', __METHOD__, TL_CRON);
     }
 
     /**

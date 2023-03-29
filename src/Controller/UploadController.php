@@ -40,7 +40,7 @@ class UploadController
             $type = 'json';
         }
 
-        \System::loadLanguageFile('con4giscoreupload');
+        System::loadLanguageFile('con4giscoreupload');
 
         try {
             if ($request->files instanceof FileBag) {
@@ -91,7 +91,7 @@ class UploadController
                     $newFile = $uploadedFile->move($uploadPath, $img_name);
                     $protocol = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
                     $site     = $protocol . $_SERVER['SERVER_NAME'] . '/';
-                    $url = \Contao\Controller::replaceInsertTags('{{env::url}}')."/".$uploadDirectoryString."/".$img_name;
+                    $url = System::getContainer()->get('contao.insert_tag.parser')->replace('{{env::url}}') . "/" . $uploadDirectoryString . "/" . $img_name;
                     $message = sprintf($GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['image_upload_successful'], $uploadedFile->getClientOriginalName(), number_format( $newFile->getSize() / 1024, 3, '.', ''), $imageWidth, $imageHeight);
 
                     if ($type === 'json') {
@@ -210,7 +210,7 @@ class UploadController
                 $fileName   = md5(uniqid('', true)) . "." .$fileExtension;
                 $uploadPath = TL_ROOT . '/' . $uploadDirectoryString;
                 $uploadedFile->move($uploadPath, $fileName);
-                $url = \Contao\Controller::replaceInsertTags('{{env::url}}')."/".$uploadDirectoryString."/".$fileName;
+                $url = System::getContainer()->get('contao.insert_tag.parser')->replace('{{env::url}}') . "/" . $uploadDirectoryString . "/" . $fileName;
 
                 return new JsonResponse(['url' => $url]);
 
