@@ -451,8 +451,10 @@ class C4GUtils
                     $response = $response->getContent();
                     $response = \GuzzleHttp\json_decode($response);
                     if ($response && $response->key && (strlen($response->key) == 64)) {
-                        $objSession = System::getContainer()->get('session');
-                        $objSession->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
+                        if (System::getContainer()->has('session')) {
+                            $objSession = System::getContainer()->get('session');
+                            $objSession->set('ciokey_' . $service . '_' . $params, $hour . '_' . $response->key);
+                        }
                         if ($getKeyOnly) {
                             return $response->key;
                         }
@@ -501,8 +503,10 @@ class C4GUtils
                     $response = $response->getContent();
                     $response = \GuzzleHttp\json_decode($response, true);
                     foreach ($response as $key => $valueKey) {
-                        $objSession = System::getContainer()->get('session');
-                        $objSession->set('ciokey_' . $arrKeyParams[$key][0] . '_' . $arrKeyParams[$key][1] ? 'id=' . $arrKeyParams[$key][1] : '', $hour . '_' . $valueKey['key']);
+                        if (System::getContainer()->has('session')) {
+                            $objSession = System::getContainer()->get('session');
+                            $objSession->set('ciokey_' . $arrKeyParams[$key][0] . '_' . $arrKeyParams[$key][1] ? 'id=' . $arrKeyParams[$key][1] : '', $hour . '_' . $valueKey['key']);
+                        }
                     }
 
                     return $response;
