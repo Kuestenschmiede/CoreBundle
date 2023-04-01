@@ -942,7 +942,7 @@ class C4GImportDataCallback extends Backend
                 }
             }
             $client = HttpClient::create();
-            $response = $client->request('GET', $url)->getContent();
+            $response = $client->request('GET', $baseDataUrl)->getContent();
             if (!$response) {
                 $response = '';
             }
@@ -955,7 +955,7 @@ class C4GImportDataCallback extends Backend
                         'Referer'       => $_SERVER['HTTP_REFERER'] ?: "",
                         'User-Agent'    => $_SERVER['HTTP_USER_AGENT'] ?: ""
                     ],
-                    'query' => json_encode($arrData)
+                    'query' => $arrData
                 ]
             );
             $response = $request->getContent();
