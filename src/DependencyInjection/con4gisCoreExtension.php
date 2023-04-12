@@ -34,9 +34,4 @@ class con4gisCoreExtension extends Extension
         );
         $loader->load('services.yml');
     }
-
-    public function getAlias()
-    {
-        return "con4gis_core";
-    }
 }

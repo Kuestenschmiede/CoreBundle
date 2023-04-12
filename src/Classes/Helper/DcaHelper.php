@@ -148,8 +148,8 @@ class DcaHelper
             $strFieldX = $strField;
             $strFieldY = substr($strField, 0, -1) . 'y';
         }
-
-        return ' <a href="con4gis/api/geopickerService?rt=' . REQUEST_TOKEN .
+        $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+        return ' <a href="con4gis/api/geopickerService?rt=' . $requestToken .
             '" title="' . $GLOBALS['TL_LANG']['c4g_maps']['geopicker'] .
             '" style="padding-left:3px" onclick="c4g.maps.backend.showGeoPicker(this.href,' .
             $strFieldX . ',' . $strFieldY . ', {title:\'' . $GLOBALS['TL_LANG']['c4g_maps']['geopicker'] . '\'});return false">' .

@@ -9,7 +9,9 @@
  * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
-
+use Contao\ArrayUtil;
+use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
 
 // API-Registration
 $GLOBALS['TL_API'] = array();
@@ -17,7 +19,7 @@ $GLOBALS['TL_API']['fileUpload']  = 'con4gis\CoreBundle\Classes\C4GFileUpload';
 $GLOBALS['TL_API']['imageUpload'] = 'con4gis\CoreBundle\Classes\C4GImageUpload';
 $GLOBALS['TL_API']['deliver']     = 'con4gis\CoreBundle\Classes\C4GDeliverFileApi';
 
-if(TL_MODE == "BE") {
+if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''))) {
     $GLOBALS['TL_CSS'][] = '/bundles/con4giscore/dist/css/con4gis.min.css';
 }
 
@@ -26,7 +28,7 @@ $GLOBALS['con4gis']['stringClass'] = '\Contao\StringUtil';
 /**
  * Backend Modules
  */
-array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array
+ArrayUtil::arrayInsert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1, array
 (
     'con4gis' => [
         'c4g_bricks'   => ['tables' => ['tl_c4g_bricks']],
@@ -36,7 +38,7 @@ array_insert($GLOBALS['BE_MOD'], array_search('content', array_keys($GLOBALS['BE
     ]
 ));
 
-array_insert($GLOBALS['BE_MOD'], array_search('con4gis', array_keys($GLOBALS['BE_MOD'])) + 1, array
+ArrayUtil::arrayInsert($GLOBALS['BE_MOD'], array_search('con4gis', array_keys($GLOBALS['BE_MOD'])) + 1, array
 (
     'con4gis_stage' => []
 ));
@@ -44,7 +46,7 @@ array_insert($GLOBALS['BE_MOD'], array_search('con4gis', array_keys($GLOBALS['BE
 /**
  * Content Elements
  */
-array_insert($GLOBALS['TL_CTE']['con4gis'], 2, array
+ArrayUtil::arrayInsert($GLOBALS['TL_CTE']['con4gis'], 2, array
 (
     'c4g_activationpage' => 'con4gis\CoreBundle\Resources\contao\modules\ContentC4gActivationpage'
 ));

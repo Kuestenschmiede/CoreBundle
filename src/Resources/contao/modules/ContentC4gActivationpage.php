@@ -95,7 +95,7 @@ class ContentC4gActivationpage extends \Module
         if ($this->c4g_activationpage_confirmation && !\Input::get('confirm')) {
             $this->Template->state = $stateClass[0];
             $this->Template->output = $this->c4g_activationpage_confirmation_text;
-            $delim = (preg_match('/\?/', $this->replaceInsertTags('{{env::request}}')) > 0) ? '&' : '?';
+            $delim = (preg_match('/\?/', System::getContainer()->get('contao.insert_tag.parser')->replace('{{env::request}}')) > 0) ? '&' : '?';
             $this->Template->output .= '<a href="{{env::path}}{{env::request}}' . $delim . 'confirm=true" class="c4g_button"><span class="c4g_button_text">' . ($this->c4g_activationpage_confirmation_button ?: $GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['msc']['default_confirmation_button']) . '</span></a>';
         } else {
             // 1) check key
