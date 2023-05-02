@@ -12,6 +12,7 @@
 namespace con4gis\CoreBundle\Classes\DCA\Fields;
 
 use con4gis\CoreBundle\Classes\DCA\DCA;
+use Contao\Config;
 
 class ImageField extends DCAField
 {
@@ -24,6 +25,6 @@ class ImageField extends DCAField
                 ->files()
                 ->filesOnly()
                 ->class('clr')
-                ->extensions($GLOBALS['TL_CONFIG']['validImageTypes']);
+                ->extensions(Config::get('validImageTypes') ?: 'png,jpg,jpeg');
     }
 }
