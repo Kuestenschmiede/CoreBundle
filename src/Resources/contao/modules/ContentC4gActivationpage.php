@@ -14,6 +14,7 @@ namespace con4gis\CoreBundle\Resources\contao\modules;
 
 use con4gis\CoreBundle\Resources\contao\models\C4gActivationkeyModel;
 use Contao\System;
+use Contao\Input;
 
 /**
  * Class Content_c4g_activationpage
@@ -40,7 +41,7 @@ class ContentC4gActivationpage extends \Module
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
-            $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+            $objTemplate->href = 'contao?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
             return $objTemplate->parse();
         }
@@ -66,9 +67,9 @@ class ContentC4gActivationpage extends \Module
         // $session = \Session::getInstance();
 
         // write key to session, so it will not get lost
-        if (\Input::get('key')) {
+        if (Input::get('key')) {
             // $session->set('c4g_activationkey_' . $this->id, \Input::get('key'));
-            $_SESSION['c4g_activationkey_' . $this->id] = \Input::get('key');
+            $_SESSION['c4g_activationkey_' . $this->id] = Input::get('key');
         }
 
         if (!FE_USER_LOGGED_IN && $this->c4g_activationpage_visitor_redirect) {
@@ -92,7 +93,7 @@ class ContentC4gActivationpage extends \Module
         }
 
         // check if a confirmation is needed
-        if ($this->c4g_activationpage_confirmation && !\Input::get('confirm')) {
+        if ($this->c4g_activationpage_confirmation && !Input::get('confirm')) {
             $this->Template->state = $stateClass[0];
             $this->Template->output = $this->c4g_activationpage_confirmation_text;
             $delim = (preg_match('/\?/', System::getContainer()->get('contao.insert_tag.parser')->replace('{{env::request}}')) > 0) ? '&' : '?';
@@ -102,7 +103,7 @@ class ContentC4gActivationpage extends \Module
             $action = '';
             $this->Template->state = $stateClass[-1];
             // $key = \Input::get('key') ?: $session->get('c4g_activationkey_' . $this->id);
-            $key = \Input::get('key') ?: $_SESSION['c4g_activationkey_' . $this->id];
+            $key = Input::get('key') ?: $_SESSION['c4g_activationkey_' . $this->id];
             $this->Template->output = '';
             if (!empty( $key ) && C4gActivationkeyModel::keyIsValid( $key )) {
                 $action = C4gActivationkeyModel::getActionForKey( $key );

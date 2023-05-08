@@ -588,7 +588,7 @@ class C4gBrickCallback extends Backend
         $attributes = 'style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
         $ref = Input::get('ref');
-        $href = '/contao/main.php?do='.$do.'&amp;ref='.$ref;
+        $href = '/contao?do='.$do.'&amp;ref='.$ref;
 
         return $this->User->hasAccess($do, 'modules') ? '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label, $imgAttributes).'</a>' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 

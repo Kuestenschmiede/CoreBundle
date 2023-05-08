@@ -12,6 +12,7 @@
 
 namespace con4gis\CoreBundle\Classes;
 
+use Contao\Input;
 /**
  * Class C4GMigration
  * @package c4g
@@ -44,8 +45,8 @@ class C4GMigration extends \Contao\BackendModule
      */
     public function generate()
     {
-        if (\Input::get('act') != '') {
-            $this->action = \Input::get('act');
+        if (Input::get('act') != '') {
+            $this->action = Input::get('act');
         } else {
             $this->action = 'init';
         }

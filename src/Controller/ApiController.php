@@ -14,6 +14,7 @@ namespace con4gis\CoreBundle\Controller;
 use con4gis\CoreBundle\Classes\C4GApiCache;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
+use Contao\Input;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,7 +47,7 @@ class ApiController extends AbstractController
         $blnUseCache = false;
         $blnOutputFromCache = false;
 
-        if (!\Config::get('debugMode') && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'server') && in_array($strApiEndpoint, $GLOBALS['CON4GIS']['USE_CACHE']['SERVICES']))
+        if (!\Config::get('debugMode') && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'server') && in_array($strASystempiEndpoint, $GLOBALS['CON4GIS']['USE_CACHE']['SERVICES']))
         {
             $blnUseCache = true;
         }
@@ -55,7 +56,7 @@ class ApiController extends AbstractController
         {
             foreach ($GLOBALS['CON4GIS']['USE_CACHE']['PARAMS'] as $key=>$arrValues)
             {
-                if (\Input::get($key) && in_array(\Input::get($key), $arrValues))
+                if (Input::get($key) && in_array(Input::get($key), $arrValues))
                 {
                     $blnUseCache = true;
                 }
@@ -95,9 +96,9 @@ class ApiController extends AbstractController
             $response = new JsonResponse(json_decode($strResponse));
         }
 
-        if ($response && ($response instanceof JsonResponse && \Input::get('callback')))
+        if ($response && ($response instanceof JsonResponse && Input::get('callback')))
         {
-            $response->setCallback(\Input::get('callback'));
+            $response->setCallback(Input::get('callback'));
         }
 
         if (!$response) {

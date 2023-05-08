@@ -23,6 +23,7 @@
 use Contao\Image;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\Input;
 use con4gis\CoreBundle\Classes\Callback\C4GImportDataCallback;
 use con4gis\CoreBundle\Classes\Events\BeforeImportButtonLoadEvent;
 use Contao\BackendUser;
@@ -473,7 +474,7 @@ class tl_c4g_import_data extends Contao\Backend
      */
     public function checkData()
     {
-        $key = Contao\Input::get('key');
+        $key = Input::get('key');
 
             if ($key) {
                 switch ($key) {

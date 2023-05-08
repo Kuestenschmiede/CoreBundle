@@ -10,6 +10,12 @@
  */
 namespace con4gis\CoreBundle\Classes;
 
+use Contao\Input;
+use Contao\Environment;
+use Contao\System;
+use Contao\CoreBundle\Session;
+use Contao\Config;
+
 class C4GFileUpload
 {
     public function generate()
@@ -29,15 +35,15 @@ class C4GFileUpload
 
                 return 'Forbidden';
             }
-            \Contao\System::loadLanguageFile('default');
+            System::loadLanguageFile('default');
             // xss cleanup
-            $_FILES = \Contao\Input::xssClean($_FILES);
-            $sServerName = \Contao\Environment::get('serverName');
-            $sRequestUri = \Contao\Environment::get('requestUri');
-            $sHttps = \Contao\Environment::get('https');
-            $path = \Contao\Environment::get('path');
-            $sConfigUploadPath = \Contao\Session::getInstance()->get('con4gisFileUploadPath');
-            $sConfigUploadPath = \Contao\Input::xssClean($sConfigUploadPath);
+            $_FILES = Input::xssClean($_FILES);
+            $sServerName = Environment::get('serverName');
+            $sRequestUri = Environment::get('requestUri');
+            $sHttps = Environment::get('https');
+            $path = Environment::get('path');
+            $sConfigUploadPath = Session::getInstance()->get('con4gisFileUploadPath');
+            $sConfigUploadPath = Input::xssClean($sConfigUploadPath);
             $sSubfolder = date('Y-m-d');
             //if not configured, use fallbackpath
             if (empty($sConfigUploadPath)) {
@@ -51,25 +57,25 @@ class C4GFileUpload
             if (!is_dir(TL_ROOT . '/' . $sUploadDir)) {
                 mkdir(TL_ROOT . '/' . $sUploadDir, 0777, true);
             }
-            $sValidFileTypes = \Contao\Session::getInstance()->get('c4g_forum_bbcodes_editor_uploadTypes');
-            $sMaxFileSize = \Contao\Session::getInstance()->get('c4g_forum_bbcodes_editor_maxFileSize');
+            $sValidFileTypes = Session::getInstance()->get('c4g_forum_bbcodes_editor_uploadTypes');
+            $sMaxFileSize = Session::getInstance()->get('c4g_forum_bbcodes_editor_maxFileSize');
             if (empty($sValidFileTypes)) {
                 // get system-configured allowed filetypes
-                $sValidFileTypes = \Config::get('uploadTypes');
+                $sValidFileTypes = Config::get('uploadTypes');
             }
             if (empty($sMaxFileSize)) {
                 // get system-configured max filesize
-                $sMaxFileSize = \Contao\Config::get('maxFileSize');
+                $sMaxFileSize = Config::get('maxFileSize');
             }
-            $sValidFileTypes = \Contao\Input::xssClean($sValidFileTypes);
-            $sMaxFileSize = \Contao\Input::xssClean($sMaxFileSize);
+            $sValidFileTypes = Input::xssClean($sValidFileTypes);
+            $sMaxFileSize = Input::xssClean($sMaxFileSize);
             //config array
             $aConfig = [
                 'maxsize' => intval($sMaxFileSize),          // maximum file size, in KiloBytes (2 MB)
                 'type' => explode(',', strtoupper($sValidFileTypes)),        // allowed extensions
             ];
             $sReturn = '';
-            $CKEditorFuncNum = \Contao\Input::get('CKEditorFuncNum');
+            $CKEditorFuncNum = Input::get('CKEditorFuncNum');
 
             if (!empty($_FILES['upload']) && empty($_FILES['uploadFile'])) {
                 $_FILES['uploadFile'] = $_FILES['upload'];

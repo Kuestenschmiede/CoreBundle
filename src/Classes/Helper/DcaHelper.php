@@ -175,7 +175,7 @@ class DcaHelper
             $do = $rt;
         }
 
-        $href = '/contao/main.php?do=' . $do/* . "&rt=$rt"*/;
+        $href = '/contao?do=' . $do/* . "&rt=$rt"*/;
 
         return '<a href="' . $href . '" class="' . $class . '" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
