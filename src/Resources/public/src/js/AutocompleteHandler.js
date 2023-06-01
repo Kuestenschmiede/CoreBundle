@@ -178,6 +178,14 @@ export class AutocompleteHandler {
                                     scope.containerAddresses.arrToPositions.push([data[i].lat, data[i].lon]);
                                 }
                             }
+                            else if (cssClass.indexOf('over') != -1){
+                                let count = cssClass[cssClass.length -1];
+
+                                if (!scope.containerAddresses.arrOverNames[count].includes(data[i].display_name)) {
+                                    scope.containerAddresses.arrOverNames[count].push(data[i].display_name);
+                                    scope.containerAddresses.arrOverPositions[count].push([data[i].lat, data[i].lon]);
+                                }
+                            }
                             else {
                                 console.log("This is weird");
                             }
