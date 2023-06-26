@@ -152,6 +152,13 @@ export class AutocompleteHandler {
                                     scope.containerAddresses.arrToPositions.push(arrAddresses[i].pos);
                                 }
                             }
+                            else if (cssClass.indexOf('over') != -1){
+                                let count = cssClass[cssClass.length -1];
+                                if (!scope.containerAddresses.arrOverNames[count].includes(arrAddresses[i].name)) {
+                                    scope.containerAddresses.arrOverNames[count].push(arrAddresses[i].name);
+                                    scope.containerAddresses.arrOverPositions[count].push(arrAddresses[i].pos);
+                                }
+                            }
                             else {
                                 console.log("This is weird");
                             }
