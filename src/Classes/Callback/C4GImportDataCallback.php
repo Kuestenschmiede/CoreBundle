@@ -195,8 +195,8 @@ class C4GImportDataCallback extends Backend
                                 $data['id']
                             );
                         }
-                    } elseif ($data['importVersion'] == '') {
-                        if ($data['id'] != 0 or $data['id'] != '') {
+                    } elseif ($data['importVersion'] == '' || $data['importVersion'] == '0') {
+                        if ($data['id']) {
                             $statement = $this->Database->prepare(
                                 'DELETE FROM tl_c4g_import_data WHERE id = ?'
                             );
@@ -213,7 +213,7 @@ class C4GImportDataCallback extends Backend
             }
             //Delete Import if it's not available anymore
             if (!$available) {
-                if ($data['importVersion'] != '') {
+                if ($data['importVersion'] != '' || $data['importVersion'] != '0') {
                     $statement = $this->Database->prepare(
                         'UPDATE tl_c4g_import_data SET tstamp = ?, availableVersion = ? WHERE id = ?'
                     );
@@ -508,7 +508,6 @@ class C4GImportDataCallback extends Backend
             }
             $zip->close();
             $this->recursivelyChangeFilePermissions($imagePath, 0775);
-
 
             if (!$this->copy($cache . '/images', $imagePath)) {
                 C4gLogModel::addLogEntry(
@@ -891,7 +890,7 @@ class C4GImportDataCallback extends Backend
                         'Error with downloaded import data file (' . $localFile . '). Error: ' . $e
                     );
                 }
-                $archive && $zip  ? $archive->close() : false;
+                $archive && $zip ? $archive->close() : false;
                 return false;
             }
             $archive && $zip ? $archive->close() : false;
@@ -1135,6 +1134,7 @@ class C4GImportDataCallback extends Backend
         if (!$file) {
             return [];
         }
+
         if ($importDataType == 'diff') {
             $idConfigFile = file_get_contents($rootDir . '/files' . $imagePath . '/id-config.json');
             if ($idConfigFile) {
@@ -1198,248 +1198,261 @@ class C4GImportDataCallback extends Backend
         $allIdChangesJson = \json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
-        foreach ($jsonFile as $importDB => $importDatasets) {
-            //sql statements for deleting removed data
-            if ($importDB == 'deleted') {
-                foreach ($importDatasets as $tableKey => $tableDataset) {
-                    $validTables = $this->Database->listTables();
-                    if (!in_array($tableKey, $validTables)) {
-                        continue;
-                    }
-                    foreach ($tableDataset as $dataset) {
-                        $dataset = (array) $dataset;
-                        $query = "DELETE FROM $tableKey";
-                        if ($tableKey == 'tl_files' && !empty($dataset['uuid']) && !empty($dataset['id'])) {
-                            $path = stripslashes($dataset['path']);
-                            $query .= " WHERE path=$path";
-                        } elseif (!empty($dataset['uuid'])) {
-                            $query .= " WHERE importId != '' AND importId != 0 AND uuid = '" .
-                                $dataset['uuid'] . "'";
-                        } elseif (!empty($dataset['id'])) {
-                            $query .= " WHERE importId != '' AND importId != 0 AND id = " .
-                                $allIdChanges[$tableKey]['id'][$dataset['id']];
-                            unset($allIdChanges[$tableKey]['id'][$dataset['id']]);
-                        } else {
+        try {
+            foreach ($jsonFile as $importDB => $importDatasets) {
+                //sql statements for deleting removed data
+                if ($importDB == 'deleted') {
+                    foreach ($importDatasets as $tableKey => $tableDataset) {
+                        $validTables = $this->Database->listTables();
+                        if (!in_array($tableKey, $validTables)) {
                             continue;
                         }
-                        $sqlStatements[] = $query;
+                        foreach ($tableDataset as $dataset) {
+                            $dataset = (array) $dataset;
+                            $query = "DELETE FROM $tableKey";
+                            if ($tableKey == 'tl_files' && !empty($dataset['uuid']) && !empty($dataset['id'])) {
+                                $path = stripslashes($dataset['path']);
+                                $query .= " WHERE path=$path";
+                            } elseif (!empty($dataset['uuid'])) {
+                                $query .= " WHERE importId != '' AND importId != 0 AND uuid = '" .
+                                    $dataset['uuid'] . "'";
+                            } elseif (!empty($dataset['id'])) {
+                                $query .= " WHERE importId != '' AND importId != 0 AND id = " .
+                                    $allIdChanges[$tableKey]['id'][$dataset['id']];
+                                unset($allIdChanges[$tableKey]['id'][$dataset['id']]);
+                            } else {
+                                continue;
+                            }
+                            $sqlStatements[] = $query;
+                        }
                     }
+                    $allIdChangesJson = \json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                    file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
+
+                    continue;
                 }
-                $allIdChangesJson = \json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
 
-                continue;
-            }
-
-            if ($importDB == 'relations' || $importDB == 'hexValues') {
-                break;
-            }
-
-            if ($importDataType == 'diff') {
-                $queryType = 'UPDATE';
-            } else {
-                $queryType = 'INSERT';
-            }
-            unset($updateWhereQuery, $updateWhereQueryValue);
-
-            $dbFields = $this->Database->getFieldNames($importDB);
-            if ($queryType == 'UPDATE' && in_array('uuid', $dbFields)) {
-                if ($importDB == 'tl_files') {
-                    $updateWhereQuery = ' WHERE path=';
-                } else {
-                    $updateWhereQuery = ' WHERE uuid=';
+                if ($importDB == 'relations' || $importDB == 'hexValues') {
+                    break;
                 }
-            } elseif ($queryType == 'UPDATE' && !isset($allIdChanges[$importDB]['id'])) {
-                C4gLogModel::addLogEntry('core', 'Skip update of table ' . $importDB . ' because of missing uuid.');
 
-                continue;
-            } elseif ($queryType == 'UPDATE' && isset($allIdChanges[$importDB]['id'])) {
-                $updateWhereQuery = ' WHERE id=';
-            }
-            foreach ($importDatasets as $importDataset) {
-                unset($updateWhereQueryValue);
                 if ($importDataType == 'diff') {
                     $queryType = 'UPDATE';
                 } else {
                     $queryType = 'INSERT';
                 }
+                unset($updateWhereQuery, $updateWhereQueryValue);
 
-                $sqlStatement = '';
-                $importDataset = (array) $importDataset;
-                if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && $importDataset['uuid'] == '') {
-                    C4gLogModel::addLogEntry('core', "Don't update dataset with id" . $importDataset['id'] . ' from table ' . $importDB . ' because of empty uuid.');
-
-                    continue;
-                } elseif ($queryType == 'UPDATE' && !array_key_exists($importDataset['id'], $allIdChanges[$importDB]['id']) && !in_array('uuid', $dbFields)) {
-                    C4gLogModel::addLogEntry('core', "Don't update dataset with id" . $importDataset['id'] . ' from table ' . $importDB . ' because id not exists in id config.');
-
-                    continue;
-                }
-                if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && $importDataset['uuid'] != '') {
-                    //check if dataset can be updated or is a completely new one
+                $dbFields = $this->Database->getFieldNames($importDB);
+                if ($queryType == 'UPDATE' && in_array('uuid', $dbFields)) {
                     if ($importDB == 'tl_files') {
-                        $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . ' WHERE path=?')
-                            ->execute($importDataset['path'])->fetchAssoc();
+                        $updateWhereQuery = ' WHERE path=';
                     } else {
-                        $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . " WHERE importId != '' AND importId != 0 AND uuid=?")
-                            ->execute($importDataset['uuid'])->fetchAssoc();
+                        $updateWhereQuery = ' WHERE uuid=';
                     }
-                    if (!$availableQuery) {
+                } elseif ($queryType == 'UPDATE' && !isset($allIdChanges[$importDB]['id'])) {
+                    C4gLogModel::addLogEntry('core', 'Skip update of table ' . $importDB . ' because of missing uuid.');
+
+                    continue;
+                } elseif ($queryType == 'UPDATE' && isset($allIdChanges[$importDB]['id'])) {
+                    $updateWhereQuery = ' WHERE id=';
+                }
+
+                foreach ($importDatasets as $importDataset) {
+                    unset($updateWhereQueryValue);
+                    if ($importDataType == 'diff') {
+                        $queryType = 'UPDATE';
+                    } else {
                         $queryType = 'INSERT';
                     }
-                } elseif ($queryType == 'UPDATE' && array_key_exists($importDataset['id'], $allIdChanges[$importDB]['id'])) {
-                    $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . ' WHERE id=?')
-                        ->execute($allIdChanges[$importDB]['id'][$importDataset['id']])->fetchAssoc();
-                    if (!$availableQuery) {
-                        $queryType = 'INSERT';
-                    }
-                }
-                if (!array_key_exists('importId', $importDataset)) {
-                    $importDataset['importId'] = $importId;
-                }
-                $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) && $importDB;
-                foreach ($importDataset as $importDbField => $importDbValue) {
-                    if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && ($importDbField == 'id' || $importDbField == 'pid')) {
+
+                    $sqlStatement = '';
+                    $importDataset = (array) $importDataset;
+
+                    if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && $importDataset['uuid'] == '') {
+                        C4gLogModel::addLogEntry('core', "Don't update dataset with id" . $importDataset['id'] . ' from table ' . $importDB . ' because of empty uuid.');
+
+                        continue;
+                    } elseif ($queryType == 'UPDATE' && !array_key_exists($importDataset['id'], $allIdChanges[$importDB]['id']) && !in_array('uuid', $dbFields)) {
+                        C4gLogModel::addLogEntry('core', "Don't update dataset with id" . $importDataset['id'] . ' from table ' . $importDB . ' because id not exists in id config.');
+
                         continue;
                     }
-                    if ($queryType == 'UPDATE' && $importDbField == 'uuid' && $importDB != 'tl_files') {
-                        $updateWhereQueryValue = $importDbValue;
-                    } elseif ($queryType == 'UPDATE' && $importDbField == 'path' && $importDB == 'tl_files') {
-                        $updateWhereQueryValue = $importDbValue;
-                    } elseif ($updateWhereQuery == ' WHERE id=' && $importDbField == 'id') {
-                        $updateWhereQueryValue = $allIdChanges[$importDB]['id'][$importDataset['id']];
+
+                    if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && $importDataset['uuid'] != '') {
+                        //check if dataset can be updated or is a completely new one
+                        if ($importDB == 'tl_files') {
+                            $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . ' WHERE path=?')
+                                ->execute($importDataset['path'])->fetchAssoc();
+                        } else {
+                            $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . " WHERE importId != '' AND importId != 0 AND uuid=?")
+                                ->execute($importDataset['uuid'])->fetchAssoc();
+                        }
+                        if (!$availableQuery) {
+                            $queryType = 'INSERT';
+                        }
+                    } elseif ($queryType == 'UPDATE' && array_key_exists($importDataset['id'], $allIdChanges[$importDB]['id'])) {
+                        $availableQuery = $this->Database->prepare('SELECT * FROM ' . $importDB . ' WHERE id=?')
+                            ->execute($allIdChanges[$importDB]['id'][$importDataset['id']])->fetchAssoc();
+                        if (!$availableQuery) {
+                            $queryType = 'INSERT';
+                        }
                     }
 
-                    if ($importDbField == 'id') {
-                        if ($primaryImportRelationTable) {
-                            $importDbValue = $allIdChanges[$importDB][$importDbField][$importDbValue];
-                        } else {
-                            $importDbValue = $allIdChangesNonRelations[$importDB][$importDbField][$importDbValue];
-                        }
-                        if ($importDbValue == '') {
-                            $importDbValue = 0;
-                        }
-                    } elseif ($importDbField == 'importId') {
-                        $importDbValue = $importId;
-                    } elseif (in_array($importDB, $relationTables)) {
-                        if (in_array($importDbField, $dbRelation[$importDB])) {
-                            if ($importDbValue != '0') {
-                                if (C4GUtils::startsWith($importDbValue, '0x') && $importDB != 'tl_files') {
-                                    $unserial = hex2bin(substr($importDbValue, 2));
+                    if (!array_key_exists('importId', $importDataset)) {
+                        $importDataset['importId'] = $importId;
+                    }
+                    $primaryImportRelationTable = in_array($importDB, $relationTablesPrimary) && $importDB;
 
-                                    if (strpos($unserial, '{')) {
+                    foreach ($importDataset as $importDbField => $importDbValue) {
+                        if ($queryType == 'UPDATE' && in_array('uuid', $dbFields) && ($importDbField == 'id' || $importDbField == 'pid')) {
+                            continue;
+                        }
+                        if ($queryType == 'UPDATE' && $importDbField == 'uuid' && $importDB != 'tl_files') {
+                            $updateWhereQueryValue = $importDbValue;
+                        } elseif ($queryType == 'UPDATE' && $importDbField == 'path' && $importDB == 'tl_files') {
+                            $updateWhereQueryValue = $importDbValue;
+                        } elseif ($updateWhereQuery == ' WHERE id=' && $importDbField == 'id') {
+                            $updateWhereQueryValue = $allIdChanges[$importDB]['id'][$importDataset['id']];
+                        }
+
+                        if ($importDbField == 'id') {
+                            if ($primaryImportRelationTable) {
+                                $importDbValue = $allIdChanges[$importDB][$importDbField][$importDbValue];
+                            } else {
+                                $importDbValue = $allIdChangesNonRelations[$importDB][$importDbField][$importDbValue];
+                            }
+                            if ($importDbValue == '') {
+                                $importDbValue = 0;
+                            }
+                        } elseif ($importDbField == 'importId') {
+                            $importDbValue = $importId;
+                        } elseif (in_array($importDB, $relationTables)) {
+                            if (in_array($importDbField, $dbRelation[$importDB])) {
+                                if ($importDbValue != '0') {
+                                    if (C4GUtils::startsWith($importDbValue, '0x') && $importDB != 'tl_files') {
+                                        $unserial = hex2bin(substr($importDbValue, 2));
+
+                                        if (strpos($unserial, '{')) {
+                                            $unserial = StringUtil::deserialize($unserial);
+                                            $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
+                                            $newImportDbValue = serialize($unserial);
+                                            $newImportDbValue = '0x'.bin2hex($newImportDbValue);
+                                            $importDbValue = $newImportDbValue;
+                                        } else {
+                                            $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
+                                            $newImportDbValue = '0x'.bin2hex($newImportDbValue);
+                                            $importDbValue = $newImportDbValue;
+                                        }
+                                    } elseif (C4GUtils::startsWith($importDbValue, 'a:')) {
+                                        $importDbValue = str_replace('\"', '"', $importDbValue);
+                                        $unserial = StringUtil::deserialize($importDbValue);
+                                        $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
+                                        $newImportDbValue = serialize($unserial);
+                                        $importDbValue = $newImportDbValue;
+                                    } elseif (strpos($importDbValue, '{')) {
+                                        $unserial = hex2bin(substr($importDbValue, 2));
                                         $unserial = StringUtil::deserialize($unserial);
                                         $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                         $newImportDbValue = serialize($unserial);
                                         $newImportDbValue = '0x'.bin2hex($newImportDbValue);
                                         $importDbValue = $newImportDbValue;
-                                    } else {
-                                        $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
-                                        $newImportDbValue = '0x'.bin2hex($newImportDbValue);
+                                    } elseif (is_numeric($importDbValue)) {
+                                        $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations);
                                         $importDbValue = $newImportDbValue;
                                     }
-                                } elseif (C4GUtils::startsWith($importDbValue, 'a:')) {
-                                    $importDbValue = str_replace('\"', '"', $importDbValue);
-                                    $unserial = StringUtil::deserialize($importDbValue);
-                                    $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
-                                    $newImportDbValue = serialize($unserial);
-                                    $importDbValue = $newImportDbValue;
-                                } elseif (strpos($importDbValue, '{')) {
-                                    $unserial = hex2bin(substr($importDbValue, 2));
-                                    $unserial = StringUtil::deserialize($unserial);
-                                    $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
-                                    $newImportDbValue = serialize($unserial);
-                                    $newImportDbValue = '0x'.bin2hex($newImportDbValue);
-                                    $importDbValue = $newImportDbValue;
-                                } elseif (is_numeric($importDbValue)) {
-                                    $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations);
-                                    $importDbValue = $newImportDbValue;
+                                }
+                            }
+                        }
+
+                        $isHexValue = false;
+                        if (array_key_exists($importDB, $hexValueRelation)) {
+                            if (in_array($importDbField, $hexValueRelation[$importDB])) {
+                                $isHexValue = true;
+                            }
+                        }
+
+                        if (in_array($importDbField, $dbFields)) {
+                            if (($importDB == 'tl_files' && $importDbField == 'id') || (isset($updateWhereQueryValue) && $importDbField == 'uuid' && $importDB != 'tl_files')) {
+                                $sqlStatement = $sqlStatement . '';
+                            } else {
+                                if ($queryType == 'INSERT') {
+                                    if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
+                                        $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (' . $importDbValue . ');;';
+                                    } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
+                                        $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
+                                    } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
+                                        $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
+                                    } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
+                                        $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES ('" . $importDbValue . "');;";
+                                    } elseif ($sqlStatement == '' && $importDbValue === null) {
+                                        $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (NULL);;';
+                                    } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
+                                        $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
+                                        $sqlStatement = str_replace(');;', ", $importDbValue);;", $sqlStatement);
+                                    } elseif ($isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
+                                        $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
+                                        $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
+                                    } elseif ($this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
+                                        $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
+                                        $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
+                                    } elseif ($importDbValue === null) {
+                                        $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
+                                        $sqlStatement = str_replace(');;', ', NULL);;', $sqlStatement);
+                                    } else {
+                                        $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
+                                        $sqlStatement = str_replace(');;', ", '$importDbValue');;", $sqlStatement);
+                                    }
+                                } elseif ($queryType == 'UPDATE') {
+                                    if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
+                                        $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = ' . $importDbValue . ';;';
+                                    } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
+                                        $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
+                                    } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
+                                        $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
+                                    } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
+                                        $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = '" . $importDbValue . "';;";
+                                    } elseif ($sqlStatement == '' && $importDbValue === null) {
+                                        $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = NULL;;';
+                                    } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
+                                        $sqlStatement = str_replace(';;', ", `$importDbField` = $importDbValue;;", $sqlStatement);
+                                    } elseif ($isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
+                                        $sqlStatement = str_replace(';;', ", `$importDbField` = UNHEX('$importDbValue');;", $sqlStatement);
+                                    } elseif ($this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
+                                        $sqlStatement = str_replace(';;', ", `$importDbField` = UNHEX('$importDbValue');;", $sqlStatement);
+                                    } elseif ($importDbValue === null) {
+                                        $sqlStatement = str_replace(';;', ", `$importDbField` = NULL;;", $sqlStatement);
+                                    } else {
+                                        $sqlStatement = str_replace(';;', ", `$importDbField` = '$importDbValue';;", $sqlStatement);
+                                    }
                                 }
                             }
                         }
                     }
 
-                    $isHexValue = false;
-                    if (array_key_exists($importDB, $hexValueRelation)) {
-                        if (in_array($importDbField, $hexValueRelation[$importDB])) {
-                            $isHexValue = true;
-                        }
+                    if (
+                        $queryType == 'UPDATE' &&
+                        isset($updateWhereQuery) &&
+                        isset($updateWhereQueryValue) &&
+                        $updateWhereQuery != '' &&
+                        $updateWhereQueryValue != ''
+                    ) {
+                        $sqlStatement = str_replace(
+                            ';;',
+                            $updateWhereQuery . "'" . $updateWhereQueryValue . "';",
+                            $sqlStatement
+                        );
+                    } else {
+                        $sqlStatement = str_replace(');;', ');', $sqlStatement);
                     }
-
-                    if (in_array($importDbField, $dbFields)) {
-                        if (($importDB == 'tl_files' && $importDbField == 'id') || (isset($updateWhereQueryValue) && $importDbField == 'uuid' && $importDB != 'tl_files')) {
-                            $sqlStatement = $sqlStatement . '';
-                        } else {
-                            if ($queryType == 'INSERT') {
-                                if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
-                                    $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (' . $importDbValue . ');;';
-                                } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
-                                    $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
-                                } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
-                                    $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES (UNHEX('" . $importDbValue . "'));;";
-                                } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
-                                    $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . "`) VALUES ('" . $importDbValue . "');;";
-                                } elseif ($sqlStatement == '' && $importDbValue === null) {
-                                    $sqlStatement = 'INSERT INTO `' . $importDB . '` (`' . $importDbField . '`) VALUES (NULL);;';
-                                } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
-                                    $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
-                                    $sqlStatement = str_replace(');;', ", $importDbValue);;", $sqlStatement);
-                                } elseif ($isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
-                                    $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
-                                    $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
-                                } elseif ($this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
-                                    $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
-                                    $sqlStatement = str_replace(');;', ", UNHEX('$importDbValue'));;", $sqlStatement);
-                                } elseif ($importDbValue === null) {
-                                    $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
-                                    $sqlStatement = str_replace(');;', ', NULL);;', $sqlStatement);
-                                } else {
-                                    $sqlStatement = str_replace(') VALUES', ", `$importDbField`) VALUES", $sqlStatement);
-                                    $sqlStatement = str_replace(');;', ", '$importDbValue');;", $sqlStatement);
-                                }
-                            } elseif ($queryType == 'UPDATE') {
-                                if ($sqlStatement == '' && C4GUtils::startsWith($importDbValue, '0x')) {
-                                    $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = ' . $importDbValue . ';;';
-                                } elseif ($sqlStatement == '' && $isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
-                                    $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
-                                } elseif ($sqlStatement == '' && $this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
-                                    $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = UNHEX('" . $importDbValue . "');;";
-                                } elseif ($sqlStatement == '' && !C4GUtils::startsWith($importDbValue, '0x')) {
-                                    $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . " = '" . $importDbValue . "';;";
-                                } elseif ($sqlStatement == '' && $importDbValue === null) {
-                                    $sqlStatement = 'UPDATE `' . $importDB . '` SET ' . $importDbField . ' = NULL;;';
-                                } elseif (C4GUtils::startsWith($importDbValue, '0x')) {
-                                    $sqlStatement = str_replace(';;', ", `$importDbField` = $importDbValue;;", $sqlStatement);
-                                } elseif ($isHexValue && $importDbField != 'hash' && $importDbField != 'foreignKey') {
-                                    $sqlStatement = str_replace(';;', ", `$importDbField` = UNHEX('$importDbValue');;", $sqlStatement);
-                                } elseif ($this->isUuid($importDbValue) && $importDbField != 'hash' && $importDbField != 'foreignKey') {
-                                    $sqlStatement = str_replace(';;', ", `$importDbField` = UNHEX('$importDbValue');;", $sqlStatement);
-                                } elseif ($importDbValue === null) {
-                                    $sqlStatement = str_replace(';;', ", `$importDbField` = NULL;;", $sqlStatement);
-                                } else {
-                                    $sqlStatement = str_replace(';;', ", `$importDbField` = '$importDbValue';;", $sqlStatement);
-                                }
-                            }
-                        }
-                    }
+                    $sqlStatements[] = $sqlStatement;
                 }
-                if (
-                    $queryType == 'UPDATE' &&
-                    isset($updateWhereQuery) &&
-                    isset($updateWhereQueryValue) &&
-                    $updateWhereQuery != '' &&
-                    $updateWhereQueryValue != ''
-                ) {
-                    $sqlStatement = str_replace(
-                        ';;',
-                        $updateWhereQuery . "'" . $updateWhereQueryValue . "';",
-                        $sqlStatement
-                    );
-                } else {
-                    $sqlStatement = str_replace(');;', ');', $sqlStatement);
-                }
-                $sqlStatements[] = $sqlStatement;
             }
+
+        } catch (\Exception $e) {
+            C4gLogModel::addLogEntry('core', 'Error translation json to sql. Abort import. ' . $e);
+
+            return false;
         }
 
         return $sqlStatements;
