@@ -545,24 +545,45 @@ class C4GImportDataCallback extends Backend
             return false;
         }
 
-        foreach ($sqlStatements as $sqlStatement) {
-            if ($sqlStatement == '') {
-                C4gLogModel::addLogEntry(
-                    'core',
-                    'Find empty sql statement'
-                );
-                continue; //ToDo check
+
+        $this->Database->beginTransaction();
+        $batchSize = 250;
+
+        $batchCount = ceil(count($sqlStatements) / $batchSize);
+
+        try {
+            for ($i = 0; $i < $batchCount; $i++) {
+                $batchStatements = array_slice($sqlStatements, $i * $batchSize, $batchSize);
+
+                foreach ($batchStatements as $sqlStatement) {
+                    if ($sqlStatement == '') {
+                        C4gLogModel::addLogEntry('core', 'Found empty SQL statement');
+                        continue; // Skip empty SQL statements
+                    }
+
+                    try {
+                        $stmt = $this->Database->prepare($sqlStatement);
+                        $stmt->execute();
+                    } catch (Exception $e) {
+                        // Check for duplicate entry error
+                        if (str_contains($e->getMessage(), 'Duplicate entry')) {
+                            // Log the duplicate entry error details
+                            C4gLogModel::addLogEntry('core', 'Duplicate entry error: ' . $e->getMessage());
+                            // Continue to the next SQL statement skipping dups
+                            continue;
+                        } else {
+                            // Handle other errors
+                            C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+                        }
+                    }
+                }
             }
 
-            try {
-                $this->Database->query($sqlStatement);
-            } catch (Exception $e) {
-                C4gLogModel::addLogEntry(
-                    'core',
-                    'Error while executing SQL-Import: ' . $e->getMessage()
-                );
-            }
+            $this->Database->commitTransaction();
+        } catch (Exception $e) {
+            C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
         }
+
         $statement = $this->Database->prepare(
             'UPDATE tl_c4g_import_data SET tstamp=?, importVersion = ?, importUuid = ?, importFilePath = ? WHERE id = ?'
         );
