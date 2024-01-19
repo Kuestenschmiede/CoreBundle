@@ -21,6 +21,7 @@ use Contao\PageRedirect;
 use Contao\StringUtil;
 use Contao\System;
 use Exception;
+use JsonMachine\Items;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
@@ -523,66 +524,202 @@ class C4GImportDataCallback extends Backend
             $this->recursivelyChangeFilePermissions($imagePath, 0775);
         }
 
-        $file = file_get_contents($cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']));
-        $sqlStatements = $this->getSqlFromJson($file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
-        if ($importDataType == 'diff') {
-            $this->deleteOldDiffImages($file);
-        }
+        $jsonFilePath = $cache . '/data/' . str_replace('.c4g', '.json', $importData['general']['filename']);
+        $file = file_get_contents($jsonFilePath);
 
-        if (!$sqlStatements) {
-            C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
-            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
-            $this->importRunning(false, $con4gisImportId);
-            if (!$importId) {
-                $objFolder = new Folder('files/con4gis_import_data/io-data/');
-                $objFolder->purge();
-                $objFolder->delete();
-                $objFolder = new Folder('files' . $importData['images']['path']);
-                $objFolder->purge();
-                $objFolder->delete();
+        $jsonFileIterator = Items::fromFile($jsonFilePath);
+
+        $relations = Null;
+        $hexValueFile = Null;
+
+        // Initialize arrays to store prio tables
+        $relationTables = [];
+        $relationTablesPrimary = [];
+        $dbRelation = [];
+        $dbRelationPrimary = [];
+        $hexValueRelation = [];
+
+        $isPrioTable = false;
+
+        //Initial search for prio tables
+        foreach ($jsonFileIterator as $initialItem => $initialItemValue) {
+            //Current ini table
+            $initialTempArray[$initialItem] = $initialItemValue;
+
+            if (($initialItem === 'hexValues') || ($initialItem === 'relations')){
+                $isPrioTable = true;
             }
 
-            return false;
-        }
+            if ($isPrioTable) {
+                //Setting important tables
+                if ($initialItem === 'hexValues') {
+                    $hexValueFile[$initialItem] = $initialItemValue;
+                }
+                if ($initialItem === 'relations') {
+                    $relations[$initialItem] = $initialItemValue;
+                }
 
+                //Process hexValues
+                if (array_key_exists('hexValues', $hexValueFile)) {
+                    foreach ($hexValueFile['hexValues'] as $hexField => $hexValues) {
+                        $hexValueRelation[$hexField] = explode(',', $hexValues);
+                    }
+                }
 
-        $this->Database->beginTransaction();
-        $batchSize = 250;
+                //Process relations
+                foreach ($relations['relations'] as $key => $value) {
+                    //Current ini table
+                    $initialTempArray[$initialItem] = $initialItemValue;
 
-        $batchCount = ceil(count($sqlStatements) / $batchSize);
-
-        try {
-            for ($i = 0; $i < $batchCount; $i++) {
-                $batchStatements = array_slice($sqlStatements, $i * $batchSize, $batchSize);
-
-                foreach ($batchStatements as $sqlStatement) {
-                    if ($sqlStatement == '') {
-                        C4gLogModel::addLogEntry('core', 'Found empty SQL statement');
-                        continue; // Skip empty SQL statements
+                    //Setting important tables
+                    if ($initialItem === 'hexValues') {
+                        $hexValueFile[$initialItem] = $initialItemValue;
+                    }
+                    if ($initialItem === 'relations') {
+                        $relations[$initialItem] = $initialItemValue;
                     }
 
-                    try {
-                        $stmt = $this->Database->prepare($sqlStatement);
-                        $stmt->execute();
-                    } catch (Exception $e) {
-                        // Check for duplicate entry error
-                        if (str_contains($e->getMessage(), 'Duplicate entry')) {
-                            // Log the duplicate entry error details
-                            C4gLogModel::addLogEntry('core', 'Duplicate entry error: ' . $e->getMessage());
-                            // Continue to the next SQL statement skipping dups
-                            continue;
-                        } else {
-                            // Handle other errors
-                            C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+                    //Process hexValues
+                    if (array_key_exists('hexValues', $hexValueFile)) {
+                        foreach ($hexValueFile['hexValues'] as $hexField => $hexValues) {
+                            $hexValueRelation[$hexField] = explode(',', $hexValues);
+                        }
+                    }
+
+                    //Process relations
+                    foreach ($relations['relations'] as $key => $value) {
+                        //primary tables
+                        if ($key == 'NoRelations' && $value == 'ToDisplay') {
+                            break;
+                        }
+                        $firstTable = explode('.', $key);
+
+                        if (!in_array($firstTable[0], $relationTables)) {
+                            $relationTables[] = $firstTable[0];
+                        }
+
+                        $dbRelation[$firstTable[0]][] = $firstTable[1];
+
+                        //foreign tables
+                        $secondTable = explode('.', $value);
+
+                        if (!in_array($secondTable[0], $relationTablesPrimary)) {
+                            $relationTablesPrimary[] = $secondTable[0];
+                        }
+                        if (is_array($dbRelationPrimary[$secondTable[0]]) && !in_array($secondTable[1], $dbRelationPrimary[$secondTable[0]])) {
+                            $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
+                        } elseif (!is_array($dbRelationPrimary[$secondTable[0]])) {
+                            $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
                         }
                     }
                 }
             }
-
-            $this->Database->commitTransaction();
-        } catch (Exception $e) {
-            C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+            unset($initialTempArray);
+            unset($isPrioTable);
         }
+        unset($initialItem);
+        unset($initialItemValue);
+
+        // Iterate through the JSON file items Important that we skip tables that are prio
+        foreach ($jsonFileIterator as $item => $itemValue) {
+            $tempArray[$item] = $itemValue;
+
+            if (($item === 'hexValues') || ($item === 'relations')){
+                $isPrioTable = true;
+            }
+
+            if(!$isPrioTable){
+
+                $sqlStatements = $this->getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation,
+                    $tempArray,$file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
+
+                if (!$sqlStatements) {
+                    C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
+                    Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
+                    $this->importRunning(false, $con4gisImportId);
+                    if (!$importId) {
+                        $objFolder = new Folder('files/con4gis_import_data/io-data/');
+                        $objFolder->purge();
+                        $objFolder->delete();
+                        $objFolder = new Folder('files' . $importData['images']['path']);
+                        $objFolder->purge();
+                        $objFolder->delete();
+                    }
+
+                    return false;
+                }
+
+                //Execute batched statements
+//                $this->Database->beginTransaction();
+//                $batchSize = 250;
+//
+//                $batchCount = ceil(count($sqlStatements) / $batchSize);
+//
+//                try {
+//                    for ($i = 0; $i < $batchCount; $i++) {
+//                        $batchStatements = array_slice($sqlStatements, $i * $batchSize, $batchSize);
+//
+//                        foreach ($batchStatements as $sqlStatement) {
+//                            if ($sqlStatement == '') {
+//                                C4gLogModel::addLogEntry('core', 'Found empty SQL statement');
+//                                continue; // Skip empty SQL statements
+//                            }
+//
+//                            try {
+//                                $stmt = $this->Database->execute($sqlStatement);
+//                            } catch (Exception $e) {
+//                                // Check for duplicate entry error
+//                                if (str_contains($e->getMessage(), 'Duplicate entry')) {
+//                                    // Log the duplicate entry error details
+//                                    C4gLogModel::addLogEntry('core', 'Duplicate entry error: ' . $e->getMessage());
+//                                    // Continue to the next SQL statement skipping dups
+//                                    continue;
+//                                } else {
+//                                    // Handle other errors
+//                                    C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+//                                }
+//                            }
+//                        }
+//                    }
+//                $this->Database->beginTransaction();
+
+                foreach ($sqlStatements as $sqlStatement) {
+                    if ($sqlStatement == '') {
+                        C4gLogModel::addLogEntry(
+                            'core',
+                            'Find empty sql statement'
+                        );
+                        continue; //ToDo check
+                    }
+
+                    try {
+                        $this->Database->execute($sqlStatement);
+                    } catch (Exception $e) {
+                        C4gLogModel::addLogEntry(
+                            'core',
+                            'Error while executing SQL-Import: ' . $e->getMessage()
+                        );
+                    }
+                }
+
+//                $this->Database->commitTransaction();
+
+                    unset($jsonFileIterator);
+                    unset($tempArray);
+                    unset($sqlStatements);
+                    unset($isPrioTable);
+//                } catch (Exception $e) {
+//                    C4gLogModel::addLogEntry('core', 'Error while executing SQL-Import: ' . $e->getMessage());
+//                }
+            }
+        }
+        unset($relations);
+        unset($hexValueRelation);
+        unset($hexValueFile);
+        unset($relationTables);
+        unset($relationTablesPrimary);
+        unset($dbRelation);
+        unset($dbRelationPrimary);
 
         $statement = $this->Database->prepare(
             'UPDATE tl_c4g_import_data SET tstamp=?, importVersion = ?, importUuid = ?, importFilePath = ? WHERE id = ?'
@@ -1143,14 +1280,24 @@ class C4GImportDataCallback extends Backend
     }
 
     /**
+     * @param $relations
+     * @param $relationTables
+     * @param $relationTablesPrimary
+     * @param $dbRelation
+     * @param $dbRelationPrimary
+     * @param $hexValueRelation
+     * @param $jsonFile
      * @param $file
      * @param $uuid
      * @param $importDataType
      * @param $imagePath
      * @return array
      */
-    private function getSqlFromJson($file, $uuid, $importDataType, $imagePath): array
+
+    private function getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation,
+                                    $jsonFile,$file, $uuid, $importDataType, $imagePath): array
     {
+        $updateWhereQuery = '';
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if (!$file) {
             return [];
@@ -1169,47 +1316,8 @@ class C4GImportDataCallback extends Backend
         }
 
         $importId = $uuid;
-        $jsonFile = (array) \json_decode($file);
+//        $jsonFile = (array) \json_decode($file);
         $sqlStatements = [];
-        $relations = array_slice($jsonFile, -1, 1);
-        $relationTables = [];
-        $relationTablesPrimary = [];
-        $dbRelation = [];
-        $dbRelationPrimary = [];
-        $hexValueFile = array_slice($jsonFile, -2, 1);
-        $hexValueRelation = [];
-
-        if (array_key_exists('hexValues', $hexValueFile)) {
-            foreach ($hexValueFile['hexValues'] as $hexField => $hexValues) {
-                $hexValueRelation[$hexField] = explode(',', $hexValues);
-            }
-        }
-
-        foreach ($relations['relations'] as $key => $value) {
-            //primary tables
-            if ($key == 'NoRelations' && $value == 'ToDisplay') {
-                break;
-            }
-            $firstTable = explode('.', $key);
-
-            if (!in_array($firstTable[0], $relationTables)) {
-                $relationTables[] = $firstTable[0];
-            }
-
-            $dbRelation[$firstTable[0]][] = $firstTable[1];
-
-            //foreign tables
-            $secondTable = explode('.', $value);
-
-            if (!in_array($secondTable[0], $relationTablesPrimary)) {
-                $relationTablesPrimary[] = $secondTable[0];
-            }
-            if (is_array($dbRelationPrimary[$secondTable[0]]) && !in_array($secondTable[1], $dbRelationPrimary[$secondTable[0]])) {
-                $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
-            } elseif (!is_array($dbRelationPrimary[$secondTable[0]])) {
-                $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
-            }
-        }
 
         //Get all changed IDs
         $allChanges = $this->getIdChanges($jsonFile, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson);
@@ -1218,6 +1326,8 @@ class C4GImportDataCallback extends Backend
 
         $allIdChangesJson = \json_encode($allIdChanges, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         file_put_contents($rootDir . '/files' . $imagePath . '/id-config.json', $allIdChangesJson);
+
+        $jsonFile = (array) \json_decode($file);
 
         try {
             foreach ($jsonFile as $importDB => $importDatasets) {
@@ -1473,9 +1583,8 @@ class C4GImportDataCallback extends Backend
         } catch (\Exception $e) {
             C4gLogModel::addLogEntry('core', 'Error translation json to sql. Abort import. ' . $e);
 
-            return false;
+            return [];
         }
-
         return $sqlStatements;
     }
 
