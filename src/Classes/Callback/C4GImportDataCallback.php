@@ -529,8 +529,9 @@ class C4GImportDataCallback extends Backend
 
         $jsonFileIterator = Items::fromFile($jsonFilePath);
 
-        $relations = Null;
-        $hexValueFile = Null;
+        $relations = [];
+        $hexValueFile = [];
+        $maps = [];
 
         // Initialize arrays to store prio tables
         $relationTables = [];
@@ -539,16 +540,35 @@ class C4GImportDataCallback extends Backend
         $dbRelationPrimary = [];
         $hexValueRelation = [];
 
+        $testType = [];
+        $testTag = [];
+        $testLocStyles = [];
+        $testSaveAllTables = [];
+
         //Initial search for prio tables
         foreach ($jsonFileIterator as $initialItem => $initialItemValue) {
-
-            if (($initialItem === 'hexValues') || ($initialItem === 'relations')) {
+            $testSaveAllTables[$initialItem] = $initialItemValue;
+            if (($initialItem === 'hexValues') || ($initialItem === 'relations') || ($initialItem === 'tl_c4g_map_locstyles')) {
                 //Setting important tables
                 if ($initialItem === 'hexValues') {
                     $hexValueFile[$initialItem] = $initialItemValue;
                 }
                 if ($initialItem === 'relations') {
                     $relations[$initialItem] = $initialItemValue;
+                }
+                if ($initialItem === 'tl_c4g_map_locstyles') {
+                    $maps[$initialItem] = $initialItemValue;
+                }
+
+                //toDo its a quick fix that needs to be removed
+                if ($initialItem == 'tl_gutesio_data_type') {
+                    $testType[$initialItem] = $initialItemValue;
+                }
+                if ($initialItem == 'tl_gutesio_data_type_element_values') {
+                    $testTag[$initialItem] = $initialItemValue;
+                }
+                if ($initialItem == 'tl_gutesio_data_tag_type') {
+                    $testLocStyles[$initialItem] = $initialItemValue;
                 }
 
                 //Process hexValues
@@ -559,63 +579,47 @@ class C4GImportDataCallback extends Backend
                 }
 
                 //Process relations
-                foreach ($relations['relations'] as $key => $value) {
-
-                    //Setting important tables
-                    if ($initialItem === 'hexValues') {
-                        $hexValueFile[$initialItem] = $initialItemValue;
+                 foreach ($relations['relations'] as $key => $value) {
+                    //primary tables
+                    if ($key == 'NoRelations' && $value == 'ToDisplay') {
+                        break;
                     }
-                    if ($initialItem === 'relations') {
-                        $relations[$initialItem] = $initialItemValue;
-                    }
+                    $firstTable = explode('.', $key);
 
-                    //Process hexValues
-                    if (array_key_exists('hexValues', $hexValueFile)) {
-                        foreach ($hexValueFile['hexValues'] as $hexField => $hexValues) {
-                            $hexValueRelation[$hexField] = explode(',', $hexValues);
-                        }
+                    if (!in_array($firstTable[0], $relationTables)) {
+                        $relationTables[] = $firstTable[0];
                     }
 
-                    //Process relations
-                    foreach ($relations['relations'] as $key => $value) {
-                        //primary tables
-                        if ($key == 'NoRelations' && $value == 'ToDisplay') {
-                            break;
-                        }
-                        $firstTable = explode('.', $key);
+                    $dbRelation[$firstTable[0]][] = $firstTable[1];
 
-                        if (!in_array($firstTable[0], $relationTables)) {
-                            $relationTables[] = $firstTable[0];
-                        }
+                    //foreign tables
+                    $secondTable = explode('.', $value);
 
-                        $dbRelation[$firstTable[0]][] = $firstTable[1];
-
-                        //foreign tables
-                        $secondTable = explode('.', $value);
-
-                        if (!in_array($secondTable[0], $relationTablesPrimary)) {
-                            $relationTablesPrimary[] = $secondTable[0];
-                        }
-                        if (is_array($dbRelationPrimary[$secondTable[0]]) && !in_array($secondTable[1], $dbRelationPrimary[$secondTable[0]])) {
-                            $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
-                        } elseif (!is_array($dbRelationPrimary[$secondTable[0]])) {
-                            $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
-                        }
+                    if (!in_array($secondTable[0], $relationTablesPrimary)) {
+                        $relationTablesPrimary[] = $secondTable[0];
+                    }
+                    if (is_array($dbRelationPrimary[$secondTable[0]]) && !in_array($secondTable[1], $dbRelationPrimary[$secondTable[0]])) {
+                        $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
+                    } elseif (!is_array($dbRelationPrimary[$secondTable[0]])) {
+                        $dbRelationPrimary[$secondTable[0]][] = $secondTable[1];
                     }
                 }
             }
         }
-        unset($initialItem);
-        unset($initialItemValue);
 
         // Iterate through the JSON file items Important that we skip tables that are prio
         foreach ($jsonFileIterator as $item => $itemValue) {
 
+            if(!(($item === 'hexValues') || ($item === 'relations')|| ($item === 'tl_c4g_map_locstyles'))){
 
-            if(!(($item === 'hexValues') || ($item === 'relations'))){
-
-                $sqlStatements = $this->getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
+                $sqlStatements = $this->getSqlFromJson($maps,$relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
                     $itemValue,$file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
+//                $sqlStatements = $this->getSqlFromJson($maps,$relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
+//                    [$itemValue,$testType,$testTag,$testLocStyles],$file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
+
+                if ($importDataType == 'diff') {
+                    $this->deleteOldDiffImages($file);
+                }
 
                 if (!$sqlStatements) {
                     C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
@@ -656,13 +660,6 @@ class C4GImportDataCallback extends Backend
                 unset($sqlStatements);
             }
         }
-        unset($relations);
-        unset($hexValueRelation);
-        unset($hexValueFile);
-        unset($relationTables);
-        unset($relationTablesPrimary);
-        unset($dbRelation);
-        unset($dbRelationPrimary);
 
         $statement = $this->Database->prepare(
             'UPDATE tl_c4g_import_data SET tstamp=?, importVersion = ?, importUuid = ?, importFilePath = ? WHERE id = ?'
@@ -1237,11 +1234,12 @@ class C4GImportDataCallback extends Backend
      * @return array
      */
 
-    private function getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $importDB,
+    private function getSqlFromJson($maps,$relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $importDB,
                                     $jsonFile,$file, $uuid, $importDataType, $imagePath): array
     {
         $updateWhereQuery = '';
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
         if (!$file) {
             return [];
         }
