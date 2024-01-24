@@ -531,7 +531,7 @@ class C4GImportDataCallback extends Backend
 
         $relations = [];
         $hexValueFile = [];
-        $maps = [];
+        $relationsTables = [];
 
         // Initialize arrays to store prio tables
         $relationTables = [];
@@ -540,9 +540,6 @@ class C4GImportDataCallback extends Backend
         $dbRelationPrimary = [];
         $hexValueRelation = [];
 
-        $testType = [];
-        $testTag = [];
-        $testLocStyles = [];
         $testSaveAllTables = [];
 
         //Initial search for prio tables
@@ -557,18 +554,7 @@ class C4GImportDataCallback extends Backend
                     $relations[$initialItem] = $initialItemValue;
                 }
                 if ($initialItem === 'tl_c4g_map_locstyles') {
-                    $maps[$initialItem] = $initialItemValue;
-                }
-
-                //toDo its a quick fix that needs to be removed
-                if ($initialItem == 'tl_gutesio_data_type') {
-                    $testType[$initialItem] = $initialItemValue;
-                }
-                if ($initialItem == 'tl_gutesio_data_type_element_values') {
-                    $testTag[$initialItem] = $initialItemValue;
-                }
-                if ($initialItem == 'tl_gutesio_data_tag_type') {
-                    $testLocStyles[$initialItem] = $initialItemValue;
+                    $relationsTables[$initialItem] = $initialItemValue;
                 }
 
                 //Process hexValues
@@ -612,8 +598,8 @@ class C4GImportDataCallback extends Backend
 
             if(!(($item === 'hexValues') || ($item === 'relations')|| ($item === 'tl_c4g_map_locstyles'))){
 
-                $sqlStatements = $this->getSqlFromJson($maps,$relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
-                    $itemValue,$file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
+                $sqlStatements = $this->getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
+                    $itemValue,$file,$relationsTables, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
 //                $sqlStatements = $this->getSqlFromJson($maps,$relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
 //                    [$itemValue,$testType,$testTag,$testLocStyles],$file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
 
@@ -1234,8 +1220,8 @@ class C4GImportDataCallback extends Backend
      * @return array
      */
 
-    private function getSqlFromJson($maps,$relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $importDB,
-                                    $jsonFile,$file, $uuid, $importDataType, $imagePath): array
+    private function getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $importDB,
+                                    $jsonFile,$file,$relationsTables, $uuid, $importDataType, $imagePath): array
     {
         $updateWhereQuery = '';
         $rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -1258,9 +1244,16 @@ class C4GImportDataCallback extends Backend
 
         $importId = $uuid;
         $sqlStatements = [];
+        $tables = [$importDB => $jsonFile];
+
+        if ($relationsTables){
+            foreach ($relationsTables as $table => $tableData) {
+                $tables[$table] = $tableData;
+            }
+        }
 
         //Get all changed IDs
-        $allChanges = $this->getIdChanges([$importDB => $jsonFile], $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson);
+        $allChanges = $this->getIdChanges($tables, $relationTablesPrimary, $dbRelationPrimary, $allIdChangesJson);
         $allIdChanges = $allChanges['allIdChanges'];
         $allIdChangesNonRelations = $allChanges['allIdChangesNonRelations'];
 
