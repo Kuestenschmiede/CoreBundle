@@ -540,12 +540,15 @@ class C4GImportDataCallback extends Backend
         $dbRelationPrimary = [];
         $hexValueRelation = [];
 
-        $testSaveAllTables = [];
+//        $testSaveAllTables = [];
 
         //Initial search for prio tables
         foreach ($jsonFileIterator as $initialItem => $initialItemValue) {
-            $testSaveAllTables[$initialItem] = $initialItemValue;
-            if (($initialItem === 'hexValues') || ($initialItem === 'relations') || ($initialItem === 'tl_c4g_map_locstyles')) {
+            if (($initialItem === 'hexValues') ||
+                ($initialItem === 'relations') ||
+                ($initialItem === 'tl_c4g_map_locstyles')||
+                ($initialItem === 'tl_gutesio_data_type')||
+                ($initialItem === 'tl_gutesio_data_tag')) {
                 //Setting important tables
                 if ($initialItem === 'hexValues') {
                     $hexValueFile[$initialItem] = $initialItemValue;
@@ -553,7 +556,9 @@ class C4GImportDataCallback extends Backend
                 if ($initialItem === 'relations') {
                     $relations[$initialItem] = $initialItemValue;
                 }
-                if ($initialItem === 'tl_c4g_map_locstyles') {
+                if (($initialItem === 'tl_c4g_map_locstyles') ||
+                    ($initialItem === 'tl_gutesio_data_type') ||
+                    ($initialItem === 'tl_gutesio_data_tag')) {
                     $relationsTables[$initialItem] = $initialItemValue;
                 }
 
@@ -596,7 +601,7 @@ class C4GImportDataCallback extends Backend
         // Iterate through the JSON file items Important that we skip tables that are prio
         foreach ($jsonFileIterator as $item => $itemValue) {
 
-            if(!(($item === 'hexValues') || ($item === 'relations')|| ($item === 'tl_c4g_map_locstyles'))){
+            if(!(($item === 'hexValues') || ($item === 'relations'))){
 
                 $sqlStatements = $this->getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
                     $itemValue,$file,$relationsTables, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
