@@ -540,8 +540,6 @@ class C4GImportDataCallback extends Backend
         $dbRelationPrimary = [];
         $hexValueRelation = [];
 
-//        $testSaveAllTables = [];
-
         //Initial search for prio tables
         foreach ($jsonFileIterator as $initialItem => $initialItemValue) {
             if (($initialItem === 'hexValues') ||
@@ -598,58 +596,116 @@ class C4GImportDataCallback extends Backend
             }
         }
 
-        // Iterate through the JSON file items Important that we skip tables that are prio
-        foreach ($jsonFileIterator as $item => $itemValue) {
 
-            if(!(($item === 'hexValues') || ($item === 'relations'))){
+        $batchSize = 100;
 
-                $sqlStatements = $this->getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
-                    $itemValue,$file,$relationsTables, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
-//                $sqlStatements = $this->getSqlFromJson($maps,$relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
-//                    [$itemValue,$testType,$testTag,$testLocStyles],$file, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
+        $iterator = $jsonFileIterator;
 
-                if ($importDataType == 'diff') {
-                    $this->deleteOldDiffImages($file);
-                }
+        $totalItems = iterator_count($iterator);
 
-                if (!$sqlStatements) {
-                    C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
-                    Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
-                    $this->importRunning(false, $con4gisImportId);
-                    if (!$importId) {
-                        $objFolder = new Folder('files/con4gis_import_data/io-data/');
-                        $objFolder->purge();
-                        $objFolder->delete();
-                        $objFolder = new Folder('files' . $importData['images']['path']);
-                        $objFolder->purge();
-                        $objFolder->delete();
-                    }
+        $startIndex = 0;
 
-                    return false;
-                }
+        while ($startIndex < $totalItems) {
+            // Get the current batch of items
+            $batchItems = [];
+            $endIndex = min($startIndex + $batchSize, $totalItems);
 
-                foreach ($sqlStatements as $sqlStatement) {
-                    if ($sqlStatement == '') {
-                        C4gLogModel::addLogEntry(
-                            'core',
-                            'Find empty sql statement'
-                        );
-                        continue; //ToDo check
-                    }
-
-                    try {
-                        $this->Database->execute($sqlStatement);
-                    } catch (Exception $e) {
-                        C4gLogModel::addLogEntry(
-                            'core',
-                            'Error while executing SQL-Import: ' . $e->getMessage()
-                        );
-                    }
-                }
-
-                unset($jsonFileIterator);
-                unset($sqlStatements);
+            // Collect items for the current batch
+            for ($i = $startIndex; $i < $endIndex; $i++) {
+                $batchItems[] = iterator_to_array($iterator->skipTo($i));
             }
+
+            // Process the current batch of items
+            foreach ($batchItems as $item) {
+                // Process item here
+                if(!(($item === 'hexValues') || ($item === 'relations'))){
+
+                    $itemValueCount = count($itemValue);
+                    // Determine how many $itemValue to process based on the limit
+                    $itemsToProcess = min($maxItemsToProcess, $itemValueCount);
+
+                    // Slice the $itemValue array to get only the items to process
+                    $itemsToProcessArray = array_slice($itemValue, 0, $itemsToProcess);
+
+                    // Process the selected $itemValue items
+                    foreach ($itemsToProcessArray as $singleItemValue) {
+
+                        if (!($item === 'hexValues' || $item === 'relations')) {
+                            while (!empty($itemValue)) {
+                                // Take the first 100 elements or less if there are fewer than 100
+                                $itemsToProcessArray = array_splice($itemValue, 0, $maxItemsToProcess);
+
+                                foreach ($itemsToProcessArray as $singleItemValue) {
+                                    // Record memory usage before exe func
+                                    $memoryBefore = memory_get_usage();
+                                    $memoryBeforeMb = round($memoryBefore / (1024 * 1024), 2);
+                                    $sqlStatements = $this->getSqlFromJson($relations,$relationTables,$relationTablesPrimary,$dbRelation,$dbRelationPrimary,$hexValueRelation, $item,
+                                        $singleItemValue,$file,$relationsTables, $importData['import']['uuid'], $importDataType, $importData['images']['path']);
+
+                                    // Record memory usage after executing the function
+                                    $memoryAfter = memory_get_usage();
+                                    $memoryAfterMb = round($memoryAfter / (1024 * 1024), 2);
+
+                                    // Calculate the difference in memory usage
+                                    $memoryUsedBytes = $memoryAfter - $memoryBefore;
+                                    $memoryUsedMB = round($memoryUsedBytes / (1024 * 1024)); // Convert bytes to megabytes
+
+                                    if ($importDataType == 'diff') {
+                                        $this->deleteOldDiffImages($file);
+                                    }
+
+                                    if (!$sqlStatements) {
+                                        C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
+                                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
+                                        $this->importRunning(false, $con4gisImportId);
+                                        if (!$importId) {
+                                            $objFolder = new Folder('files/con4gis_import_data/io-data/');
+                                            $objFolder->purge();
+                                            $objFolder->delete();
+                                            $objFolder = new Folder('files' . $importData['images']['path']);
+                                            $objFolder->purge();
+                                            $objFolder->delete();
+                                        }
+
+                                        return false;
+                                    }
+
+                                    foreach ($sqlStatements as $sqlStatement) {
+                                        if ($sqlStatement == '') {
+                                            C4gLogModel::addLogEntry(
+                                                'core',
+                                                'Find empty sql statement'
+                                            );
+                                            continue; //ToDo check
+                                        }
+
+                                        try {
+                                            $this->Database->execute($sqlStatement);
+                                        } catch (Exception $e) {
+                                            C4gLogModel::addLogEntry(
+                                                'core',
+                                                'Error while executing SQL-Import: ' . $e->getMessage()
+                                            );
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Check if all $itemValue have been processed
+                            if (empty($itemValue)) {
+                                unset($jsonFileIterator[$item]);
+                            }
+                        }
+                    }
+
+                    unset($jsonFileIterator);
+                    unset($sqlStatements);
+                }
+                var_dump($item);
+            }
+
+            // Move to the next batch
+            $startIndex = $endIndex;
         }
 
         $statement = $this->Database->prepare(
