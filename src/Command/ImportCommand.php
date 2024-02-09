@@ -51,10 +51,9 @@ class ImportCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $importId = (int) $input->getArgument('importId');
-        // $dryRun = $input->getOption('dry-run');
         $import = new C4GImport();
         try {
-            $import->importBaseData($importId);
+            $import->importBaseData($importId, $output);
         }
         catch (\Exception $exception) {
             C4gLogModel::addLogEntry(

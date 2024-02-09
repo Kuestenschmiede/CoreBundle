@@ -274,10 +274,10 @@ class C4GImport
      * @return false|void
      * @throws Exception
      */
-    public function importBaseData($importId = false)
+    public function importBaseData($importId = false, $output = false)
     {
         if ($this->importRunning()) {
-            
+            $output->writeln("Import already running");
             return false;
         }
         $availableLocal = false;
@@ -320,7 +320,7 @@ class C4GImport
                     $deleted = $this->deleteBaseData($importId, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
-                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         C4gLogModel::addLogEntry('core', 'Error deleting old import data for automatic import. Stopped Import');
                         PageRedirect::redirect('/contao?do=c4g_io_data');
                         return false;
@@ -329,7 +329,7 @@ class C4GImport
                     $deleted = $this->deleteBaseData(false, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
-                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         PageRedirect::redirect('/contao?do=c4g_io_data');
                         return false;
                     }
@@ -454,7 +454,7 @@ class C4GImport
                     $deleted = $this->deleteBaseData($importId, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
-                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
 
                         return false;
                     }
@@ -462,7 +462,7 @@ class C4GImport
                     $deleted = $this->deleteBaseData(false, true, true);
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
-                        Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                        $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         PageRedirect::redirect('/contao?do=c4g_io_data');
 
                         return false;
@@ -521,7 +521,7 @@ class C4GImport
 
         if (!$sqlStatements) {
             C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
-            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
+            $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
             $this->importRunning(false, $con4gisImportId);
             if (!$importId) {
                 $objFolder = new Folder('files/con4gis_import_data/io-data/');
@@ -551,6 +551,9 @@ class C4GImport
             }
 
             try {
+                if ($output) {
+                    $output->writeln($sqlStatement);
+                }
                 $this->database->query($sqlStatement);
             } catch (Exception $e) {
                 C4gLogModel::addLogEntry(
@@ -587,92 +590,12 @@ class C4GImport
         $error = $event->getError();
 
         if ($error) {
-            Message::addError($error);
+            $ouput->writeln($error);
         }
 
         $this->importRunning(false, $con4gisImportId);
 
         C4gLogModel::addLogEntry('core', 'The import data was successfully imported.');
-    }
-
-
-    /**
-     * @param $importId
-     * @return false|void
-     * @throws Exception
-     */
-    public function updateBaseData($importId = false)
-    {
-        if ($this->importRunning()) {
-            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
-            PageRedirect::redirect('/contao?do=c4g_io_data');
-            return false;
-        }
-
-        if ($importId) {
-            $cronImportData = $this->database->prepare(
-                'SELECT importVersion, availableVersion FROM tl_c4g_import_data WHERE id = ?'
-            )->execute($importId)->fetchAssoc();
-
-            if (!$cronImportData['availableVersion'] || ($cronImportData['importVersion'] && ($cronImportData['importVersion'] >= $cronImportData['availableVersion']))) {
-                return false;
-            }
-        }
-
-        $this->importBaseData($importId);
-
-        PageRedirect::redirect('/contao?do=c4g_io_data');
-    }
-
-    /**
-     * @return void
-     */
-    public function releaseBaseData()
-    {
-        // Check current action
-        $data = $_REQUEST;
-        $con4gisDeleteId = $data['id'];
-        $localData = $this->database->prepare(
-            'SELECT * FROM tl_c4g_import_data WHERE id = ?'
-        )->execute($con4gisDeleteId)->fetchAssoc();
-        $con4gisReleaseUuid = $localData['importUuid'];
-        $con4gisDeleteTables = explode(',', $localData['importTables']);
-        $con4gisDeleteTables = str_replace(' ', '', $con4gisDeleteTables);
-        if (empty($con4gisDeleteTables)) {
-            $con4gisDeleteTables = ['tl_c4g_'];
-        }
-
-        if ($con4gisReleaseUuid >= 6) {
-            //Release import data
-            $tables = $this->database->listTables();
-
-            foreach ($tables as $table) {
-                foreach ($con4gisDeleteTables as $con4gisDeleteTable) {
-                    if (C4GUtils::stringContains($table, $con4gisDeleteTable)) {
-                        if ($this->database->fieldExists('importId', $table)) {
-                            $statement = $this->database->prepare(
-                                "UPDATE $table SET importId=? WHERE importId = ?"
-                            );
-                            $statement->execute('0', $con4gisReleaseUuid);
-                        }
-                    }
-                }
-            }
-
-            $statement = $this->database->prepare(
-                'UPDATE tl_c4g_import_data SET tstamp = ?, importVersion = ?, importUuid = ?, importfilePath = ? WHERE id = ?'
-            );
-            $statement->execute(time(), '', '0', '', $con4gisDeleteId);
-
-            $this->loadBaseData(false);
-        } else {
-            C4gLogModel::addLogEntry('core', 'Error releasing unavailable import: wrong id set!');
-            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasingError']);
-        }
-
-        C4gLogModel::addLogEntry('core', 'The import data was successfully released.');
-        Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasedSuccessfull']);
-        PageRedirect::redirect('/contao?do=c4g_io_data');
     }
 
     /**
