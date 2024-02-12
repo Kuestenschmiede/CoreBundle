@@ -11,7 +11,9 @@
 
 namespace con4gis\CoreBundle\Classes\Callback;
 
+use Composer\InstalledVersions;
 use con4gis\CoreBundle\Classes\C4GUtils;
+use con4gis\CoreBundle\Classes\Events\AdditionalImportProxyDataEvent;
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Contao\Backend;
@@ -20,15 +22,11 @@ use Contao\Message;
 use Contao\PageRedirect;
 use Contao\StringUtil;
 use Contao\System;
+use DirectoryIterator;
 use Exception;
-use JsonMachine\Items;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Yaml\Parser;
 use ZipArchive;
-use con4gis\CoreBundle\Classes\Events\AfterImportEvent;
-use con4gis\CoreBundle\Classes\Events\AdditionalImportProxyDataEvent;
-use DirectoryIterator;
-use Composer\InstalledVersions;
 
 class C4GImportDataCallback extends Backend
 {
