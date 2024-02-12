@@ -9,6 +9,7 @@ use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use Contao\Database;
 use Contao\Folder;
+use Contao\PageRedirect;
 use Contao\StringUtil;
 use Contao\System;
 use ZipArchive;
@@ -1228,7 +1229,7 @@ class C4GImport
                             $updateWhereQueryValue = $importDbValue;
                         } elseif ($queryType == 'UPDATE' && $importDbField == 'path' && $importDB == 'tl_files') {
                             $updateWhereQueryValue = $importDbValue;
-                        } elseif ($updateWhereQuery == ' WHERE id=' && $importDbField == 'id') {
+                        } elseif ($updateWhereQuery && $importDbField && $updateWhereQuery == ' WHERE id=' && $importDbField == 'id') {
                             $updateWhereQueryValue = $allIdChanges[$importDB]['id'][$importDataset['id']];
                         }
 
