@@ -551,11 +551,9 @@ class C4GImport
             }
 
             try {
-                if ($output) {
-                    $output->writeln($sqlStatement);
-                }
                 $this->database->query($sqlStatement);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
+                $output->writeln('Error while executing SQL-Import: ' . $e->getMessage());
                 C4gLogModel::addLogEntry(
                     'core',
                     'Error while executing SQL-Import: ' . $e->getMessage()

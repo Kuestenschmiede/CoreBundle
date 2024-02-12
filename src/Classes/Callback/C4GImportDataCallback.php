@@ -314,8 +314,13 @@ class C4GImportDataCallback extends Backend
             $arrOutput = [];
             $code = null;
             exec($executable . $command, $arrOutput, $code);
-            foreach ($arrOutput as $output) {
-                Message::addError($output);
+            if ($code !== 0) {
+                foreach ($arrOutput as $output) {
+                    Message::addError($output);
+                }
+            }
+            else {
+                Message::addConfirmation('Import erfolgreich.');
             }
         }
     }
