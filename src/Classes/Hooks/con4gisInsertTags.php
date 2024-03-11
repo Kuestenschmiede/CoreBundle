@@ -19,7 +19,7 @@ use Contao\System;
  * Class con4gisInsertTag
  * @package con4gis\CoreBundle\Classes\Hooks
  */
-class con4gisInsertTags extends \System
+class con4gisInsertTags extends System
 {
     /**
      * Instanz des Symfony EventDispatchers
