@@ -348,7 +348,11 @@ class C4GImportDataCallback extends Backend
 
         $this->importBaseData($importId);
 
-        PageRedirect::redirect('/contao?do=c4g_io_data');
+        try {
+            PageRedirect::redirect('/contao?do=c4g_io_data');
+        } catch (Exception $e) {
+            //do nothing - cron error
+        }
     }
 
     /**
@@ -1008,7 +1012,7 @@ class C4GImportDataCallback extends Backend
                         $updateWhereQueryValue = $importDbValue;
                     } elseif ($queryType == 'UPDATE' && $importDbField == 'path' && $importDB == 'tl_files') {
                         $updateWhereQueryValue = $importDbValue;
-                    } elseif ($updateWhereQuery == ' WHERE id=' && $importDbField == 'id') {
+                    } elseif (isset($updateWhereQuery) && $updateWhereQuery == ' WHERE id=' && $importDbField == 'id') {
                         $updateWhereQueryValue = $allIdChanges[$importDB]['id'][$importDataset['id']];
                     }
 

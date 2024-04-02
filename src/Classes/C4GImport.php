@@ -1229,7 +1229,7 @@ class C4GImport
                             $updateWhereQueryValue = $importDbValue;
                         } elseif ($queryType == 'UPDATE' && $importDbField == 'path' && $importDB == 'tl_files') {
                             $updateWhereQueryValue = $importDbValue;
-                        } elseif ($updateWhereQuery && $importDbField && $updateWhereQuery == ' WHERE id=' && $importDbField == 'id') {
+                        } elseif (isset($updateWhereQuery) && $updateWhereQuery && $importDbField && $updateWhereQuery == ' WHERE id=' && $importDbField == 'id') {
                             $updateWhereQueryValue = $allIdChanges[$importDB]['id'][$importDataset['id']];
                         }
 
