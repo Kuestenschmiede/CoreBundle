@@ -322,7 +322,7 @@ class C4GImport
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
                         if ($output) {
-                            $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                            $output->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         }
                         C4gLogModel::addLogEntry('core', 'Error deleting old import data for automatic import. Stopped Import');
                         PageRedirect::redirect('/contao?do=c4g_io_data');
@@ -333,7 +333,7 @@ class C4GImport
                     if (!$deleted) {
                         $this->importRunning(false, $con4gisImportId);
                         if ($output)  {
-                            $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                            $output->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         }
                         PageRedirect::redirect('/contao?do=c4g_io_data');
                         return false;
@@ -461,7 +461,7 @@ class C4GImport
                         $this->importRunning(false, $con4gisImportId);
 
                         if ($output) {
-                            $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                            $output->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         }
 
                         return false;
@@ -472,7 +472,7 @@ class C4GImport
                         $this->importRunning(false, $con4gisImportId);
 
                         if ($output) {
-                            $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
+                            $output->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         }
 
                         PageRedirect::redirect('/contao?do=c4g_io_data');
@@ -534,7 +534,7 @@ class C4GImport
         if (!$sqlStatements) {
             C4gLogModel::addLogEntry('core', 'Error inserting/updating in database');
             if ($output) {
-                $ouput->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
+                $output->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['importError']);
             }
             $this->importRunning(false, $con4gisImportId);
             if (!$importId) {
@@ -602,7 +602,7 @@ class C4GImport
         $error = $event->getError();
 
         if ($error && $output) {
-            $ouput->writeln($error);
+            $output->writeln($error);
         }
 
         $this->importRunning(false, $con4gisImportId);
