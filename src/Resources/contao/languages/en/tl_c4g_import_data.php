@@ -44,7 +44,7 @@ $GLOBALS['TL_LANG']['tl_c4g_import_data']['deleteData'] = array("Delete data",""
  */
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['type_demo'] = "Demo data";
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['type_basedata'] = "Base data";
-$GLOBALS['TL_LANG']['tl_c4g_import_data']['source_io'] = "con4gis.io";
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['source_io'] = "con4gis Support";
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['source_locale'] = "Locale";
 
 /**
@@ -58,8 +58,8 @@ $GLOBALS['TL_LANG']['tl_c4g_import_data']['releaseImportDialog'] = 'This solves 
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['con4gisIoImportData'] = 'Overview of all imports';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_import_data']['infotext'] = 'Here you can import or update basic and demo data. Some modules provide demo data. If you have <a href="https://con4gis.io"><b>con4gis.io</b></a> access, further basic and demo data imports are available via the servers.';
-$GLOBALS['TL_LANG']['tl_c4g_import_data']['infotextNoKey'] = 'You have no con4gis.io access. But you need one to be able to see imports. You can create this under <a href="https://con4gis.io"><b>con4gis.io</b></a>.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['infotext'] = 'Here you can import or update basic and demo data. Some modules provide demo data. If you have <a href="https://con4gis.org/support"><b>con4gis Support</b></a> access, further basic and demo data imports are available via the servers.';
+$GLOBALS['TL_LANG']['tl_c4g_import_data']['infotextNoKey'] = 'You have no con4gis support access. But you need one to be able to see imports. You can create this under <a href="https://con4gis.org/suport"><b>con4gis.org</b></a>.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning'] = 'The import is already running. Only data of one import at a time can be imported.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport'] = 'Older import folder in file system. Reimport everything manually.';
 $GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports'] = 'Error while deleting older imports..';

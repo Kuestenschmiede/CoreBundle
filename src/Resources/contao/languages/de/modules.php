@@ -12,11 +12,11 @@
 /**
  * Back end modules
  */
-$GLOBALS['TL_LANG']['MOD']['con4gis'] = array('con4gis 8', 'Geoinformationssysteme mit Contao.');
+$GLOBALS['TL_LANG']['MOD']['con4gis'] = array('con4gis 9', 'Contao für Geoinformationssysteme.');
 $GLOBALS['TL_LANG']['MOD']['con4gis_stage'] = array('con4gis Prototypen', 'Nicht freigegebene Bausteine.');
 $GLOBALS['TL_LANG']['MOD']['c4g_bricks'] = array('Dashboard', 'Direkteinstieg in alle Bausteine.');
 $GLOBALS['TL_LANG']['MOD']['c4g_settings'] = array('Einstellungen', 'Einstellungen für alle Bausteine.');
-$GLOBALS['TL_LANG']['MOD']['c4g_io_data'] = array('Daten importieren', 'con4gis.io stellt Grund- und Demodaten zur Verfügung.');
+$GLOBALS['TL_LANG']['MOD']['c4g_io_data'] = array('Daten importieren', 'Über die con4gis Cloud stellen wir Grund- und Demodaten zur Verfügung.');
 $GLOBALS['TL_LANG']['MOD']['c4g_log'] = array('Log', 'Internes Log für con4gis.');
 
 /**

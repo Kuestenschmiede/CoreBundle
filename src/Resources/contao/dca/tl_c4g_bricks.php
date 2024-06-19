@@ -57,22 +57,6 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'class'               => 'header_con4gis_version',
                 'button_callback'     => [$cbClass, 'con4gisVersion']
             ),
-            'con4gisOrg' => array
-            (
-                'href'                => 'key=con4gisOrg',
-                'class'               => 'header_con4gis_org',
-                'button_callback'     => [$cbClass, 'con4gisOrg'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
-                'label'               => 'con4gis.org'
-            ),
-            'con4gisIO' => array
-            (
-                'href'                => 'key=con4gisIO',
-                'class'               => 'header_con4gis_io',
-                'button_callback'     => [$cbClass, 'con4gisIO'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.io.svg',
-                'label'               => 'con4gis.io'
-            ),
             'globalSettings' => array
             (
                 'href'                => 'key=globalSettings',
@@ -112,6 +96,14 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'button_callback'     => [$cbClass, 'serverLogs'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/serverlog.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'][0]
+            ),
+            'con4gisOrg' => array
+            (
+                'href'                => 'key=con4gisOrg',
+                'class'               => 'header_con4gis_org',
+                'button_callback'     => [$cbClass, 'con4gisOrg'],
+                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
+                'label'               => 'con4gis.org'
             )
 		),
 		'operations' => array

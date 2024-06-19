@@ -17,7 +17,6 @@ li .c4g_visible_brick {
 .col_brickname img {
   width: 75px
 }
-.header_con4gis_io,
-.header_con4gis_org {
-  vertical-align: 8px
+.con4gis_version {
+  margin-bottom: 8px
 }

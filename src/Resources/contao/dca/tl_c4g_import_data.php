@@ -534,7 +534,7 @@ class tl_c4g_import_data extends Contao\Backend
      */
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
-        return '<a href="https://con4gis.io"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a><br>';
+        return '<a href="https://con4gis.support"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a><br>';
     }
 
     /**

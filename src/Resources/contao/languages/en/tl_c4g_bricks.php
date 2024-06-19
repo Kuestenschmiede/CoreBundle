@@ -29,7 +29,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'] = ["Reload versions","The
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['importData'] = ["Import data","'Import basic and demo data."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'] = ["Server Logs","Logs from the con4gis bricks are displayed."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisOrg'] = ["con4gis.org","All about the GIS kit."];
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisIO'] = ["con4gis.io","Map services for Contao."];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisIO'] = ["con4gis","Map services for Contao."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['firstButton'] = "Open settings";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['secondButton'] = "Open settings";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['thirdButton'] = "Open settings";
@@ -71,8 +71,8 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'] = 'Progressive Web App';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Batch processing of processes (queue)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Position tracking';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Travel cost calculator (requires con4gis.io)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Travel cost calculator (requires con4gis Support)';
 
 /** INFOTEXT */
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Welcome to the con4gis control center. Here you can use the bricks and see what else con4gis has to offer.'.
-    ' A special feature is the new data import: with the help of a con4gis.io access you can easily import demo and basic data.';
+    ' A special feature is the new data import: with the help of a con4gis support access you can easily import demo and basic data.';

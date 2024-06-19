@@ -58,8 +58,8 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'] = [
     'Maximum file size',
     'Maximum file size for other files.'
 ];
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL for con4gis.io', 'Enter the URL for the con4gis.io map services here. The URL will be displayed in your IO Account.'];
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Key for con4gis.io', 'Enter one of your keys for the con4gis.io map services here (<a href="https://con4gis.io" target="_blank" rel="noopener">generate free key</a>).'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL for con4gis support', 'Enter the URL for the con4gis support services here. The URL will be displayed in your IO Account.'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Key for con4gis support', 'Enter one of your keys for the con4gis support services here (<a href="https://con4gis.org/support" target="_blank" rel="noopener">generate free key</a>).'];
 $GLOBALS['TL_LANG']['tl_c4g_settings']['disableJQueryLoading'] = ['Do not load jQuery', 'If you select this checkbox, jQuery will not be loaded. Useful if you already load jQuery from another source.'];
 
 /** INFO **/
@@ -71,7 +71,7 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['global_legend'] = "Global settings";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI settings (forum/groups/projects)";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Upload settings (forum/projects)";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Miscellaneous settings";
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = 'con4gis.io map services';
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = 'con4gis support';
 $GLOBALS['TL_LANG']['tl_c4g_settings']['expert_legend'] = "Expert settings";
 
 /** Field References */

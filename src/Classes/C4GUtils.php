@@ -641,6 +641,19 @@ class C4GUtils
         return 'IN(' . implode(',', array_fill(0, count($array), '?')) . ')';
     }
 
+    public static function buildInStringValues(array $array)
+    {
+        $result = '';
+        foreach ($array as $key => $value) {
+           if ($result) {
+               $result .= ','.$value;
+           } else {
+               $result = $value;
+           }
+        }
+       return $result;
+    }
+
     /**
      * @param $link
      * @return string

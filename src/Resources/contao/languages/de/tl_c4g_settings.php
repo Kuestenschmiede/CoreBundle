@@ -58,9 +58,9 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['uploadMaxFileSize'] = array(
     'Maximale Dateigröße',
     'Maximale Dateigröße für Uploads aller Art.'
 );
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL für con4gis.io', 'Geben Sie hier die URL für die con4gis.io Kartendienste ein. Die URL wird Ihnen im IO Account angezeigt.'];
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Schlüssel für con4gis.io', 'Geben Sie hier einen Ihrer Schlüssel für die con4gis.io Kartendienste ein (<a href="https://con4gis.io" target="_blank" rel="noopener">kostenfreien Schlüssel generieren</a>).'];
-$GLOBALS['TL_LANG']['tl_c4g_settings']['disableJQueryLoading'] = ['jQuery nicht laden', 'Wenn Sie diese Checkbox aktivieren, wird jQuery nicht geladen. Nützlich wenn Sie bereits jQuery aus einer anderen Quelle laden.'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoUrl'] = ['URL für con4gis Support', 'Gib hier die URL für die con4gis Support ein. Die URL wird Dir in Deinem Account angezeigt (account.con4gis.support).'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoKey'] = ['API-Schlüssel für con4gis Support', 'Gib hier einen Deiner Schlüssel für con4gis Support ein (<a href="https://con4gis.org/support" target="_blank" rel="noopener">kostenfreien Schlüssel generieren</a>).'];
+$GLOBALS['TL_LANG']['tl_c4g_settings']['disableJQueryLoading'] = ['jQuery nicht laden', 'Wenn Du diese Checkbox aktivierst, wird jQuery nicht geladen. Nur nützlich wenn Du jQuery aus einer anderen Quelle lädst.'];
 
 /** INFO **/
 $GLOBALS['TL_LANG']['tl_c4g_settings']['infotext'] =
@@ -71,7 +71,7 @@ $GLOBALS['TL_LANG']['tl_c4g_settings']['global_legend'] = "Globale Einstellungen
 $GLOBALS['TL_LANG']['tl_c4g_settings']['layout_legend'] = "jQuery UI Einstellungen (forum/groups/projects)";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['upload_legend'] = "Uploadeinstellungen (forum/projects)";
 $GLOBALS['TL_LANG']['tl_c4g_settings']['misc_legend'] = "Sonstige Einstellungen";
-$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = 'con4gis.io Kartendienste';
+$GLOBALS['TL_LANG']['tl_c4g_settings']['con4gisIoLegend'] = 'con4gis Kartendienste';
 $GLOBALS['TL_LANG']['tl_c4g_settings']['expert_legend'] = "Experten-Einstellungen";
 
 /** Field References */

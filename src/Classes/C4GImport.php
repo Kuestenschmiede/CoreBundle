@@ -798,7 +798,7 @@ class C4GImport
                         C4gLogModel::addLogEntry(
                             'core',
                             'Did not find file on Proxy-Server. '.
-                            'Please try again later or contact support@con4gis.io'
+                            'Please try again later or contact support@con4gis.org'
                         );
                     } else {
                         C4gLogModel::addLogEntry(

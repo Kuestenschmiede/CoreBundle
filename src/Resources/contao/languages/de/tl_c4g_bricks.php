@@ -29,7 +29,7 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'] = ["Versionen aktualisier
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['importData'] = ["Daten importieren","Grund- und Demodaten importieren."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'] = ["Server Logs","Logs aus den con4gis Modulen werden angezeigt."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisOrg'] = ["con4gis.org","Alles zum GIS-Baukasten."];
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisIO'] = ["con4gis.io","Kartendienste für Contao."];
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['con4gisIO'] = ["con4gis.support","Kartendienste für Contao."];
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['firstButton'] = "Einstellungen öffnen";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['secondButton'] = "Einstellungen öffnen";
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['thirdButton'] = "Einstellungen öffnen";
@@ -71,8 +71,8 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Stapelverarbeitung von Prozesse
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['reservation'] = 'Reservierungsformulare (Tische, Räume, ...)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Positionsverfolgung';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Fahrtkostenrechner (erfordert con4gis.io)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Fahrtkostenrechner (nur für con4gis Supporter)';
 
 /** INFOTEXT */
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Willkommen in der con4gis Schaltzentrale. Hier kann man die Bausteine nutzen und sehen was con4gis noch zu bieten hat.'.
-    ' Eine Besonderheit ist der neue Datenimport: darüber kann man, mit Hilfe eines con4gis.io Zugangs, auf einfache Art und Weise Demo- und Grunddaten einspielen.';
+    ' Eine Besonderheit ist der neue Datenimport: darüber kann man, mit Hilfe eines con4gis Supporter Zugangs, auf einfache Art und Weise Demo- und Grunddaten einspielen.';

@@ -92,7 +92,7 @@ $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['INSTALL']                = 'packagist
 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_website']        = 'con4gis Website';
 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_documentation']  = 'con4gis Docs';
 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['github_coastforge']      = 'con4gis @ GitHub';
-$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_io']             = 'con4gis.io Kartendienste';
+$GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['con4gis_io']             = 'con4gis Kartendienste';
 $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['server_log']             = 'con4gis Serverlog';
 
 $GLOBALS['TL_LANG']['MSC']['C4G_ERROR']['file_upload_successful']         = "%s erfolgreich hochgeladen: \\n- Größe: %s KB";
