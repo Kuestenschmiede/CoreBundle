@@ -1648,7 +1648,11 @@ class C4GImport
                 if (C4GUtils::stringContains($table, $con4gisDeleteTable)) {
                     if ($this->database->fieldExists('importId', $table)) {
                         try {
-                            $this->database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
+                            if (strpos($table, 'tl_c4g_') !== false) {
+                                $this->database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
+                            } else {
+                                $this->database->prepare("DELETE FROM $table WHERE importId > 0")->execute($likeOperator);
+                            }
                         } catch (\Exception $e) {
                             C4gLogModel::addLogEntry('core', 'Error deleting data from database. Abort import. ' . $e);
 
