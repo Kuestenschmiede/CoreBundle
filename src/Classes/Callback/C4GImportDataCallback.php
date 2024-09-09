@@ -332,7 +332,7 @@ class C4GImportDataCallback extends Backend
     {
         if ($this->importRunning()) {
             Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
-            PageRedirect::redirect('/contao?do=c4g_io_data');
+            PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
             return false;
         }
 
@@ -349,7 +349,7 @@ class C4GImportDataCallback extends Backend
         $this->importBaseData($importId);
 
         try {
-            PageRedirect::redirect('/contao?do=c4g_io_data');
+            PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
         } catch (Exception $e) {
             //do nothing - cron error
         }
@@ -403,7 +403,7 @@ class C4GImportDataCallback extends Backend
 
         C4gLogModel::addLogEntry('core', 'The import data was successfully released.');
         Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['releasedSuccessfull']);
-        PageRedirect::redirect('/contao?do=c4g_io_data');
+        PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
     }
 
     /**
@@ -419,7 +419,7 @@ class C4GImportDataCallback extends Backend
             if ($this->importRunning()) {
                 C4gLogModel::addLogEntry('core', 'Import already running. Try again later ');
                 Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
-                PageRedirect::redirect('/contao?do=c4g_io_data');
+                PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                 return false;
             }
         }
@@ -472,7 +472,7 @@ class C4GImportDataCallback extends Backend
                     C4gLogModel::addLogEntry('core', 'Older import folder in file system. Reimport everything manually.');
                     $this->importRunning(false, $con4gisDeleteId);
                     Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport']);
-                    PageRedirect::redirect('/contao?do=c4g_io_data');
+                    PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                     return false;
                 }
             }
@@ -530,7 +530,7 @@ class C4GImportDataCallback extends Backend
             if (!$deletedOldImports) {
                 $this->importRunning(false, $con4gisDeleteId);
                 Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
-                PageRedirect::redirect('/contao?do=c4g_io_data');
+                PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                 return false;
             }
 
@@ -541,7 +541,7 @@ class C4GImportDataCallback extends Backend
             $this->loadBaseData(false);
         } else {
             C4gLogModel::addLogEntry('core', 'Error deleting unavailable import: wrong id set!');
-            PageRedirect::redirect('/contao?do=c4g_io_data');
+            PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
             return false;
         }
 
@@ -552,7 +552,7 @@ class C4GImportDataCallback extends Backend
         C4gLogModel::addLogEntry('core', 'The import data was successfully deleted.');
         if (!$update) {
             Message::addConfirmation($GLOBALS['TL_LANG']['tl_c4g_import_data']['deletedSuccessfull']);
-            PageRedirect::redirect('/contao?do=c4g_io_data');
+            PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
             return false;
         }
         return true;

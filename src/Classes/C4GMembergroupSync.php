@@ -15,6 +15,7 @@ namespace con4gis\CoreBundle\Classes;
 use con4gis\GroupsBundle\Resources\models\MemberModel;
 use con4gis\GroupsBundle\Resources\models\MemberGroupModel;
 use Contao\Input;
+use Contao\System;
 
 /**
  * Class C4GMembergroupSync
@@ -53,7 +54,7 @@ class C4GMembergroupSync extends \Contao\BackendModule
 
                 break;
             case 'back':
-                \Controller::redirect('contao?do=c4g_core');
+                \Controller::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_core');
             case 'init':
             default:
                 $this->output[] = $GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNC']['INTRO'];

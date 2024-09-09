@@ -325,7 +325,7 @@ class C4GImport
                             $output->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         }
                         C4gLogModel::addLogEntry('core', 'Error deleting old import data for automatic import. Stopped Import');
-                        PageRedirect::redirect('/contao?do=c4g_io_data');
+                        PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                         return false;
                     }
                 } elseif ($importDataType == 'full') {
@@ -335,7 +335,7 @@ class C4GImport
                         if ($output)  {
                             $output->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         }
-                        PageRedirect::redirect('/contao?do=c4g_io_data');
+                        PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                         return false;
                     }
                 }
@@ -407,7 +407,7 @@ class C4GImport
                     'Cant create path: '.$downloadPath.'. Abort import.'
                 );
                 $this->importRunning(false, $con4gisImportId);
-                PageRedirect::redirect('/contao?do=c4g_io_data');
+                PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                 return false;
             }
 
@@ -418,7 +418,7 @@ class C4GImport
                     'Cant update. Import file cannot be downloaded. Abort import.'
                 );
                 $this->importRunning(false, $con4gisImportId);
-                PageRedirect::redirect('/contao?do=c4g_io_data');
+                PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                 return false;
             }
 
@@ -445,7 +445,7 @@ class C4GImport
                     'Cant update. Import file is empty. Abort import.'
                 );
                 $this->importRunning(false, $con4gisImportId);
-                PageRedirect::redirect('/contao?do=c4g_io_data');
+                PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                 return false;
             }
 
@@ -475,7 +475,7 @@ class C4GImport
                             $output->writeln($GLOBALS['TL_LANG']['tl_c4g_import_data']['errorDeleteImports']);
                         }
 
-                        PageRedirect::redirect('/contao?do=c4g_io_data');
+                        PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
 
                         return false;
                     }
@@ -674,7 +674,7 @@ class C4GImport
                     C4gLogModel::addLogEntry('core', 'Older import folder in file system. Reimport everything manually.');
                     $this->importRunning(false, $con4gisDeleteId);
                     Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['olderImport']);
-                    PageRedirect::redirect('/contao?do=c4g_io_data');
+                    PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_io_data');
                     return false;
                 }
             }

@@ -15,6 +15,7 @@ use Contao\Input;
 use Contao\Controller;
 use Contao\Environment;
 use Composer\InstalledVersions;
+use Contao\System;
 
 class C4gBrickCallback extends Backend
 {
@@ -419,7 +420,7 @@ class C4gBrickCallback extends Backend
     {
         $rt = Input::get('rt');
         $result = Database::getInstance()->execute("SELECT id FROM tl_c4g_settings LIMIT 1")->fetchAssoc();
-        $href = '/contao?do=c4g_settings&id="' . $result['id'].'"&rt='.$rt.'&key=openSettings';
+        $href = System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_settings&id="' . $result['id'].'"&rt='.$rt.'&key=openSettings';
         return $this->User->hasAccess('c4g_settings', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
     }
 
@@ -445,7 +446,7 @@ class C4gBrickCallback extends Backend
             $actKey = 'switchAll';
         }
 
-        $href = "/contao?do=".$do."&key=".$actKey;
+        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=".$do."&key=".$actKey;
         return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
 
@@ -463,7 +464,7 @@ class C4gBrickCallback extends Backend
         $rt = Input::get('rt');
         $do = Input::get('do');
 
-        $href = "/contao?do=$do&key=reloadVersions";
+        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=$do&key=reloadVersions";
         return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
 
@@ -479,7 +480,7 @@ class C4gBrickCallback extends Backend
     public function importData($href, $label, $title, $class, $attributes)
     {
         $rt = Input::get('rt');
-        $href = "/contao?do=c4g_io_data&rt=$rt&key=importData";
+        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=c4g_io_data&rt=$rt&key=importData";
         return $this->User->hasAccess('c4g_io_data', 'modules') ?  '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
     }
 
@@ -495,7 +496,7 @@ class C4gBrickCallback extends Backend
     public function serverLogs($href, $label, $title, $class, $attributes)
     {
         $rt = Input::get('rt');
-        $href = "/contao?do=c4g_log&rt=$rt&key=serverLogs";
+        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=c4g_log&rt=$rt&key=serverLogs";
         return $this->User->hasAccess('c4g_log', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
     }
 
@@ -588,7 +589,7 @@ class C4gBrickCallback extends Backend
         $attributes = 'style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
         $ref = Input::get('ref');
-        $href = '/contao?do='.$do.'&amp;ref='.$ref;
+        $href = System::getContainer()->get('router')->generate('contao_backend') .'?do='.$do.'&amp;ref='.$ref;
 
         return $this->User->hasAccess($do, 'modules') ? '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label, $imgAttributes).'</a>' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 
@@ -672,7 +673,7 @@ class C4gBrickCallback extends Backend
             }
         }
 
-        $href = "/contao?do=$do&key=switchFavorite_".$row['brickkey'];
+        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=$do&key=switchFavorite_".$row['brickkey'];
         return '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>'.Image::getHtml($icon, $label, $imgAttributes).'</a> ';
     }
 }

@@ -175,7 +175,7 @@ class DcaHelper
             $do = $rt;
         }
 
-        $href = '/contao?do=' . $do/* . "&rt=$rt"*/;
+        $href = System::getContainer()->get('router')->generate('contao_backend') .'?do=' . $do/* . "&rt=$rt"*/;
 
         return '<a href="' . $href . '" class="' . $class . '" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
