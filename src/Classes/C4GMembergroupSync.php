@@ -102,7 +102,7 @@ class C4GMembergroupSync extends \Contao\BackendModule
                             $objGroup = MemberGroupModel::findByPk($memberGroupId);
                             if ($objGroup) {
                                 // check if the group has a member-limitation
-                                $count = is_countable($count) && count(\Contao\StringUtil::deserialize($objGroup->cg_member) : count(\Contao\StringUtil::deserialize($objGroup->cg_member)) : 0;
+                                $count = is_countable($count) && count(\Contao\StringUtil::deserialize($objGroup->cg_member)) ? count(\Contao\StringUtil::deserialize($objGroup->cg_member)) : 0;
                                 if ($objGroup->cg_max_member > 0 && $objGroup->cg_max_member <= $count) {
                                     $this->output[] = '<span class="c4g_warning">' . sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MEMBERGROUPSYNC']['ERROR_GROUPLIMITREACHED'], $objMember->id, $objGroup->id) . '</span>';
 
