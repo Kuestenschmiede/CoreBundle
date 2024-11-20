@@ -33,6 +33,14 @@ class C4GImportDataCallback extends Backend
     public function __construct()
     {
         parent::__construct();
+
+        $db = $this->Database;
+        $rows = $db->prepare("SELECT COUNT(*) AS rowCount FROM tl_c4g_log")->execute()->fetchAssoc();
+
+        if ($rows['rowCount'] > 1000) {
+            $deleteCount = $rows['rowCount'] - 500;
+            $db->prepare("DELETE FROM tl_c4g_log ORDER BY tstamp DESC LIMIT ".$deleteCount)->execute();
+        }
     }
 
     /**
