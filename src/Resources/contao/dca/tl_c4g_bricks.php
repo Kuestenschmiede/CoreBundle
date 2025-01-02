@@ -225,6 +225,11 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
         [
             'sql' => "int(10) unsigned NOT NULL default '0'"
         ],
+        'vendor' =>
+        [
+            'inputType'               => 'text',
+            'sql'                     => "varchar(128) NOT NULL default ''",
+        ],
 		'brickkey' =>
         [
 			'inputType'               => 'text',

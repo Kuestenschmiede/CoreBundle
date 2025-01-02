@@ -49,103 +49,123 @@ class C4gBrickCallback extends Backend
         $this->bundles = [
             'core' => [
                 'repo' => 'CoreBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['core'],
                 'icon' => $iconPath.'core_c4g.svg'
             ],
             'data' => [
                 'repo' => 'DataBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['data'],
                 'icon' => $iconPath.'data_c4g.svg'
             ],
             'documents' => [
                 'repo' => 'DocumentsBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['documents'],
                 'icon' => $iconPath.'documents_c4g.svg'
             ],
 //            'editor' => [
 //                'repo' => 'EditorBundle',
+//                'vendor' => 'con4gis',
 //                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['editor'],
 //                'icon' => $iconPath.'editor_c4g.svg'
 //            ],
             'export' => [
                 'repo' => 'ExportBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['export'],
                 'icon' => $iconPath.'export_c4g.svg'
             ],
-            'firefighter' => [
-                'repo' => 'FirefighterBundle',
-                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'],
-                'icon' => $iconPath.'firefighter_c4g.svg'
-            ],
+//            'firefighter' => [
+//                'repo' => 'FirefighterBundle',
+//                'vendor' => 'con4gis',
+//                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['firefighter'],
+//                'icon' => $iconPath.'firefighter_c4g.svg'
+//            ],
             'framework' => [
                 'repo' => 'FrameworksBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'],
                 'icon' => $iconPath.'framework_c4g.svg'
             ],
-            'forum' => [
-                'repo' => 'ForumBundle',
-                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
-                'icon' => $iconPath.'forum_c4g.svg'
-            ],
+//            'forum' => [
+//                'repo' => 'ForumBundle',
+//                'vendor' => 'con4gis',
+//                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
+//                'icon' => $iconPath.'forum_c4g.svg'
+//            ],
             'groups' => [
                 'repo' => 'GroupsBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['groups'],
                 'icon' => $iconPath.'groups_c4g.svg'
             ],
             'import' => [
                 'repo' => 'ImportBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['import'],
                 'icon' => $iconPath.'import_c4g.svg'
             ],
-            'ldap' => [
-                'repo' => 'LdapBundle',
-                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'],
-                'icon' => $iconPath.'ldap_c4g.svg'
-            ],
+//            'ldap' => [
+//                'repo' => 'LdapBundle',
+//                'vendor' => 'con4gis',
+//                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'],
+//                'icon' => $iconPath.'ldap_c4g.svg'
+//            ],
             'maps' => [
                 'repo' => 'MapsBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['maps'],
                 'icon' => $iconPath.'maps_c4g.svg'
             ],
-            'oauth' => [
-                'repo' => 'OAuthBundle',
-                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['oauth'],
-                'icon' => $iconPath.'oauth_c4g.svg'
-            ],
+//            'oauth' => [
+//                'repo' => 'OAuthBundle',
+//                'vendor' => 'con4gis',
+//                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['oauth'],
+//                'icon' => $iconPath.'oauth_c4g.svg'
+//            ],
             'projects' => [
                 'repo' => 'ProjectsBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['projects'],
                 'icon' => $iconPath.'projects_c4g.svg'
             ],
             'pwa' => [
                 'repo' => 'PwaBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'],
                 'icon' => $iconPath.'pwa_c4g.svg'
             ],
             'queue' => [
                 'repo' => 'QueueBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'],
                 'icon' => $iconPath.'queue_c4g.svg'
             ],
             'reservation' => [
                 'repo' => 'ReservationBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['reservation'],
                 'icon' => $iconPath.'reservation_c4g.svg'
             ],
             'tracking' => [
                 'repo' => 'TrackingBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'],
                 'icon' => $iconPath.'tracking_c4g.svg'
             ],
-            'visualization' => [
-                'repo' => 'VisualizationBundle',
-                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'],
-                'icon' => $iconPath.'visualization_c4g.svg'
-            ],
             'travel-costs' => [
                 'repo' => 'TravelCostsBundle',
+                'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['travel-costs'],
                 'icon' => $iconPath.'travel-costs_c4g.svg'
+            ],
+            'visualization' => [
+                'repo' => 'VisualizationBundle',
+                'vendor' => 'con4gis',
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'],
+                'icon' => $iconPath.'visualization_c4g.svg'
             ]
         ];
     }
@@ -154,7 +174,7 @@ class C4gBrickCallback extends Backend
         $bundles = $this->bundles;
         $packages = [];
         foreach ($bundles as $bundle => $values) {
-            $packages[] = 'con4gis/'.$bundle;
+            $packages[] = $values['vendor'].'/'.$bundle;
         }
 
         $versions = [];
@@ -272,6 +292,7 @@ class C4gBrickCallback extends Backend
             //get official packages
             foreach ($bundles as $bundle => $values) {
                 if (key_exists('con4gis/'.$bundle, $installedPackages) && $installedPackages['con4gis/'.$bundle]) {
+                    $vendor = 'con4gis';
                     $installedVersion = $installedPackages['con4gis/'.$bundle];
                     $latestVersion = $this->versions['con4gis/'.$bundle];
 
@@ -281,6 +302,7 @@ class C4gBrickCallback extends Backend
                         $latestVersion = '<b>'.$latestVersion.'</b>';
                     }
                 } else if (key_exists('gutesio/'.$bundle, $installedPackages) && $installedPackages['gutesio/'.$bundle]) {
+                    $vendor = 'gutesio';
                     $installedVersion = $installedPackages['gutesio/'.$bundle];
                     $latestVersion = $this->versions['gutesio/'.$bundle];
 
@@ -291,11 +313,13 @@ class C4gBrickCallback extends Backend
                     }
                 } else {
                     $installedVersion = '';
-                    $latestVersion    = $this->versions['con4gis/'.$bundle];
+                    $vendor = $values['vendor'];
+                    $latestVersion = $this->versions[$vendor.'/'.$bundle];
                 }
 
                 $set['tstamp'] = time();
                 $set['pid'] = $this->User->id;
+                $set['vendor'] = $vendor;
                 $set['brickkey'] = $bundle;
                 $set['brickname'] = $values['icon'] ? Image::getHtml($values['icon']) : $bundle;
                 $set['repository'] = $values['repo'];
@@ -312,17 +336,12 @@ class C4gBrickCallback extends Backend
 
             //get develop packages
             foreach ($installedPackages as $vendorBundle=>$version) {
-                if (((substr($vendorBundle,0,7) == 'con4gis') || (substr($vendorBundle,0,7) == 'gutesio')) && (!key_exists($vendorBundle, $this->versions) || !$this->versions[$vendorBundle])) {
-                    $bundle = substr($vendorBundle,8);
-
-                    if (key_exists($bundle, $bundles) && $bundles[$bundle]) {
-                        continue;
-                    }
-
+                if ($bundle = $this->checkDevelopPackage($vendorBundle)) {
                     $installedVersion = $version;
 
                     $set['tstamp'] = time();
                     $set['pid'] = $this->User->id;
+                    $set['vendor'] = $vendor;
                     $set['brickkey'] = $bundle;
                     $set['brickname'] = $bundle;
                     $set['repository'] = '-';
@@ -339,6 +358,18 @@ class C4gBrickCallback extends Backend
         }
 
         return $bricks;
+    }
+
+    private function checkDevelopPackage($vendorBundle) {
+        if (((substr($vendorBundle,0,7) == 'con4gis') || (substr($vendorBundle,0,7) == 'gutesio')) && (!key_exists($vendorBundle, $this->versions) || !$this->versions[$vendorBundle])) {
+            $bundle = substr($vendorBundle, 8);
+
+            if (key_exists($bundle, $this->bundles) && $this->bundles[$bundle]) {
+                return false;
+            }
+
+            return $bundle;
+        }
     }
 
 
@@ -613,7 +644,9 @@ class C4gBrickCallback extends Backend
     public function showDocs($row, $href, $label, $title, $icon) {
         $attributes = 'style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
-        return '<a href="https://docs.con4gis.org/con4gis-'.$row['brickkey'].'" title="'.StringUtil::specialchars($title).'" '.$attributes.' target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
+        if ($row['vendor'] == 'con4gis' && !$this->checkDevelopPackage($row['vendor'].'/'.$row['brickkey'])) {
+            return '<a href="https://docs.con4gis.org/con4gis-' . $row['brickkey'] . '" title="' . StringUtil::specialchars($title) . '" ' . $attributes . ' target="_blank" rel="noopener">' . Image::getHtml($icon, $label, $imgAttributes) . '</a>';
+        }
     }
 
     /**
@@ -628,7 +661,10 @@ class C4gBrickCallback extends Backend
     public function showPackagist($row, $href, $label, $title, $icon) {
         $attributes = 'style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
-        return '<a href="https://packagist.org/packages/con4gis/'.$row['brickkey'].'" title="'.StringUtil::specialchars($title).'" '.$attributes.' target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
+
+        if (!$this->checkDevelopPackage($row['vendor'].'/'.$row['brickkey'])) {
+            return '<a href="https://packagist.org/packages/'.$row['vendor'].'/'.$row['brickkey'].'" title="'.StringUtil::specialchars($title).'" '.$attributes.' target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
+        }
     }
 
     /**
@@ -642,7 +678,9 @@ class C4gBrickCallback extends Backend
      */
     public function showGitHub($row, $href, $label, $title, $icon) {
         $imgAttributes = 'style="width: 18px; height: 18px"';
-        return '<a href="https://github.com/Kuestenschmiede/'.$row['repository'].'" title="'.StringUtil::specialchars($title).'" target="_blank" rel="noopener">'.Image::getHtml($icon, $label, $imgAttributes).'</a>';
+        if (!$this->checkDevelopPackage($row['vendor'].'/'.$row['brickkey'])) {
+            return '<a href="https://github.com/Kuestenschmiede/' . $row['repository'] . '" title="' . StringUtil::specialchars($title) . '" target="_blank" rel="noopener">' . Image::getHtml($icon, $label, $imgAttributes) . '</a>';
+        }
     }
 
     /**
