@@ -200,7 +200,7 @@ class C4gBrickCallback extends Backend
             $packages = InstalledVersions::getInstalledPackages();
             $installed = [];
             foreach ($packages as $key => $value) {
-                if (strpos($value, 'con4gis') !== false || strpos($key, 'gutesio') !== false) {
+                if (strpos($value, 'con4gis') !== false || strpos($value, 'gutesio') !== false) {
                     $installed[$value] = InstalledVersions::getVersion($value);
                 }
             }
