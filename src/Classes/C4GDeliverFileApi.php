@@ -2,16 +2,19 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 namespace con4gis\CoreBundle\Classes;
 
 use Contao\Input;
 use Contao\Environment;
+use Contao\System;
+use Contao\BackendUser;
+
 class C4GDeliverFileApi
 {
     public function generate()
@@ -31,7 +34,8 @@ class C4GDeliverFileApi
         $sFilePath = str_replace($aInfo['basename'], '', $sFilePath) . $sUniqFileName;
 
         // User not logged in...
-        if (!FE_USER_LOGGED_IN) {
+        $hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+        if (!$hasFrontendUser) {
             header('HTTP/1.0 404 Not Found');
             die();
         }
@@ -49,7 +53,8 @@ class C4GDeliverFileApi
         }
 
         // file does not exist
-        if (!file_exists(TL_ROOT . '/' . $sFilePath)) {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        if (!file_exists($rootDir . '/' . $sFilePath)) {
             header('HTTP/1.0 404 Not Found');
             die();
         }
@@ -79,8 +84,8 @@ class C4GDeliverFileApi
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
-        header('Content-Length: ' . filesize(TL_ROOT . '/' . $sFilePath));
+        header('Content-Length: ' . filesize($rootDir . '/' . $sFilePath));
 
-        return ['data' => file_get_contents(TL_ROOT . '/' . $sFilePath), 'type' => 'application/octet-stream'];
+        return ['data' => file_get_contents($rootDir . '/' . $sFilePath), 'type' => 'application/octet-stream'];
     }
 }

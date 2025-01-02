@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 namespace con4gis\CoreBundle\Classes\Helper;
@@ -17,6 +17,8 @@ use Contao\Database;
 use Contao\Image;
 use Contao\Input;
 use Contao\System;
+
+use Contao\Versions;
 
 /**
  * Class DcaHelper
@@ -175,7 +177,7 @@ class DcaHelper
             $do = $rt;
         }
 
-        $href = System::getContainer()->get('router')->generate('contao_backend') .'?do=' . $do/* . "&rt=$rt"*/;
+        $href = System::getContainer()->get('router')->generate('contao_backend'). '?do=' . $do/* . "&rt=$rt"*/;
 
         return '<a href="' . $href . '" class="' . $class . '" title="' . \Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }

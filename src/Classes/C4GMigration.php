@@ -3,16 +3,18 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
 namespace con4gis\CoreBundle\Classes;
 
 use Contao\Input;
+use Contao\System;
+
 /**
  * Class C4GMigration
  * @package c4g
@@ -57,11 +59,11 @@ class C4GMigration extends \Contao\BackendModule
 
                 break;
             case 'back':
-                \Controller::redirect(\Environment::get('script') . '?do=c4g_core');
+                \Controller::redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=c4g_core');
             case 'dbupdate':
-                \Controller::redirect(\Environment::get('script') . '?do=repository_manager&update=database');
+                \Controller::redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=repository_manager&update=database');
             case 'uninstall':
-                \Controller::redirect(\Environment::get('script') . '?do=repository_manager&uninstall=cfs_' . $this->module);
+                \Controller::redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=repository_manager&uninstall=cfs_' . $this->module);
             case 'init':
             default:
                 $this->output[] = sprintf($GLOBALS['TL_LANG']['MSC']['C4G_BE_INFO']['MIGRATION']['INTRO'], $this->module);

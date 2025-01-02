@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 namespace con4gis\CoreBundle\Classes;
@@ -20,6 +20,7 @@ class C4GFileUpload
 {
     public function generate()
     {
+        $hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
         try {
             define('TL_MODE', 'FE');
             define('TL_SCRIPT', 'SOMETHING');
@@ -30,7 +31,7 @@ class C4GFileUpload
             // Initialize the system
             require_once($initialize);
             // User not logged in...
-            if (!FE_USER_LOGGED_IN) {
+            if (!$hasFrontendUser) {
                 header('HTTP/1.0 403 Forbidden');
 
                 return 'Forbidden';
@@ -38,6 +39,7 @@ class C4GFileUpload
             System::loadLanguageFile('default');
             // xss cleanup
             $_FILES = Input::xssClean($_FILES);
+            $rootDir = System::getContainer()->getParameter('kernel.project_dir');
             $sServerName = Environment::get('serverName');
             $sRequestUri = Environment::get('requestUri');
             $sHttps = Environment::get('https');
@@ -54,8 +56,8 @@ class C4GFileUpload
             // add subfolder
             $sUploadDir = $sUploadDir . $sSubfolder;
             // create if not exist
-            if (!is_dir(TL_ROOT . '/' . $sUploadDir)) {
-                mkdir(TL_ROOT . '/' . $sUploadDir, 0777, true);
+            if (!is_dir($rootDir . '/' . $sUploadDir)) {
+                mkdir($rootDir . '/' . $sUploadDir, 0777, true);
             }
             $sValidFileTypes = Session::getInstance()->get('c4g_forum_bbcodes_editor_uploadTypes');
             $sMaxFileSize = Session::getInstance()->get('c4g_forum_bbcodes_editor_maxFileSize');
@@ -93,7 +95,7 @@ class C4GFileUpload
                 $sProtocol = !empty($sHttps) ? 'https://' : 'http://';
                 $sSite = $sProtocol . $sServerName . $path . '/con4gis/api/deliver?file=';
                 // build file path
-                $sUploadpath = TL_ROOT . '/' . $sUploadDir . $sUniqFileName;       // full file path
+                $sUploadpath = $rootDir . '/' . $sUploadDir . $sUniqFileName;       // full file path
                 $sExtension = pathinfo($_FILES['uploadFile']['name']);
                 $sType = $sExtension['extension'];       // gets extension
                 // Checks if the file has allowed type, size, width and height (for images)

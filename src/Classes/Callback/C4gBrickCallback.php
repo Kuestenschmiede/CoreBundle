@@ -16,6 +16,7 @@ use Contao\Controller;
 use Contao\Environment;
 use Composer\InstalledVersions;
 use Contao\System;
+use Symfony\Component\Security\Core\Security;
 
 class C4gBrickCallback extends Backend
 {
@@ -41,8 +42,7 @@ class C4gBrickCallback extends Backend
     {
         parent::__construct();
         $this->versionProvider = new C4GVersionProvider();
-        $this->import(BackendUser::class, 'User');
-        //$this->User->authenticate();
+        $this->User = System::getContainer()->get('security.helper')->getUser();
 
         $iconPath = 'bundles/con4giscore/images/be-icons/';
 
@@ -142,10 +142,10 @@ class C4gBrickCallback extends Backend
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'],
                 'icon' => $iconPath.'visualization_c4g.svg'
             ],
-            'io-travel-costs' => [
-                'repo' => 'IOTravelCostsBundle',
-                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'],
-                'icon' => $iconPath.'io-travel-costs_c4g.svg'
+            'travel-costs' => [
+                'repo' => 'TravelCostsBundle',
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['travel-costs'],
+                'icon' => $iconPath.'travel-costs_c4g.svg'
             ]
         ];
     }
@@ -167,22 +167,21 @@ class C4gBrickCallback extends Backend
     }
 
     private function getInstalledPackages() {
-//        $packages = $this->getContainer()->getParameter('kernel.packages');
         if ($this->getContainer()->hasParameter('kernel.packages')) {
             $packages = $this->getContainer()->getParameter('kernel.packages');
             $installed = [];
             foreach ($packages as $key => $value) {
-                if (strpos($key, 'con4gis') !== false) {
+                if (strpos($key, 'con4gis') !== false || strpos($key, 'gutesio') !== false) {
                     $installed[$key] = $value;
                 }
             }
         }
         else {
-            $packages = array_flip(InstalledVersions::getInstalledPackages());
+            $packages = InstalledVersions::getInstalledPackages();
             $installed = [];
             foreach ($packages as $key => $value) {
-                if (strpos($key, 'con4gis') !== false) {
-                    $installed[$key] = InstalledVersions::getVersion($key);
+                if (strpos($value, 'con4gis') !== false || strpos($key, 'gutesio') !== false) {
+                    $installed[$value] = InstalledVersions::getVersion($value);
                 }
             }
         }
@@ -281,14 +280,19 @@ class C4gBrickCallback extends Backend
                     if ($this->compareVersions($iv, $lv)) {
                         $latestVersion = '<b>'.$latestVersion.'</b>';
                     }
+                } else if (key_exists('gutesio/'.$bundle, $installedPackages) && $installedPackages['gutesio/'.$bundle]) {
+                    $installedVersion = $installedPackages['gutesio/'.$bundle];
+                    $latestVersion = $this->versions['gutesio/'.$bundle];
+
+                    $iv = (strpos($installedVersion,'v') == 0) ? substr($installedVersion, 1) : $installedVersion;
+                    $lv = (strpos($latestVersion,'v') == 0) ? substr($latestVersion, 1) : $latestVersion;
+                    if ($this->compareVersions($iv, $lv)) {
+                        $latestVersion = '<b>'.$latestVersion.'</b>';
+                    }
                 } else {
                     $installedVersion = '';
                     $latestVersion    = $this->versions['con4gis/'.$bundle];
                 }
-
-//                if ($installedVersion == '9999999-dev') {
-//                   $installedVersion = 'dev';
-//                }
 
                 $set['tstamp'] = time();
                 $set['pid'] = $this->User->id;
@@ -308,7 +312,7 @@ class C4gBrickCallback extends Backend
 
             //get develop packages
             foreach ($installedPackages as $vendorBundle=>$version) {
-                if ((substr($vendorBundle,0,7) == 'con4gis') && (!key_exists($vendorBundle, $this->versions) || !$this->versions[$vendorBundle])) {
+                if (((substr($vendorBundle,0,7) == 'con4gis') || (substr($vendorBundle,0,7) == 'gutesio')) && (!key_exists($vendorBundle, $this->versions) || !$this->versions[$vendorBundle])) {
                     $bundle = substr($vendorBundle,8);
 
                     if (key_exists($bundle, $bundles) && $bundles[$bundle]) {
@@ -383,7 +387,7 @@ class C4gBrickCallback extends Backend
                     if ($keyValue) {
                         $result = Database::getInstance()->prepare("SELECT favorite FROM tl_c4g_bricks WHERE brickkey=? AND pid=? LIMIT 1")->execute($keyValue, $this->User->id)->fetchAssoc();
                         if ($result) {
-                            $favorite = $result['favorite'] == '1' ? '0' : '1';
+                            $favorite = $result['favorite'] === '1' ? '0' : '1';
                             Database::getInstance()->prepare("UPDATE tl_c4g_bricks SET favorite=? WHERE brickkey=? AND pid=?")->execute($favorite,$keyValue, $this->User->id);
                         }
                     }
@@ -403,8 +407,7 @@ class C4gBrickCallback extends Backend
             $bricks = $this->loadBricks($dc, false);
         }
 
-        //ToDo
-        //\Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext']);
+        \Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext']);
     }
 
     /**
@@ -424,8 +427,8 @@ class C4gBrickCallback extends Backend
             return '';
         }
 
-        $href = System::getContainer()->get('router')->generate('contao_backend') .'?do=c4g_settings&id="' . $result['id'].'"&rt='.$rt.'&key=openSettings';
-        return $this->User->hasAccess('c4g_settings', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+        $href = System::getContainer()->get('router')->generate('contao_backend'). '?do=c4g_settings&id="' . $result['id'].'"&rt='.$rt.'&key=openSettings';
+        return $this->User->hasAccess('c4g_settings', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
     }
 
     /**
@@ -450,7 +453,7 @@ class C4gBrickCallback extends Backend
             $actKey = 'switchAll';
         }
 
-        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=".$do."&key=".$actKey;
+        $href = System::getContainer()->get('router')->generate('contao_backend'). "?do=".$do."&key=".$actKey;
         return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
 
@@ -468,7 +471,7 @@ class C4gBrickCallback extends Backend
         $rt = Input::get('rt');
         $do = Input::get('do');
 
-        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=$do&key=reloadVersions";
+        $href = System::getContainer()->get('router')->generate('contao_backend'). "?do=$do&key=reloadVersions";
         return '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
     }
 
@@ -484,8 +487,8 @@ class C4gBrickCallback extends Backend
     public function importData($href, $label, $title, $class, $attributes)
     {
         $rt = Input::get('rt');
-        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=c4g_io_data&rt=$rt&key=importData";
-        return $this->User->hasAccess('c4g_io_data', 'modules') ?  '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+        $href = System::getContainer()->get('router')->generate('contao_backend'). "?do=c4g_io_data&rt=$rt&key=importData";
+        return $this->User->hasAccess('c4g_io_data', 'modules') ?  '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
     }
 
     /**
@@ -500,8 +503,8 @@ class C4gBrickCallback extends Backend
     public function serverLogs($href, $label, $title, $class, $attributes)
     {
         $rt = Input::get('rt');
-        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=c4g_log&rt=$rt&key=serverLogs";
-        return $this->User->hasAccess('c4g_log', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+        $href = System::getContainer()->get('router')->generate('contao_backend'). "?do=c4g_log&rt=$rt&key=serverLogs";
+        return $this->User->hasAccess('c4g_log', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
     }
 
     /**
@@ -593,10 +596,9 @@ class C4gBrickCallback extends Backend
         $attributes = 'style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
         $ref = Input::get('ref');
-        $href = System::getContainer()->get('router')->generate('contao_backend') .'?do='.$do.'&amp;ref='.$ref;
+        $href = System::getContainer()->get('router')->generate('contao_backend'). '?do='.$do.'&amp;ref='.$ref;
 
         return $this->User->hasAccess($do, 'modules') ? '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"'.$attributes.'>'.Image::getHtml($icon, $label, $imgAttributes).'</a>' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-
     }
 
     /**
@@ -655,7 +657,7 @@ class C4gBrickCallback extends Backend
         $rt = Input::get('rt');
         $do = Input::get('do');
 
-        $attributes = 'style="margin-right:3px"';
+        $attributes = ' style="margin-right:3px"';
         $imgAttributes = 'style="width: 18px; height: 18px"';
 
         $showButton = false;
@@ -674,10 +676,13 @@ class C4gBrickCallback extends Backend
         if ($result) {
             if ($result['favorite'] == '1') {
                 $icon = 'bundles/con4giscore/images/be-icons/star_light.svg';
+            } else {
+                $icon = 'bundles/con4giscore/images/be-icons/star.svg';
             }
-        }
 
-        $href = System::getContainer()->get('router')->generate('contao_backend') ."?do=$do&key=switchFavorite_".$row['brickkey'];
-        return '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>'.Image::getHtml($icon, $label, $imgAttributes).'</a> ';
+            $href = System::getContainer()->get('router')->generate('contao_backend'). "?do=".$do."&key=switchFavorite_".$row['brickkey']."&rt=".$rt."&ref=''";
+            $link = '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>'.Image::getHtml($icon, $label, $imgAttributes).'</a> ';
+            return $link;
+        }
     }
 }

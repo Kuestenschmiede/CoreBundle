@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 use Contao\Input;
@@ -63,8 +63,9 @@ ini_set("display_errors","1");
 
 
         // create if not exist
-        if (!is_dir(TL_ROOT . "/" . $sUploadDir)) {
-            mkdir(TL_ROOT . "/" . $sUploadDir, 0777, true);
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        if (!is_dir($rootDir . "/" . $sUploadDir)) {
+            mkdir($rootDir . "/" . $sUploadDir, 0777, true);
         }
 
         // HERE SET THE PATH TO THE FOLDER WITH IMAGES ON YOUR SERVER (RELATIVE TO THE ROOT OF YOUR WEBSITE ON SERVER)
@@ -113,6 +114,7 @@ ini_set("display_errors","1");
 
 
         $CKEditorFuncNum = Input::get('CKEditorFuncNum');
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if (!empty($_FILES['upload']) && strlen($_FILES['upload']['name']) > 1 && !empty($_FILES['upload']['tmp_name'])) {
             $sUploadDir = trim($sUploadDir, '/') . '/';
             $real_name   = basename($_FILES['upload']['name']);
@@ -124,7 +126,7 @@ ini_set("display_errors","1");
             $sExtension  = pathinfo($_FILES['upload']['name']);
             $sType       = $sExtension['extension'];       // gets extension
             $img_name   = md5(uniqid('', true)) . "." .$sType;
-            $uploadpath = TL_ROOT . '/' . $sUploadDir . $img_name;       // full file path
+            $uploadpath = $rootDir . '/' . $sUploadDir . $img_name;       // full file path
             list($width, $height) = getimagesize($_FILES['upload']['tmp_name']);     // gets image width and height
             $err = '';         // to store the errors
 

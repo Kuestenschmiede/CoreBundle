@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Contao\System;
+use Contao\FilesModel;
 
 class UploadController
 {
@@ -33,7 +34,7 @@ class UploadController
     }
 
     public function imageUploadAction(Request $request) {
-
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         if ($request->query->get('CKEditor')) {
             $type = 'ckeditor';
         } else {
@@ -75,19 +76,19 @@ class UploadController
                     if ($uploadDirectoryBinary === null) {
                         throw new C4GGenericException();
                     }
-                    $uploadDirectoryString = \FilesModel::findByUuid(\Contao\StringUtil::binToUuid($uploadDirectoryBinary))->path;
+                    $uploadDirectoryString = FilesModel::findByUuid(\Contao\StringUtil::binToUuid($uploadDirectoryBinary))->path;
 
                     $subDirectory = date("Y-m-d");
                     $uploadDirectoryString = $uploadDirectoryString . "/" .$subDirectory;
-                    if (!is_dir(TL_ROOT . "/" . $uploadDirectoryString)) {
-                        $success = mkdir(TL_ROOT . "/" . $uploadDirectoryString, 0777, true);
+                    if (!is_dir($rootDir . "/" . $uploadDirectoryString)) {
+                        $success = mkdir($rootDir . "/" . $uploadDirectoryString, 0777, true);
                         if (!$success) {
                             throw new C4GGenericException();
                         }
                     }
                     $fileExtension = explode('/', $uploadedFile->getMimeType())[1];
                     $img_name   = md5(uniqid('', true)) . "." .$fileExtension;
-                    $uploadPath = TL_ROOT . '/' . $uploadDirectoryString;
+                    $uploadPath = $rootDir . '/' . $uploadDirectoryString;
                     $newFile = $uploadedFile->move($uploadPath, $img_name);
                     $protocol = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
                     $site     = $protocol . $_SERVER['SERVER_NAME'] . '/';
@@ -171,6 +172,7 @@ class UploadController
     }
 
     public function fileUploadAction(Request $request) {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         System::loadLanguageFile('con4giscoreupload');
 
         if ($request->files instanceof FileBag) {
@@ -199,16 +201,16 @@ class UploadController
                     return new JsonResponse([], Response::HTTP_BAD_REQUEST);
                 }
 
-                $uploadDirectoryString = \FilesModel::findByUuid(\Contao\StringUtil::binToUuid($uploadDirectoryBinary))->path;
+                $uploadDirectoryString = FilesModel::findByUuid(\Contao\StringUtil::binToUuid($uploadDirectoryBinary))->path;
 
                 $subDirectory = date("Y-m-d");
                 $uploadDirectoryString = $uploadDirectoryString . "/" .$subDirectory;
-                if (!is_dir(TL_ROOT . "/" . $uploadDirectoryString)) {
-                    mkdir(TL_ROOT . "/" . $uploadDirectoryString, 0777, true);
+                if (!is_dir($rootDir . "/" . $uploadDirectoryString)) {
+                    mkdir($rootDir . "/" . $uploadDirectoryString, 0777, true);
                 }
                 $fileExtension = explode('/', $uploadedFile->getMimeType())[1];
                 $fileName   = md5(uniqid('', true)) . "." .$fileExtension;
-                $uploadPath = TL_ROOT . '/' . $uploadDirectoryString;
+                $uploadPath = $rootDir . '/' . $uploadDirectoryString;
                 $uploadedFile->move($uploadPath, $fileName);
                 $url = System::getContainer()->get('contao.insert_tag.parser')->replace('{{env::url}}') . "/" . $uploadDirectoryString . "/" . $fileName;
 

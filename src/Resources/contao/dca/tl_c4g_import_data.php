@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
@@ -39,6 +39,12 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
     'config' => array
     (
         'dataContainer'               => DC_Table::class,
+        'notCopyable'      => true,
+        'notCreatable'     => true,
+        'notEditable'      => true,
+        'notDeletable'     => true,
+        'enableVersioning' => false,
+        'switchToEdit'     => false,
         'sql'                         => array
         (
             'keys' => array
@@ -79,14 +85,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
                 'class'               => 'header_back',
                 'icon'                => 'back.svg',
                 'label'               => &$GLOBALS['TL_LANG']['MSC']['backBT'],
-            ],
-            'con4gisIoOverview' => array
-            (
-                'href'                => 'key=con4gisIoOverview',
-                'button_callback'     => ['tl_c4g_import_data', 'con4gisIO'],
-                'icon'                => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
-                'label'               => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['con4gisIoImportData'],
-            ),
+            ]
         ),
         'operations' => array
         (
@@ -343,12 +342,10 @@ class tl_c4g_import_data extends Contao\Backend
             $installedPackages = System::getContainer()->getParameter('kernel.packages');
         }
         else {
+            $installedPackages = [];
             $allInstalledPackages = InstalledVersions::getInstalledPackages();
-            $installedPackages = array_flip(array_filter($allInstalledPackages, function($k) {
-                return str_contains('con4gis', $k);
-            }));
-            foreach ($installedPackages as $key => $installedPackage) {
-                $installedPackages[$key] = InstalledVersions::getVersion($key);
+            foreach ($allInstalledPackages as $key => $installedPackage) {
+                $installedPackages[$installedPackage] = InstalledVersions::getVersion($installedPackage);
             }
         }
         $importAllowed = true;

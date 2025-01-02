@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
@@ -71,8 +71,8 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Stapelverarbeitung von Prozesse
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['reservation'] = 'Reservierungsformulare (Tische, Räume, ...)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Positionsverfolgung';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Fahrtkostenrechner (nur für con4gis Supporter)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['travel-costs'] = 'Fahrtkostenrechner (nur mit con4gis Support-Tarif)';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Willkommen in der con4gis Schaltzentrale. Hier kann man die Bausteine nutzen und sehen was con4gis noch zu bieten hat.'.
-    ' Eine Besonderheit ist der neue Datenimport: darüber kann man, mit Hilfe eines con4gis Supporter Zugangs, auf einfache Art und Weise Demo- und Grunddaten einspielen.';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = "Über das Favoriten-Sternchen an den Bausteinen, können die Backend-Module ".
+    "im Contao-Menü ein- und ausgeblendet werden. Solltet ihr viele Bausteine nutzen, dann könnt ihr unter Einstellungen den Bausteinnamen dazu schalten.";

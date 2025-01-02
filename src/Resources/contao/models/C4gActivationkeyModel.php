@@ -3,21 +3,26 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
 namespace con4gis\CoreBundle\Resources\contao\models;
 use Contao\Database;
+use Contao\Model;
+use Contao\ArticleModel;
+use Contao\Controller;
+use Contao\PageModel;
+use Contao\Environment;
 
 /**
  * Class C4gActivationkeyModel
  * @package c4g
  */
-class C4gActivationkeyModel extends \Model
+class C4gActivationkeyModel extends Model
 {
 	/**
 	 * Table name
@@ -68,13 +73,13 @@ class C4gActivationkeyModel extends \Model
 		$objActivationPages->next();
 
 		// get the article for this content-element
-		$objArticle = \ArticleModel::findByPk( $objActivationPages->pid );
+		$objArticle = ArticleModel::findByPk( $objActivationPages->pid );
 		if ($objArticle) {
 			// if found, find the Page, where this article is nested
-			$objPage = \PageModel::findByPk( $objArticle->pid );
+			$objPage = PageModel::findByPk( $objArticle->pid );
 			if ($objPage) {
 				// if found build the desired URL (base + page-url + key)
-				return \Environment::get('base') . \Controller::generateFrontendUrl( $objPage->row() ) . '?key=' . $key;
+				return Environment::get('base') . Controller::generateFrontendUrl( $objPage->row() ) . '?key=' . $key;
 			}
 		}
 

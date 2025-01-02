@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
@@ -71,8 +71,8 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['pwa'] = 'Progressive Web App';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['queue'] = 'Batch processing of processes (queue)';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Position tracking';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['io-travel-costs'] = 'Travel cost calculator (requires con4gis Support)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['travel-costs'] = 'Travel cost calculator (requires con4gis Support tariff)';
 
 /** INFOTEXT */
-$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = 'Welcome to the con4gis control center. Here you can use the bricks and see what else con4gis has to offer.'.
-    ' A special feature is the new data import: with the help of a con4gis support access you can easily import demo and basic data.';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = "The backend modules can be shown and hidden in the Contao menu using the favourites asterisk on the modules. ".
+"If you use many modules, you can switch on the module name under Settings.";

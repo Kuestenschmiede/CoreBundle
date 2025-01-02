@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 namespace con4gis\CoreBundle\Classes;
@@ -20,7 +20,7 @@ use Composer\InstalledVersions;
  */
 class C4GVersionProvider
 {
-    const REQUEST_URL = 'https://repo.packagist.org/p/[vendor]/[package].json';
+    const REQUEST_URL = 'https://repo.packagist.org/packages/[vendor]/[package].json';
 
     /**
      * @param string $package
@@ -62,7 +62,7 @@ class C4GVersionProvider
         $arrJson = json_decode($json, true);
         $intError = json_last_error();
         if ($intError === JSON_ERROR_NONE) {
-            $candidates = array_keys($arrJson['packages'][$package]);
+            $candidates = array_keys($arrJson['package']['versions']);
             $currentLatestVersion = '';
             foreach ($candidates as $candidate) {
                 // ignore dev branches

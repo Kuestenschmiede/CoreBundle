@@ -2,10 +2,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
@@ -40,10 +40,11 @@ class AutoloadHelper
      */
     protected static function registerTemplates($objFiles)
     {
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
         foreach ($objFiles as $varFile) {
             $strFile = (is_array($varFile)) ? array_shift($varFile) : $varFile;
             $objFile = pathinfo($strFile);
-            \Contao\TemplateLoader::addFile($objFile['filename'], str_replace(TL_ROOT . '/', '', $objFile['dirname']));
+            \Contao\TemplateLoader::addFile($objFile['filename'], str_replace($rootDir . '/', '', $objFile['dirname']));
         }
     }
 
@@ -55,7 +56,8 @@ class AutoloadHelper
      */
     protected static function makePath($strPath, $folder)
     {
-        $strPath = (!substr_count($strPath, TL_ROOT)) ? TL_ROOT . '/' . $strPath : $strPath;
+        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $strPath = (!substr_count($strPath, $rootDir)) ? $rootDir . '/' . $strPath : $strPath;
         $strPath .= "$folder/";
         $strPath = str_replace('//', '/', $strPath);
 

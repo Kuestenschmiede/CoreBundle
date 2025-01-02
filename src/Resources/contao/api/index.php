@@ -3,12 +3,16 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
+    use Contao\Input;
+    use Contao\System;
+    use Contao\Config;
+    use Contao\Environment;
 
     // index.php is a frontend script
     define('TL_MODE', 'FE');
@@ -70,7 +74,8 @@
             header('Content-Type: application/json');
 
             // Maintenance mode
-            if ($GLOBALS['TL_CONFIG']['maintenanceMode'] && !BE_USER_LOGGED_IN) {
+            $hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+            if ($GLOBALS['TL_CONFIG']['maintenanceMode'] &&  !$hasBackendUser/* !BE_USER_LOGGED_IN */) {
                 header('HTTP/1.1 503 Service Unavailable');
                 exit;
             }
@@ -106,7 +111,7 @@
             $blnUseCache = false;
             $blnOutputFromCache = false;
 
-            if (!\Config::get('debugMode') && (\Config::get('cacheMode') == 'both' || \Config::get('cacheMode') == 'server') && in_array($strApiEndpoint, $GLOBALS['CON4GIS']['USE_CACHE']['SERVICES']))
+            if (!Config::get('debugMode') && (Config::get('cacheMode') == 'both' || Config::get('cacheMode') == 'server') && in_array($strApiEndpoint, $GLOBALS['CON4GIS']['USE_CACHE']['SERVICES']))
             {
                 $blnUseCache = true;
             }
@@ -115,7 +120,7 @@
             {
                 foreach ($GLOBALS['CON4GIS']['USE_CACHE']['PARAMS'] as $key=>$arrValues)
                 {
-                    if (\Input::get($key) && in_array(\Input::get($key), $arrValues))
+                    if (Input::get($key) && in_array(Input::get($key), $arrValues))
                     {
                         $blnUseCache = true;
                     }
@@ -135,9 +140,9 @@
             // Generate the result
 
             // check for jsonp request
-            if (\Input::get('callback'))
+            if (Input::get('callback'))
             {
-                echo \Input::get('callback') . '(';
+                echo Input::get('callback') . '(';
             }
 
             if ($blnOutputFromCache)
@@ -168,7 +173,7 @@
 
 
             // check for jsonp request
-            if (\Input::get('callback'))
+            if (Input::get('callback'))
             {
                 echo ');';
             }
@@ -183,17 +188,17 @@
         {
 
             // Return null on empty request path
-            if (\Environment::get('request') == '') {
+            if (Environment::get('request') == '') {
                 return null;
             }
 
-            $test = \Environment::get('request');
+            $test = Environment::get('request');
 
             // Get the request string without the index.php fragment
-            if (\Environment::get('request') == $this->_sApiUrl . 'index.php') {
+            if (Environment::get('request') == $this->_sApiUrl . 'index.php') {
                 $strRequest = '';
             } else {
-                list($strRequest) = explode('?', str_replace($this->_sApiUrl . 'index.php/', '', \Environment::get('request')), 2);
+                list($strRequest) = explode('?', str_replace($this->_sApiUrl . 'index.php/', '', Environment::get('request')), 2);
             }
 
             // Remove api fragment

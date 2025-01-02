@@ -3,10 +3,10 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 8
+ * @version 10
  * @author con4gis contributors (see "authors.txt")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2022, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
@@ -15,12 +15,15 @@ namespace con4gis\CoreBundle\Resources\contao\modules;
 use con4gis\CoreBundle\Resources\contao\models\C4gActivationkeyModel;
 use Contao\System;
 use Contao\Input;
+use Contao\Module;
+use Contao\BackendTemplate;
+use Contao\FrontendUser;
 
 /**
  * Class Content_c4g_activationpage
  * @package c4g
  */
-class ContentC4gActivationpage extends \Module
+class ContentC4gActivationpage extends Module
 {
     /**
      * Template
@@ -35,13 +38,13 @@ class ContentC4gActivationpage extends \Module
     {
         if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
         {
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
 
-            $objTemplate->wildcard = '### ' . ($this->c4g_activationpage_action_handler ?: utf8_strtoupper($GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['msc']['auto_action_handler']) ). ' ###';
+            $objTemplate->wildcard = '### ' . ($this->c4g_activationpage_action_handler ?: mb_strtoupper($GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['msc']['auto_action_handler']) ). ' ###';
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
-            $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend') .'?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+            $objTemplate->href = System::getContainer()->get('router')->generate('contao_backend'). '?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
             return $objTemplate->parse();
         }
@@ -55,7 +58,7 @@ class ContentC4gActivationpage extends \Module
     protected function compile()
     {
         // prepare stuff
-        $this->import('FrontendUser', 'User');
+        $this->import(FrontendUser::class, 'User');
         System::loadLanguageFile('tl_content');
         $stateClass = array
         (
@@ -72,7 +75,8 @@ class ContentC4gActivationpage extends \Module
             $_SESSION['c4g_activationkey_' . $this->id] = Input::get('key');
         }
 
-        if (!FE_USER_LOGGED_IN && $this->c4g_activationpage_visitor_redirect) {
+        $hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+        if (!$hasFrontendUser && $this->c4g_activationpage_visitor_redirect) {
             // redirect to defined page
             $objPage = $this->Database->prepare("SELECT id, alias FROM tl_page WHERE id=?")
                 ->limit(1)
