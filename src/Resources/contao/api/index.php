@@ -188,17 +188,17 @@
         {
 
             // Return null on empty request path
-            if (Environment::get('request') == '') {
+            if (\Contao\Environment::get('request') == '') {
                 return null;
             }
 
-            $test = Environment::get('request');
+            $test = \Contao\Environment::get('request');
 
             // Get the request string without the index.php fragment
-            if (Environment::get('request') == $this->_sApiUrl . 'index.php') {
+            if (\Contao\Environment::get('request') == $this->_sApiUrl . 'index.php') {
                 $strRequest = '';
             } else {
-                list($strRequest) = explode('?', str_replace($this->_sApiUrl . 'index.php/', '', Environment::get('request')), 2);
+                list($strRequest) = explode('?', str_replace($this->_sApiUrl . 'index.php/', '', \Contao\Environment::get('request')), 2);
             }
 
             // Remove api fragment

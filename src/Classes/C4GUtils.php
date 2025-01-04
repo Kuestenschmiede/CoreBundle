@@ -17,6 +17,7 @@ use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use con4gis\MapsBundle\Resources\contao\models\C4gMapSettingsModel;
 use Symfony\Component\HttpClient\HttpClient;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -794,5 +795,13 @@ class C4GUtils
             $result = html_entity_decode($parser->replace($insertTag));
         }
         return $result;
+    }
+
+    public static function isFrontend() {
+        return System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''));
+    }
+
+    public static function isBackend() {
+        return System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''));
     }
 }

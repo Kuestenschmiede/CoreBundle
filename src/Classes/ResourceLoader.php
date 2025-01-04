@@ -36,28 +36,32 @@ class ResourceLoader
     public static function loadJavaScriptResource($jsFile, $location = self::JAVASCRIPT, $key = '')
     {
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
-        $webDir = $projectDir . '/web';
-        // check for changed directory name
+        $webDir = $projectDir . '/public';
+        // check for older directory name
         if (!file_exists($webDir)) {
-            $webDir = $projectDir . '/public';
+            $webDir = $projectDir . '/web';
         }
         if (!C4GUtils::startsWith($jsFile, '/')) {
             $jsFile = '/' . $jsFile;
+            $jsFileWithoutSlash = $jsFile;
+        } else {
+            $jsFileWithoutSlash = substr($jsFile, 1);
         }
         if (file_exists($webDir . $jsFile)) {
             $timeStamp = filemtime($webDir . $jsFile);
         } else {
             $timeStamp = 0;
         }
+
         switch ($location) {
             case self::JAVASCRIPT:
                 if ($timeStamp) {
                     $jsFile .= '|' . $timeStamp;
                 }
                 if ($key === '') {
-                    $GLOBALS[self::JAVASCRIPT][] = $jsFile;
+                    $GLOBALS[self::JAVASCRIPT][] = $jsFileWithoutSlash;
                 } else {
-                    $GLOBALS[self::JAVASCRIPT][$key] = $jsFile;
+                    $GLOBALS[self::JAVASCRIPT][$key] = $jsFileWithoutSlash;
                 }
 
                 break;
@@ -137,12 +141,18 @@ class ResourceLoader
     public static function loadCssResource($cssFile, $key = '')
     {
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
-        $webDir = $projectDir . '/web';
-        if (!C4GUtils::startsWith($cssFile, '/')) {
-            $cssFile = '/' . $cssFile;
+        $webDir = $projectDir . '/public';
+        // check for older directory name
+        if (!file_exists($webDir)) {
+            $webDir = $projectDir . '/web';
         }
-        if (file_exists($webDir . $cssFile)) {
-            $cssFile .= '|' . filemtime($webDir . $cssFile);
+        if (!C4GUtils::startsWith($cssFile, '/')) {
+            //$cssFile = '/' . $cssFile;
+        } else {
+            $cssFile = substr($cssFile, 1);
+        }
+        if (file_exists($webDir . '/'. $cssFile)) {
+            $cssFile .= '|' . filemtime($webDir . '/'. $cssFile);
         }
         if ($key === '') {
             $GLOBALS[self::CSS][] = $cssFile;
@@ -217,7 +227,6 @@ class ResourceLoader
     public static function loadJqueryUiTheme($theme)
     {
         self::loadCssResourceDeferred("bundles/con4giscore/vendor/jQuery/ui-themes/themes/$theme/jquery-ui.css");
-//        self::loadCssResource("bundles/con4giscore/vendor/jQuery/ui-themes/themes/$theme/jquery-ui.css", self::JQ_UI);
     }
 
     /**
@@ -239,7 +248,7 @@ class ResourceLoader
         global $objPage;
 
         //workaround hasJQuery param with contao >= 4.5
-        if ($objPage->layout) {
+        if ($objPage && property_exists($objPage::class, 'layout') && $objPage->layout) {
             $objLayout = LayoutModel::findByPk($objPage->layout);
             $objPage->hasJQuery = $objLayout->addJQuery;
         }
@@ -248,13 +257,11 @@ class ResourceLoader
 
         switch ($module) {
             case 'maps':
-                // Maps 3
-                //
                 $neededResources['clipboard'] = true;
 
                 // check if jQuery needs to be loaded
                 $jQueryLoaded = false;
-                $scripts = $GLOBALS['TL_JAVASCRIPT'];
+                $scripts = $GLOBALS && key_exists('TL_JavaSCRIPT', $GLOBALS) ? $GLOBALS['TL_JAVASCRIPT'] : [];
                 if (is_array($scripts)) {
                     foreach ($scripts as $strScriptUrl) {
                         if (preg_match('/assets\/jquery\/core\/\d+\.\d+\.\d+\/jquery\.min\.js/i', $strScriptUrl)) {
@@ -265,7 +272,7 @@ class ResourceLoader
                     }
                 }
 
-                if ($objPage->hasJQuery) {
+                if ($objPage && $objPage->hasJQuery) {
                     $jQueryLoaded = true;
                 }
 
@@ -324,12 +331,12 @@ class ResourceLoader
             // load jQuery
 
             //workaround hasJQuery param with contao >= 4.5
-            if ($objPage->layout) {
+            if ($objPage && $objPage->layout) {
                 $objLayout = LayoutModel::findByPk($objPage->layout);
                 $objPage->hasJQuery = $objLayout->addJQuery;
             }
 
-            if ($objPage->hasJQuery) {
+            if ($objPage && $objPage->hasJQuery) {
                 // jQuery is already loaded by Contao, don't load again!
             } else {
                 ResourceLoader::loadJavaScriptResource('assets/jquery/js/jquery.min.js', self::HEAD, 'c4g_jquery');
@@ -337,54 +344,13 @@ class ResourceLoader
         }
         ResourceLoader::loadJavaScriptResource('/bundles/con4giscore/dist/js/C4GAjaxRequest.js|async|static', self::JAVASCRIPT, 'ajax-request');
 
-//        if ($resources['magnific-popup']) {
-//            // load magnific-popup
-//            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/magnific-popup/jquery.magnific-popup.min.js|async|static', self::JAVASCRIPT, 'magnific-popup');
-//            ResourceLoader::loadCssResource('bundles/con4giscore/vendor/magnific-popup/magnific-popup.css', 'magnific-popup');
-//        }
-//
         if ($resources['clipboard']) {
             // load clipboard
             ResourceLoader::loadJavaScriptResource('/bundles/con4giscore/vendor/clipboard.min.js', self::BODY, 'clipboard');
         }
-//        if ($resources['jspdf']) {
-//            // load clipboard
-//            ResourceLoader::loadJavaScriptResource('bundles/con4giscore/vendor/jspdf/jspdf.min.js|async|static', self::JAVASCRIPT, 'jspdf');
-//            //$GLOBALS['TL_JAVASCRIPT']['jspdf.plugin.from_html'] = 'bundles/con4giscore/vendor/jspdf/plugins/from_html.js|static';
-//        }
 
         return true;
     }
-
-    /**
-     * @param $key
-     * @param $cssFile
-     * @deprecated
-     */
-//    public static function loadCssRessource($key, $cssFile)
-//    {
-//        self::loadCssResource($cssFile, $key);
-//    }
-
-    /**
-     * @param $key
-     * @param $jsFile
-     * @param bool $inHeader
-     * @param bool $es6Module
-     * @deprecated
-     */
-//    public static function loadJavaScriptRessource($key, $jsFile, $inHeader = false, $es6Module = false)
-//    {
-//        if ($inHeader) {
-//            self::loadJavaScriptResource($jsFile, self::HEAD, $key);
-//        } else {
-//            if ($es6Module) {
-//                self::loadJavaScriptResourceModule($jsFile, $key);
-//            } else {
-//                self::loadJavaScriptResource($jsFile, self::BODY, $key);
-//            }
-//        }
-//    }
 
     /**
      * @param $key

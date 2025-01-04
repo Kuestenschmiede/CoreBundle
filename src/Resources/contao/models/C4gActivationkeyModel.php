@@ -79,7 +79,7 @@ class C4gActivationkeyModel extends Model
 			$objPage = PageModel::findByPk( $objArticle->pid );
 			if ($objPage) {
 				// if found build the desired URL (base + page-url + key)
-				return Environment::get('base') . Controller::generateFrontendUrl( $objPage->row() ) . '?key=' . $key;
+				return \Contao\Environment::get('base') . Controller::generateFrontendUrl( $objPage->row() ) . '?key=' . $key;
 			}
 		}
 

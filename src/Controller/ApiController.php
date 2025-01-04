@@ -140,13 +140,13 @@ class ApiController extends AbstractController
             return null;
         }
 
-        echo \Environment::get('request');
+        echo \Contao\Environment::get('request');
 
         // Get the request string without the index.php fragment
-        if (\Environment::get('request') == $this->_sApiUrl . 'index.php') {
+        if (\Contao\Environment::get('request') == $this->_sApiUrl . 'index.php') {
             $strRequest = '';
         } else {
-            list($strRequest) = explode('?', str_replace($this->_sApiUrl . 'index.php/', '', \Environment::get('request')), 2);
+            list($strRequest) = explode('?', str_replace($this->_sApiUrl . 'index.php/', '', \Contao\Environment::get('request')), 2);
         }
 
         // Remove api fragment
