@@ -454,10 +454,6 @@ class C4gBrickCallback extends Backend
     {
         $rt = Input::get('rt');
 
-        if (!$result = Database::getInstance()->execute("SELECT id FROM tl_c4g_settings LIMIT 1")->fetchAssoc()) {
-            return '';
-        }
-
         $href = System::getContainer()->get('router')->generate('contao_backend'). '?do=c4g_settings&id="' . $result['id'].'"&rt='.$rt.'&key=openSettings';
         return $this->User->hasAccess('c4g_settings', 'modules') ? '<a href="' . $href . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
     }
