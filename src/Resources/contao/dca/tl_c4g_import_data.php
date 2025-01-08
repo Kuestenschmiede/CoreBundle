@@ -38,14 +38,14 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
     // Config
     'config' => array
     (
-        'dataContainer'               => DC_Table::class,
+        'dataContainer'    => DC_Table::class,
         'notCopyable'      => true,
         'notCreatable'     => true,
         'notEditable'      => true,
         'notDeletable'     => true,
         'enableVersioning' => false,
         'switchToEdit'     => false,
-        'sql'                         => array
+        'sql'              => array
         (
             'keys' => array
             (
