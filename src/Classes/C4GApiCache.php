@@ -57,7 +57,7 @@ class C4GApiCache
     public function getCacheKey($strApiEndpoint, $arrFragments)
     {
         $frontendIndex = new \Contao\FrontendIndex();
-        $hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+        $hasFrontendUser = \Contao\System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
         if ($hasFrontendUser) {
             $arrFragments['userId'] = FrontendUser::getInstance()->id;
         }
