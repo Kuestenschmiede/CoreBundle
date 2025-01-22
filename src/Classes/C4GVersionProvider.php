@@ -106,27 +106,22 @@ class C4GVersionProvider
     {
         $toCompareFragments = explode('.', $toCompare);
         $comparableFragments = explode('.', $comparable);
-        // compare major version
-        if ($toCompareFragments[0] > $comparableFragments[0]) {
-            return false;
-        } elseif ($toCompareFragments[0] < $comparableFragments[0]) {
-            return true;
-        }
-        // compare minor version
-        if ($toCompareFragments[1] > $comparableFragments[1]) {
-            return false;
-        } elseif ($toCompareFragments[1] < $comparableFragments[1]) {
-            return true;
-        }
-        // compare bugfix version
-        if ($toCompareFragments[2] > $comparableFragments[2]) {
-            return false;
-        } elseif ($toCompareFragments[2] < $comparableFragments[2]) {
-            return true;
+
+        $toCompareFragments[0] = strpos($toCompareFragments[0], 'v') === false ? $toCompareFragments[0] : substr($toCompareFragments[0], 1);
+        $comparableFragments[0] = strpos($comparableFragments[0], 'v') === false ? $comparableFragments[0] : substr($comparableFragments[0], 1);
+
+        for ($i = 0; $i < 3; $i++) {
+            $toValue = intval($toCompareFragments[$i]);
+            $cmpValue = intval($comparableFragments[$i]);
+
+            if ($toValue > $cmpValue) {
+                return false;
+            } elseif ($toValue < $cmpValue) {
+                return true;
+            }
         }
 
-        //ToDo compare release candidates
-
+        // ToDo compare release candidates
         return false;
     }
 }
