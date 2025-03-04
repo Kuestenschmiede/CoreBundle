@@ -10,6 +10,7 @@
  */
 namespace con4gis\CoreBundle\Classes;
 
+use Composer\MetadataMinifier\MetadataMinifier;
 use Contao\System;
 use Symfony\Component\HttpClient\HttpClient;
 use Composer\InstalledVersions;
@@ -20,7 +21,7 @@ use Composer\InstalledVersions;
  */
 class C4GVersionProvider
 {
-    const REQUEST_URL = 'https://repo.packagist.org/packages/[vendor]/[package].json';
+    const REQUEST_URL = 'https://repo.packagist.org/p2/[vendor]/[package].json';
 
     /**
      * @param string $package
@@ -54,22 +55,22 @@ class C4GVersionProvider
             $response = '';
         }
 
-        return $this->parseLatestVersion($response, $package);
+        return $this->parseLatestVersion($response, $package, $arrPackage[0], $arrPackage[1]);
     }
 
-    private function parseLatestVersion(string $json, string $package)
+    private function parseLatestVersion(string $json, string $package, string $vendor, string $packageName)
     {
         $arrJson = json_decode($json, true);
         $intError = json_last_error();
         if ($intError === JSON_ERROR_NONE) {
-            $candidates = array_keys($arrJson['package']['versions']);
+            $candidates = MetadataMinifier::expand($arrJson['packages'][$package]);
             $currentLatestVersion = '';
             foreach ($candidates as $candidate) {
                 // ignore dev branches
-                if (strpos($candidate, 'dev') !== false) {
+                if (strpos($candidate['version'], 'dev') !== false) {
                     continue;
                 }
-                $version = $this->getComparableVersionString($candidate);
+                $version = $this->getComparableVersionString($candidate['version']);
                 if ($this->compareVersions($currentLatestVersion, $version)) {
                     $currentLatestVersion = $version;
                 }
