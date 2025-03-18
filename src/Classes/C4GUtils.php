@@ -637,9 +637,13 @@ class C4GUtils
      * @param array $array
      * @return string
      */
-    public static function buildInString(array $array)
+    public static function buildInString(array $array): string
     {
-        return 'IN(' . implode(',', array_fill(0, count($array), '?')) . ')';
+        if (empty($array)) {
+            return "IN (NULL)";
+        }
+
+        return 'IN (' . implode(',', array_fill(0, count($array), '?')) . ')';
     }
 
     public static function buildInStringValues(array $array)
