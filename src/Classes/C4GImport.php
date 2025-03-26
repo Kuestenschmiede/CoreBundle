@@ -281,6 +281,7 @@ class C4GImport
             $output->writeln("Import already running");
             return false;
         }
+        System::loadLanguageFile('tl_c4g_import_data');
         $availableLocal = false;
         if ($importId) {
             $con4gisImportId = $importId;
@@ -1651,7 +1652,7 @@ class C4GImport
                             if (strpos($table, 'tl_c4g_') !== false) {
                                 $this->database->prepare("DELETE FROM $table WHERE importId LIKE ?")->execute($likeOperator);
                             } else {
-                                $this->database->prepare("DELETE FROM $table WHERE importId > 0")->execute($likeOperator);
+                                $this->database->prepare("DELETE FROM $table WHERE importId > 0")->execute();
                             }
                         } catch (\Exception $e) {
                             C4gLogModel::addLogEntry('core', 'Error deleting data from database. Abort import. ' . $e);

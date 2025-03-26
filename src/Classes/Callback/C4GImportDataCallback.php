@@ -290,7 +290,7 @@ class C4GImportDataCallback extends Backend
      * @return false|void
      * @throws Exception
      */
-    public function importBaseData($importId = false)
+    public function importBaseData($importId = false, $cron = false)
     {
         if ($importId) {
             $con4gisImportId = $importId;
@@ -322,11 +322,19 @@ class C4GImportDataCallback extends Backend
             exec($executable . $command, $arrOutput, $code);
             if ($code !== 0) {
                 foreach ($arrOutput as $output) {
-                    Message::addError($output);
+                    if (!$cron) {
+                        Message::addError($output);
+                    } else {
+                        C4gLogModel::addLogEntry("core", $output);
+                    }
                 }
             }
             else {
-                Message::addConfirmation('Import erfolgreich.');
+                if (!$cron) {
+                    Message::addConfirmation('Import erfolgreich.');
+                } else {
+                    C4gLogModel::addLogEntry("core", "Import erfolgreich.");
+                }
             }
         }
     }
@@ -336,11 +344,14 @@ class C4GImportDataCallback extends Backend
      * @return false|void
      * @throws Exception
      */
-    public function updateBaseData($importId = false)
+    public function updateBaseData($importId = false, $cron = false)
     {
         if ($this->importRunning()) {
-            Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
-            PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=c4g_io_data');
+            if (!$cron) {
+                Message::addError($GLOBALS['TL_LANG']['tl_c4g_import_data']['importRunning']);
+                PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=c4g_io_data');
+            }
+
             return false;
         }
 
@@ -354,7 +365,7 @@ class C4GImportDataCallback extends Backend
             }
         }
 
-        $this->importBaseData($importId);
+        $this->importBaseData($importId, $cron);
 
         try {
             PageRedirect::redirect(System::getContainer()->get('router')->generate('contao_backend'). '?do=c4g_io_data');
@@ -675,10 +686,10 @@ class C4GImportDataCallback extends Backend
                 }
             }
             $client = HttpClient::create();
-            $response = $client->request('GET', $baseDataUrl)->getContent();
-            if (!$response) {
-                $response = '';
-            }
+//            $response = $client->request('GET', $baseDataUrl)->getContent();
+//            if (!$response) {
+//                $response = '';
+//            }
 
             $request = $client->request(
                 'GET',

@@ -10,15 +10,15 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ImportCommand extends Command
 {
     protected static $defaultName = 'con4gis:import';
-    private Container $container;
+    private ContainerInterface $container;
+
     /**
-     * InterlivingImportCommand constructor.
-     * @param Container
+     * ImportCommand constructor.
      * @param ContaoFramework $framework
      */
     public function __construct(
