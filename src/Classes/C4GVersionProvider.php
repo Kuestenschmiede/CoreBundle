@@ -29,7 +29,7 @@ class C4GVersionProvider
      */
     public static function isInstalled(string $package)
     {
-        if (System::getContainer()->hasParameter('kernel.packages')) {
+        if (System::getContainer() && System::getContainer()->hasParameter('kernel.packages')) {
             $installedPackages = System::getContainer()->getParameter('kernel.packages');
             return ($package && array_key_exists($package, $installedPackages));
         }
@@ -38,6 +38,25 @@ class C4GVersionProvider
         }
 
 
+    }
+
+    /**
+     * @return array|bool|float|int|string|\UnitEnum|null
+     */
+    public static function getContaoVersion() {
+        if (System::getContainer() && System::getContainer()->hasParameter('contao.version')) {
+            return System::getContainer()->getParameter('contao.version');
+        } else {
+            return InstalledVersions::getVersion('contao/core-bundle');
+        }
+    }
+
+    /**
+     * @param $version
+     * @return bool|int
+     */
+    public static function isContaoVersionAtLeast($version) {
+        return version_compare(self::getContaoVersion(), $version, '>=');
     }
 
     /**
