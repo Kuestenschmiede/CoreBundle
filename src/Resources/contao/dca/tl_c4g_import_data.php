@@ -290,7 +290,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
 /**
  * Class tl_c4g_import_data
  */
-class tl_c4g_import_data extends Contao\Backend
+class tl_c4g_import_data extends \Contao\Backend
 {
 
     private $importDataCallback = null;
