@@ -696,12 +696,13 @@ class C4GImportDataCallback extends Backend
                 $baseDataUrl,
                 [
                     'headers' => [
-                        'Referer'       => $_SERVER['HTTP_REFERER'] ?: "",
-                        'User-Agent'    => $_SERVER['HTTP_USER_AGENT'] ?: ""
+                        'Referer'    => !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "",
+                        'User-Agent' => !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ""
                     ],
                     'query' => $arrData
                 ]
             );
+
             $response = $request->getContent();
             if ($response) {
                 if (C4GUtils::startsWith($response, '[{') && C4GUtils::endsWith($response, '}]')) {
