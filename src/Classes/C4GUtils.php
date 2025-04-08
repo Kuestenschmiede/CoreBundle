@@ -626,7 +626,7 @@ class C4GUtils
         $chars = ['{','}'];
         $uuid = $uuid ? str_replace($chars, ' ', $uuid) : false;
         $elements = $uuid ? explode('-', $uuid) : false;
-        if ($uuid && (strlen($elements[0]) === 8) && (strlen($elements[1]) === 4) && (strlen($elements[2]) === 4) && (strlen($elements[3]) === 4) && (strlen($elements[4]) === 12)) {
+        if ($uuid && (strlen($elements[0]) === 8) && (strlen($elements[1]) === 4) && (strlen($elements[2]) === 4) && (strlen($elements[3]) === 4) && ((strlen($elements[4]) === 12) || (strlen($elements[4]) === 14))) {
             return true;
         }
 
