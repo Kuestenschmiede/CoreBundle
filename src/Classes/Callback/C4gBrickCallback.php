@@ -617,7 +617,7 @@ class C4gBrickCallback extends Backend
         }
 
         if (!$foundButton) {
-            return;
+            return "";
         }
 
         $attributes = 'style="margin-right:3px"';
