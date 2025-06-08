@@ -28,6 +28,8 @@ class ResourceLoader
     const BODY = 'TL_BODY';
     const JQ_UI = 'c4g_jquery_ui';
 
+    private static $loadedFiles = [];
+
     /**
      * @param $jsFile
      * @param string $location
@@ -35,62 +37,46 @@ class ResourceLoader
      */
     public static function loadJavaScriptResource($jsFile, $location = self::JAVASCRIPT, $key = '')
     {
+        $cacheKey = $jsFile . '_' . $location . '_' . $key;
+        if (isset(self::$loadedFiles[$cacheKey])) {
+            return;
+        }
+        self::$loadedFiles[$cacheKey] = true;
+
+        $jsFile = C4GUtils::startsWith($jsFile, '/') ? $jsFile : '/' . $jsFile;
+        $jsFileWithoutSlash = ltrim($jsFile, '/');
+
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
         $webDir = $projectDir . '/public';
-        // check for older directory name
         if (!file_exists($webDir)) {
             $webDir = $projectDir . '/web';
         }
-        if (!C4GUtils::startsWith($jsFile, '/')) {
-            $jsFile = '/' . $jsFile;
-            $jsFileWithoutSlash = $jsFile;
-        } else {
-            $jsFileWithoutSlash = substr($jsFile, 1);
-        }
-        if (file_exists($webDir . $jsFile)) {
-            $timeStamp = filemtime($webDir . $jsFile);
-        } else {
-            $timeStamp = 0;
-        }
+
+        $timeStamp = file_exists($webDir . $jsFile) ? filemtime($webDir . $jsFile) : 0;
+
+        $jsFileWithTimestamp = $timeStamp ? $jsFile . '?v=' . $timeStamp : $jsFile;
 
         switch ($location) {
             case self::JAVASCRIPT:
-                if ($timeStamp) {
-                    $jsFile .= '|' . $timeStamp;
-                }
                 if ($key === '') {
                     $GLOBALS[self::JAVASCRIPT][] = $jsFileWithoutSlash;
                 } else {
                     $GLOBALS[self::JAVASCRIPT][$key] = $jsFileWithoutSlash;
                 }
-
                 break;
+
             case self::HEAD:
-                if ($timeStamp) {
-                    $jsFile .= '?v=' . $timeStamp;
-                }
-                if ($key === '') {
-                    $GLOBALS[self::HEAD][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
-                } else {
-                    $GLOBALS[self::HEAD][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
-                }
-
-                break;
             case self::BODY:
-                if ($timeStamp) {
-                    $jsFile .= '?v=' . $timeStamp;
-                }
+                $scriptTag = '<script src="' . $jsFileWithTimestamp . '" defer></script>' . "\n";
                 if ($key === '') {
-                    $GLOBALS[self::BODY][] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                    $GLOBALS[$location][] = $scriptTag;
                 } else {
-                    $GLOBALS[self::BODY][$key] = '<script src="' . $jsFile . '" defer></script>' . "\n";
+                    $GLOBALS[$location][$key] = $scriptTag;
                 }
-
-                break;
-            default:
                 break;
         }
     }
+
 
     /**
      * @param $jsFile
