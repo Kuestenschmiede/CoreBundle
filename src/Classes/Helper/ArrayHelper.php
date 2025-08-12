@@ -121,7 +121,7 @@ class ArrayHelper
         $sortFields = [];
         $args = [];
 
-        if (!$fields) {
+        if (!$fields || !$arr) {
             return $arr;
         }
 
