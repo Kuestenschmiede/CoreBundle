@@ -20,7 +20,7 @@ use Composer\InstalledVersions;
  */
 class C4GVersionProvider
 {
-    const REQUEST_URL = 'https://repo.packagist.org/p/[vendor]/[package].json';
+    const REQUEST_URL = 'https://repo.packagist.org/p2/[vendor]/[package].json';
 
     /**
      * @param string $package
