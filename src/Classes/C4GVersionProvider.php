@@ -69,7 +69,7 @@ class C4GVersionProvider
         $url = str_replace('[vendor]', $arrPackage[0], self::REQUEST_URL);
         $url = str_replace('[package]', $arrPackage[1], $url);
         $client = HttpClient::create();
-        $response = $client->request('GET', $url)->getContent();
+        $response = $client->request('GET', $url, ['timeout' => 120])->getContent();
         if (!$response) {
             $response = '';
         }
