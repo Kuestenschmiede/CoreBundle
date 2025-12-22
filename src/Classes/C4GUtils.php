@@ -581,15 +581,14 @@ class C4GUtils
             ]);
             try {
                 $response = $client->request('GET', $searchUrl, ['timeout' => 2]);
-                $statusCode = $response->getStatusCode();
                 if ($response && $response->getStatusCode() === 200) {
-                    $response = $response->getContent();
-                    $response = \GuzzleHttp\json_decode($response, true);
+                    $responseContent = $response->getContent();
+                    $responseContent = \GuzzleHttp\json_decode($responseContent, true);
                     if ($getArray) {
-                        return $response['address'];
+                        return $responseContent['address'];
                     }
                     else {
-                        return $response['display_name'];
+                        return $responseContent['display_name'];
                     }
                 }
             } catch (\Exception $exception) {
