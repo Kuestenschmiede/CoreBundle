@@ -703,7 +703,11 @@ class C4GImportDataCallback extends Backend
                 ]
             );
 
-            $response = $request->getContent();
+            try {
+                $response = $request->getContent();
+            } catch (\Exception $e) {
+                return false;
+            }
             if ($response) {
                 if (C4GUtils::startsWith($response, '[{') && C4GUtils::endsWith($response, '}]')) {
                     return \json_decode($response);
