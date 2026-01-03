@@ -1,10 +1,9 @@
 /*
  * This file is part of con4gis, the gis-kit for Contao CMS.
  * @package con4gis
- * @version 10
- * @author con4gis contributors (see "authors.txt")
+ * @author con4gis contributors (see "authors.md")
  * @license LGPL-3.0-or-later
- * @copyright (c) 2010-2025, by Küstenschmiede GmbH Software & Design
+ * @copyright (c) 2010-2026, by Küstenschmiede GmbH Software & Design
  * @link https://www.con4gis.org
  */
 
@@ -15,11 +14,9 @@
 /**
  * @summary     DataTables
  * @description Paginate, search and order HTML tables
- * @version     1.10.16
  * @file        jquery.dataTables.js
  * @author      SpryMedia Ltd
  * @contact     www.datatables.net
- * @copyright   Copyright 2008-2017 SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license
