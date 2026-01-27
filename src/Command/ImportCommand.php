@@ -6,15 +6,18 @@ use con4gis\CoreBundle\Classes\C4GImport;
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+#[AsCommand(
+    name: 'con4gis:import'
+)]
 class ImportCommand extends Command
 {
-    protected static $defaultName = 'con4gis:import';
     private ContainerInterface $container;
 
     /**
