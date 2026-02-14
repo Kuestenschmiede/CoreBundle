@@ -1195,7 +1195,7 @@ class C4GImportDataCallback extends Backend
         $allIdChangesNonRelations = [];
         foreach ($jsonFile as $importDB => $importDatasets) {
             if ($importDB == 'relations' or $importDB == 'hexValues') {
-                break;
+                continue;
             }
 
             $firstPrimaryChange = true;
@@ -1209,24 +1209,24 @@ class C4GImportDataCallback extends Backend
                                 !$primaryImportRelationTable ||
                                 in_array($importDbField, $dbRelationPrimary[$importDB])
                             ) {
-                                if ($firstPrimaryChange) {
-                                    $highestId = $this->Database->prepare(
-                                        "SELECT * FROM $importDB ORDER BY id DESC LIMIT 1"
-                                    )->execute()->fetchAssoc();
-                                    if ($highestId) {
-                                        $highestId = (int) $highestId[$importDbField];
-                                        $nextId = $highestId + 1;
-                                    } else {
-                                        $nextId = 1;
-                                    }
-                                    $firstPrimaryChange = false;
-                                } else {
-                                    $nextId = end($allIdChanges[$importDB][$importDbField]) + 1;
-                                }
                                 if (!isset($allIdChanges[$importDB][$importDbField][$importDbValue])) {
+                                    if ($firstPrimaryChange) {
+                                        $highestId = $this->Database->prepare(
+                                            "SELECT id FROM $importDB ORDER BY id DESC LIMIT 1"
+                                        )->execute()->fetchAssoc();
+                                        if ($highestId) {
+                                            $highestId = (int) $highestId['id'];
+                                            $nextId = $highestId + 1;
+                                        } else {
+                                            $nextId = 1;
+                                        }
+                                        $firstPrimaryChange = false;
+                                    } else {
+                                        $nextId = end($allIdChanges[$importDB][$importDbField]) + 1;
+                                    }
                                     $allIdChanges[$importDB][$importDbField][$importDbValue] = $nextId ?? 'nextId';
+                                    unset($nextId);
                                 }
-                                unset($nextId);
                             }
                         }
 
@@ -1259,7 +1259,7 @@ class C4GImportDataCallback extends Backend
             $newValue = $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$importDbValue];
 
             if (is_numeric($importDbValue) && is_null($newValue)) {
-                $newValue = 0;
+                $newValue = $importDbValue;
             }
 
             return (string) $newValue;
