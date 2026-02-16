@@ -1168,6 +1168,11 @@ class C4GImport
                     break;
                 }
 
+                if (!$this->database->tableExists($importDB)) {
+                    C4gLogModel::addLogEntry('core', 'Skip update of table ' . $importDB . ' because it does not exist in the database.');
+                    continue;
+                }
+
                 if ($importDataType == 'diff') {
                     $queryType = 'UPDATE';
                 } else {
