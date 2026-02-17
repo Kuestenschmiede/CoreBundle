@@ -81,6 +81,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
                 'href'                => 'do=c4g_bricks&table=tl_c4g_bricks',
                 'class'               => 'header_back',
                 'icon'                => 'back.svg',
+                'primary' => true,
                 'label'               => &$GLOBALS['TL_LANG']['MSC']['backBT'],
             ]
         ),
@@ -451,7 +452,7 @@ class tl_c4g_import_data extends \Contao\Backend
     /**
      * saveData
      */
-    public function saveData(DataContainer $dc)
+    public function saveData(\Contao\DataContainer $dc)
     {
         $con4gisImport = $this->Input->post('con4gisImport');
 
