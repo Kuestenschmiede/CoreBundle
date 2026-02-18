@@ -1427,6 +1427,10 @@ class C4GImport
                 continue;
             }
 
+            if (!$this->database->tableExists($importDB)) {
+                continue;
+            }
+
             $firstPrimaryChange = true;
             foreach ($importDatasets as $importDataset) {
                 $importDataset = (array) $importDataset;
@@ -1597,24 +1601,39 @@ class C4GImport
      */
     private function copy($source, $dest)
     {
-        $result = false;
+        if (!file_exists($source)) {
+            return false;
+        }
+
+        $result = true;
         if (is_dir($source)) {
-            $dir_handle = opendir($source);
-            while ($file = readdir($dir_handle)) {
-                if ($file != '.' && $file != '..') {
-                    if (is_dir($source . '/' . $file)) {
-                        if (!is_dir($dest . '/' . $file)) {
-                            mkdir($dest . '/' . $file);
-                        }
-                        $result = $this->copy($source . '/' . $file, $dest . '/' . $file);
-                    } else {
-                        $result = copy($source . '/' . $file, $dest . '/' . $file);
-                    }
+            if (!is_dir($dest)) {
+                if (!@mkdir($dest, 0770, true)) {
+                    // return false; // If mkdir fails, we might still want to try files inside if dest already exists partially
                 }
             }
-            closedir($dir_handle);
+
+            $dir_handle = opendir($source);
+            if ($dir_handle) {
+                while (($file = readdir($dir_handle)) !== false) {
+                    if ($file != '.' && $file != '..') {
+                        if (is_dir($source . '/' . $file)) {
+                            if (!$this->copy($source . '/' . $file, $dest . '/' . $file)) {
+                                $result = false;
+                            }
+                        } else {
+                            if (!@copy($source . '/' . $file, $dest . '/' . $file)) {
+                                $result = false;
+                            }
+                        }
+                    }
+                }
+                closedir($dir_handle);
+            } else {
+                $result = false;
+            }
         } else {
-            $result = copy($source, $dest);
+            $result = @copy($source, $dest);
         }
 
         return $result;
