@@ -56,6 +56,7 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
                 'href'                => 'do=c4g_bricks&table=tl_c4g_bricks',
                 'class'               => 'header_back',
                 'icon'                => 'back.svg',
+                'primary' => true,
                 'label'               => &$GLOBALS['TL_LANG']['MSC']['backBT'],
             ],
         ),

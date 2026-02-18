@@ -63,6 +63,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=globalSettings',
                 'class'               => 'header_global_settings',
+                'primary' => true,
                 'button_callback'     => [$cbClass, 'globalSettings'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/global_settings_16.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'][0]
@@ -80,6 +81,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=reloadVersions',
                 'class'               => 'header_reload_versions',
                 'button_callback'     => [$cbClass, 'reloadVersions'],
+                'primary' => true,
                 'icon'                => 'bundles/con4giscore/images/be-icons/update_version.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'][0]
             ),
@@ -88,6 +90,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=importData',
                 'class'               => 'header_import_data',
                 'button_callback'     => [$cbClass, 'importData'],
+                'primary' => true,
                 'icon'                => 'bundles/con4giscore/images/be-icons/importData.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['importData'][0]
             ),
@@ -96,6 +99,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
                 'href'                => 'key=serverLogs',
                 'class'               => 'header_server_logs',
                 'button_callback'     => [$cbClass, 'serverLogs'],
+                'primary' => true,
                 'icon'                => 'bundles/con4giscore/images/be-icons/serverlog.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'][0]
             ),
