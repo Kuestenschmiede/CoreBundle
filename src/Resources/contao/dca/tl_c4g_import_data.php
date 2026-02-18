@@ -535,30 +535,33 @@ class tl_c4g_import_data extends \Contao\Backend
     /**
      * @param $row
      * @param $label
-     * @return var
+     * @return array
      */
-    public function labelCallback($row, $label){
+    public function labelCallback($row, $label, \Contao\DataContainer $dc, array $labels)
+    {
         $userLng = BackendUser::getInstance()->language;
+
+        $fields = $GLOBALS['TL_DCA']['tl_c4g_import_data']['list']['label']['fields'];
 
         $caption = $this->get_string_between($row['caption'], "::".$userLng."}}", "{{");
         $description = $this->get_string_between($row['description'], "::".$userLng."}}", "{{");
-        
-        $newLabel['caption'] = $caption;
-        $newLabel['type'] = $row['type'];
-        $newLabel['source'] = $row['source'];
-        $newLabel['bundles'] = $row['bundles'];
-        $newLabel['bundlesVersion'] = $row['bundlesVersion'];
-        $newLabel['description'] = $description;
-        $newLabel['importVersion'] = $row['importVersion'];
-        $newLabel['availableVersion'] = $row['availableVersion'];
 
-        return $newLabel;
+        $captionKey = array_search('caption', $fields, true);
+        $descKey = array_search('description', $fields, true);
+
+        $labels[$captionKey] = $caption;
+        $labels[$descKey] = $description;
+
+        return $labels;
     }
 
-    private function get_string_between($string, $start, $end){
+    private function get_string_between($string, $start, $end)
+    {
         $string = " ".$string;
         $ini = strpos($string,$start);
-        if ($ini == 0) return "";
+        if ($ini == 0) {
+            return "";
+        }
         $ini += strlen($start);
         $len = strpos($string,$end,$ini) - $ini;
         return substr($string,$ini,$len);
