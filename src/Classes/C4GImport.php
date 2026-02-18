@@ -1180,7 +1180,12 @@ class C4GImport
                 }
                 unset($updateWhereQuery, $updateWhereQueryValue);
 
-                $dbFields = $this->database->getFieldNames($importDB);
+                try {
+                    $dbFields = $this->database->getFieldNames($importDB);
+                } catch (\Throwable $e) {
+                    C4gLogModel::addLogEntry('core', 'Skip update of table ' . $importDB . ' because getFieldNames failed: ' . $e->getMessage());
+                    continue;
+                }
                 if ($queryType == 'UPDATE' && in_array('uuid', $dbFields)) {
                     if ($importDB == 'tl_files') {
                         $updateWhereQuery = ' WHERE path=';
