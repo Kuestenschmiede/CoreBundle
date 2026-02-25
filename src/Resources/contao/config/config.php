@@ -31,7 +31,10 @@ ArrayUtil::arrayInsert($GLOBALS['BE_MOD'], array_search('content', array_keys($G
 (
     'con4gis' => [
         'c4g_bricks'   => ['tables' => ['tl_c4g_bricks']],
-        'c4g_settings' => ['tables' => ['tl_c4g_settings']],
+        'c4g_settings' => [
+            'tables' => ['tl_c4g_settings'],
+            'stylesheet' => ['/bundles/con4giscore/dist/css/be_c4g_settings.css']
+        ],
         'c4g_io_data'  => ['tables' => ['tl_c4g_import_data']],
         'c4g_log'      => ['tables' => ['tl_c4g_log']]
     ]

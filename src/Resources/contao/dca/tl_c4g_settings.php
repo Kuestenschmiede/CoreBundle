@@ -36,38 +36,6 @@ $GLOBALS['TL_DCA']['tl_c4g_settings'] = array
         )
     ),
 
-
-    //List
-    'list' => array
-    (
-        'sorting' => array
-        (
-            'mode'              => 2,
-            'fields'            => array('test'),
-            'panelLayout'       => 'limit',
-            'icon'              => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
-        ),
-
-        'label' => array
-        (
-            'fields'            => array('test'),
-            'showColumns'       => true,
-            'format'            => '%s',
-        ),
-
-        'global_operations' => [],
-
-        'operations' => array
-        (
-            'edit' => array
-            (
-                'label'         => &$GLOBALS['TL_LANG']['tl_c4g_settings']['edit'],
-                'href'          => 'act=edit',
-                'icon'          => 'edit.svg',
-            )
-        )
-    ),
-
 	// Palettes
 	'palettes' => array
 	(
