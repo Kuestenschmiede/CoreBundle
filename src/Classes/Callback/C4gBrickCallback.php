@@ -611,6 +611,7 @@ class C4gBrickCallback extends Backend
                 $do = $brickArr[$row['brickkey']][$key]['do'];
                 $icon = $brickArr[$row['brickkey']][$key]['icon'] ?: '';
                 $title = $brickArr[$row['brickkey']][$key]['title'];
+                $label = $title;
                 $foundButton = true;
                 break;
             }
