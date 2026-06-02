@@ -65,7 +65,7 @@ class C4GDeliverFileApi
         // extract uri vars
         parse_str($sRequestUri, $aUriVars);
 
-        if (class_exists('con4gis\ApiBundle\Controller\ApiController') && (version_compare(VERSION, '4', '>='))) {
+        if (class_exists('con4gis\ApiBundle\Controller\ApiController')) {
             $sFileHashGenerated = md5($aUriVars['u'] . $GLOBALS['TL_CONFIG']['encryptionKey'] . basename($aUriVars[$path . '/con4gis/api/deliver?file']));
         } else {
             $sFileHashGenerated = md5($aUriVars['u'] . $GLOBALS['TL_CONFIG']['encryptionKey'] . basename($aUriVars[$path . '/bundles/con4giscore/vendor/deliver_php?file']));

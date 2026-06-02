@@ -73,10 +73,9 @@ class StackDatabase implements StackInterface
     {
         if (is_countable($item) && count($item)) {
             $data = serialize($item);
-            $query = 'INSERT INTO `' . $this->table . '` SET ';
-            $query .= '`data` = \'' . $data . '\', ';
-            $query .= ' `tstamp` = ' . time();
-            $this->execute($query);
+            $db = $this->getDb();
+            $db->prepare('INSERT INTO `' . $this->table . '` SET `data` = ?, `tstamp` = ?')
+                ->execute($data, time());
         }
     }
 
@@ -89,8 +88,9 @@ class StackDatabase implements StackInterface
         $data = $this->top();
 
         if (is_array($data) && is_countable($data) && count($data)) {
-            $query = 'DELETE FROM `' . $this->table . '` WHERE `id` = ' . $data['id'];
-            $this->execute($query);
+            $db = $this->getDb();
+            $db->prepare('DELETE FROM `' . $this->table . '` WHERE `id` = ?')
+                ->execute($data['id']);
 
             return $data;
         }
