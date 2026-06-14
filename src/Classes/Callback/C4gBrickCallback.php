@@ -89,12 +89,12 @@ class C4gBrickCallback extends Backend
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['framework'],
                 'icon' => $iconPath.'framework_c4g.svg'
             ],
-//            'forum' => [
-//                'repo' => 'ForumBundle',
-//                'vendor' => 'con4gis',
-//                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
-//                'icon' => $iconPath.'forum_c4g.svg'
-//            ],
+            'forum' => [
+                'repo' => 'ForumBundle',
+                'vendor' => 'con4gis',
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['forum'],
+                'icon' => 'bundles/con4gisforum/img/forum.svg'
+            ],
             'groups' => [
                 'repo' => 'GroupsBundle',
                 'vendor' => 'con4gis',
@@ -166,6 +166,18 @@ class C4gBrickCallback extends Backend
                 'vendor' => 'con4gis',
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'],
                 'icon' => $iconPath.'visualization_c4g.svg'
+            ],
+            'operator' => [
+                'repo' => 'OperatorBundle',
+                'vendor' => 'gutesio',
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['operator'],
+                'icon' => 'bundles/gutesiooperator/img/gutes_digital.svg'
+            ],
+            'data-model' => [
+                'repo' => 'DataModelBundle',
+                'vendor' => 'gutesio',
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['data-model'],
+                'icon' => 'bundles/gutesiooperator/img/gutes_io.svg'
             ]
         ];
     }

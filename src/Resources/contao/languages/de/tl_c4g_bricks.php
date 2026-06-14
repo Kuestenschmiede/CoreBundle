@@ -71,6 +71,8 @@ $GLOBALS['TL_LANG']['tl_c4g_bricks']['reservation'] = 'Reservierungsformulare (T
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['tracking'] = 'Positionsverfolgung';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['visualization'] = 'Chartgenerator';
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['travel-costs'] = 'Fahrtkostenrechner (nur mit con4gis Support-Tarif)';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['operator'] = 'Betreiber-Instanz für gutes.digital / nordsee.digital';
+$GLOBALS['TL_LANG']['tl_c4g_bricks']['data-model'] = 'Gemeinsames Datenmodell für gutes.digital / nordsee.digital';
 
 /** INFOTEXT */
 $GLOBALS['TL_LANG']['tl_c4g_bricks']['infotext'] = "Über das Favoriten-Sternchen an den Bausteinen, können die Backend-Module ".
