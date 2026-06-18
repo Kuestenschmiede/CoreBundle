@@ -107,6 +107,60 @@ class C4GUtils
     }
 
     /**
+     * Safely deserializes and casts IDs to integers.
+     * @param mixed $ids
+     * @return array
+     */
+    public static function deserializeIds($ids)
+    {
+        $cleanIds = [];
+        $stack = is_array($ids) ? $ids : (is_null($ids) ? [] : [$ids]);
+
+        while (!empty($stack)) {
+            $current = array_shift($stack);
+
+            if (is_array($current)) {
+                foreach ($current as $val) {
+                    $stack[] = $val;
+                }
+            } elseif (is_numeric($current)) {
+                $val = (int) $current;
+                if ($val >= 0) {
+                    $cleanIds[] = $val;
+                }
+            } elseif (is_string($current)) {
+                $current = trim($current);
+                if ($current === '' || $current === 'a:0:{}') {
+                    continue;
+                }
+
+                if (is_numeric($current)) {
+                    $val = (int) $current;
+                    if ($val >= 0) {
+                        $cleanIds[] = $val;
+                    }
+                    continue;
+                }
+
+                if (preg_match('/^[asiO]:\d+:/', $current)) {
+                    $deserialized = \Contao\StringUtil::deserialize($current, true);
+                    if ($deserialized !== $current) {
+                        $stack[] = $deserialized;
+                    }
+                } elseif (strpos($current, ',') !== false) {
+                    foreach (explode(',', $current) as $val) {
+                        $stack[] = $val;
+                    }
+                }
+            }
+        }
+
+        $result = array_values(array_unique($cleanIds));
+
+        return empty($result) ? [0] : $result;
+    }
+
+    /**
      * @param array $params
      */
     public static function addParametersToURL($url, $params)
