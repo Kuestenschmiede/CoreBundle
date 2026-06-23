@@ -860,4 +860,26 @@ class C4GUtils
     public static function isBackend() {
         return System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''));
     }
+
+    /**
+     * Parses the con4gis state string into an array.
+     * Example state: forum:50;searchDialog:50
+     *
+     * @param string $state
+     * @param array $target
+     */
+    public static function parseState(string $state, array &$target)
+    {
+        if (empty($state)) {
+            return;
+        }
+
+        $parts = explode(';', $state);
+        foreach ($parts as $part) {
+            $kv = explode(':', $part);
+            if (count($kv) === 2) {
+                $target[$kv[0]] = $kv[1];
+            }
+        }
+    }
 }
