@@ -14,6 +14,7 @@ namespace con4gis\CoreBundle\Classes;
 use con4gis\CoreBundle\Resources\contao\models\C4gLogModel;
 use con4gis\CoreBundle\Resources\contao\models\C4gSettingsModel;
 use con4gis\MapsBundle\Resources\contao\models\C4gMapSettingsModel;
+use Contao\Config;
 use Symfony\Component\HttpClient\HttpClient;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -239,7 +240,7 @@ class C4GUtils
             } elseif ($GLOBALS['TL_CONFIG']['useSMTP'] and filter_var($GLOBALS['TL_CONFIG']['smtpUser'])) {
                 $eMail->from = $GLOBALS['TL_CONFIG']['smtpUser'];
             } else {
-                $eMail->from = $GLOBALS['TL_CONFIG']['adminEmail'];
+                $eMail->from = \Contao\Config::get('adminEmail');
             }
 
             $eMail->subject = $mailData['subject'];

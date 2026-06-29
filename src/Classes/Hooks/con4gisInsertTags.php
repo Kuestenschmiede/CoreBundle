@@ -54,6 +54,13 @@ class con4gisInsertTags extends System
      */
     public function replaceTag($strTag)
     {
+        if ($strTag === 'admin_email' || $strTag === 'admin-email') {
+            $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+            if ($request && $request->attributes->has('_c4g_admin_email')) {
+                return $request->attributes->get('_c4g_admin_email');
+            }
+        }
+
 //        $packages = System::getContainer()->getParameter('kernel.packages');
         if (System::getContainer()->hasParameter('kernel.packages')) {
             $packages = System::getContainer()->getParameter('kernel.packages');
