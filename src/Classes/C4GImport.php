@@ -1288,7 +1288,7 @@ class C4GImport
                                     if (C4GUtils::startsWith($importDbValue, '0x') && $importDB != 'tl_files') {
                                         $unserial = hex2bin(substr($importDbValue, 2));
 
-                                        if (strpos($unserial, '{')) {
+                                        if (strpos($unserial, '{') !== false || strpos($unserial, 'a:') === 0) {
                                             $unserial = StringUtil::deserialize($unserial);
                                             $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                             $newImportDbValue = serialize($unserial);
@@ -1305,13 +1305,12 @@ class C4GImport
                                         $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
                                         $newImportDbValue = serialize($unserial);
                                         $importDbValue = $newImportDbValue;
-                                    } elseif (strpos($importDbValue, '{')) {
-                                        $unserial = hex2bin(substr($importDbValue, 2));
-                                        $unserial = StringUtil::deserialize($unserial);
-                                        $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
-                                        $newImportDbValue = serialize($unserial);
-                                        $newImportDbValue = '0x'.bin2hex($newImportDbValue);
-                                        $importDbValue = $newImportDbValue;
+                                    } elseif (C4GUtils::startsWith($importDbValue, '[') || C4GUtils::startsWith($importDbValue, '{')) {
+                                        $unserial = json_decode($importDbValue, true);
+                                        if ($unserial !== null) {
+                                            $unserial = $this->changeDbValue($importDB, $importDbField, $unserial, $allIdChanges, $relations);
+                                            $importDbValue = json_encode($unserial, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                                        }
                                     } elseif (is_numeric($importDbValue)) {
                                         $newImportDbValue = $this->changeDbValue($importDB, $importDbField, $importDbValue, $allIdChanges, $relations);
                                         $importDbValue = $newImportDbValue;
@@ -1496,7 +1495,7 @@ class C4GImport
         if (!is_array($importDbValue)) {
             $newValue = $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$importDbValue];
 
-            if (is_numeric($importDbValue) && is_null($newValue)) {
+            if (is_null($newValue)) {
                 $newValue = $importDbValue;
             }
 
@@ -1505,10 +1504,9 @@ class C4GImport
         foreach ($importDbValue as $key => $value) {
             if (is_array($value)) {
                 $newValue[$key] = $this->changeDbValue($importDB, $importDbField, $value, $allIdChanges, $relations);
-            } elseif (is_numeric($value) && $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value]) {
-                $newValue[$key] = (string) $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value];
             } else {
-                $newValue[$key] = (string) $value;
+                $mappedValue = $allIdChanges[$primaryRelation[0]][$primaryRelation[1]][$value];
+                $newValue[$key] = (string) ($mappedValue ?? $value);
             }
         }
 

@@ -130,8 +130,8 @@ class C4GVersionProvider
         $comparableFragments[0] = strpos($comparableFragments[0], 'v') === false ? $comparableFragments[0] : substr($comparableFragments[0], 1);
 
         for ($i = 0; $i < 3; $i++) {
-            $toValue = intval($toCompareFragments[$i]);
-            $cmpValue = intval($comparableFragments[$i]);
+            $toValue = isset($toCompareFragments[$i]) ? intval($toCompareFragments[$i]) : 0;
+            $cmpValue = isset($comparableFragments[$i]) ? intval($comparableFragments[$i]) : 0;
 
             if ($toValue > $cmpValue) {
                 return false;

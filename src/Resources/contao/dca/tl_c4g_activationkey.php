@@ -33,13 +33,13 @@ $GLOBALS['TL_DCA']['tl_c4g_activationkey'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('tstamp DESC', 'id DESC'),
+			'fields'                  => array('tstamp DESC','id DESC'),
 			'panelLayout'             => 'filter;sort,search,limit',
             'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'text'),
+			'fields'                  => array('tstamp','text'),
 			'format'                  => '<span style="color:#b3b3b3;padding-right:3px">[%s]</span> %s',
 			'maxCharacters'           => 96,
 		),

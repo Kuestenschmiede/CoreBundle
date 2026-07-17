@@ -39,6 +39,10 @@ class DCAPalette
 
     public function subPalette(string $field, string $option, string $fields)
     {
+        if (strpos($fields, ';') !== false) {
+            $fields = str_replace(';', ",[EOF];[$field],", $fields);
+        }
+
         if (isset($this->subPalettesGlobal[$field . '_' . $option])) {
             $this->subPalettesGlobal[$field . '_' . $option] .= $fields;
         } else {

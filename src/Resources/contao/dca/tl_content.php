@@ -12,12 +12,7 @@ use Contao\Backend;
 /***
  * Palettes
  */
-$GLOBALS['TL_DCA']['tl_content']['palettes']['c4g_activationpage'] =  '{type_legend},type,headline;'.
-    '{c4g_activationpage_function_legend},c4g_activationpage_action_handler,c4g_activationpage_confirmation;'.
-    '{c4g_activationpage_custom_message_legend:hide},c4g_activationpage_success_msg,c4g_activationpage_invalid_key_msg,c4g_activationpage_handler_error_msg;'.
-    '{template_legend:hide},c4g_activationpage_use_default_css,customTpl;'.
-    '{protected_legend:hide},c4g_activationpage_visitor_redirect,protected;'.
-    '{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['c4g_activationpage'] =  '{type_legend},type,headline;' . '{c4g_activationpage_function_legend},c4g_activationpage_action_handler,c4g_activationpage_confirmation;' . '{c4g_activationpage_custom_message_legend:hide},c4g_activationpage_success_msg,c4g_activationpage_invalid_key_msg,c4g_activationpage_handler_error_msg;' . '{template_legend:hide},c4g_activationpage_use_default_css,customTpl;' . '{protected_legend:hide},c4g_activationpage_visitor_redirect,protected;' . '{expert_legend:hide},guests,cssID,space';
 /***
  * Subpalettes
  */
@@ -35,8 +30,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['c4g_activationpage_action_handler'] 
     'label'                   => &$GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['fields']['action_handler'],
     'exclude'                 => true,
     'inputType'               => 'select',
-    'options_callback'        => array('tl_content_c4g_activationpage', 'get_registered_action_handlers'),
-    'eval'                    => array('includeBlankOption' => true, 'blankOptionLabel' => &$GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['msc']['auto_action_handler']),
+    'options_callback'        => array('tl_content_c4g_activationpage','get_registered_action_handlers'),
+    'eval'                    => array('includeBlankOption' => true,'blankOptionLabel' => &$GLOBALS['TL_LANG']['tl_content']['c4g_activationpage']['msc']['auto_action_handler']),
     'sql'                     => "varchar(255) NOT NULL default ''"
 );
 

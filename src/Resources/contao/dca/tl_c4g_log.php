@@ -35,12 +35,12 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
             'mode'                    => 2,
             'fields'                  => array('id DESC'),
             'panelLayout'             => 'filter;sort,search,limit',
-            'headerFields'            => array('tstamp', 'bundle', 'message', 'id'),
+            'headerFields'            => array('tstamp','bundle','message','id'),
             'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
         ),
         'label' => array
         (
-            'fields'                  => array('tstamp', 'bundle', 'message', 'id'),
+            'fields'                  => array('tstamp','bundle','message','id'),
             'showColumns'             => true,
         ),
         'global_operations' => array
@@ -49,7 +49,7 @@ $GLOBALS['TL_DCA']['tl_c4g_log'] = array
                 'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
                 'href'                => 'act=select',
                 'class'               => 'header_edit_all',
-                'attributes'          => 'onclick="Backend.getScrollOffset();" accesskey="e"'
+                'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
             ],
             'back' => [
                 //'href'                => 'key=back',

@@ -52,11 +52,11 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
         'closed' => true,
         'onload_callback'			=> array
         (
-            array('tl_c4g_import_data', 'checkData'),
+            array('tl_c4g_import_data','checkData'),
         ),
         'onsubmit_callback'			=> array
         (
-            array('tl_c4g_import_data', 'saveData'),
+            array('tl_c4g_import_data','saveData'),
         )
     ),
     'list' => array
@@ -66,14 +66,14 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
             'mode'                    => 2,
             'fields'                  => array('caption'),
             'panelLayout'             => 'search',
-            'headerFields'            => array('caption', 'type', 'source', 'bundles', 'bundlesVersion', 'description', 'importVersion', 'availableVersion'),
+            'headerFields'            => array('caption','type','source','bundles','bundlesVersion','description','importVersion','availableVersion'),
             'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
         ),
         'label' => array
         (
-            'fields'                  => array('caption', 'type', 'source', 'bundles', 'bundlesVersion', 'description', 'importVersion', 'availableVersion'),
+            'fields'                  => array('caption','type','source','bundles','bundlesVersion','description','importVersion','availableVersion'),
             'showColumns'             => true,
-            'label_callback'          => ['tl_c4g_import_data', 'labelCallback'],
+            'label_callback'          => ['tl_c4g_import_data','labelCallback'],
         ),
         'global_operations' => array
         (
@@ -92,28 +92,28 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['importData'],
                 'href'                => 'key=importBaseData',
                 'class'               => 'reload_version',
-                'button_callback'     => ['tl_c4g_import_data', 'loadButtons'],
+                'button_callback'     => ['tl_c4g_import_data','loadButtons'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/importData.svg'
             ),
             'update' => array
             (
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['updateData'],
                 'href'                => 'key=updateBaseData',
-                'button_callback'     => ['tl_c4g_import_data', 'loadButtons'],
+                'button_callback'     => ['tl_c4g_import_data','loadButtons'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/update_version.svg'
             ),
             'releaseImport' => array
             (
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['releaseImport'],
                 'href'                => 'key=releaseBaseData',
-                'button_callback'     => ['tl_c4g_import_data', 'loadButtons'],
+                'button_callback'     => ['tl_c4g_import_data','loadButtons'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/cut.svg'
             ),
             'delete' => array
             (
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['deleteData'],
                 'href'                => 'key=deleteImport',
-                'button_callback'     => ['tl_c4g_import_data', 'loadButtons'],
+                'button_callback'     => ['tl_c4g_import_data','loadButtons'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/delete.svg',
             )
         )
@@ -267,7 +267,7 @@ $GLOBALS['TL_DCA']['tl_c4g_import_data'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_c4g_import_data']['con4gisImport'],
             'filter'                  => false,
             'inputType'               => 'select',
-            'options_callback'        => ['tl_c4g_import_data', 'getCon4gisImportTemplates'],
+            'options_callback'        => ['tl_c4g_import_data','getCon4gisImportTemplates'],
             'sql'                     => "int NOT NULL default 0",
         ),
         'importRunning' => array
@@ -299,7 +299,7 @@ class tl_c4g_import_data extends \Contao\Backend
     public function __construct()
     {
         parent::__construct();
-        $this->import(BackendUser::class, 'User');
+        $this->import(BackendUser::class,'User');
         $this->importDataCallback = new C4GImportDataCallback();
     }
 
@@ -348,12 +348,12 @@ class tl_c4g_import_data extends \Contao\Backend
         }
         $importAllowed = true;
 
-        $bundles = str_replace(" ", "", $bundles);
-        $bundlesVersion = str_replace(" ", "", $bundlesVersion);
+        $bundles = str_replace(" ","", $bundles);
+        $bundlesVersion = str_replace(" ","", $bundlesVersion);
 
         if ($source != "locale") {
             foreach ($bundles as $key => $value) {
-                $pos = strpos($value, 'Bundle');
+                $pos = strpos($value,'Bundle');
                 $bundleName = strtolower(substr($value,0,$pos));
                 $version = key_exists('con4gis/'.$value, $installedPackages) ? $installedPackages['con4gis/'.$value] : false;
                 if (!$version) {
@@ -366,7 +366,7 @@ class tl_c4g_import_data extends \Contao\Backend
                 }
 
                 //Remove Bugfix release Number
-                if (substr_count($version, ".") == 2 && strpos($version, 'dev') !== true) {
+                if (substr_count($version,".") == 2 && strpos($version,'dev') !== true) {
                     $temp = explode('.', $version);
                     unset($temp[count($temp) - 1]);
                     $version = implode('.', $temp);
@@ -374,11 +374,11 @@ class tl_c4g_import_data extends \Contao\Backend
 
                 //Check if Version contains x or -
                 $allMinorVersions = false;
-                if (strpos($bundlesVersion[$key], '.x') !== false) {
-                    $bundlesVersion[$key] = strtok($bundlesVersion[$key], ".x");
+                if (strpos($bundlesVersion[$key],'.x') !== false) {
+                    $bundlesVersion[$key] = strtok($bundlesVersion[$key],".x");
                     $allMinorVersions = true;
                 }
-                if (strpos($bundlesVersion[$key], '-') !== false) {
+                if (strpos($bundlesVersion[$key],'-') !== false) {
                     $bothVersions = explode("-", $bundlesVersion[$key]);
                     $versionFrom = explode(".", $bothVersions[0]);
                     $versionTo = explode(".", $bothVersions[1]);
@@ -394,13 +394,13 @@ class tl_c4g_import_data extends \Contao\Backend
                 }
 
                 if ($allMinorVersions) {
-                    if (strpos($version, 'dev') !== true) {
-                        $version = strtok($version, ".");
+                    if (strpos($version,'dev') !== true) {
+                        $version = strtok($version,".");
                     }
                 }
 
                 //ToDo dev versions compare
-                if (($version == $bundlesVersion[$key]) || strpos($version, 'dev') !== false) {
+                if (($version == $bundlesVersion[$key]) || strpos($version,'dev') !== false) {
                     $isInstalled = true;
                 } else {
                     $isInstalled = false;
@@ -456,7 +456,7 @@ class tl_c4g_import_data extends \Contao\Backend
     {
         $con4gisImport = $this->Input->post('con4gisImport');
 
-        $responses = $this->getCon4gisImportData("getBasedata.php", "specificData", $con4gisImport);
+        $responses = $this->getCon4gisImportData("getBasedata.php","specificData", $con4gisImport);
 
         foreach ($responses as $response) {
             $objUpdate = $this->Database->prepare("UPDATE tl_c4g_import_data SET bundles=? WHERE id=?")->execute($response->bundles, $dc->id);
@@ -510,7 +510,7 @@ class tl_c4g_import_data extends \Contao\Backend
             $coreVersion = InstalledVersions::getVersion('con4gis/core');
         }
         
-        $responses = $this->importDataCallback->getCon4gisImportData("getBasedata.php", "allData", false, $coreVersion, $contaoVersion);
+        $responses = $this->importDataCallback->getCon4gisImportData("getBasedata.php","allData", false, $coreVersion, $contaoVersion);
         $arrReturn = [];
         foreach ($responses as $response) {
             $arrReturn[$response->id] = System::getContainer()->get('contao.insert_tag.parser')->replace($response->caption);
@@ -543,8 +543,8 @@ class tl_c4g_import_data extends \Contao\Backend
 
         $fields = $GLOBALS['TL_DCA']['tl_c4g_import_data']['list']['label']['fields'];
 
-        $caption = $this->get_string_between($row['caption'], "::".$userLng."}}", "{{");
-        $description = $this->get_string_between($row['description'], "::".$userLng."}}", "{{");
+        $caption = $this->get_string_between($row['caption'],"::".$userLng."}}","{{");
+        $description = $this->get_string_between($row['description'],"::".$userLng."}}","{{");
 
         $captionKey = array_search('caption', $fields, true);
         $descKey = array_search('description', $fields, true);

@@ -31,7 +31,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 				'id' => 'primary',
 			)
 		),
-		'onload_callback' => [[$cbClass, 'checkButtons']],
+		'onload_callback' => [[$cbClass,'checkButtons']],
 	),
 
 	// List
@@ -43,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             'fields'                  => ['brickname'],
 			'panelLayout'             => 'filter',
             'headerFields'            => ['brickname','description','installedVersion','latestVersion'],
-            'filter'                  => ['showBundle' => ["showBundle = ?", "1"]],
+            'filter'                  => ['showBundle' => ["showBundle = ?","1"]],
             'icon'                    => 'bundles/con4giscore/images/be-icons/con4gis_blue.svg',
 		),
 		'label' => array
@@ -57,14 +57,14 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=thisVersion',
                 'class'               => 'header_con4gis_version',
-                'button_callback'     => [$cbClass, 'con4gisVersion']
+                'button_callback'     => [$cbClass,'con4gisVersion']
             ),
             'globalSettings' => array
             (
                 'href'                => 'key=globalSettings',
                 'class'               => 'header_global_settings',
                 'primary' => true,
-                'button_callback'     => [$cbClass, 'globalSettings'],
+                'button_callback'     => [$cbClass,'globalSettings'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/global_settings_16.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['globalSettings'][0]
             ),
@@ -72,7 +72,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=switchAll',
                 'class'               => 'header_switch_installed',
-                'button_callback'     => [$cbClass, 'switchInstalled'],
+                'button_callback'     => [$cbClass,'switchInstalled'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/visible.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['switchInstalledAll'][0]
             ),
@@ -80,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=reloadVersions',
                 'class'               => 'header_reload_versions',
-                'button_callback'     => [$cbClass, 'reloadVersions'],
+                'button_callback'     => [$cbClass,'reloadVersions'],
                 'primary' => true,
                 'icon'                => 'bundles/con4giscore/images/be-icons/update_version.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['reloadVersions'][0]
@@ -89,7 +89,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=importData',
                 'class'               => 'header_import_data',
-                'button_callback'     => [$cbClass, 'importData'],
+                'button_callback'     => [$cbClass,'importData'],
                 'primary' => true,
                 'icon'                => 'bundles/con4giscore/images/be-icons/importData.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['importData'][0]
@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=serverLogs',
                 'class'               => 'header_server_logs',
-                'button_callback'     => [$cbClass, 'serverLogs'],
+                'button_callback'     => [$cbClass,'serverLogs'],
                 'primary' => true,
                 'icon'                => 'bundles/con4giscore/images/be-icons/serverlog.svg',
                 'label'               => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['serverLogs'][0]
@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=con4gisOrg',
                 'class'               => 'header_con4gis_org',
-                'button_callback'     => [$cbClass, 'con4gisOrg'],
+                'button_callback'     => [$cbClass,'con4gisOrg'],
                 'icon'                => 'bundles/con4giscore/images/be-icons/con4gis.org_dark.svg',
                 'label'               => 'con4gis.org'
             )
@@ -118,91 +118,91 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
             (
                 'href'                => 'key=firstButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'secondButton' => array
             (
                 'href'                => 'key=secondButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'thirdButton' => array
             (
                 'href'                => 'key=thirdButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'fourthButton' => array
             (
                 'href'                => 'key=fourthButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'fifthButton' => array
             (
                 'href'                => 'key=fifthButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'sixthButton' => array
             (
                 'href'                => 'key=sixthButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'seventhButton' => array
             (
                 'href'                => 'key=seventhButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'eighthButton' => array
             (
                 'href'                => 'key=eighthButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'ninthButton' => array
             (
                 'href'                => 'key=ninthButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'tenthButton' => array
             (
                 'href'                => 'key=tenthButtonn',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'eleventhButton' => array
             (
                 'href'                => 'key=eleventhButton',
                 'icon'                => 'bundles/con4giscore/images/be-icons/edit.svg',
-                'button_callback'     => [$cbClass, 'loadButton']
+                'button_callback'     => [$cbClass,'loadButton']
             ),
             'showDocs' => array
             (
                 'href'                => 'key=showDocs',
                 'icon'                => 'bundles/con4giscore/images/be-icons/help_16.svg',
-                'button_callback'     => [$cbClass, 'showDocs']
+                'button_callback'     => [$cbClass,'showDocs']
             ),
             'showPackagist' => array
             (
                 'href'                => 'key=showPackagist',
                 'icon'                => 'bundles/con4giscore/images/be-icons/packagist_16.svg',
-                'button_callback'     => [$cbClass, 'showPackagist']
+                'button_callback'     => [$cbClass,'showPackagist']
             ),
             'showGitHub' => array
             (
                 'href'                => 'key=showGitHub',
                 'icon'                => 'bundles/con4giscore/images/be-icons/github_16.svg',
-                'button_callback'     => [$cbClass, 'showGitHub']
+                'button_callback'     => [$cbClass,'showGitHub']
             ),
             'favorite' => array
             (
                 'href'                => 'key=switchFavorite',
                 'icon'                => 'bundles/con4giscore/images/be-icons/star.svg',
-                'button_callback'     => [$cbClass, 'switchFavorite']
+                'button_callback'     => [$cbClass,'switchFavorite']
             ),
 		)
 	),
@@ -210,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default' => '{brick_legend},brickname,description,installedVersion,latestVersion,withSettings,favorite;'
+		'default' => '{brick_legend},brickname,description,installedVersion,latestVersion,withSettings,favorite'
 	),
 
 	// Fields
@@ -236,46 +236,46 @@ $GLOBALS['TL_DCA']['tl_c4g_bricks'] = array
 		'brickkey' =>
         [
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>false, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'long'),
+			'eval'                    => array('mandatory'=>false,'unique'=>true,'decodeEntities'=>true,'maxlength'=>128,'tl_class'=>'long'),
             'sql'                     => "varchar(128) NOT NULL default ''",
             'filter'                  => true
         ],
         'brickname' =>
         [
             'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>false, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>254, 'tl_class'=>'long'),
+            'eval'                    => array('mandatory'=>false,'unique'=>true,'decodeEntities'=>true,'maxlength'=>254,'tl_class'=>'long'),
             'sql'                     => "varchar(254) NOT NULL default ''",
             'search'                  => true,
         ],
         'repository' =>
         [
             'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'long'),
+            'eval'                    => array('mandatory'=>false,'unique'=>false,'decodeEntities'=>true,'maxlength'=>128,'tl_class'=>'long'),
             'sql'                     => "varchar(128) NOT NULL default ''"
         ],
         'description' =>
         [
             'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>254, 'tl_class'=>'long'),
+            'eval'                    => array('mandatory'=>false,'unique'=>false,'decodeEntities'=>true,'maxlength'=>254,'tl_class'=>'long'),
             'sql'                     => "varchar(254) NOT NULL default ''",
             'search'                  => true
         ],
         'installedVersion' =>
         [
             'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>64, 'tl_class'=>'long'),
+            'eval'                    => array('mandatory'=>false,'unique'=>false,'decodeEntities'=>true,'maxlength'=>64,'tl_class'=>'long'),
             'sql'                     => "varchar(64) NOT NULL default ''"
         ],
         'latestVersion' =>
         [
             'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>64, 'tl_class'=>'long'),
+            'eval'                    => array('mandatory'=>false,'unique'=>false,'decodeEntities'=>true,'maxlength'=>64,'tl_class'=>'long'),
             'sql'                     => "varchar(64) NOT NULL default ''"
         ],
         'icon' =>
         [
             'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>false, 'unique'=>false, 'decodeEntities'=>true, 'maxlength'=>254, 'tl_class'=>'long'),
+            'eval'                    => array('mandatory'=>false,'unique'=>false,'decodeEntities'=>true,'maxlength'=>254,'tl_class'=>'long'),
             'sql'                     => "varchar(254) NOT NULL default ''"
         ],
         'withSettings' =>
