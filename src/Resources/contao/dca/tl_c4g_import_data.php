@@ -315,6 +315,20 @@ class tl_c4g_import_data extends \Contao\Backend
      */
     public function loadButtons($arrRow, $href, $label, $title, $icon, $attributes)
     {
+            if (is_array($title)) {
+                $title = $title[0] ?? '';
+            }
+            if (is_array($label)) {
+                $label = $label[0] ?? '';
+            }
+
+            if (is_array($title)) {
+                $title = $title[0] ?? '';
+            }
+            if (is_array($label)) {
+                $label = $label[0] ?? '';
+            }
+
 
         $event = new BeforeImportButtonLoadEvent();
         $dispatcher = System::getContainer()->get('event_dispatcher');
@@ -529,6 +543,14 @@ class tl_c4g_import_data extends \Contao\Backend
      */
     public function con4gisIO($href, $label, $title, $class, $attributes)
     {
+            if (is_array($title)) {
+                $title = $title[0] ?? '';
+            }
+            if (is_array($label)) {
+                $label = $label[0] ?? '';
+            }
+
+
         return '<a href="https://con4gis.support"  class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes .' target="_blank" rel="noopener">' . $label . '</a><br>';
     }
 
@@ -539,6 +561,14 @@ class tl_c4g_import_data extends \Contao\Backend
      */
     public function labelCallback($row, $label, \Contao\DataContainer $dc, array $labels)
     {
+            if (is_array($label)) {
+                $label = $label[0] ?? '';
+            }
+
+            if (is_array($label)) {
+                $label = $label[0] ?? '';
+            }
+
         $userLng = BackendUser::getInstance()->language;
 
         $fields = $GLOBALS['TL_DCA']['tl_c4g_import_data']['list']['label']['fields'];
