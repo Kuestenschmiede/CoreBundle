@@ -849,7 +849,8 @@ class C4GUtils
         $result = '';
         $parser = System::getContainer()->get('contao.insert_tag.parser');
         if ($parser && $insertTag) {
-            $result = html_entity_decode($parser->replace($insertTag));
+            $insertTag = html_entity_decode($insertTag, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $result = html_entity_decode($parser->replace($insertTag), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
         return $result;
     }
