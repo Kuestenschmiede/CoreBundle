@@ -48,6 +48,12 @@ class UploadController
                 $uploadedFile = $files->get('upload');
                 if ($uploadedFile instanceof UploadedFile) {
                     $settings = C4gSettingsModel::findSettings();
+                    if (!$uploadedFile->isValid()) {
+                        if ($uploadedFile->getError() === UPLOAD_ERR_INI_SIZE || $uploadedFile->getError() === UPLOAD_ERR_FORM_SIZE) {
+                            throw new C4GFileSizeException($settings->uploadMaxFileSize, $uploadedFile->getSize());
+                        }
+                        throw new C4GGenericException();
+                    }
                     $allowedTypes = explode(',', $settings->uploadAllowedImageTypes);
                     $maxWidth = $settings->uploadAllowedImageWidth;
                     $maxHeight = $settings->uploadAllowedImageHeight;
@@ -72,10 +78,22 @@ class UploadController
                     }
 
                     $uploadDirectoryBinary = $settings->uploadPathImages;
-                    if ($uploadDirectoryBinary === null) {
-                        throw new C4GGenericException();
+                    $uploadDirectoryString = '';
+                    if ($uploadDirectoryBinary !== null) {
+                        $uuid = \Contao\StringUtil::binToUuid($uploadDirectoryBinary);
+                        $filesModel = FilesModel::findByUuid($uuid);
+                        if ($filesModel !== null) {
+                            $uploadDirectoryString = $filesModel->path;
+                        }
                     }
-                    $uploadDirectoryString = FilesModel::findByUuid(\Contao\StringUtil::binToUuid($uploadDirectoryBinary))->path;
+
+                    if ($uploadDirectoryString === '') {
+                        if (is_dir($rootDir . '/files/c4g_forum')) {
+                            $uploadDirectoryString = 'files/c4g_forum';
+                        } else {
+                            $uploadDirectoryString = 'files/c4g_brick_data/forum';
+                        }
+                    }
 
                     $subDirectory = date("Y-m-d");
                     $uploadDirectoryString = $uploadDirectoryString . "/" .$subDirectory;
@@ -157,14 +175,15 @@ class UploadController
         } catch (\Throwable $e) {
             $response = array(
                 'title' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorTitle'],
-                'message' => $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorMessage'],
+                'message' => ($e->getMessage() && !($e instanceof C4GGenericException)) ? $e->getMessage() : $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['genericUploadErrorMessage'],
             );
             if ($type === 'ckeditor') {
                 $response = "<script>window.parent.CKEDITOR.tools.callFunction(".$request->query->get('CKEditorFuncNum').", '', '".$response['message']."');</script>";
             }
         }
         if ($type === 'json') {
-            return new JsonResponse($response);
+            $status = isset($response['url']) ? 200 : 400;
+            return new JsonResponse($response, $status);
         } else {
             return new Response($response);
         }
@@ -179,6 +198,13 @@ class UploadController
             $uploadedFile = $files->get('upload');
             if ($uploadedFile instanceof UploadedFile) {
                 $settings = C4gSettingsModel::findSettings();
+                if (!$uploadedFile->isValid()) {
+                    $msg = $uploadedFile->getErrorMessage();
+                    if ($uploadedFile->getError() === UPLOAD_ERR_INI_SIZE || $uploadedFile->getError() === UPLOAD_ERR_FORM_SIZE) {
+                        $msg = $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['fileSizeErrorMessage'] . round($settings->uploadMaxFileSize / 1048576, 2) . $GLOBALS['TL_LANG']['con4gis']['core']['frontend']['fileSizeErrorMessageMegaBytes'];
+                    }
+                    return new JsonResponse(['message' => $msg], Response::HTTP_BAD_REQUEST);
+                }
                 $allowedTypes = explode(',', $settings->uploadAllowedDocumentTypes);
                 $maxSize = $settings->uploadMaxFileSize;
                 if (empty($allowedTypes) || !is_array($allowedTypes) ||
@@ -197,10 +223,25 @@ class UploadController
 
 
                 if ($maxSize < $uploadedFile->getSize()) {
-                    return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+                    return new JsonResponse(['message' => 'File too large'], Response::HTTP_BAD_REQUEST);
                 }
 
-                $uploadDirectoryString = FilesModel::findByUuid(\Contao\StringUtil::binToUuid($uploadDirectoryBinary))->path;
+                $uploadDirectoryString = '';
+                if ($uploadDirectoryBinary !== null) {
+                    $uuid = \Contao\StringUtil::binToUuid($uploadDirectoryBinary);
+                    $filesModel = FilesModel::findByUuid($uuid);
+                    if ($filesModel !== null) {
+                        $uploadDirectoryString = $filesModel->path;
+                    }
+                }
+
+                if ($uploadDirectoryString === '') {
+                    if (is_dir($rootDir . '/files/c4g_forum')) {
+                        $uploadDirectoryString = 'files/c4g_forum';
+                    } else {
+                        $uploadDirectoryString = 'files/c4g_brick_data/forum';
+                    }
+                }
 
                 $subDirectory = date("Y-m-d");
                 $uploadDirectoryString = $uploadDirectoryString . "/" .$subDirectory;
