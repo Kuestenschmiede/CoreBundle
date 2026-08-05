@@ -849,8 +849,17 @@ class C4GUtils
         $result = '';
         $parser = System::getContainer()->get('contao.insert_tag.parser');
         if ($parser && $insertTag) {
-            $insertTag = html_entity_decode($insertTag, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $result = html_entity_decode($parser->replace($insertTag), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $maxLoops = 5;
+            while (strpos($insertTag, '&') !== false && $maxLoops > 0) {
+                $previous = $insertTag;
+                $insertTag = \Contao\StringUtil::decodeEntities($insertTag);
+                if ($previous === $insertTag) {
+                    break;
+                }
+                $maxLoops--;
+            }
+            $result = $parser->replace($insertTag);
+            $result = \Contao\StringUtil::decodeEntities($result);
         }
         return $result;
     }
