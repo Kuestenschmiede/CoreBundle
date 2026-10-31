@@ -107,12 +107,12 @@ class C4gBrickCallback extends Backend
                 'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['import'],
                 'icon' => $iconPath.'import_c4g.svg'
             ],
-//            'ldap' => [
-//                'repo' => 'LdapBundle',
-//                'vendor' => 'con4gis',
-//                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'],
-//                'icon' => $iconPath.'ldap_c4g.svg'
-//            ],
+            'ldap' => [
+                'repo' => 'LdapBundle',
+                'vendor' => 'con4gis',
+                'description' => &$GLOBALS['TL_LANG']['tl_c4g_bricks']['ldap'],
+                'icon' => $iconPath.'ldap_c4g.svg'
+            ],
             'maps' => [
                 'repo' => 'MapsBundle',
                 'vendor' => 'con4gis',
@@ -225,6 +225,14 @@ class C4gBrickCallback extends Backend
             return true;
         } else if (Database::getInstance()->tableExists('tl_c4g_'.$bundle.'_configuration')){
             $table = 'tl_c4g_'.$bundle.'_configuration';
+            try {
+                $result = Database::getInstance()->execute("SELECT * FROM $table LIMIT 1")->fetchAllAssoc();
+                return true;
+            } catch (\Exception $e) {
+                return false;
+            }
+        } else if (Database::getInstance()->tableExists('tl_c4g_'.$bundle.'_settings')){
+            $table = 'tl_c4g_'.$bundle.'_settings';
             try {
                 $result = Database::getInstance()->execute("SELECT * FROM $table LIMIT 1")->fetchAllAssoc();
                 return true;
@@ -350,6 +358,7 @@ class C4gBrickCallback extends Backend
             foreach ($installedPackages as $vendorBundle=>$version) {
                 if ($bundle = $this->checkDevelopPackage($vendorBundle)) {
                     $installedVersion = $version;
+                    $vendor = substr($vendorBundle, 0, strpos($vendorBundle, '/'));
 
                     $set['tstamp'] = time();
                     $set['pid'] = $this->User->id;
