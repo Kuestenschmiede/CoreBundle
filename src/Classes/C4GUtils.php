@@ -350,7 +350,7 @@ class C4GUtils
         if ($stripStopwords) {
             $dSearch = [
                 '#(\s[A-Za-z]{1,2})\s#',
-                '# ' . implode(' | ', $GLOBALS['TL_LANG']['C4G_FORUM']['STOPWORDS']) . ' #',
+                '# ' . implode(' | ', $GLOBALS['TL_LANG']['C4G_FORUM']['STOPWORDS'] ?? []) . ' #',
                 '# +#',
             ];
             $dReplace = [
